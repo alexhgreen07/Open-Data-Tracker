@@ -9,9 +9,9 @@ function Home_Tab (home_div_id) {
 	this.On_Click_Event = function()
 	{
 		
-		alert('Home data refreshed!');
-		
 		this.new_data_display_div.innerHTML = 'Last refreshed: ' + (new Date()) + '<br />';
+		
+		//NOT IMPLEMENTED
 	};
 	
 	//render function (div must already exist)
@@ -53,11 +53,5 @@ function Home_Tab (home_div_id) {
 
 	};
 }
-
-function Alert_Stuff()
-{
-	alert("success");
-}
-
 
 

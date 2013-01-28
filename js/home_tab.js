@@ -19,7 +19,6 @@ function Home_Tab (home_div_id) {
 		
 		this.data_form = document.createElement("form");
 		this.data_form.setAttribute('method',"post");
-		this.data_form.setAttribute('style',"text-align:center;");
 		this.data_form.setAttribute('id',"home_display_form");
 		
 		this.button = document.createElement("input");

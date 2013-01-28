@@ -18,6 +18,7 @@ function Data_Tab (data_div_id) {
 		//execute the RPC callback for retrieving the item log
 		rpc.Data_Interface.Get_Item_Log(params,function(jsonRpcObj){
 			
+			//RPC complete. Set appropriate HTML.
 			var new_html = '';
 			
 			new_html += 'Last refreshed: ' + (new Date()) + '<br />';
@@ -35,7 +36,6 @@ function Data_Tab (data_div_id) {
 		
 		this.data_form = document.createElement("form");
 		this.data_form.setAttribute('method',"post");
-		this.data_form.setAttribute('style',"text-align:center;");
 		this.data_form.setAttribute('id',"data_display_form");
 		
 		this.button = document.createElement("input");

@@ -42,7 +42,6 @@ function Task_Tab (task_div_id) {
 		//create the top form
 		this.data_form = document.createElement("form");
 		this.data_form.setAttribute('method',"post");
-		this.data_form.setAttribute('style',"text-align:center;");
 		this.data_form.setAttribute('id',"add_task_entry_form");
 	
 		this.data_form.innerHTML += 'Tasks:<br />';
@@ -88,7 +87,6 @@ function Task_Tab (task_div_id) {
 		//create the top form
 		this.data_form = document.createElement("form");
 		this.data_form.setAttribute('method',"post");
-		this.data_form.setAttribute('style',"text-align:center;");
 		this.data_form.setAttribute('id',"new_task_form");
 		
 		this.data_form.innerHTML += 'Name:<br />';

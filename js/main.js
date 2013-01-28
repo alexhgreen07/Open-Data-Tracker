@@ -2,7 +2,13 @@ function Main_Application()
 {
 	//initialize the main tab array
 	this.tabs_array = new Array();
-
+	this.main_tab_nav;
+	this.home_tab_object;
+	this.item_tab_object;
+	this.task_tab_object;
+	this.data_tab_object;
+	this.graph_tab_object;
+	
 	//setup the main tabs
 	this.Setup_Main_Tabs = function() {
 	
@@ -32,23 +38,23 @@ function Main_Application()
 		this.tabs_array[4][1] = "<div id='graph_tab_div'></div>";
 		
 		//render the tabs
-		var main_tab_nav = new Tabs(main_tabs_div,this.tabs_array);
-		main_tab_nav.Render();
+		this.main_tab_nav = new Tabs(main_tabs_div,this.tabs_array);
+		this.main_tab_nav.Render();
 		
-		var home_tab_object = new Home_Tab('home_tab_div');
-		home_tab_object.Render();
+		this.home_tab_object = new Home_Tab('home_tab_div');
+		this.home_tab_object.Render();
 		
-		var item_tab_object = new Item_Tab('item_tab_div');
-		item_tab_object.Render();
+		this.item_tab_object = new Item_Tab('item_tab_div');
+		this.item_tab_object.Render();
 		
-		var task_tab_object = new Task_Tab('task_tab_div');
-		task_tab_object.Render();
+		this.task_tab_object = new Task_Tab('task_tab_div');
+		this.task_tab_object.Render();
 		
-		var data_tab_object = new Data_Tab('data_tab_div');
-		data_tab_object.Render();
+		this.data_tab_object = new Data_Tab('data_tab_div');
+		this.data_tab_object.Render();
 		
-		var graph_tab_object = new Graph_Tab('graph_tab_div');
-		graph_tab_object.Render();
+		this.graph_tab_object = new Graph_Tab('graph_tab_div');
+		this.graph_tab_object.Render();
 	};
 	
 	//load a script to the head
@@ -72,14 +78,40 @@ function Main_Application()
 	
 }
 
+//define the global variables
+var app;
+var rpc;
+
 //this is the main function for the application
 function main()
 {
-
-	var app = new Main_Application();
 	
-	app.Setup_Main_Tabs();
+	app = new Main_Application();
+	
+	rpc = new jsonrpcphp('lib/api.php',function(){
+		
+		app.Setup_Main_Tabs();
+		
+		/*
+		
+		//EXAMPLE using multiple parameters
+		
+		var params = new Array();
+		params[0] = "1";
+		params[1] = "Test";
+		params[2] = "test note";
+		
+		rpc.Data_Interface.Insert_Item_Entry(params,function(jsonRpcObj){
 
+			alert(JSON.stringify(jsonRpcObj.result));
+
+		});
+		
+		*/
+	    
+	});
+	
+	
 }
 
 

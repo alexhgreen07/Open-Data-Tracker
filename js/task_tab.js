@@ -3,6 +3,11 @@ function Task_Tab (task_div_id) {
 	//class variables
 	this.div_id = task_div_id;
 	
+	this.On_Click_Event()
+	{
+		alert('Task submitted!');
+	}
+	
 	this.Render_New_Task_Entry_Form = function() {
 	
 		html_output = '';

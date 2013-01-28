@@ -25,6 +25,10 @@ require_once('lib/auth.php');
 	<script src="js/tabs.js"></script>
 	<script src="js/accordian.js"></script>
 	<script src="js/home_tab.js"></script>
+	<script src="js/item_tab.js"></script>
+	<script src="js/task_tab.js"></script>
+	<script src="js/data_tab.js"></script>
+	<script src="js/graph_tab.js"></script>
 	
 	<script>
 		//this function will render all major components of the application

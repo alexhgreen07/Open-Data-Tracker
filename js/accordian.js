@@ -8,20 +8,21 @@ function Accordian (accordian_div_id, accordian_array) {
 	this.Render = function() {
 
 		var new_inner_html = '';
-
+		
 		//create all top tab items using ul
 		for (var i = 0; i < this.tabs.length; i++)
 		{
 			new_inner_html += '<h3>' + this.tabs[i][0] + '</h3>';
 			new_inner_html += '<div><p>' + this.tabs[i][1] + '</p></div>';
 		}
-
+		
+		
 		var div_tab = document.getElementById(this.div_id);
 
 		div_tab.innerHTML = new_inner_html;
 
 		//execute JQuery tabs initialization
-		$("#" + this.div_id).accordion();
+		$("#" + this.div_id).accordion({ heightStyle: "content" });
 
 	};
 }

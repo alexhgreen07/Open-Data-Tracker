@@ -80,7 +80,7 @@ elseif(isset($_POST['task_name_to_enter']))
 	}
 	else
 	{
-		$sql = "UPDATE `task_log` SET `hours`=((NOW() - `start_time`)/60/60) WHERE `task_id` = '".$task_id."' and `hours` = 0";
+		$sql = "UPDATE `task_log` SET `hours`=(TIMESTAMPDIFF(SECOND,`start_time`,NOW())/60/60) WHERE `task_id` = '".$task_id."' and `hours` = 0";
 	}
 	
 	//execute insert

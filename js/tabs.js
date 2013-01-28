@@ -9,8 +9,6 @@ function Tabs (tab_div_id, tab_array) {
 
 		var new_inner_html = '';
 
-		
-
 		new_inner_html += "<ul>";
 
 		//create all top tab items using ul

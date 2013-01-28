@@ -11,40 +11,44 @@ function Main_Application()
 		//append the main tab div
 		document.body.innerHTML += '<div id="' + main_tabs_div + '"></div>';
 		
-		//setup the array and all HTML
-		this.Setup_Main_Tabs_Array();
+		this.tabs_array[0] = new Array();
+		this.tabs_array[0][0] = "Home";
+		this.tabs_array[0][1] = "<div id='home_tab_div'></div>";
+		
+		this.tabs_array[1] = new Array();
+		this.tabs_array[1][0] = "Items";
+		this.tabs_array[1][1] = "<div id='item_tab_div'></div>";
+		
+		this.tabs_array[2] = new Array();
+		this.tabs_array[2][0] = "Tasks";
+		this.tabs_array[2][1] = "<div id='task_tab_div'></div>";
+		
+		this.tabs_array[3] = new Array();
+		this.tabs_array[3][0] = "Data";
+		this.tabs_array[3][1] = "<div id='data_tab_div'></div>";
+		
+		this.tabs_array[4] = new Array();
+		this.tabs_array[4][0] = "Graphs";
+		this.tabs_array[4][1] = "<div id='graph_tab_div'></div>";
 		
 		//render the tabs
 		var main_tab_nav = new Tabs(main_tabs_div,this.tabs_array);
 		main_tab_nav.Render();
 		
-	};
-	
-	//setup the main tabs array with all HTML content
-	this.Setup_Main_Tabs_Array = function() {
+		var home_tab_object = new Home_Tab('home_tab_div');
+		home_tab_object.Render();
 		
-		var home_tab_object = new Home_Tab();
+		var item_tab_object = new Item_Tab('item_tab_div');
+		item_tab_object.Render();
 		
-		this.tabs_array[0] = new Array();
-		this.tabs_array[0][0] = "Home";
-		this.tabs_array[0][1] = home_tab_object.Render();
+		var task_tab_object = new Task_Tab('task_tab_div');
+		task_tab_object.Render();
 		
-		this.tabs_array[1] = new Array();
-		this.tabs_array[1][0] = "Items";
-		this.tabs_array[1][1] = "Hello world again!";
+		var data_tab_object = new Data_Tab('data_tab_div');
+		data_tab_object.Render();
 		
-		this.tabs_array[2] = new Array();
-		this.tabs_array[2][0] = "Tasks";
-		this.tabs_array[2][1] = "Hello world once more!";
-		
-		this.tabs_array[3] = new Array();
-		this.tabs_array[3][0] = "Data";
-		this.tabs_array[3][1] = "Hello world for real!";
-		
-		this.tabs_array[4] = new Array();
-		this.tabs_array[4][0] = "Graphs";
-		this.tabs_array[4][1] = "Hello world for the last time!";
-	
+		var graph_tab_object = new Graph_Tab('graph_tab_div');
+		graph_tab_object.Render();
 	};
 	
 	//load a script to the head

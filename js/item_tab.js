@@ -1,6 +1,7 @@
-function Item_Tab () {
+function Item_Tab (item_div_id) {
 
 	//class variables
+	this.div_id = item_div_id;
 
 	this.Render_New_Item_Entry_Form = function() {
 	
@@ -10,7 +11,7 @@ function Item_Tab () {
 		return_html += 'Value: <br><input type="text" class="text" name="value" /><br/>';
 		return_html += 'Unit: <br><select name="unit_dropdown"></select><br/>';
 		return_html += 'Note: <br><input type="text" class="text" name="notes" /><br/><br/>';
-		return_html += '<input type="submit"><br/><br/></form>';
+		return_html += '<button type="button">Submit</button><br/><br/></form>';
 		
 		return return_html;
 	
@@ -28,25 +29,35 @@ function Item_Tab () {
 		
 		var tabs_array = new Array();
 		
-		this.tabs_array[0] = new Array();
-		this.tabs_array[0][0] = "New Item Entry";
-		this.tabs_array[0][1] = this.Render_New_Item_Entry_Form();
+		tabs_array[0] = new Array();
+		tabs_array[0][0] = "New Item Entry";
+		tabs_array[0][1] = this.Render_New_Item_Entry_Form();
 		
-		this.tabs_array[1] = new Array();
-		this.tabs_array[1][0] = "View Items";
-		this.tabs_array[1][1] = "Under construction...";
+		tabs_array[1] = new Array();
+		tabs_array[1][0] = "View Items";
+		tabs_array[1][1] = "Under construction...";
+		
+		tabs_array[2] = new Array();
+		tabs_array[2][0] = "New Item";
+		tabs_array[2][1] = "Under construction...";
+		
+		tabs_array[3] = new Array();
+		tabs_array[3][0] = "Edit Item";
+		tabs_array[3][1] = "Under construction...";
 		
 		var return_html = '';
 		
 		return_html += '<div id="items_accordian"></div>';
 		
-		var items_accordian = Accordian('items_accordian',tabs_array);
-		
-		return_html += items_accordian.Render();
-		
-		
-		return return_html;
+		var div_tab = document.getElementById(this.div_id);
 
+		div_tab.innerHTML = return_html;
+		
+		var items_accordian = new Accordian('items_accordian',tabs_array);
+		
+		items_accordian.Render();
+		
+		
 	};
 }
 

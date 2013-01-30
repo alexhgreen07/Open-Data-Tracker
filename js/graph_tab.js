@@ -9,7 +9,7 @@ function Graph_Tab (data_div_id) {
 		var return_html = '';
 		
 		return_html += '<form method="post" style="text-align:center;" id="graph_display_form">';
-		return_html += '<button type="button" onClick="Alert_Stuff()">Refresh</button>';
+		return_html += 'Under construnction...';
 		return_html += '</form>';
 		
 		var div_tab = document.getElementById(this.div_id);

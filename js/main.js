@@ -9,6 +9,21 @@ function Main_Application()
 	this.data_tab_object;
 	this.graph_tab_object;
 	
+	//refresh data view
+	this.Refresh_Data = function()
+	{
+		var self = this;
+		
+		self.home_tab_object.Refresh_Data(function()
+		{
+			self.data_tab_object.Refresh_Item_Data(function()
+			{
+				//alert('refresh complete');
+			});
+		});
+		
+	};
+	
 	//setup the main tabs
 	this.Setup_Main_Tabs = function() {
 	
@@ -45,6 +60,12 @@ function Main_Application()
 		this.home_tab_object.Render();
 		
 		this.item_tab_object = new Item_Tab('item_tab_div');
+		var self = this;
+		this.item_tab_object.refresh_item_log_callback = function()
+		{
+			//ensure the data tab gets refreshed when a new item is added
+			self.Refresh_Data();
+		};
 		this.item_tab_object.Render();
 		
 		this.task_tab_object = new Task_Tab('task_tab_div');
@@ -55,6 +76,27 @@ function Main_Application()
 		
 		this.graph_tab_object = new Graph_Tab('graph_tab_div');
 		this.graph_tab_object.Render();
+		
+		//perform asynchronous refresh operations
+		var self = this;
+		
+		self.home_tab_object.Refresh_Data(function()
+		{
+			self.item_tab_object.Refresh_Items(function()
+			{
+				self.task_tab_object.Refresh_Tasks(function()
+				{
+					self.task_tab_object.Refresh_Task_Name_List(function()
+					{
+						self.data_tab_object.Refresh_Item_Data(function()
+						{
+							//alert('refresh complete');
+						});
+					});
+				});
+				
+			});
+		});
 	};
 	
 	//load a script to the head
@@ -92,22 +134,7 @@ function main()
 		
 		app.Setup_Main_Tabs();
 		
-		/*
 		
-		//EXAMPLE using multiple parameters
-		
-		var params = new Array();
-		params[0] = "1";
-		params[1] = "Test";
-		params[2] = "test note";
-		
-		rpc.Data_Interface.Insert_Item_Entry(params,function(jsonRpcObj){
-
-			alert(JSON.stringify(jsonRpcObj.result));
-
-		});
-		
-		*/
 	    
 	});
 	

@@ -15,10 +15,6 @@ function Render_Home_Form()
 	$database_form_output .= "
 	<div id='home_display_div'>";
 	
-	
-	
-	
-	
 	$database_form_output .= '</div>';
 
 	$database_form_output .= '

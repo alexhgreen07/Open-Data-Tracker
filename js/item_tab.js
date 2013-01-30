@@ -2,13 +2,115 @@ function Item_Tab (item_div_id) {
 
 	//class variables
 	this.div_id = item_div_id;
+	this.item_value;
+	this.unit_name_select;
+	this.item_note;
+	this.loading_image;
+	this.refresh_item_log_callback;
 
 	this.Add_Item_Entry_Click = function() 
 	{
-		alert('New item entry added!');
 		
-		//NOT IMPLEMENTED (RPC)
+		//get the value string
+		var value_string = $("#" + this.item_value.id).val();
+		var unit_string = $("#" + this.unit_name_select.id).val();
+		var note_string = $("#" + this.item_note.id).val();
+		
+		//check that the string is numeric
+		if(!isNaN(Number(value_string)) && value_string != '')
+		{
+			
+			var self = this;
+		
+			//show the loader image
+			$('#' + self.loading_image.id).show();
+			
+			var params = new Array();
+			params[0] = value_string;
+			params[1] = unit_string;
+			params[2] = note_string;
+		
+			//execute the RPC callback for retrieving the item log
+			rpc.Data_Interface.Insert_Item_Entry(params,function(jsonRpcObj){
+				
+				if(jsonRpcObj.result.authenticated == 'true')
+				{
+					if(jsonRpcObj.result.success == 'true')
+					{
+						alert('New item entry added!');
+					}
+					else
+					{
+						alert('Item entry failed to add.');
+					}
+
+				}
+				else
+				{
+					alert('You are not logged in. Please refresh the page and login again.');
+				}
+				
+				//hide the loader image
+				$('#' + self.loading_image.id).hide();
+				
+				self.refresh_item_log_callback();
+			});
+		}
+		else
+		{
+			alert('The value field must be numeric.');
+		}
+		
 	};
+	
+	this.Refresh_Items = function(refresh_callback)
+	{
+		var params = new Array();
+		
+		var self = this;
+		
+		//show the loader image
+		$('#' + self.loading_image.id).show();
+		
+		//execute the RPC callback for retrieving the item log
+		rpc.Data_Interface.Get_Items_Names(params,function(jsonRpcObj){
+			
+			if(jsonRpcObj.result.authenticated == 'true')
+			{
+				if(jsonRpcObj.result.success == 'true')
+				{
+					var new_inner_html = '';
+					
+					new_inner_html += '<option>-</option>';
+					
+					for (var i = 0; i < jsonRpcObj.result.items.length; i++)
+					{
+						new_inner_html += '<option>' + jsonRpcObj.result.items[i] + '</option>';
+					}
+					
+					document.getElementById(self.unit_name_select.id).innerHTML = new_inner_html;
+					
+				}
+				else
+				{
+					alert('Items failed to refresh.');
+				}
+
+			}
+			else
+			{
+				alert('You are not logged in. Please refresh the page and login again.');
+			}
+			
+			//hide the loader image
+			$('#' + self.loading_image.id).hide();
+			
+			refresh_callback();
+		});
+		
+	};
+	
+	
 
 	this.Render_New_Item_Entry_Form = function(form_div_id) {
 		
@@ -32,6 +134,7 @@ function Item_Tab (item_div_id) {
 		this.unit_name_select = document.createElement("select");
 		this.unit_name_select.setAttribute('name',"unit_dropdown");
 		this.unit_name_select.setAttribute('id',"unit_dropdown");
+		this.unit_name_select.innerHTML = '<option>-</option>';
 		this.data_form.appendChild(this.unit_name_select);
 		
 		this.data_form.innerHTML += 'Note:<br />';
@@ -62,12 +165,15 @@ function Item_Tab (item_div_id) {
 		});
 		this.data_form.appendChild(this.item_add_entry_button);
 		
+		this.loading_image = document.createElement("img");
+		this.loading_image.setAttribute('id','item_tab_new_item_entry_loader_image');
+		this.loading_image.setAttribute('style','width:100%;height:19px;');
+		this.loading_image.setAttribute('src','ajax-loader.gif');
+		this.data_form.appendChild(this.loading_image);
 		
 		var div_tab = document.getElementById(form_div_id);
-
 		div_tab.appendChild(this.data_form);
 		
-	
 	};
 	
 	this.Render_View_Items_Form = function() {

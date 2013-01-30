@@ -5,13 +5,44 @@ function Home_Tab (home_div_id) {
 	this.data_form;
 	this.button;
 	this.new_data_display_div;
+	this.loading_image;
+	
+	this.Refresh_Data = function(refresh_callback)
+	{
+		var params = new Array();
+		
+		var self = this;
+		
+		//show the loader image
+		$('#' + self.loading_image.id).show();
+		
+		//execute the RPC callback for retrieving the item log
+		rpc.Data_Interface.Get_Home_Data_Summary(params,function(jsonRpcObj){
+			
+			
+			var new_inner_html = '';
+			
+			new_inner_html += 'Last refreshed: ' + (new Date()) + '<br />';
+			
+			new_inner_html += jsonRpcObj.result.html;
+			
+			self.new_data_display_div.innerHTML = new_inner_html;
+			
+			//hide the loader image
+			$('#' + self.loading_image.id).hide();
+			
+			refresh_callback();
+		});
+	};
 	
 	this.On_Click_Event = function()
 	{
+		var self = this;
 		
-		this.new_data_display_div.innerHTML = 'Last refreshed: ' + (new Date()) + '<br />';
-		
-		//NOT IMPLEMENTED
+		this.Refresh_Data(function()
+		{
+			//empty
+		});
 	};
 	
 	//render function (div must already exist)
@@ -38,6 +69,12 @@ function Home_Tab (home_div_id) {
 		});
 		
 		this.data_form.appendChild(this.button);
+		
+		this.loading_image = document.createElement("img");
+		this.loading_image.setAttribute('id','home_tab_refresh_loader_image');
+		this.loading_image.setAttribute('style','width:100%;height:19px;');
+		this.loading_image.setAttribute('src','ajax-loader.gif');
+		this.data_form.appendChild(this.loading_image);
 		
 		this.new_data_display_div = document.createElement("div");
 		this.data_form.appendChild(this.new_data_display_div);

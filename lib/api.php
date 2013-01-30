@@ -5,6 +5,9 @@ require_once('config.php');
 require_once('data_interface.php');
 require_once('../js/json-rpc2php-master/jsonRPC2Server.php');
 
+//this is a protected area. Ensure the session is authorized.
+Authorize_Session();
+
 //Connect to mysql server
 $link = mysql_connect(DB_HOST, DB_USER, DB_PASSWORD);
 if(!$link) {

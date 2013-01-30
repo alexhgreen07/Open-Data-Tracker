@@ -5,15 +5,17 @@ function Data_Tab (data_div_id) {
 	this.data_form;
 	this.button;
 	this.new_data_display_div;
+	this.loading_image;
 	
-	this.On_Click_Event = function()
+	this.Refresh_Item_Data = function(refresh_callback)
 	{
+		var self = this;
 		
-		//set local variable for scoping
-		var data_div_to_refresh = this.new_data_display_div;
-		
+		//show the loader image
+		$('#' + self.loading_image.id).show();
 		
 		var params = new Array();
+		
 		
 		//execute the RPC callback for retrieving the item log
 		rpc.Data_Interface.Get_Item_Log(params,function(jsonRpcObj){
@@ -22,11 +24,24 @@ function Data_Tab (data_div_id) {
 			var new_html = '';
 			
 			new_html += 'Last refreshed: ' + (new Date()) + '<br />';
-			new_html += jsonRpcObj.result;
+			new_html += jsonRpcObj.result.html;
 			
-			data_div_to_refresh.innerHTML = new_html;
-
+			self.new_data_display_div.innerHTML = new_html;
+			
+			//hide the loader image
+			$('#' + self.loading_image.id).hide();
+			
+			refresh_callback();
 		});
+	};
+	
+	this.On_Click_Event = function()
+	{
+		
+		//alert('calling rpc onclick.');
+		
+		this.Refresh_Item_Data();
+		
 	};
 	
 	//render function (div must already exist)
@@ -55,19 +70,23 @@ function Data_Tab (data_div_id) {
 		});
 		
 		this.data_form.appendChild(this.button);
+		
+		this.loading_image = document.createElement("img");
+		this.loading_image.setAttribute('id','data_tab_loader_image');
+		this.loading_image.setAttribute('style','width:100%;height:19px;');
+		this.loading_image.setAttribute('src','ajax-loader.gif');
+		this.data_form.appendChild(this.loading_image);
 
 		this.new_data_display_div = document.createElement("div");
-		
 		this.data_form.appendChild(this.new_data_display_div);
+		
 		
 		var div_tab = document.getElementById(this.div_id);
 		
 		div_tab.innerHTML = '';
 			
 		div_tab.appendChild(this.data_form);
-		
-		//call the click function to refresh data.
-		this.On_Click_Event();
+
 	};
 }
 

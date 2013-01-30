@@ -1,14 +1,19 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+	<title>Trackanything: Member Index</title>
+	
+	<!-- Custom CSS stylsheet -->
+	<link href="css/loginmodule.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
 <?php
 
-require_once("lib/header.php");
-require_once("lib/footer.php");
 require_once('lib/config.php');
 
 $html_output = '';
-
-$html_output .= render_doctype();
-
-$html_output .= render_header("Login Form");
 
 //Sanitize the POST values
 $login = mysql_real_escape_string($_POST['login']);
@@ -111,12 +116,10 @@ else
 }
 
 
-
-
-
-$html_output .= render_footer();
-
 echo $html_output;
 
 ?>
+
+</body>
+</html>
 

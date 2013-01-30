@@ -11,16 +11,18 @@ function Item_Tab (item_div_id) {
 	this.Add_Item_Entry_Click = function() 
 	{
 		
+		var self = this;
+		
 		//get the value string
-		var value_string = $("#" + this.item_value.id).val();
-		var unit_string = $("#" + this.unit_name_select.id).val();
-		var note_string = $("#" + this.item_note.id).val();
+		var value_string = $("#" + self.item_value.id).val();
+		var unit_string = $("#" + self.unit_name_select.id).val();
+		var note_string = $("#" + self.item_note.id).val();
 		
 		//check that the string is numeric
 		if(!isNaN(Number(value_string)) && value_string != '')
 		{
 			
-			var self = this;
+			
 		
 			//show the loader image
 			$('#' + self.loading_image.id).show();
@@ -52,6 +54,11 @@ function Item_Tab (item_div_id) {
 				
 				//hide the loader image
 				$('#' + self.loading_image.id).hide();
+				
+				//reset all the fields to default
+				$("#" + self.item_value.id).val('');
+				$("#" + self.unit_name_select.id).val('-');
+				$("#" + self.item_note.id).val('');
 				
 				self.refresh_item_log_callback();
 			});

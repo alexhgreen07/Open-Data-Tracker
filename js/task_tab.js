@@ -185,6 +185,11 @@ function Task_Tab (task_div_id) {
 		});
 	};
 	
+	this.On_Task_Name_Select_Change_Event = function()
+	{
+		alert('Handler for task name select change called.');
+	};
+	
 	this.Refresh_Timer_Display = function()
 	{
 		var self = this;
@@ -224,6 +229,12 @@ function Task_Tab (task_div_id) {
 		this.task_name_select = document.createElement("select");
 		this.task_name_select.setAttribute('name',"task_name_to_enter");
 		this.task_name_select.setAttribute('id',"task_name_to_enter");
+		$(this.task_name_select).change(function() {
+			
+			//call the change event function
+			self.On_Task_Name_Select_Change_Event();
+			
+		});
 		this.data_form_new_entry.appendChild(this.task_name_select);
 		
 		//info div creation

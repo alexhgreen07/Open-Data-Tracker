@@ -187,7 +187,7 @@ function Task_Tab (task_div_id) {
 	
 	this.On_Task_Name_Select_Change_Event = function()
 	{
-		alert('Handler for task name select change called.');
+		//alert('Handler for task name select change called.');
 	};
 	
 	this.Refresh_Timer_Display = function()

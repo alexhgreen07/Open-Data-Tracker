@@ -22,7 +22,7 @@ function Accordian (accordian_div_id, accordian_array) {
 		div_tab.innerHTML = new_inner_html;
 
 		//execute JQuery tabs initialization
-		$("#" + this.div_id).accordion({ heightStyle: "content" });
+		$("#" + this.div_id).accordion({collapsible: true, heightStyle: "content" });
 
 	};
 }

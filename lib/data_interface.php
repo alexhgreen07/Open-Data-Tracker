@@ -274,17 +274,45 @@ class Data_Interface {
 				$return_json['success'] = 'true';
 			
 			
-				$num=mysql_numrows($result);
-
+				$num = mysql_numrows($result);
+				
 				$i=0;
 				while ($i < $num) {
-
-					$row_result = mysql_result($result,$i,"name");
-
-					if($row_result != "")
+					
+					$item_name = mysql_result($result,$i,"name");
+					
+					//check if the task has been started yet
+					$inner_sql_query = "SELECT `task_id`, `start_time` 
+						FROM `life_management`.`task_log` 
+						WHERE `task_id` = " . mysql_result($result,$i,"task_id") . 
+						" AND `status` = 'started'";
+					$inner_result = mysql_query($inner_sql_query);
+					$started_task_count = mysql_numrows($inner_result);
+					
+					$status = 'stopped';
+					
+					if($started_task_count > 0)
 					{
+						//fill proper data from query
+						$status = 'started';
+						$start_time = mysql_result($inner_result,0,"start_time");
 
-						$return_json['items'][$i] = $row_result;
+					}
+					else
+					{
+						//fill default data
+						$status = 'stopped';
+						$start_time = '';
+					}
+					
+					if($item_name != "")
+					{
+						$return_json['items'][$i] = array(
+							'item_name' => $item_name,
+							'item_status' => $status,
+							'start_time' => $start_time,
+						);
+
 	
 					}
 
@@ -325,11 +353,17 @@ class Data_Interface {
 
 		if($task_start_stop == "Start")
 		{
-			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`) VALUES ('".$task_id."',NOW())";
+			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`status`) VALUES ('".$task_id."',NOW(),'started')";
 		}
 		else
 		{
-			$sql = "UPDATE `task_log` SET `hours`=(TIMESTAMPDIFF(SECOND,`start_time`,NOW())/60/60) WHERE `task_id` = '".$task_id."' and `hours` = 0";
+			$sql = "UPDATE `task_log` 
+				SET 
+				`hours`=(TIMESTAMPDIFF(SECOND,`start_time`,NOW())/60/60),
+				`status`='stopped'
+				WHERE `task_id` = '".$task_id."' AND 
+				`hours` = 0 AND
+				`status` = 'started'";
 		}
 		
 		$return_json['debug'] = $sql;
@@ -408,7 +442,7 @@ class Data_Interface {
 			
 				$return_html = '';
 
-				$num=mysql_numrows($result);
+				$num = mysql_numrows($result);
 		
 				$return_html .= "
 				<b>Database Output</b><br>

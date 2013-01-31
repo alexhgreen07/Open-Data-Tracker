@@ -6,6 +6,7 @@ function Task_Tab (task_div_id) {
 	this.data_form_view_tasks;
 	this.data_form_new_task;
 	this.task_name_select;
+	this.task_info_json_array;
 	this.task_info_div;
 	this.task_timer_div;
 	this.task_start_stop_button;
@@ -35,13 +36,17 @@ function Task_Tab (task_div_id) {
 			{
 				if(jsonRpcObj.result.success == 'true')
 				{
+					
+					//ensure the task info array is saved
+					self.task_info_json_array = jsonRpcObj.result.items;
+					
 					var new_inner_html = '';
 					
 					new_inner_html += '<option>-</option>';
 					
-					for (var i = 0; i < jsonRpcObj.result.items.length; i++)
+					for (var i = 0; i < self.task_info_json_array.length; i++)
 					{
-						new_inner_html += '<option>' + jsonRpcObj.result.items[i] + '</option>';
+						new_inner_html += '<option>' + self.task_info_json_array[i].item_name + '</option>';
 					}
 					
 					document.getElementById(self.task_name_select.id).innerHTML = new_inner_html;
@@ -188,6 +193,38 @@ function Task_Tab (task_div_id) {
 	this.On_Task_Name_Select_Change_Event = function()
 	{
 		//alert('Handler for task name select change called.');
+		
+		var selected_index = document.getElementById(this.task_name_select.id).selectedIndex;
+		var new_html = '';
+		new_html += 'Info:<br /><br />';
+		
+		if(selected_index > 0)
+		{
+		
+			var new_item = this.task_info_json_array[selected_index - 1];
+		
+			new_html += 'Status: ' + new_item.item_status + '<br />';
+			new_html += 'Start Time: ' + new_item.start_time + '<br />';
+			
+			if(new_item.item_status == 'started')
+			{
+				//set the start time and button value
+				this.current_task_start_time = new_item.start_time;
+				this.task_start_stop_button.value = 'Stop';
+			}
+			else
+			{
+				this.task_start_stop_button.value = 'Start';
+			}
+		}
+		else
+		{
+			this.task_start_stop_button.value = 'Start';
+		}
+		
+		new_html += '<br />';
+		
+		this.task_info_div.innerHTML = new_html;
 	};
 	
 	this.Refresh_Timer_Display = function()
@@ -239,6 +276,7 @@ function Task_Tab (task_div_id) {
 		
 		//info div creation
 		this.task_info_div = document.createElement("div");
+		this.task_info_div.setAttribute('id','task_info_div');
 		this.task_info_div.innerHTML = 'Info:<br /><br />';
 		this.data_form_new_entry.appendChild(this.task_info_div);
 		

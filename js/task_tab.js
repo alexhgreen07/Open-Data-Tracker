@@ -97,53 +97,104 @@ function Task_Tab (task_div_id) {
 	
 	this.On_Complete_Click_Event = function() 
 	{
-		alert('Task completed!');
+		var params = new Array();
 		
-		//NOT IMPLEMENTED
+		var task_name = $('#' + this.task_name_select.id).val();
+		var task_start_stop = this.task_start_stop_button.value;
+		
+		//ensure it is not the first item in the list
+		if(task_name != '-')
+		{
+		
+			var self = this;
+		
+			//show the loader image
+			$('#' + self.loading_image_new.id).show();
+		
+			//execute the RPC callback for retrieving the item log
+			rpc.Data_Interface.Get_Tasks(params,function(jsonRpcObj){
+			
+				if(jsonRpcObj.result.success == 'true')
+				{
+			
+					
+			
+					alert('Task completed.');
+				}
+				else
+				{
+					alert('Task failed to complete.');
+				}
+			
+			
+				//hide the loader image
+				$('#' + self.loading_image_new.id).hide();
+		
+			});
+		
+		}
+		else
+		{
+			alert('Please select a valid task.');
+		}
 	};
 	
 	this.On_Start_Stop_Click_Event = function()
 	{
 		
 		var params = new Array();
-		params[0] = $('#' + this.task_name_select.id).val();
-		params[1] = this.task_start_stop_button.value;
 		
-		var self = this;
+		var task_name = $('#' + this.task_name_select.id).val();
+		var task_start_stop = this.task_start_stop_button.value;
 		
-		//show the loader image
-		$('#' + self.loading_image_new.id).show();
+		//ensure it is not the first item in the list
+		if(task_name != '-')
+		{
 		
-		//execute the RPC callback for retrieving the item log
-		rpc.Data_Interface.Task_Start_Stop(params,function(jsonRpcObj){
+			params[0] = task_name;
+			params[1] = task_start_stop;
+		
+			var self = this;
+		
+			//show the loader image
+			$('#' + self.loading_image_new.id).show();
+		
+			//execute the RPC callback for retrieving the item log
+			rpc.Data_Interface.Task_Start_Stop(params,function(jsonRpcObj){
 			
-			if(jsonRpcObj.result.success == 'true')
-			{
-			
-				if(self.task_start_stop_button.value == 'Start')
+				if(jsonRpcObj.result.success == 'true')
 				{
-					self.current_task_start_time = new Date();
-					self.Refresh_Timer_Display();
+			
+					if(self.task_start_stop_button.value == 'Start')
+					{
+						self.current_task_start_time = new Date();
+						self.Refresh_Timer_Display();
 					
-					self.task_start_stop_button.value = 'Stop';
+						self.task_start_stop_button.value = 'Stop';
+					}
+					else
+					{
+						self.task_start_stop_button.value = 'Start';
+					}
+			
+				
 				}
 				else
 				{
-					self.task_start_stop_button.value = 'Start';
+					alert('Task failed to start/stop.');
 				}
 			
-				
-			}
-			else
-			{
-				alert('Task failed to start/stop.');
-			}
 			
-			
-			//hide the loader image
-			$('#' + self.loading_image_new.id).hide();
+				//hide the loader image
+				$('#' + self.loading_image_new.id).hide();
 		
-		});
+			});
+		
+		}
+		else
+		{
+			alert('Please select a valid task.');
+		}
 	};
 	
 	this.On_View_Task_Refresh_Click_Event = function()
@@ -266,6 +317,7 @@ function Task_Tab (task_div_id) {
 		this.task_name_select = document.createElement("select");
 		this.task_name_select.setAttribute('name',"task_name_to_enter");
 		this.task_name_select.setAttribute('id',"task_name_to_enter");
+		this.task_name_select.innerHTML = '<option>-</option>';
 		$(this.task_name_select).change(function() {
 			
 			//call the change event function

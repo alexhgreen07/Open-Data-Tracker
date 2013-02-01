@@ -285,11 +285,11 @@ class Data_Interface {
 					$inner_sql_query = "SELECT `task_id`, `start_time` 
 						FROM `life_management`.`task_log` 
 						WHERE `task_id` = " . mysql_result($result,$i,"task_id") . 
-						" AND `status` = 'started'";
+						" AND `status` = 'Started'";
 					$inner_result = mysql_query($inner_sql_query);
 					$started_task_count = mysql_numrows($inner_result);
 					
-					$status = 'stopped';
+					$status = 'Stopped';
 					
 					if($started_task_count > 0)
 					{
@@ -360,10 +360,10 @@ class Data_Interface {
 			$sql = "UPDATE `task_log` 
 				SET 
 				`hours`=(TIMESTAMPDIFF(SECOND,`start_time`,NOW())/60/60),
-				`status`='stopped'
+				`status`='Stopped'
 				WHERE `task_id` = '".$task_id."' AND 
 				`hours` = 0 AND
-				`status` = 'started'";
+				`status` = 'Started'";
 		}
 		
 		$return_json['debug'] = $sql;

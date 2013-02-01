@@ -294,14 +294,14 @@ class Data_Interface {
 					if($started_task_count > 0)
 					{
 						//fill proper data from query
-						$status = 'started';
+						$status = 'Started';
 						$start_time = mysql_result($inner_result,0,"start_time");
 
 					}
 					else
 					{
 						//fill default data
-						$status = 'stopped';
+						$status = 'Stopped';
 						$start_time = '';
 					}
 					
@@ -353,7 +353,7 @@ class Data_Interface {
 
 		if($task_start_stop == "Start")
 		{
-			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`status`) VALUES ('".$task_id."',NOW(),'started')";
+			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`status`) VALUES ('".$task_id."',NOW(),'Started')";
 		}
 		else
 		{

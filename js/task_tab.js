@@ -206,7 +206,7 @@ function Task_Tab (task_div_id) {
 			new_html += 'Status: ' + new_item.item_status + '<br />';
 			new_html += 'Start Time: ' + new_item.start_time + '<br />';
 			
-			if(new_item.item_status == 'started')
+			if(new_item.item_status == 'Started')
 			{
 				//set the start time and button value
 				this.current_task_start_time = new_item.start_time;
@@ -300,6 +300,25 @@ function Task_Tab (task_div_id) {
 		});
 		this.data_form_new_entry.appendChild(this.task_start_stop_button);
 		
+		
+		//task mark complete button creation
+		this.task_start_complete_button = document.createElement("input");
+		this.task_start_complete_button.setAttribute('id','task_entry_complete');
+		this.task_start_complete_button.setAttribute('type','submit');
+		this.task_start_complete_button.value = 'Mark Complete';
+		
+		$(this.task_start_complete_button).button();
+		$(this.task_start_complete_button).click(function( event ) {
+			
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			//execute the click event
+			self.On_Complete_Click_Event();
+		});
+		this.data_form_new_entry.appendChild(this.task_start_complete_button);
+		
+		
 		this.loading_image_new = document.createElement("img");
 		this.loading_image_new.setAttribute('id','task_tab_new_entry_loader_image');
 		this.loading_image_new.setAttribute('style','width:100%;height:19px;');
@@ -374,6 +393,8 @@ function Task_Tab (task_div_id) {
 		this.data_form_new_task.setAttribute('method',"post");
 		this.data_form_new_task.setAttribute('id',"new_task_form");
 		
+		this.data_form_new_task.innerHTML += '<b>General</b><br />';
+		
 		this.data_form_new_task.innerHTML += 'Name:<br />';
 		
 		//task name creation
@@ -392,14 +413,23 @@ function Task_Tab (task_div_id) {
 		this.task_description.setAttribute('type','text');
 		this.data_form_new_task.appendChild(this.task_description);
 		
-		this.data_form_new_task.innerHTML += 'Estimated Time:<br />';
+		this.data_form_new_task.innerHTML += 'Estimated Time (Hours):<br />';
 		
 		//task estimate creation
 		this.task_estimate = document.createElement("input");
 		this.task_estimate.setAttribute('name','task_estimated_time');
 		this.task_estimate.setAttribute('id','task_estimated_time');
 		this.task_estimate.setAttribute('type','text');
+		this.task_estimate.setAttribute('value','0');
 		this.data_form_new_task.appendChild(this.task_estimate);
+		
+		this.data_form_new_task.innerHTML += 'Status:<br />';
+		
+		//task recurring
+		this.task_status_select = document.createElement("select");
+		this.task_status_select.setAttribute('id','task_status_select');
+		this.task_status_select.innerHTML = '<option>Stopped</option><option>Started</option>';
+		this.data_form_new_task.appendChild(this.task_status_select);
 		
 		this.data_form_new_task.innerHTML += 'Note:<br />';
 		
@@ -409,6 +439,72 @@ function Task_Tab (task_div_id) {
 		this.task_note.setAttribute('id','task_note');
 		this.task_note.setAttribute('type','text');
 		this.data_form_new_task.appendChild(this.task_note);
+		
+		this.data_form_new_task.innerHTML += '<br /><br />';
+		this.data_form_new_task.innerHTML += '<b>Schedule</b><br />';
+		
+		this.data_form_new_task.innerHTML += 'Scheduled/Floating:<br />';
+		
+		//task recurring
+		this.task_scheduled_select = document.createElement("select");
+		this.task_scheduled_select.setAttribute('id','task_scheduled_select');
+		this.task_scheduled_select.innerHTML = '<option>Floating</option><option>Scheduled</option>';
+		this.data_form_new_task.appendChild(this.task_scheduled_select);
+		
+		this.data_form_new_task.innerHTML += 'Scheduled Date:<br />';
+		
+		//task estimate creation
+		this.task_scheduled_date = document.createElement("input");
+		this.task_scheduled_date.setAttribute('id','task_scheduled_date');
+		this.task_scheduled_date.setAttribute('type','text');
+		this.data_form_new_task.appendChild(this.task_scheduled_date);
+		
+		this.data_form_new_task.innerHTML += 'Scheduled Time Hour:<br />';
+		
+		//task estimate creation
+		this.task_scheduled_time_hour = document.createElement("select");
+		this.task_scheduled_time_hour.setAttribute('id','task_scheduled_time_hour');
+		var new_html = '';
+		for(var i = 0; i < 23; i++)
+		{
+			new_html += '<option>' + i + '</option>';
+		}
+		this.task_scheduled_time_hour.innerHTML = new_html;
+		this.data_form_new_task.appendChild(this.task_scheduled_time_hour);
+		
+		this.data_form_new_task.innerHTML += 'Scheduled Time Minute:<br />';
+		
+		//task estimate creation
+		this.task_scheduled_time_minute = document.createElement("select");
+		this.task_scheduled_time_minute.setAttribute('id','task_scheduled_time_minute');
+		var new_html = '';
+		for(var i = 0; i < 60; i += 5)
+		{
+			new_html += '<option>' + i + '</option>';
+		}
+		this.task_scheduled_time_minute.innerHTML = new_html;
+		this.data_form_new_task.appendChild(this.task_scheduled_time_minute);
+		
+		this.data_form_new_task.innerHTML += '<br /><br />';
+		this.data_form_new_task.innerHTML += '<b>Reccurances</b><br />';
+		
+		this.data_form_new_task.innerHTML += 'Recurring:<br />';
+		
+		
+		//task recurring
+		this.task_recurring_select = document.createElement("select");
+		this.task_recurring_select.setAttribute('id','task_recurring_select');
+		this.task_recurring_select.innerHTML = '<option>False</option><option>True</option>';
+		this.data_form_new_task.appendChild(this.task_recurring_select);
+		
+		this.data_form_new_task.innerHTML += 'Recurrance Period (Hours):<br />';
+		
+		//task estimate creation
+		this.task_reccurance_period = document.createElement("input");
+		this.task_reccurance_period.setAttribute('id','task_reccurance_period');
+		this.task_reccurance_period.setAttribute('type','text');
+		this.task_reccurance_period.setAttribute('value','0');
+		this.data_form_new_task.appendChild(this.task_reccurance_period);
 		
 		this.data_form_new_task.innerHTML += '<br /><br />';
 		
@@ -439,6 +535,11 @@ function Task_Tab (task_div_id) {
 		div_tab.appendChild(this.data_form_new_task);
 		
 		$('#' + self.loading_image_add.id).hide();
+		
+		$('#' + self.task_scheduled_date.id).datepicker();
+		var date_to_set = new Date();
+		$('#' + self.task_scheduled_date.id).datepicker("setDate", date_to_set);
+		
 		
 	};
 	

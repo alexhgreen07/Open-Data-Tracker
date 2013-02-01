@@ -253,7 +253,7 @@ class Data_Interface {
 		return $return_json;
 	}
 	
-	public function Get_Task_Names()
+	public function Get_Start_Stop_Task_Names()
 	{
 		$return_json = array(
 			'authenticated' => 'false',
@@ -266,7 +266,7 @@ class Data_Interface {
 			
 			$return_json['authenticated'] = 'true';
 		
-			$sql_query = "SELECT DISTINCT `task_id`,`name`,`date_created` FROM `life_management`.`tasks`";
+			$sql_query = "SELECT DISTINCT `task_id`,`name`,`date_created` FROM `life_management`.`tasks` WHERE `status` != 'Completed'";
 			$result=mysql_query($sql_query);
 		
 			if($result)
@@ -338,7 +338,6 @@ class Data_Interface {
 		$return_json = array(
 			'authenticated' => 'false',
 			'success' => 'false',
-			'debug' => '',
 		);
 		
 		
@@ -346,7 +345,7 @@ class Data_Interface {
 		$task_name_to_enter = mysql_real_escape_string($task_name_to_enter);
 		$task_start_stop = mysql_real_escape_string($task_start_stop);
 		
-		$sql_query = "SELECT DISTINCT `task_id` FROM `life_management`.`tasks` WHERE `name` = '".$task_name_to_enter."'";
+		$sql_query = "SELECT DISTINCT `task_id` FROM `life_management`.`tasks` WHERE `name` = '".$task_name_to_enter."' AND `status` != 'Completed'";
 		$result=mysql_query($sql_query);
 
 		$task_id = mysql_result($result,0,"task_id");
@@ -366,8 +365,6 @@ class Data_Interface {
 				`status` = 'Started'";
 		}
 		
-		$return_json['debug'] = $sql;
-		
 		//execute insert
 		$success = mysql_query($sql);
 		
@@ -379,6 +376,71 @@ class Data_Interface {
 		{
 			$return_json['success'] = 'false';
 		}
+		
+		
+		
+		return $return_json;
+	}
+	
+	public function Task_Mark_Complete($task_name_to_enter)
+	{
+		$return_json = array(
+			'authenticated' => 'false',
+			'success' => 'false',
+		);
+		
+		try {
+			$task_name_to_enter = mysql_real_escape_string($task_name_to_enter);
+			$task_start_stop = mysql_real_escape_string($task_start_stop);
+			
+			//find the task by its name
+			$sql_query = "SELECT DISTINCT `task_id`, `recurring` FROM `life_management`.`tasks` WHERE `name` = '".$task_name_to_enter."'";
+			$result=mysql_query($sql_query);
+			
+			if(!$result)
+			{
+				throw new Exception('SQL error.');
+			}
+			
+			$task_id = mysql_result($result,0,"task_id");
+			$is_recurring = mysql_result($result,0,"recurring");
+			
+			//if it is not a recurring task, set it to compelete
+			if(!$is_recurring)
+			{
+				$sql = "UPDATE `tasks` SET `status`='Completed' WHERE `task_id`=".$task_id;
+			
+				//execute insert
+				$success = mysql_query($sql);
+				
+				if(!$success)
+				{
+					throw new Exception('SQL error.');
+				}
+			}
+			
+			//insert an entry into the log indicating the task is complete
+			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`status`) VALUES ('".$task_id."',NOW(),'Completed')";
+		
+			//execute insert
+			$success = mysql_query($sql);
+		
+			if(!$success)
+			{
+				throw new Exception('SQL error.');
+			}
+			
+			
+			$return_json['success'] = 'true';
+			
+			
+		} catch (MyException $e) {
+			/* rethrow it 
+			throw $e;*/
+			
+			$return_json['success'] = 'false';
+		}
+		
 		
 		
 		

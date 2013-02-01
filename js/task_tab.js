@@ -30,7 +30,7 @@ function Task_Tab (task_div_id) {
 		$('#' + self.loading_image_new.id).show();
 		
 		//execute the RPC callback for retrieving the item log
-		rpc.Data_Interface.Get_Task_Names(params,function(jsonRpcObj){
+		rpc.Data_Interface.Get_Start_Stop_Task_Names(params,function(jsonRpcObj){
 			
 			if(jsonRpcObj.result.authenticated == 'true')
 			{
@@ -51,6 +51,8 @@ function Task_Tab (task_div_id) {
 					
 					document.getElementById(self.task_name_select.id).innerHTML = new_inner_html;
 					
+					//refresh the task info div
+					self.On_Task_Name_Select_Change_Event();
 				}
 				else
 				{
@@ -95,53 +97,8 @@ function Task_Tab (task_div_id) {
 		});
 	};
 	
-	this.On_Complete_Click_Event = function() 
+	this.Start_Stop_Task = function(refresh_callback)
 	{
-		var params = new Array();
-		
-		var task_name = $('#' + this.task_name_select.id).val();
-		var task_start_stop = this.task_start_stop_button.value;
-		
-		//ensure it is not the first item in the list
-		if(task_name != '-')
-		{
-		
-			var self = this;
-		
-			//show the loader image
-			$('#' + self.loading_image_new.id).show();
-		
-			//execute the RPC callback for retrieving the item log
-			rpc.Data_Interface.Get_Tasks(params,function(jsonRpcObj){
-			
-				if(jsonRpcObj.result.success == 'true')
-				{
-			
-					
-			
-					alert('Task completed.');
-				}
-				else
-				{
-					alert('Task failed to complete.');
-				}
-			
-			
-				//hide the loader image
-				$('#' + self.loading_image_new.id).hide();
-		
-			});
-		
-		}
-		else
-		{
-			alert('Please select a valid task.');
-		}
-	};
-	
-	this.On_Start_Stop_Click_Event = function()
-	{
-		
 		var params = new Array();
 		
 		var task_name = $('#' + this.task_name_select.id).val();
@@ -187,6 +144,52 @@ function Task_Tab (task_div_id) {
 			
 				//hide the loader image
 				$('#' + self.loading_image_new.id).hide();
+				
+				refresh_callback();
+			});
+		
+		}
+		else
+		{
+			alert('Please select a valid task.');
+		}
+	};
+	
+	this.Mark_Task_Complete = function()
+	{
+		var params = new Array();
+		
+		var task_name = $('#' + this.task_name_select.id).val();
+		var task_start_stop = this.task_start_stop_button.value;
+		
+		//ensure it is not the first item in the list
+		if(task_name != '-')
+		{
+			params[0] = task_name;
+			
+			var self = this;
+		
+			//show the loader image
+			$('#' + self.loading_image_new.id).show();
+		
+			//execute the RPC callback for retrieving the item log
+			rpc.Data_Interface.Task_Mark_Complete(params,function(jsonRpcObj){
+			
+				if(jsonRpcObj.result.success == 'true')
+				{
+			
+					alert('Task completed.');
+				}
+				else
+				{
+					alert('Task failed to complete.');
+				}
+				
+				//refresh the list to remove this task
+				self.Refresh_Task_Name_List();
+			
+				//hide the loader image
+				$('#' + self.loading_image_new.id).hide();
 		
 			});
 		
@@ -195,6 +198,32 @@ function Task_Tab (task_div_id) {
 		{
 			alert('Please select a valid task.');
 		}
+	};
+	
+	this.On_Complete_Click_Event = function() 
+	{
+		var task_name = $('#' + this.task_name_select.id).val();
+		var task_start_stop = this.task_start_stop_button.value;
+		var self = this;
+		
+		//stop the task before marking it complete
+		if(task_start_stop == 'Stop')
+		{
+			this.Start_Stop_Task(function()
+			{
+				self.Mark_Task_Complete();
+			});
+		}
+		else
+		{
+			this.Mark_Task_Complete();
+		}
+	};
+	
+	this.On_Start_Stop_Click_Event = function()
+	{
+		
+		this.Start_Stop_Task();
 	};
 	
 	this.On_View_Task_Refresh_Click_Event = function()

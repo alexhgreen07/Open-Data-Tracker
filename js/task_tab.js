@@ -300,7 +300,10 @@ function Task_Tab (task_div_id) {
 		});
 		this.data_form_new_entry.appendChild(this.task_start_stop_button);
 		
-		
+		this.test_div = document.createElement("div");
+		this.test_div.innerHTML = '<br />';
+		this.data_form_new_entry.appendChild(this.test_div);
+
 		//task mark complete button creation
 		this.task_start_complete_button = document.createElement("input");
 		this.task_start_complete_button.setAttribute('id','task_entry_complete');

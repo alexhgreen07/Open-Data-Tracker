@@ -543,32 +543,6 @@ function Task_Tab (task_div_id) {
 		this.task_scheduled_date.setAttribute('type','text');
 		this.data_form_new_task.appendChild(this.task_scheduled_date);
 		
-		this.data_form_new_task.innerHTML += 'Scheduled Time Hour:<br />';
-		
-		//task estimate creation
-		this.task_scheduled_time_hour = document.createElement("select");
-		this.task_scheduled_time_hour.setAttribute('id','task_scheduled_time_hour');
-		var new_html = '';
-		for(var i = 0; i < 23; i++)
-		{
-			new_html += '<option>' + i + '</option>';
-		}
-		this.task_scheduled_time_hour.innerHTML = new_html;
-		this.data_form_new_task.appendChild(this.task_scheduled_time_hour);
-		
-		this.data_form_new_task.innerHTML += 'Scheduled Time Minute:<br />';
-		
-		//task estimate creation
-		this.task_scheduled_time_minute = document.createElement("select");
-		this.task_scheduled_time_minute.setAttribute('id','task_scheduled_time_minute');
-		var new_html = '';
-		for(var i = 0; i < 60; i += 5)
-		{
-			new_html += '<option>' + i + '</option>';
-		}
-		this.task_scheduled_time_minute.innerHTML = new_html;
-		this.data_form_new_task.appendChild(this.task_scheduled_time_minute);
-		
 		this.data_form_new_task.innerHTML += '<br /><br />';
 		this.data_form_new_task.innerHTML += '<b>Reccurances</b><br />';
 		
@@ -620,10 +594,9 @@ function Task_Tab (task_div_id) {
 		
 		$('#' + self.loading_image_add.id).hide();
 		
-		$('#' + self.task_scheduled_date.id).datepicker();
+		$('#' + self.task_scheduled_date.id).datetimepicker();
 		var date_to_set = new Date();
-		$('#' + self.task_scheduled_date.id).datepicker("setDate", date_to_set);
-		
+		$('#' + self.task_scheduled_date.id).datetimepicker("setDate", date_to_set);
 		
 	};
 	

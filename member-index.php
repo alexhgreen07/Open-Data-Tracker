@@ -23,6 +23,10 @@ Authorize_Session();
 	<script src="js/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js"></script>
 	<link rel="stylesheet" href="/resources/demos/style.css" />
 	
+	<!-- JQuery UI timepicker addon -->
+	<script src="js/jquery-ui-timerpicker-addon/jquery-ui-timepicker-addon.js"></script>
+	<link rel="stylesheet" href="js/jquery-ui-timerpicker-addon/jquery-ui-timepicker-addon.css" />
+	
 	<!-- JSON RPC Library -->
 	<script src="js/json-rpc2php-master/jsonRPC2php.client.js"></script>
 	

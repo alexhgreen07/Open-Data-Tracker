@@ -1,70 +1,35 @@
 <?php
 
 require_once('auth.php');
+require_once('data_interface_lib/home_data_interface.php');
+require_once('data_interface_lib/item_data_interface.php');
+require_once('data_interface_lib/task_data_interface.php');
 
 class Data_Interface {
+	
+	//this will store the open database link
+	private $database_link;
+	private $home_data_interface;
+	private $item_data_interface;
+	private $task_data_interface;
+	
+	public function Data_Interface($new_database_link) {
+		
+		//note this is expected to be initialized and open to the proper database
+		$this->database_link = $new_database_link;
+		
+		//create the new helper objects
+		$this->home_data_interface = new Home_Data_Interface($new_database_link);
+		$this->item_data_interface = new Item_Data_Interface($new_database_link);
+		$this->task_data_interface = new Task_Data_Interface($new_database_link);
+	}
 
 	public function Get_Home_Data_Summary()
 	{
-		$return_json = array(
-			'authenticated' => 'false',
-			'success' => 'false',
-			'html' => '',
-		);
 		
-		$titles_and_queries = array(
-			"1 Day Item Totals:" => "SELECT `unit` AS `name`, SUM( `value` ) AS `agg_value` 
-				FROM `item_log` 
-				WHERE DATEDIFF( NOW( ) , `time` ) < 1 GROUP BY `unit`",
-			"7 Day Item Averages:" => "SELECT `unit` AS `name`, (SUM( `value` ) / 7) AS `agg_value` 
-			FROM `item_log` 
-			WHERE DATEDIFF( NOW( ) , `time` ) <= 7 AND DATEDIFF( NOW( ) , `time` ) > 0 GROUP BY `unit`",
-			"1 Day Task Totals:" => "SELECT `tasks`.`name` AS `name`, SUM(`task_log`.`hours`) AS `agg_value` 
-			FROM `task_log`, `tasks` 
-			WHERE `task_log`.`task_id` = `tasks`.`task_id` 
-			AND DATEDIFF( NOW( ) , `task_log`.`start_time` ) < 1 GROUP BY `tasks`.`name`",
-			"7 Day Task Averages:" => "SELECT `tasks`.`name` AS `name`, (SUM(`task_log`.`hours`) / 7) AS `agg_value` 
-			FROM `task_log`, `tasks` 
-			WHERE `task_log`.`task_id` = `tasks`.`task_id` 
-			AND DATEDIFF( NOW( ) , `task_log`.`start_time` ) <= 7 
-			AND DATEDIFF( NOW( ) , `task_log`.`start_time` ) > 0 GROUP BY `tasks`.`name`",
-		);
-
-		$return_html = '';
-
-		foreach ($titles_and_queries as $title => $query) {
-		    
-		    	$return_html .= '
-			<b>'.$title.'</b> <br />
-			<table border="1" style="width:100%;">
-			<tr><td><b>Unit</b></td><td><b>Aggregate</b></td></tr>';
-
-
-			$result=mysql_query($query);
-			$num=mysql_numrows($result);
-
-
-			$i=0;
-			while ($i < $num) {
-	
-				$return_html .= '<tr>';
-	
-				$field1_name = mysql_result($result,$i,"name");
-				$field2_name = mysql_result($result,$i,"agg_value");
-
-				$return_html .= '<td style="width:50%;">'.$field1_name."</td>";
-				$return_html .= '<td style="width:50%;">'.round($field2_name,2)."</td>";
-			
-				$return_html .= '</tr>';
-
-				$i++;
-			}
-
-			$return_html .= '</table><br />';
-		    
-		}
+		$home_data_int = $this->home_data_interface;
 		
-		$return_json['html'] = $return_html;
+		$return_json = $home_data_int->Get_Home_Data_Summary();
 		
 		return $return_json;
 	}
@@ -72,143 +37,38 @@ class Data_Interface {
 	public function Insert_Item_Entry($value, $unit, $note)
 	{
 		
-		$return_json = array(
-			'authenticated' => 'false',
-			'success' => 'false',
-		);
+		$item_data_int = $this->item_data_interface;
 		
-		if(Is_Session_Authorized())
-		{
-			
-			$return_json['authenticated'] = 'true';
-			
-			$value = mysql_real_escape_string($value);
-
-			if($unit != "-")
-			{
-				$unit = mysql_real_escape_string($unit);
-			}
-			else
-			{
-				$unit = "";
-			}
-
-			$note = mysql_real_escape_string($note);
-
-			if($value != "")
-			{
+		$return_json = $item_data_int->Insert_Item_Entry($value, $unit, $note);
 		
-				$sql_insert = "INSERT INTO `life_management`.`item_log` (
-					`time` ,
-					`value` ,
-					`unit` ,
-					`note`
-					)
-					VALUES (
-					NOW(), '".$value."', '".$unit."', '".$note."')";
-
-				$success = mysql_query($sql_insert);
-			
-				if($success)
-				{
-					$return_json['success'] = 'true';
-				}
-				else
-				{
-					$return_json['success'] = 'false';
-				}
-			
-			
-
-			}
-		
-		}
-		else
-		{
-			$return_json['authenticated'] = 'false';
-			
-		}
-		
-		
-		return $return_json;		
+		return $return_json;	
 		
 	}
 	
 	public function Get_Items_Names()
 	{
-		$return_json = array(
-			'authenticated' => 'false',
-			'success' => 'false',
-			'items' => array(),
-		);
+		$item_data_int = $this->item_data_interface;
 		
-		if(Is_Session_Authorized())
-		{
-			
-			$return_json['authenticated'] = 'true';
-		
-			$sql_query = "SELECT DISTINCT `unit` FROM `life_management`.`item_log` ORDER BY `unit` asc";
-			$result=mysql_query($sql_query);
-		
-			if($result)
-			{
-				$return_json['success'] = 'true';
-			
-			
-				$num=mysql_numrows($result);
-
-				$i=0;
-				while ($i < $num) {
-
-					$row_result = mysql_result($result,$i,"unit");
-
-					if($row_result != "")
-					{
-
-						$return_json['items'][$i] = $row_result;
-	
-					}
-
-					$i++;
-				}
-			}
-			else
-			{
-				$return_json['success'] = 'false';
-			}
-		
-		}
-		else
-		{
-			$return_json['authenticated'] = 'false';
-		}
+		$return_json = $item_data_int->Get_Items_Names();
 		
 		return $return_json;
 	}
 	
-	public function Add_New_Item($args)
+	public function Add_New_Item()
 	{
 
-		$return_json = array(
-			'authenticated' => 'false',
-			'success' => 'false',
-		);
+		$item_data_int = $this->item_data_interface;
 		
-		//NOT IMPLEMENTED
-		
+		$return_json = $item_data_int->Add_New_Item();
 		
 		return $return_json;
 	}
 
-	public function Edit_Item($args)
+	public function Edit_Item()
 	{
-		$return_json = array(
-			'authenticated' => 'false',
-			'success' => 'false',
-		);
+		$item_data_int = $this->item_data_interface;
 		
-		
-		//NOT IMPLEMENTED
+		$return_json = $item_data_int->Edit_Item();
 		
 		return $return_json;
 	}
@@ -225,7 +85,7 @@ class Data_Interface {
 		$task_start_stop = mysql_real_escape_string($task_start_stop);
 	
 		$sql_query = "SELECT DISTINCT `task_id` FROM `life_management`.`tasks` WHERE `name` = '".$task_name_to_enter."'";
-		$result = mysql_query($sql_query);
+		$result = mysql_query($sql_query, $this->database_link);
 
 		$task_id = mysql_result($result,0,"task_id");
 
@@ -239,7 +99,7 @@ class Data_Interface {
 		}
 	
 		//execute insert
-		$success = mysql_query($sql);
+		$success = mysql_query($sql, $this->database_link);
 		
 		if($success)
 		{
@@ -269,7 +129,7 @@ class Data_Interface {
 			$sql_query = "SELECT DISTINCT `task_id`,`name`,`date_created`, `recurring`, `recurrance_period`, `scheduled_time`, `estimated_time` 
 				FROM `life_management`.`tasks` 
 				WHERE `status` != 'Completed'";
-			$result=mysql_query($sql_query);
+			$result=mysql_query($sql_query, $this->database_link);
 		
 			if($result)
 			{
@@ -294,7 +154,7 @@ class Data_Interface {
 						FROM `life_management`.`task_log` 
 						WHERE `task_id` = " . $task_id . 
 						" AND `status` = 'Started'";
-					$inner_result = mysql_query($inner_sql_query);
+					$inner_result = mysql_query($inner_sql_query, $this->database_link);
 					$started_task_count = mysql_numrows($inner_result);
 					
 					$status = 'Stopped';
@@ -360,7 +220,7 @@ class Data_Interface {
 		$task_start_stop = mysql_real_escape_string($task_start_stop);
 		
 		$sql_query = "SELECT DISTINCT `task_id` FROM `life_management`.`tasks` WHERE `name` = '".$task_name_to_enter."' AND `status` != 'Completed'";
-		$result=mysql_query($sql_query);
+		$result=mysql_query($sql_query, $this->database_link);
 
 		$task_id = mysql_result($result,0,"task_id");
 
@@ -380,7 +240,7 @@ class Data_Interface {
 		}
 		
 		//execute insert
-		$success = mysql_query($sql);
+		$success = mysql_query($sql, $this->database_link);
 		
 		if($success)
 		{
@@ -409,7 +269,7 @@ class Data_Interface {
 			
 			//find the task by its name
 			$sql_query = "SELECT DISTINCT `task_id`, `recurring` FROM `life_management`.`tasks` WHERE `name` = '".$task_name_to_enter."'";
-			$result=mysql_query($sql_query);
+			$result=mysql_query($sql_query, $this->database_link);
 			
 			if(!$result)
 			{
@@ -425,7 +285,7 @@ class Data_Interface {
 				$sql = "UPDATE `tasks` SET `status`='Completed' WHERE `task_id`=".$task_id;
 			
 				//execute insert
-				$success = mysql_query($sql);
+				$success = mysql_query($sql, $this->database_link);
 				
 				if(!$success)
 				{
@@ -437,7 +297,7 @@ class Data_Interface {
 			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`status`) VALUES ('".$task_id."',NOW(),'Completed')";
 		
 			//execute insert
-			$success = mysql_query($sql);
+			$success = mysql_query($sql, $this->database_link);
 		
 			if(!$success)
 			{
@@ -481,7 +341,7 @@ class Data_Interface {
 		$sql .= "'".$task_note."')";
 	
 	
-		$success = mysql_query($sql);
+		$success = mysql_query($sql, $this->database_link);
 		
 		if($success)
 		{
@@ -509,7 +369,7 @@ class Data_Interface {
 			$return_json['authenticated'] = 'true';
 		
 			$sql_query = "SELECT DISTINCT `name`,`description`,`date_created`,`estimated_time` FROM `life_management`.`tasks`";
-			$result=mysql_query($sql_query);
+			$result=mysql_query($sql_query, $this->database_link);
 		
 			if($result)
 			{
@@ -578,7 +438,7 @@ class Data_Interface {
 		$return_html = '';
 		
 		$query="SELECT * FROM `life_management`.`item_log` order by `time` desc";
-		$result=mysql_query($query);
+		$result=mysql_query($query, $this->database_link);
 
 		$num=mysql_numrows($result);
 		

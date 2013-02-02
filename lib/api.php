@@ -20,9 +20,11 @@ if(!$db) {
 	die("Unable to select database");
 }
 
-//initialize and process RPC requests
-$myClass = new Data_Interface();
+//initialize the API class and the RPC interface
+$myClass = new Data_Interface($link);
 $jsonRpc = new jsonRPCServer();
+
+//register class and process requests
 $jsonRpc->registerClass($myClass);
 $jsonRpc->handle() or die('no request');
 

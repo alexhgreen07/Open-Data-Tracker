@@ -227,6 +227,31 @@ function Task_Tab (task_div_id) {
 		}
 	};
 	
+	this.Refresh_Timer_Display = function()
+	{
+		var self = this;
+		var new_html = '';
+			
+		if(self.task_start_stop_button.value == 'Stop')
+		{
+			var currentTime = new Date();
+			
+			var time_diff_seconds = (currentTime - self.current_task_start_time)/1000;
+			var days = Math.floor(time_diff_seconds / 60 / 60 / 24);
+			var hours = Math.floor(time_diff_seconds / 60 / 60) % 24;
+			var minutes = Math.floor(time_diff_seconds / 60) % 60;
+
+			var seconds = Math.floor(time_diff_seconds % 60);
+			
+			new_html += "Running Time: " + days + ":" + hours + ":" + minutes + ":" + seconds;
+			new_html += '<br /><br />';
+			
+			
+		}
+		
+		self.task_timer_div.innerHTML = new_html;
+	};
+	
 	this.On_Complete_Click_Event = function() 
 	{
 		var task_name = $('#' + this.task_name_select.id).val();
@@ -273,8 +298,6 @@ function Task_Tab (task_div_id) {
 		
 		//execute the RPC callback for retrieving the item log
 		rpc.Data_Interface.Add_New_Task(params,function(jsonRpcObj){
-			
-			
 			
 			//hide the loader image
 			$('#' + self.loading_image_add.id).hide();
@@ -342,30 +365,6 @@ function Task_Tab (task_div_id) {
 		//refresh the timer
 		this.Refresh_Timer_Display();
 					
-	};
-	
-	this.Refresh_Timer_Display = function()
-	{
-		var self = this;
-		var new_html = '';
-			
-		if(self.task_start_stop_button.value == 'Stop')
-		{
-			var currentTime = new Date();
-			
-			var time_diff_seconds = (currentTime - self.current_task_start_time)/1000;
-			var days = Math.floor(time_diff_seconds / 60 / 60 / 24);
-			var hours = Math.floor(time_diff_seconds / 60 / 60) % 24;
-			var minutes = Math.floor(time_diff_seconds / 60) % 60;
-			var seconds = Math.floor(time_diff_seconds % 60);
-			
-			new_html += "Running Time: " + days + ":" + hours + ":" + minutes + ":" + seconds;
-			new_html += '<br /><br />';
-			
-			
-		}
-		
-		self.task_timer_div.innerHTML = new_html;
 	};
 	
 	this.Render_New_Task_Entry_Form = function(form_div_id) {

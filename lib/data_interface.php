@@ -266,7 +266,9 @@ class Data_Interface {
 			
 			$return_json['authenticated'] = 'true';
 		
-			$sql_query = "SELECT DISTINCT `task_id`,`name`,`date_created` FROM `life_management`.`tasks` WHERE `status` != 'Completed'";
+			$sql_query = "SELECT DISTINCT `task_id`,`name`,`date_created`, `recurring`, `recurrance_period`, `scheduled_time`, `estimated_time` 
+				FROM `life_management`.`tasks` 
+				WHERE `status` != 'Completed'";
 			$result=mysql_query($sql_query);
 		
 			if($result)
@@ -280,11 +282,17 @@ class Data_Interface {
 				while ($i < $num) {
 					
 					$item_name = mysql_result($result,$i,"name");
+					$task_id = mysql_result($result,$i,"task_id");
+					$date_created = mysql_result($result,$i,'date_created');
+					$recurring = mysql_result($result,$i,'recurring');
+					$recurrance_period = mysql_result($result,$i,'recurrance_period');
+					$scheduled_time = mysql_result($result,$i,'scheduled_time');
+					$estimated_time = mysql_result($result,$i,'estimated_time');
 					
 					//check if the task has been started yet
 					$inner_sql_query = "SELECT `task_id`, `start_time` 
 						FROM `life_management`.`task_log` 
-						WHERE `task_id` = " . mysql_result($result,$i,"task_id") . 
+						WHERE `task_id` = " . $task_id . 
 						" AND `status` = 'Started'";
 					$inner_result = mysql_query($inner_sql_query);
 					$started_task_count = mysql_numrows($inner_result);
@@ -310,6 +318,12 @@ class Data_Interface {
 						$return_json['items'][$i] = array(
 							'item_name' => $item_name,
 							'item_status' => $status,
+							'task_id' => $task_id,
+							'date_created' => $date_created,
+							'recurring' => $recurring,
+							'recurrance_period' => $recurrance_period,
+							'scheduled_time' => $scheduled_time,
+							'estimated_time' => $estimated_time,
 							'start_time' => $start_time,
 						);
 

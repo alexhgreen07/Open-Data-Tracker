@@ -40,13 +40,24 @@ function Task_Tab (task_div_id) {
 					//ensure the task info array is saved
 					self.task_info_json_array = jsonRpcObj.result.items;
 					
+					//create a list of options for the select
 					var new_inner_html = '';
 					
 					new_inner_html += '<option>-</option>';
 					
+					//iterate through all tasks
 					for (var i = 0; i < self.task_info_json_array.length; i++)
 					{
+						//add task option to select
 						new_inner_html += '<option>' + self.task_info_json_array[i].item_name + '</option>';
+						
+						//format task start datetime
+						if(self.task_info_json_array[i].start_time != '')
+						{
+							//change start date string to javascript date object
+							var t = self.task_info_json_array[i].start_time.split(/[- :]/);
+							self.task_info_json_array[i].start_time = new Date(t[0], t[1]-1, t[2], t[3], t[4], t[5]);
+						}
 					}
 					
 					document.getElementById(self.task_name_select.id).innerHTML = new_inner_html;
@@ -101,6 +112,10 @@ function Task_Tab (task_div_id) {
 	{
 		var params = new Array();
 		
+		//retrieve the selected item from the info array
+		var selected_index = document.getElementById(this.task_name_select.id).selectedIndex;
+		var selected_task = this.task_info_json_array[selected_index - 1];
+		
 		var task_name = $('#' + this.task_name_select.id).val();
 		var task_start_stop = this.task_start_stop_button.value;
 		
@@ -124,16 +139,28 @@ function Task_Tab (task_div_id) {
 			
 					if(self.task_start_stop_button.value == 'Start')
 					{
-						self.current_task_start_time = new Date();
-						self.Refresh_Timer_Display();
+						//set the new fiels for the task
+						selected_task.start_time = new Date();
+						self.current_task_start_time = selected_task.start_time;
+						selected_task.item_status = 'Started';
 					
 						self.task_start_stop_button.value = 'Stop';
 					}
 					else
 					{
+						//set the new fields for the task
+						selected_task.start_time = '';
+						selected_task.item_status = 'Stopped';
+						
 						self.task_start_stop_button.value = 'Start';
 					}
-			
+					
+					//refresh the info div
+					self.On_Task_Name_Select_Change_Event();
+					
+					//refresh the timer
+					self.Refresh_Timer_Display();
+				
 				
 				}
 				else
@@ -282,7 +309,13 @@ function Task_Tab (task_div_id) {
 		{
 		
 			var new_item = this.task_info_json_array[selected_index - 1];
-		
+			
+			new_html += 'Task ID: ' + new_item.task_id + '<br />';
+			new_html += 'Date Created: ' + new_item.date_created + '<br />';
+			new_html += 'Recurring: ' + new_item.recurring + '<br />';
+			new_html += 'Recurrance Period: ' + new_item.recurrance_period + '<br />';
+			new_html += 'Estimated Time (Hours): ' + new_item.estimated_time + '<br />';
+			new_html += 'Scheduled Time: ' + new_item.scheduled_time + '<br />';
 			new_html += 'Status: ' + new_item.item_status + '<br />';
 			new_html += 'Start Time: ' + new_item.start_time + '<br />';
 			
@@ -305,6 +338,10 @@ function Task_Tab (task_div_id) {
 		new_html += '<br />';
 		
 		this.task_info_div.innerHTML = new_html;
+		
+		//refresh the timer
+		this.Refresh_Timer_Display();
+					
 	};
 	
 	this.Refresh_Timer_Display = function()

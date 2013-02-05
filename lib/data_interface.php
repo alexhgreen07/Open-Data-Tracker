@@ -85,12 +85,12 @@ class Data_Interface {
 		return $return_json;
 	}
 	
-	public function Insert_Task_Entry($start_time, $task_id, $hours, $completed)
+	public function Insert_Task_Entry($start_time, $task_id, $hours, $completed, $note)
 	{
 		
 		$task_data_int = $this->task_data_interface;
 		
-		$return_json = $task_data_int->Insert_Task_Entry($start_time, $task_id, $hours, $completed);
+		$return_json = $task_data_int->Insert_Task_Entry($start_time, $task_id, $hours, $completed, $note);
 		
 		return $return_json;
 	}
@@ -104,11 +104,11 @@ class Data_Interface {
 		return $return_json;
 	}
 	
-	public function Task_Start_Stop($task_name_to_enter, $task_start_stop)
+	public function Task_Start_Stop($task_name_to_enter, $task_start_stop, $note)
 	{
 		$task_data_int = $this->task_data_interface;
 		
-		$return_json = $task_data_int->Task_Start_Stop($task_name_to_enter, $task_start_stop);
+		$return_json = $task_data_int->Task_Start_Stop($task_name_to_enter, $task_start_stop, $note);
 		
 		return $return_json;
 	}

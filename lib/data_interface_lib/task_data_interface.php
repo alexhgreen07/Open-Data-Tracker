@@ -13,7 +13,7 @@ class Task_Data_Interface {
 	}
 	
 	
-	public function Insert_Task_Entry($start_time, $task_id, $hours, $completed)
+	public function Insert_Task_Entry($start_time, $task_id, $hours, $completed, $note)
 	{
 		
 		$return_json = array(
@@ -25,6 +25,7 @@ class Task_Data_Interface {
 		$task_id = mysql_real_escape_string($task_id);
 		$hours = mysql_real_escape_string($hours);
 		$completed = mysql_real_escape_string($completed);
+		$note = mysql_real_escape_string($note);
 		
 		try
 		{
@@ -48,11 +49,12 @@ class Task_Data_Interface {
 				$status = "Stopped";
 			}
 		
-			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`hours`, `status`) VALUES ('".
+			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`hours`, `status`, `note`) VALUES ('".
 				$task_id."','".
 				$start_time."','".
 				$hours."', '".
-				$status."')";
+				$status."','".
+				$note."')";
 	
 			//execute insert
 			$success = mysql_query($sql, $this->database_link);
@@ -168,7 +170,7 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 	
-	public function Task_Start_Stop($task_name_to_enter, $task_start_stop)
+	public function Task_Start_Stop($task_name_to_enter, $task_start_stop, $note)
 	{
 		$return_json = array(
 			'authenticated' => 'false',
@@ -179,6 +181,7 @@ class Task_Data_Interface {
 		
 		$task_name_to_enter = mysql_real_escape_string($task_name_to_enter);
 		$task_start_stop = mysql_real_escape_string($task_start_stop);
+		$note = mysql_real_escape_string($note);
 		
 		$sql_query = "SELECT DISTINCT `task_id` FROM `life_management`.`tasks` WHERE `name` = '".$task_name_to_enter."' AND `status` != 'Completed'";
 		$result=mysql_query($sql_query, $this->database_link);
@@ -187,14 +190,15 @@ class Task_Data_Interface {
 
 		if($task_start_stop == "Start")
 		{
-			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`status`) VALUES ('".$task_id."',NOW(),'Started')";
+			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`status`,`note`) VALUES ('".$task_id."',NOW(),'Started','".$note."')";
 		}
 		else
 		{
 			$sql = "UPDATE `task_log` 
 				SET 
 				`hours`=(TIMESTAMPDIFF(SECOND,`start_time`,NOW())/60/60),
-				`status`='Stopped'
+				`status`='Stopped',
+				`note`='".$note."'
 				WHERE `task_id` = '".$task_id."' AND 
 				`hours` = 0 AND
 				`status` = 'Started'";

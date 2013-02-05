@@ -123,10 +123,13 @@ function Task_Tab (task_div_id) {
 			var selected_task = this.task_info_json_array[selected_index - 1];
 			var task_time = $('#' + this.task_entry_start_time.id).val();
 			var duration = $('#' + this.task_entry_duration.id).val();
+			var task_note = $('#' + this.task_entry_note.id).val();
 		
 			params[0] = task_time;
 			params[1] = selected_task.task_id;
 			params[2] = duration;
+			params[3] = 0;
+			params[4] = task_note;
 			
 			if(is_completed)
 			{
@@ -147,7 +150,10 @@ function Task_Tab (task_div_id) {
 			
 				if(jsonRpcObj.result.success == 'true')
 				{
-			
+					
+					$('#' + self.task_entry_duration.id).val('0');
+					$('#' + self.task_entry_note.id).val('');
+					
 					alert('Task entry submitted.');
 			
 				}
@@ -176,6 +182,7 @@ function Task_Tab (task_div_id) {
 		
 		var task_name = $('#' + this.task_name_select.id).val();
 		var task_start_stop = this.task_start_stop_button.value;
+		var task_note = $('#' + this.task_timecard_note.id).val();
 		
 		//ensure it is not the first item in the list
 		if(task_name != '-')
@@ -183,6 +190,7 @@ function Task_Tab (task_div_id) {
 		
 			params[0] = task_name;
 			params[1] = task_start_stop;
+			params[2] = task_note;
 		
 			var self = this;
 		
@@ -201,7 +209,8 @@ function Task_Tab (task_div_id) {
 						selected_task.start_time = new Date();
 						self.current_task_start_time = selected_task.start_time;
 						selected_task.item_status = 'Started';
-					
+						
+						$('#' + self.task_timecard_note_div.id).show();
 						self.task_start_stop_button.value = 'Stop';
 					}
 					else
@@ -210,6 +219,7 @@ function Task_Tab (task_div_id) {
 						selected_task.start_time = '';
 						selected_task.item_status = 'Stopped';
 						
+						$('#' + self.task_timecard_note_div.id).hide();
 						self.task_start_stop_button.value = 'Start';
 					}
 					
@@ -449,6 +459,14 @@ function Task_Tab (task_div_id) {
 		});
 		this.data_form_timecard_entry.appendChild(this.task_name_select);
 		
+		this.task_timecard_note_div = document.createElement("div");
+		this.task_timecard_note_div.setAttribute('id','task_timecard_note_div');
+		this.task_timecard_note_div.innerHTML = 'Note:<br />';
+		this.task_timecard_note = document.createElement("input");
+		this.task_timecard_note.setAttribute('id','task_timecard_note');
+		this.task_timecard_note_div.appendChild(this.task_timecard_note);
+		this.data_form_timecard_entry.appendChild(this.task_timecard_note_div);
+		
 		//info div creation
 		this.task_info_div = document.createElement("div");
 		this.task_info_div.setAttribute('id','task_info_div');
@@ -508,6 +526,7 @@ function Task_Tab (task_div_id) {
 		div_tab.appendChild(this.data_form_timecard_entry);
 		
 		$('#' + self.loading_image_new.id).hide();
+		$('#' + self.task_timecard_note_div.id).hide();
 		
 		//this is used to update the timer value on running tasks
 		window.setInterval(function()
@@ -560,6 +579,14 @@ function Task_Tab (task_div_id) {
 		this.task_entry_duration.setAttribute('type','text');
 		this.task_entry_duration.setAttribute('value','0');
 		this.data_form_new_entry.appendChild(this.task_entry_duration);
+		
+		this.data_form_new_entry.innerHTML += 'Note:<br />';
+		
+		this.task_entry_note = document.createElement("input");
+		this.task_entry_note.setAttribute('name','task_entry_note');
+		this.task_entry_note.setAttribute('id','task_entry_note');
+		this.task_entry_note.setAttribute('type','text');
+		this.data_form_new_entry.appendChild(this.task_entry_note);
 		
 		this.data_form_new_entry.innerHTML += '<br /><br />';
 		

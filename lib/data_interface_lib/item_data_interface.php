@@ -13,7 +13,7 @@ class Item_Data_Interface {
 	}
 	
 	
-	public function Insert_Item_Entry($value, $unit, $note)
+	public function Insert_Item_Entry($value, $item_id, $note)
 	{
 		
 		$return_json = array(
@@ -28,13 +28,13 @@ class Item_Data_Interface {
 			
 			$value = mysql_real_escape_string($value);
 
-			if($unit != "-")
+			if($item_id != "-")
 			{
-				$unit = mysql_real_escape_string($unit);
+				$item_id = mysql_real_escape_string($item_id);
 			}
 			else
 			{
-				$unit = "";
+				$item_id = "";
 			}
 
 			$note = mysql_real_escape_string($note);
@@ -45,11 +45,11 @@ class Item_Data_Interface {
 				$sql_insert = "INSERT INTO `life_management`.`item_log` (
 					`time` ,
 					`value` ,
-					`unit` ,
+					`item_id` ,
 					`note`
 					)
 					VALUES (
-					NOW(), '".$value."', '".$unit."', '".$note."')";
+					NOW(), '".$value."', '".$item_id."', '".$note."')";
 
 				$success = mysql_query($sql_insert, $this->database_link);
 			
@@ -78,7 +78,7 @@ class Item_Data_Interface {
 		
 	}
 	
-	public function Get_Items_Names()
+	public function Get_Items()
 	{
 		$return_json = array(
 			'authenticated' => 'false',
@@ -91,7 +91,7 @@ class Item_Data_Interface {
 			
 			$return_json['authenticated'] = 'true';
 		
-			$sql_query = "SELECT DISTINCT `unit` FROM `life_management`.`item_log` ORDER BY `unit` asc";
+			$sql_query = "SELECT `item_id`, `name`, `description`, `unit`, `date_created` FROM `life_management`.`items` ORDER BY `name` asc";
 			$result=mysql_query($sql_query, $this->database_link);
 		
 			if($result)
@@ -103,13 +103,24 @@ class Item_Data_Interface {
 
 				$i=0;
 				while ($i < $num) {
+					
+					$item_name = mysql_result($result,$i,"name");
+					$item_description = mysql_result($result,$i,'description');
+					$item_unit = mysql_result($result,$i,"unit");
+					$item_date_created = mysql_result($result,$i,'date_created');
+					$item_id = mysql_result($result,$i,"item_id");
 
-					$row_result = mysql_result($result,$i,"unit");
-
-					if($row_result != "")
+					if($item_name != "")
 					{
-
-						$return_json['items'][$i] = $row_result;
+						$return_json['items'][$i] = array(
+							'item_name' => $item_name,
+							'item_description' => $item_description,
+							'item_unit' => $item_unit,
+							'date_created' => $item_date_created,
+							'item_id' => $item_id,
+						);
+						
+						//$return_json['items'][$i] = $row_result;
 	
 					}
 
@@ -130,7 +141,7 @@ class Item_Data_Interface {
 		return $return_json;
 	}
 	
-	public function Add_New_Item()
+	public function Add_New_Item($name, $unit, $description)
 	{
 
 		$return_json = array(
@@ -138,8 +149,39 @@ class Item_Data_Interface {
 			'success' => 'false',
 		);
 		
-		//NOT IMPLEMENTED
+		$name = mysql_real_escape_string($name);
+		$unit = mysql_real_escape_string($unit);
+		$description = mysql_real_escape_string($description);
 		
+		if(Is_Session_Authorized())
+		{
+			$return_json['authenticated'] = 'true';
+			
+			if($name != "")
+			{
+		
+				$sql_insert = "INSERT INTO `items`(`date_created`,`name`, `unit`, `description`) VALUES (
+					NOW(), '".$name."', '".$unit."', '".$description."')";
+
+				$success = mysql_query($sql_insert, $this->database_link);
+			
+				if($success)
+				{
+					$return_json['success'] = 'true';
+				}
+				else
+				{
+					$return_json['success'] = 'false';
+				}
+			
+			
+
+			}
+		}
+		else
+		{
+			$return_json['authenticated'] = 'false';
+		}
 		
 		return $return_json;
 	}

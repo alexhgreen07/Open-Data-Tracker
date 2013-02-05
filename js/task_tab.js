@@ -61,6 +61,7 @@ function Task_Tab (task_div_id) {
 					}
 					
 					document.getElementById(self.task_name_select.id).innerHTML = new_inner_html;
+					document.getElementById(self.add_task_entry_task_name_select.id).innerHTML = new_inner_html;
 					
 					//refresh the task info div
 					self.On_Task_Name_Select_Change_Event();
@@ -106,6 +107,63 @@ function Task_Tab (task_div_id) {
 			
 			refresh_callback();
 		});
+	};
+	
+	this.Insert_Task_Entry = function(is_completed)
+	{
+		var self = this;
+		var params = new Array();
+		
+		//retrieve the selected item from the info array
+		var selected_index = document.getElementById(this.add_task_entry_task_name_select.id).selectedIndex;
+		
+		if(selected_index > 0)
+		{
+		
+			var selected_task = this.task_info_json_array[selected_index - 1];
+			var task_time = $('#' + this.task_entry_start_time.id).val();
+			var duration = $('#' + this.task_entry_duration.id).val();
+		
+			params[0] = task_time;
+			params[1] = selected_task.task_id;
+			params[2] = duration;
+			
+			if(is_completed)
+			{
+			
+				params[3] = 1;
+			
+			}
+			else
+			{
+				params[3] = 0;
+			}
+			
+			//show the loader image
+			$('#' + self.add_task_entry_loading_image_new.id).show();
+		
+			//execute the RPC callback for retrieving the item log
+			rpc.Data_Interface.Insert_Task_Entry(params,function(jsonRpcObj){
+			
+				if(jsonRpcObj.result.success == 'true')
+				{
+			
+					alert('Task entry submitted.');
+			
+				}
+				else
+				{
+					alert('Failed to insert task entry.');
+				}
+			
+			
+				//hide the loader image
+				$('#' + self.add_task_entry_loading_image_new.id).hide();
+				
+				refresh_callback();
+			});
+		
+		}
 	};
 	
 	this.Start_Stop_Task = function(refresh_callback)
@@ -367,16 +425,16 @@ function Task_Tab (task_div_id) {
 					
 	};
 	
-	this.Render_New_Task_Entry_Form = function(form_div_id) {
+	this.Render_Timecard_Task_Entry_Form = function(form_div_id) {
 		
 		var self = this;
 		
 		//create the top form
-		this.data_form_new_entry = document.createElement("form");
-		this.data_form_new_entry.setAttribute('method',"post");
-		this.data_form_new_entry.setAttribute('id',"add_task_entry_form");
+		this.data_form_timecard_entry = document.createElement("form");
+		this.data_form_timecard_entry.setAttribute('method',"post");
+		this.data_form_timecard_entry.setAttribute('id',"timecard_task_entry_form");
 	
-		this.data_form_new_entry.innerHTML += 'Tasks:<br />';
+		this.data_form_timecard_entry.innerHTML += 'Tasks:<br />';
 		
 		//task name select dropdown
 		this.task_name_select = document.createElement("select");
@@ -389,16 +447,16 @@ function Task_Tab (task_div_id) {
 			self.On_Task_Name_Select_Change_Event();
 			
 		});
-		this.data_form_new_entry.appendChild(this.task_name_select);
+		this.data_form_timecard_entry.appendChild(this.task_name_select);
 		
 		//info div creation
 		this.task_info_div = document.createElement("div");
 		this.task_info_div.setAttribute('id','task_info_div');
 		this.task_info_div.innerHTML = 'Info:<br /><br />';
-		this.data_form_new_entry.appendChild(this.task_info_div);
+		this.data_form_timecard_entry.appendChild(this.task_info_div);
 		
 		this.task_timer_div = document.createElement("div");
-		this.data_form_new_entry.appendChild(this.task_timer_div);
+		this.data_form_timecard_entry.appendChild(this.task_timer_div);
 		
 		//task start/stop button creation
 		this.task_start_stop_button = document.createElement("input");
@@ -415,11 +473,11 @@ function Task_Tab (task_div_id) {
 			//execute the click event
 			self.On_Start_Stop_Click_Event();
 		});
-		this.data_form_new_entry.appendChild(this.task_start_stop_button);
+		this.data_form_timecard_entry.appendChild(this.task_start_stop_button);
 		
 		this.test_div = document.createElement("div");
 		this.test_div.innerHTML = '<br />';
-		this.data_form_new_entry.appendChild(this.test_div);
+		this.data_form_timecard_entry.appendChild(this.test_div);
 
 		//task mark complete button creation
 		this.task_start_complete_button = document.createElement("input");
@@ -436,18 +494,18 @@ function Task_Tab (task_div_id) {
 			//execute the click event
 			self.On_Complete_Click_Event();
 		});
-		this.data_form_new_entry.appendChild(this.task_start_complete_button);
+		this.data_form_timecard_entry.appendChild(this.task_start_complete_button);
 		
 		
 		this.loading_image_new = document.createElement("img");
 		this.loading_image_new.setAttribute('id','task_tab_new_entry_loader_image');
 		this.loading_image_new.setAttribute('style','width:100%;height:19px;');
 		this.loading_image_new.setAttribute('src','ajax-loader.gif');
-		this.data_form_new_entry.appendChild(this.loading_image_new);
+		this.data_form_timecard_entry.appendChild(this.loading_image_new);
 		
 		var div_tab = document.getElementById(form_div_id);
 
-		div_tab.appendChild(this.data_form_new_entry);
+		div_tab.appendChild(this.data_form_timecard_entry);
 		
 		$('#' + self.loading_image_new.id).hide();
 		
@@ -459,6 +517,110 @@ function Task_Tab (task_div_id) {
 			
 		}, 
 		1000);
+	};
+	
+	
+	this.Render_New_Task_Entry_Form = function(form_div_id) {
+		
+		var self = this;
+		
+		//create the top form
+		this.data_form_new_entry = document.createElement("form");
+		this.data_form_new_entry.setAttribute('method',"post");
+		this.data_form_new_entry.setAttribute('id',"add_task_entry_form");
+	
+		this.data_form_new_entry.innerHTML += 'Tasks:<br />';
+		
+		//task name select dropdown
+		this.add_task_entry_task_name_select = document.createElement("select");
+		this.add_task_entry_task_name_select.setAttribute('name',"add_task_entry_name_to_enter");
+		this.add_task_entry_task_name_select.setAttribute('id',"add_task_entry_name_to_enter");
+		this.add_task_entry_task_name_select.innerHTML = '<option>-</option>';
+		$(this.add_task_entry_task_name_select).change(function() {
+			
+			//call the change event function
+			//self.On_Task_Name_Select_Change_Event();
+			
+		});
+		this.data_form_new_entry.appendChild(this.add_task_entry_task_name_select);
+		
+		this.data_form_new_entry.innerHTML += 'Start Time:<br />';
+		
+		this.task_entry_start_time = document.createElement("input");
+		this.task_entry_start_time.setAttribute('name','task_entry_start_time');
+		this.task_entry_start_time.setAttribute('id','task_entry_start_time');
+		this.task_entry_start_time.setAttribute('type','text');
+		this.data_form_new_entry.appendChild(this.task_entry_start_time);
+		
+		this.data_form_new_entry.innerHTML += 'Duration:<br />';
+		
+		this.task_entry_duration = document.createElement("input");
+		this.task_entry_duration.setAttribute('name','task_entry_duration');
+		this.task_entry_duration.setAttribute('id','task_entry_duration');
+		this.task_entry_duration.setAttribute('type','text');
+		this.task_entry_duration.setAttribute('value','0');
+		this.data_form_new_entry.appendChild(this.task_entry_duration);
+		
+		this.data_form_new_entry.innerHTML += '<br /><br />';
+		
+		//task submit button creation
+		this.add_task_entry_task_submit_button = document.createElement("input");
+		this.add_task_entry_task_submit_button.setAttribute('id','new_task_entry_submit');
+		this.add_task_entry_task_submit_button.setAttribute('type','submit');
+		this.add_task_entry_task_submit_button.value = 'Submit';
+		this.data_form_new_entry.appendChild(this.add_task_entry_task_submit_button);
+		
+		this.data_form_new_entry.innerHTML += '<br /><br />';
+		
+		//task mark complete button creation
+		this.add_task_entry_task_complete_button = document.createElement("input");
+		this.add_task_entry_task_complete_button.setAttribute('id','new_task_entry_complete');
+		this.add_task_entry_task_complete_button.setAttribute('type','submit');
+		this.add_task_entry_task_complete_button.value = 'Mark Complete';
+		this.data_form_new_entry.appendChild(this.add_task_entry_task_complete_button);
+		
+		this.add_task_entry_loading_image_new = document.createElement("img");
+		this.add_task_entry_loading_image_new.setAttribute('id','add_task_entry_tab_new_entry_loader_image');
+		this.add_task_entry_loading_image_new.setAttribute('style','width:100%;height:19px;');
+		this.add_task_entry_loading_image_new.setAttribute('src','ajax-loader.gif');
+		this.data_form_new_entry.appendChild(this.add_task_entry_loading_image_new);
+
+		
+		var div_tab = document.getElementById(form_div_id);
+
+		div_tab.appendChild(this.data_form_new_entry);
+		
+		$('#' + this.add_task_entry_task_submit_button.id).button();
+		$('#' + this.add_task_entry_task_submit_button.id).click(function( event ) {
+			
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			//execute the click event
+			self.Insert_Task_Entry(false);
+		});
+		
+		
+		$('#' + this.add_task_entry_task_complete_button.id).button();
+		$('#' + this.add_task_entry_task_complete_button.id).click(function( event ) {
+			
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			
+			//execute the click event
+			self.Insert_Task_Entry(true);
+		});
+		
+		
+		$('#' + self.add_task_entry_loading_image_new.id).hide();
+		
+		$('#' + this.task_entry_start_time.id).datetimepicker({
+			timeFormat: "HH:mm",
+			dateFormat: 'yy-mm-dd'
+		});
+		$('#' + this.task_entry_start_time.id).datetimepicker("setDate", new Date());
+		
 	};
 	
 	//render function (div must already exist)
@@ -643,11 +805,11 @@ function Task_Tab (task_div_id) {
 		
 		tabs_array[0] = new Array();
 		tabs_array[0][0] = "Timecard Task Entry";
-		tabs_array[0][1] = '<div id="new_task_entry_div"></div>';
+		tabs_array[0][1] = '<div id="timecard_task_entry_div"></div>';
 		
 		tabs_array[1] = new Array();
 		tabs_array[1][0] = "New Task Entry";
-		tabs_array[1][1] = 'Under construction...';
+		tabs_array[1][1] = '<div id="new_task_entry_div"></div>';
 		
 		tabs_array[2] = new Array();
 		tabs_array[2][0] = "View Tasks";
@@ -673,6 +835,8 @@ function Task_Tab (task_div_id) {
 		task_accordian.Render();
 		
 		//now render all accordian tabs
+		this.Render_Timecard_Task_Entry_Form('timecard_task_entry_div');
+		
 		this.Render_New_Task_Entry_Form('new_task_entry_div');
 		
 		this.Render_New_Task_Form('add_task_div');

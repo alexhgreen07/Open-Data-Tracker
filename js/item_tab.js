@@ -100,7 +100,7 @@ function Item_Tab (item_div_id) {
 		this.item_display_div.innerHTML = new_inner_html;
 	};
 	
-	this.Add_Item_Entry_Click = function() 
+	this.Add_Quick_Item_Entry_Click = function() 
 	{
 		
 		var self = this;
@@ -125,7 +125,7 @@ function Item_Tab (item_div_id) {
 			params[2] = note_string;
 		
 			//execute the RPC callback for retrieving the item log
-			rpc.Data_Interface.Insert_Item_Entry(params,function(jsonRpcObj){
+			rpc.Data_Interface.Insert_Quick_Item_Entry(params,function(jsonRpcObj){
 				
 				if(jsonRpcObj.result.authenticated == 'true')
 				{
@@ -151,6 +151,72 @@ function Item_Tab (item_div_id) {
 				$("#" + self.item_value.id).val('');
 				$("#" + self.quick_item_name_select.id).val('-');
 				$("#" + self.item_note.id).val('');
+				
+				self.refresh_item_log_callback();
+			});
+		}
+		else
+		{
+			alert('The value field must be numeric.');
+		}
+		
+	};
+	
+	this.Add_Item_Entry_Click = function() 
+	{
+		
+		var self = this;
+		
+		//get the value string
+		var time_string = $("#" + self.item_new_time.id).val();
+		var value_string = $("#" + self.item_new_value.id).val();
+		var item_select_index = $("#" + self.new_item_name_select.id).prop("selectedIndex");
+		var note_string = $("#" + self.item_new_note.id).val();
+		
+		//check that the string is numeric
+		if(!isNaN(Number(value_string)) && value_string != '')
+		{
+			
+			
+		
+			//show the loader image
+			$('#' + self.new_loading_image.id).show();
+			
+			var params = new Array();
+			params[0] = time_string;
+			params[1] = value_string;
+			params[2] = self.items_list[item_select_index - 1].item_id;
+			params[3] = note_string;
+		
+			//execute the RPC callback for retrieving the item log
+			rpc.Data_Interface.Insert_Item_Entry(params,function(jsonRpcObj){
+				
+				if(jsonRpcObj.result.authenticated == 'true')
+				{
+					if(jsonRpcObj.result.success == 'true')
+					{
+						//alert(jsonRpcObj.result.debug);
+						alert('New item entry added!');
+					}
+					else
+					{
+						alert('Item entry failed to add.');
+					}
+
+				}
+				else
+				{
+					alert('You are not logged in. Please refresh the page and login again.');
+				}
+				
+				//hide the loader image
+				$('#' + self.new_loading_image.id).hide();
+				
+				//reset all the fields to default
+				$("#" + self.item_new_value.id).val('');
+				$("#" + self.new_item_name_select.id).val('-');
+				$("#" + self.item_new_note.id).val('');
+				
 				
 				self.refresh_item_log_callback();
 			});
@@ -271,7 +337,7 @@ function Item_Tab (item_div_id) {
 			event.preventDefault();
 			
 			//execute the click event
-			self.Add_Item_Entry_Click();
+			self.Add_Quick_Item_Entry_Click();
 		});
 		this.item_quick_entry_data_form.appendChild(this.item_add_entry_button);
 		
@@ -344,7 +410,7 @@ function Item_Tab (item_div_id) {
 			event.preventDefault();
 			
 			//execute the click event
-			//self.Add_Item_Entry_Click();
+			self.Add_Item_Entry_Click();
 		});
 		this.item_new_entry_data_form.appendChild(this.item_new_add_entry_button);
 		
@@ -361,7 +427,11 @@ function Item_Tab (item_div_id) {
 		$('#' + self.new_loading_image.id).hide();
 		
 		//initialize the datetime picker
-		$('#' + this.item_new_time.id).datetimepicker();
+		$('#' + this.item_new_time.id).datetimepicker({
+			timeFormat: "HH:mm",
+			dateFormat: 'yy-mm-dd'
+		});
+		$('#' + this.item_new_time.id).datetimepicker("setDate", new Date());
 		$('#' + this.item_new_time.id).datetimepicker("setDate", new Date());
 		
 	};

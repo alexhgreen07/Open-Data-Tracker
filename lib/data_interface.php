@@ -37,15 +37,24 @@ class Data_Interface {
 		return $return_json;
 	}
 
-	public function Insert_Item_Entry($value, $unit, $note)
+	public function Insert_Quick_Item_Entry($value, $item_id, $note)
 	{
 		
 		$item_data_int = $this->item_data_interface;
 		
-		$return_json = $item_data_int->Insert_Item_Entry($value, $unit, $note);
+		$return_json = $item_data_int->Insert_Quick_Item_Entry($value, $item_id, $note);
 		
 		return $return_json;	
 		
+	}
+	
+	public function Insert_Item_Entry($time, $value, $item_id, $note)
+	{
+		$item_data_int = $this->item_data_interface;
+		
+		$return_json = $item_data_int->Insert_Item_Entry($time, $value, $item_id, $note);
+		
+		return $return_json;
 	}
 	
 	public function Get_Items()
@@ -76,12 +85,12 @@ class Data_Interface {
 		return $return_json;
 	}
 	
-	public function Insert_Task_Entry($task_name_to_enter,$task_start_stop)
+	public function Insert_Task_Entry($start_time, $task_id, $hours, $completed)
 	{
 		
 		$task_data_int = $this->task_data_interface;
 		
-		$return_json = $task_data_int->Insert_Task_Entry($task_name_to_enter,$task_start_stop);
+		$return_json = $task_data_int->Insert_Task_Entry($start_time, $task_id, $hours, $completed);
 		
 		return $return_json;
 	}

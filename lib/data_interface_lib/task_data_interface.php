@@ -307,12 +307,35 @@ class Task_Data_Interface {
 		$task_description = mysql_real_escape_string($description);
 		$task_estimated_time = mysql_real_escape_string($estimated_time);
 		$task_note = mysql_real_escape_string($note);
+		$status = mysql_real_escape_string($status);
+		$schedule_type = mysql_real_escape_string($schedule_type);
+		$scheduled_time = mysql_real_escape_string($scheduled_time);
+		$recurring = mysql_real_escape_string($recurring);
+		$recurrance_type = mysql_real_escape_string($recurrance_type);
+		$recurrance_period = mysql_real_escape_string($recurrance_period);
+		
 	
-		$sql = 'INSERT INTO `life_management`.`tasks`(`name`, `description`, `date_created`, `estimated_time`, `note`) VALUES (';
+		$sql = 'INSERT INTO `life_management`.`tasks` 
+			(`name`, 
+			`description`, 
+			`date_created`, 
+			`estimated_time`,
+			`status`, 
+			`schedule_type`, 
+			`scheduled_time`,
+			`recurring`,
+			`recurrance_period`,
+			`note`) VALUES (';
+			
 		$sql .= "'".$task_name."',";
 		$sql .= "'".$task_description."',";
 		$sql .= "NOW(),";
 		$sql .= "".$task_estimated_time.",";
+		$sql .= "'".$status."',";
+		$sql .= "'".$schedule_type."',";
+		$sql .= "'".$scheduled_time."',";
+		$sql .= "".$recurring.",";
+		$sql .= "'".$recurrance_period."',";
 		$sql .= "'".$task_note."')";
 	
 	

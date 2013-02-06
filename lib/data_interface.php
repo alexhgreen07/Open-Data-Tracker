@@ -122,11 +122,29 @@ class Data_Interface {
 		return $return_json;
 	}
 	
-	public function Add_New_Task($name,$description,$estimated_time,$note)
+	public function Add_New_Task($name,
+		$description = "",
+		$estimated_time = 0,
+		$note = "",
+		$status = "Stopped",
+		$schedule_type = "Floating",
+		$scheduled_time = "",
+		$recurring = 0,
+		$recurrance_type = "",
+		$recurrance_period = "")
 	{
 		$task_data_int = $this->task_data_interface;
 		
-		$return_json = $task_data_int->Add_New_Task($name,$description,$estimated_time,$note);
+		$return_json = $task_data_int->Add_New_Task($name,
+			$description,
+			$estimated_time,
+			$note,
+			$status,
+			$schedule_type,
+			$scheduled_time,
+			$recurring,
+			$recurrance_type,
+			$recurrance_period);
 		
 		return $return_json;
 	}

@@ -124,6 +124,7 @@ function Task_Tab (task_div_id) {
 			var task_time = $('#' + this.task_entry_start_time.id).val();
 			var duration = $('#' + this.task_entry_duration.id).val();
 			var task_note = $('#' + this.task_entry_note.id).val();
+			
 		
 			params[0] = task_time;
 			params[1] = selected_task.task_id;
@@ -358,6 +359,12 @@ function Task_Tab (task_div_id) {
 		params[1] = $("#" + this.task_description.id).val();
 		params[2] = $("#" + this.task_estimate.id).val();
 		params[3] = $("#" + this.task_note.id).val();
+		params[4] = $('#' + this.task_status_select.id).val();
+		params[5] = $('#' + this.task_scheduled_select.id).val();
+		params[6] = $('#' + this.task_scheduled_date.id).val();
+		params[7] = $('#' + this.task_recurring_select.id).val();
+		params[8] = 'hours';
+		params[9] = $('#' + this.task_reccurance_period.id).val();
 		
 		var self = this;
 		
@@ -414,10 +421,12 @@ function Task_Tab (task_div_id) {
 			{
 				//set the start time and button value
 				this.current_task_start_time = new_item.start_time;
+				$('#' + this.task_timecard_note_div.id).show();
 				this.task_start_stop_button.value = 'Stop';
 			}
 			else
 			{
+				$('#' + this.task_timecard_note_div.id).hide();
 				this.task_start_stop_button.value = 'Start';
 			}
 		}
@@ -819,7 +828,10 @@ function Task_Tab (task_div_id) {
 		
 		$('#' + self.loading_image_add.id).hide();
 		
-		$('#' + self.task_scheduled_date.id).datetimepicker();
+		$('#' + self.task_scheduled_date.id).datetimepicker({
+			timeFormat: "HH:mm",
+			dateFormat: 'yy-mm-dd'
+		});
 		var date_to_set = new Date();
 		$('#' + self.task_scheduled_date.id).datetimepicker("setDate", date_to_set);
 		

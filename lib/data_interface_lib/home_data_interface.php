@@ -21,6 +21,62 @@ class Home_Data_Interface {
 			'html' => '',
 		);
 		
+		
+		$return_json['html'] .= $this->Get_Task_Summary();
+		$return_json['html'] .= $this->Get_Aggregate_Summary();
+		
+		return $return_json;
+	}
+	
+	private function Get_Task_Summary()
+	{
+		$return_html = '';
+		
+		$sql = "SELECT 
+			`tasks`.`name` AS `name`, 
+			`task_log`.`start_time` AS `start_time`,
+			(TIMESTAMPDIFF(SECOND, `task_log`.`start_time`, NOW( ) ) / 60 / 60) AS `elapsed`
+			FROM `task_log`, `tasks` 
+			WHERE `task_log`.`status` = 'Started' 
+			AND `task_log`.`task_id` = `tasks`.`task_id`";
+		
+		$result=mysql_query($sql, $this->database_link);
+		$num=mysql_numrows($result);
+		
+		$return_html .= '
+			<b>Started Tasks</b> <br />
+			<table border="1" style="width:100%;">
+			<tr>
+			<td><b>Task Name</b></td>
+			<td><b>Start Time</b></td>
+			<td><b>Elapsed</b></td>
+			</tr>';
+		
+		$i=0;
+		while ($i < $num) {
+
+			$return_html .= '<tr>';
+
+			$task_name = mysql_result($result,$i,"name");
+			$task_start_time = mysql_result($result,$i,"start_time");
+			$task_elapsed = mysql_result($result,$i,"elapsed");
+
+			$return_html .= '<td>'.$task_name."</td>";
+			$return_html .= '<td>'.$task_start_time."</td>";
+			$return_html .= '<td>'.round($task_elapsed,2)."</td>";
+		
+			$return_html .= '</tr>';
+
+			$i++;
+		}
+
+		$return_html .= '</table><br />';
+		
+		return $return_html;
+	}
+	
+	private function Get_Aggregate_Summary()
+	{
 		$titles_and_queries = array(
 			"1 Day Item Totals:" => "SELECT `unit` AS `name`, SUM( `value` ) AS `agg_value` 
 				FROM `item_log`, `items` 
@@ -56,7 +112,6 @@ class Home_Data_Interface {
 			<table border="1" style="width:100%;">
 			<tr><td><b>Unit</b></td><td><b>Aggregate</b></td></tr>';
 
-
 			$result=mysql_query($query, $this->database_link);
 			$num=mysql_numrows($result);
 
@@ -81,9 +136,7 @@ class Home_Data_Interface {
 		    
 		}
 		
-		$return_json['html'] = $return_html;
-		
-		return $return_json;
+		return $return_html;
 	}
 	
 }

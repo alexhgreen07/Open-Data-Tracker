@@ -4,7 +4,7 @@ require_once('auth.php');
 require_once('data_interface_lib/home_data_interface.php');
 require_once('data_interface_lib/item_data_interface.php');
 require_once('data_interface_lib/task_data_interface.php');
-require_once('data_interface_lib/data_data_interface.php');
+require_once('data_interface_lib/report_data_interface.php');
 
 class Data_Interface {
 	
@@ -13,7 +13,7 @@ class Data_Interface {
 	private $home_data_interface;
 	private $item_data_interface;
 	private $task_data_interface;
-	private $data_data_interface;
+	private $report_data_interface;
 	
 	public function Data_Interface($new_database_link) {
 		
@@ -24,7 +24,7 @@ class Data_Interface {
 		$this->home_data_interface = new Home_Data_Interface($new_database_link);
 		$this->item_data_interface = new Item_Data_Interface($new_database_link);
 		$this->task_data_interface = new Task_Data_Interface($new_database_link);
-		$this->data_data_interface = new Data_Data_Interface($new_database_link);
+		$this->report_data_interface = new Report_Data_Interface($new_database_link);
 	}
 
 	public function Get_Home_Data_Summary()
@@ -161,14 +161,22 @@ class Data_Interface {
 	public function Get_Item_Log()
 	{
 		
-		$data_data_int = $this->data_data_interface;
+		$item_data_int = $this->item_data_interface;
 		
-		$return_json = $data_data_int->Get_Item_Log();
+		$return_json = $item_data_int->Get_Item_Log();
 		
 		return $return_json;
 	}
 	
-	
+	public function Get_Task_Log()
+	{
+		
+		$task_data_int = $this->task_data_interface;
+		
+		$return_json = $task_data_int->Get_Task_Log();
+		
+		return $return_json;
+	}
 	
 }
 

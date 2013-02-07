@@ -421,6 +421,60 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 	
+	public function Get_Task_Log()
+	{
+		
+		$return_json = array(
+			'authenticated' => 'false',
+			'success' => 'false',
+			'html' => '',
+		);
+		
+		$return_html = '';
+		
+		$query="SELECT `tasks`.`name` AS `name`, `task_log`.`start_time` AS `start_time`, `task_log`.`hours` AS `hours`, `task_log`.`note` AS `note`
+			FROM `tasks` , `task_log`
+			WHERE `tasks`.`task_id` = `task_log`.`task_id` 
+			ORDER BY `task_log`.`start_time` DESC";
+		$result=mysql_query($query, $this->database_link);
+
+		$num=mysql_numrows($result);
+		
+		$return_html .= "
+		<b>Database Output</b><br>
+		<table border='1' style='width:100%;'>";
+
+		$return_html .= "<tr><td>Name</td><td>Start Time</td><td>Duration (Hours)</td><td>Note</td></tr>";
+
+		$i=0;
+		while ($i < $num) {
+
+			$task_entry_name = mysql_result($result,$i,"name");
+			$task_entry_start_time = mysql_result($result,$i,"start_time");
+			$task_entry_hours = mysql_result($result,$i,"hours");
+			$task_entry_note = mysql_result($result,$i,"note");
+
+			$return_html .= 
+				"<tr><td>". 
+				$task_entry_name . 
+				"</td><td>" . 
+				$task_entry_start_time . 
+				"</td><td>" . 
+				$task_entry_hours . 
+				"</td><td>" . 
+				$task_entry_note . "</td></tr>";
+
+			$i++;
+		}
+
+		$return_html .= '
+		</table>';
+		
+		$return_json['html'] = $return_html;
+		
+		return $return_json;
+	}
+	
 }
 
 ?>

@@ -16,10 +16,12 @@ function Main_Application()
 		
 		self.home_tab_object.Refresh_Data(function()
 		{
+			/*
 			self.data_tab_object.Refresh_Item_Data(function()
 			{
 				//alert('refresh complete');
 			});
+			*/
 		});
 		
 	};
@@ -45,8 +47,8 @@ function Main_Application()
 		this.tabs_array[2][1] = "<div id='task_tab_div'></div>";
 		
 		this.tabs_array[3] = new Array();
-		this.tabs_array[3][0] = "Data";
-		this.tabs_array[3][1] = "<div id='data_tab_div'></div>";
+		this.tabs_array[3][0] = "Reports";
+		this.tabs_array[3][1] = "<div id='report_tab_div'></div>";
 		
 		this.tabs_array[4] = new Array();
 		this.tabs_array[4][0] = "Graphs";
@@ -71,7 +73,7 @@ function Main_Application()
 		this.task_tab_object = new Task_Tab('task_tab_div');
 		this.task_tab_object.Render();
 		
-		this.data_tab_object = new Data_Tab('data_tab_div');
+		this.data_tab_object = new Report_Tab('report_tab_div');
 		this.data_tab_object.Render();
 		
 		this.graph_tab_object = new Graph_Tab('graph_tab_div');
@@ -88,10 +90,12 @@ function Main_Application()
 				{
 					self.task_tab_object.Refresh_Task_Name_List(function()
 					{
+						/*
 						self.data_tab_object.Refresh_Item_Data(function()
 						{
 							//alert('refresh complete');
 						});
+						*/
 					});
 				});
 				

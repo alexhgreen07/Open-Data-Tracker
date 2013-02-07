@@ -105,7 +105,12 @@ function Task_Tab (task_div_id) {
 			//hide the loader image
 			$('#' + self.loading_image_view.id).hide();
 			
-			refresh_callback();
+			self.Refresh_Task_Log_Data(function()
+			{
+				refresh_callback();
+			});
+			
+			
 		});
 	};
 	
@@ -319,6 +324,43 @@ function Task_Tab (task_div_id) {
 		}
 		
 		self.task_timer_div.innerHTML = new_html;
+	};
+	
+	this.Refresh_Task_Log_Data = function(refresh_callback)
+	{
+		var self = this;
+		
+		//show the loader image
+		$('#' + self.task_log_loading_image.id).show();
+		
+		var params = new Array();
+		
+		
+		//execute the RPC callback for retrieving the item log
+		rpc.Data_Interface.Get_Task_Log(params,function(jsonRpcObj){
+			
+			//RPC complete. Set appropriate HTML.
+			var new_html = '';
+			
+			new_html += 'Last refreshed: ' + (new Date()) + '<br />';
+			new_html += jsonRpcObj.result.html;
+			
+			document.getElementById(self.new_log_data_display_div.id).innerHTML = new_html;
+			
+			//hide the loader image
+			$('#' + self.task_log_loading_image.id).hide();
+			
+			refresh_callback();
+		});
+	};
+	
+	this.On_Click_Event = function()
+	{
+		
+		//alert('calling rpc onclick.');
+		
+		this.Refresh_Task_Log_Data();
+		
 	};
 	
 	this.On_Complete_Click_Event = function() 
@@ -837,30 +879,85 @@ function Task_Tab (task_div_id) {
 		
 	};
 	
+	this.Render_View_Task_Log_Form = function(form_div_id)
+	{
+		var self = this;
+		var return_html = '';
+		
+		this.data_form = document.createElement("form");
+		this.data_form.setAttribute('method',"post");
+		this.data_form.setAttribute('id',"task_log_display_form");
+		
+		this.task_log_submit_button = document.createElement("input");
+		this.task_log_submit_button.setAttribute('type','submit');
+		this.task_log_submit_button.setAttribute('id','task_log_submit_button');
+		this.task_log_submit_button.value = 'Refresh';
+		
+		this.data_form.appendChild(this.task_log_submit_button);
+		
+		this.task_log_loading_image = document.createElement("img");
+		this.task_log_loading_image.setAttribute('id','task_log_loader_image');
+		this.task_log_loading_image.setAttribute('style','width:100%;height:19px;');
+		this.task_log_loading_image.setAttribute('src','ajax-loader.gif');
+		this.data_form.appendChild(this.task_log_loading_image);
+
+		this.new_log_data_display_div = document.createElement("div");
+		this.new_log_data_display_div.setAttribute('id','new_task_log_data_display_div');
+		this.data_form.appendChild(this.new_log_data_display_div);
+		
+		var div_tab = document.getElementById(form_div_id);
+		
+		div_tab.innerHTML = '';
+			
+		div_tab.appendChild(this.data_form);
+		
+		$(this.task_log_submit_button).button();
+		$(this.task_log_submit_button).click(function( event ) {
+			
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			//execute the click event
+			self.On_Click_Event();
+		});
+	};
+	
 	//render function (div must already exist)
 	this.Render = function() {
 		
 		var tabs_array = new Array();
 		
-		tabs_array[0] = new Array();
-		tabs_array[0][0] = "Timecard Task Entry";
-		tabs_array[0][1] = '<div id="timecard_task_entry_div"></div>';
+		var new_tab;
 		
-		tabs_array[1] = new Array();
-		tabs_array[1][0] = "New Task Entry";
-		tabs_array[1][1] = '<div id="new_task_entry_div"></div>';
+		new_tab = new Array();
+		new_tab.push("Timecard Task Entry");
+		new_tab.push('<div id="timecard_task_entry_div"></div>');
+		tabs_array.push(new_tab);
 		
-		tabs_array[2] = new Array();
-		tabs_array[2][0] = "View Tasks";
-		tabs_array[2][1] = '<div id="view_tasks_div"></div>';
+		new_tab = new Array();
+		new_tab.push("New Task Entry");
+		new_tab.push('<div id="new_task_entry_div"></div>');
+		tabs_array.push(new_tab);
 		
-		tabs_array[3] = new Array();
-		tabs_array[3][0] = "New Task";
-		tabs_array[3][1] = '<div id="add_task_div"></div>';
+		new_tab = new Array();
+		new_tab.push("New Task");
+		new_tab.push('<div id="add_task_div"></div>');
+		tabs_array.push(new_tab);
 		
-		tabs_array[4] = new Array();
-		tabs_array[4][0] = "Edit Task";
-		tabs_array[4][1] = "Under construction...";
+		new_tab = new Array();
+		new_tab.push("Edit Task");
+		new_tab.push("Under construction...");
+		tabs_array.push(new_tab);
+		
+		new_tab = new Array();
+		new_tab.push("View Tasks");
+		new_tab.push('<div id="view_tasks_div"></div>');
+		tabs_array.push(new_tab);
+		
+		new_tab = new Array();
+		new_tab.push("View Task Log");
+		new_tab.push('<div id="view_task_log_div"></div>');
+		tabs_array.push(new_tab);
 		
 		var return_html = '';
 		
@@ -881,6 +978,8 @@ function Task_Tab (task_div_id) {
 		this.Render_New_Task_Form('add_task_div');
 		
 		this.Render_View_Tasks_Form('view_tasks_div');
+		
+		this.Render_View_Task_Log_Form('view_task_log_div');
 		
 	};
 }

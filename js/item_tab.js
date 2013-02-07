@@ -26,12 +26,18 @@ function Item_Tab (item_div_id) {
 			{
 				if(jsonRpcObj.result.success == 'true')
 				{
-					
 					self.items_list = jsonRpcObj.result.items;
 					
 					self.Refresh_Item_Entry_List();
 					
 					self.Refresh_Item_View();
+					
+					self.Refresh_Item_Data(function()
+					{
+						refresh_callback();
+					});
+					
+					
 				}
 				else
 				{
@@ -47,7 +53,7 @@ function Item_Tab (item_div_id) {
 			//hide the loader image
 			$('#' + self.loading_image.id).hide();
 			
-			refresh_callback();
+			
 		});
 		
 	};
@@ -98,6 +104,43 @@ function Item_Tab (item_div_id) {
 		new_inner_html += '</table>';
 		
 		this.item_display_div.innerHTML = new_inner_html;
+	};
+	
+	this.Refresh_Item_Data = function(refresh_callback)
+	{
+		var self = this;
+		
+		//show the loader image
+		$('#' + self.item_log_loading_image.id).show();
+		
+		var params = new Array();
+		
+		
+		//execute the RPC callback for retrieving the item log
+		rpc.Data_Interface.Get_Item_Log(params,function(jsonRpcObj){
+			
+			//RPC complete. Set appropriate HTML.
+			var new_html = '';
+			
+			new_html += 'Last refreshed: ' + (new Date()) + '<br />';
+			new_html += jsonRpcObj.result.html;
+			
+			document.getElementById(self.new_data_display_div.id).innerHTML = new_html;
+			
+			//hide the loader image
+			$('#' + self.item_log_loading_image.id).hide();
+			
+			refresh_callback();
+		});
+	};
+	
+	this.On_Click_Event = function()
+	{
+		
+		//alert('calling rpc onclick.');
+		
+		this.Refresh_Item_Data();
+		
 	};
 	
 	this.Add_Quick_Item_Entry_Click = function() 
@@ -510,31 +553,90 @@ function Item_Tab (item_div_id) {
 		var div_tab = document.getElementById(form_div_id);
 		div_tab.appendChild(this.item_add_data_form);
 	};
+	
+	this.Render_Item_Log = function(form_div_id)
+	{
+		var self = this;
+		var return_html = '';
+		
+		this.data_form = document.createElement("form");
+		this.data_form.setAttribute('method',"post");
+		this.data_form.setAttribute('id',"data_display_form");
+		
+		this.button = document.createElement("input");
+		this.button.setAttribute('type','submit');
+		this.button.setAttribute('id','data_submit_button');
+		this.button.value = 'Refresh';
+		
+		this.data_form.appendChild(this.button);
+		
+		this.item_log_loading_image = document.createElement("img");
+		this.item_log_loading_image.setAttribute('id','item_log_loader_image');
+		this.item_log_loading_image.setAttribute('style','width:100%;height:19px;');
+		this.item_log_loading_image.setAttribute('src','ajax-loader.gif');
+		this.data_form.appendChild(this.item_log_loading_image);
+
+		this.new_data_display_div = document.createElement("div");
+		this.new_data_display_div.setAttribute('id','new_item_data_display_div');
+		this.data_form.appendChild(this.new_data_display_div);
+		
+		var div_tab = document.getElementById(form_div_id);
+		
+		div_tab.innerHTML = '';
+			
+		div_tab.appendChild(this.data_form);
+		
+		$(this.button).button();
+		$(this.button).click(function( event ) {
+			
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			//execute the click event
+			self.On_Click_Event();
+		});
+		
+		
+		
+	};
 
 	//render function (div must already exist)
 	this.Render = function() {
 		
 		var tabs_array = new Array();
 		
-		tabs_array[0] = new Array();
-		tabs_array[0][0] = "Quick Item Entry";
-		tabs_array[0][1] = '<div id="quick_item_entry_div"></div>';
+		var new_tab;
 		
-		tabs_array[1] = new Array();
-		tabs_array[1][0] = "New Item Entry";
-		tabs_array[1][1] = '<div id="new_item_entry_div"></div>';
+		new_tab = new Array();
+		new_tab.push("Quick Item Entry");
+		new_tab.push('<div id="quick_item_entry_div"></div>');
+		tabs_array.push(new_tab);
 		
-		tabs_array[2] = new Array();
-		tabs_array[2][0] = "View Items";
-		tabs_array[2][1] = '<div id="view_item_div"></div>';
+		new_tab = new Array();
+		new_tab.push("New Item Entry");
+		new_tab.push('<div id="new_item_entry_div"></div>');
+		tabs_array.push(new_tab);
 		
-		tabs_array[3] = new Array();
-		tabs_array[3][0] = "New Item";
-		tabs_array[3][1] = '<div id="add_item_div"></div>';
+		new_tab = new Array();
+		new_tab.push("New Item");
+		new_tab.push('<div id="add_item_div"></div>');
+		tabs_array.push(new_tab);
 		
-		tabs_array[4] = new Array();
-		tabs_array[4][0] = "Edit Item";
-		tabs_array[4][1] = "Under construction...";
+		new_tab = new Array();
+		new_tab.push("Edit Item");
+		new_tab.push("Under construction...");
+		tabs_array.push(new_tab);
+		
+		new_tab = new Array();
+		new_tab.push("View Items");
+		new_tab.push('<div id="view_item_div"></div>');
+		tabs_array.push(new_tab);
+		
+		new_tab = new Array();
+		new_tab.push("View Item Log");
+		new_tab.push('<div id="view_item_log_div"></div>');
+		tabs_array.push(new_tab);
+		
 		
 		var return_html = '';
 		
@@ -557,6 +659,7 @@ function Item_Tab (item_div_id) {
 		
 		this.Render_View_Items_Form('view_item_div');
 		
+		this.Render_Item_Log('view_item_log_div');
 		
 	};
 }

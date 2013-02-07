@@ -31,14 +31,14 @@ Authorize_Session();
 	<script src="js/json-rpc2php-master/jsonRPC2php.client.js"></script>
 	
 	<!-- Custom javascript -->
-	<script src="js/main.js"></script>
 	<script src="js/tabs.js"></script>
 	<script src="js/accordian.js"></script>
 	<script src="js/home_tab.js"></script>
 	<script src="js/item_tab.js"></script>
 	<script src="js/task_tab.js"></script>
-	<script src="js/data_tab.js"></script>
+	<script src="js/report_tab.js"></script>
 	<script src="js/graph_tab.js"></script>
+	<script src="js/main.js"></script>
 	
 	<script>
 		

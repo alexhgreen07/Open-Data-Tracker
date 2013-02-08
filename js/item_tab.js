@@ -175,6 +175,11 @@ function Item_Tab (item_div_id) {
 					if(jsonRpcObj.result.success == 'true')
 					{
 						alert('New item entry added!');
+						
+						self.Refresh_Item_Data(function()
+						{
+							self.refresh_item_log_callback();
+						});
 					}
 					else
 					{
@@ -195,7 +200,6 @@ function Item_Tab (item_div_id) {
 				$("#" + self.quick_item_name_select.id).val('-');
 				$("#" + self.item_note.id).val('');
 				
-				self.refresh_item_log_callback();
 			});
 		}
 		else
@@ -240,6 +244,11 @@ function Item_Tab (item_div_id) {
 					{
 						//alert(jsonRpcObj.result.debug);
 						alert('New item entry added!');
+						
+						self.Refresh_Item_Data(function()
+						{
+							self.refresh_item_log_callback();
+						});
 					}
 					else
 					{
@@ -261,7 +270,7 @@ function Item_Tab (item_div_id) {
 				$("#" + self.item_new_note.id).val('');
 				
 				
-				self.refresh_item_log_callback();
+				
 			});
 		}
 		else

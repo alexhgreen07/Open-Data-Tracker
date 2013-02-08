@@ -19,6 +19,7 @@ function Task_Tab (task_div_id) {
 	this.loading_image_add;
 	this.loading_image_view;
 	this.current_task_start_time;
+	this.refresh_task_log_callback;
 	
 	this.Refresh_Task_Name_List = function(refresh_callback)
 	{
@@ -28,6 +29,7 @@ function Task_Tab (task_div_id) {
 		
 		//show the loader image
 		$('#' + self.loading_image_new.id).show();
+		$('#' + self.add_task_entry_loading_image_new.id).show();
 		
 		//execute the RPC callback for retrieving the item log
 		rpc.Data_Interface.Get_Start_Stop_Task_Names(params,function(jsonRpcObj){
@@ -79,6 +81,7 @@ function Task_Tab (task_div_id) {
 			
 			//hide the loader image
 			$('#' + self.loading_image_new.id).hide();
+			$('#' + self.add_task_entry_loading_image_new.id).hide();
 			
 			refresh_callback();
 		});
@@ -161,6 +164,13 @@ function Task_Tab (task_div_id) {
 					$('#' + self.task_entry_note.id).val('');
 					
 					alert('Task entry submitted.');
+					
+					self.Refresh_Task_Log_Data(function()
+					{
+						refresh_callback();
+						
+						self.refresh_task_log_callback();
+					});
 			
 				}
 				else
@@ -172,7 +182,6 @@ function Task_Tab (task_div_id) {
 				//hide the loader image
 				$('#' + self.add_task_entry_loading_image_new.id).hide();
 				
-				refresh_callback();
 			});
 		
 		}
@@ -225,16 +234,27 @@ function Task_Tab (task_div_id) {
 						selected_task.start_time = '';
 						selected_task.item_status = 'Stopped';
 						
+						//reset the notes
+						$('#' + self.task_timecard_note.id).val('');
+						
 						$('#' + self.task_timecard_note_div.id).hide();
 						self.task_start_stop_button.value = 'Start';
 					}
+					
+					
 					
 					//refresh the info div
 					self.On_Task_Name_Select_Change_Event();
 					
 					//refresh the timer
 					self.Refresh_Timer_Display();
-				
+					
+					self.Refresh_Task_Log_Data(function()
+					{
+						refresh_callback();
+						
+						self.refresh_task_log_callback();
+					});
 				
 				}
 				else
@@ -246,7 +266,7 @@ function Task_Tab (task_div_id) {
 				//hide the loader image
 				$('#' + self.loading_image_new.id).hide();
 				
-				refresh_callback();
+				
 			});
 		
 		}
@@ -278,16 +298,26 @@ function Task_Tab (task_div_id) {
 			
 				if(jsonRpcObj.result.success == 'true')
 				{
-			
+					
+					//reset the notes
+					$('#' + self.task_timecard_note.id).val('');
+					
 					alert('Task completed.');
+					
+					self.Refresh_Task_Log_Data(function()
+					{
+						//refresh the list to remove this task
+						self.Refresh_Task_Name_List();
+						
+						self.refresh_task_log_callback();
+					});
 				}
 				else
 				{
 					alert('Task failed to complete.');
 				}
 				
-				//refresh the list to remove this task
-				self.Refresh_Task_Name_List();
+				
 			
 				//hide the loader image
 				$('#' + self.loading_image_new.id).hide();
@@ -576,7 +606,7 @@ function Task_Tab (task_div_id) {
 
 		div_tab.appendChild(this.data_form_timecard_entry);
 		
-		$('#' + self.loading_image_new.id).hide();
+		//$('#' + self.loading_image_new.id).hide();
 		$('#' + self.task_timecard_note_div.id).hide();
 		
 		//this is used to update the timer value on running tasks
@@ -691,7 +721,7 @@ function Task_Tab (task_div_id) {
 		});
 		
 		
-		$('#' + self.add_task_entry_loading_image_new.id).hide();
+		//$('#' + self.add_task_entry_loading_image_new.id).hide();
 		
 		$('#' + this.task_entry_start_time.id).datetimepicker({
 			timeFormat: "HH:mm",

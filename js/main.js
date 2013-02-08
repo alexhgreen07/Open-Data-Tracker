@@ -6,7 +6,7 @@ function Main_Application()
 	this.home_tab_object;
 	this.item_tab_object;
 	this.task_tab_object;
-	this.data_tab_object;
+	this.report_tab_object;
 	this.graph_tab_object;
 	
 	//refresh data view
@@ -16,19 +16,18 @@ function Main_Application()
 		
 		self.home_tab_object.Refresh_Data(function()
 		{
-			/*
-			self.data_tab_object.Refresh_Item_Data(function()
+			self.report_tab_object.Refresh(function()
 			{
 				//alert('refresh complete');
 			});
-			*/
 		});
 		
 	};
 	
 	//setup the main tabs
 	this.Setup_Main_Tabs = function() {
-	
+		
+		var self = this;
 		var main_tabs_div = "main_tab_navigation_div";
 	
 		//append the main tab div
@@ -62,7 +61,7 @@ function Main_Application()
 		this.home_tab_object.Render();
 		
 		this.item_tab_object = new Item_Tab('item_tab_div');
-		var self = this;
+		
 		this.item_tab_object.refresh_item_log_callback = function()
 		{
 			//ensure the data tab gets refreshed when a new item is added
@@ -71,10 +70,17 @@ function Main_Application()
 		this.item_tab_object.Render();
 		
 		this.task_tab_object = new Task_Tab('task_tab_div');
+		
+		this.task_tab_object.refresh_task_log_callback = function()
+		{
+			//ensure the data tab gets refreshed when a new task is added
+			self.Refresh_Data();
+		};
+		
 		this.task_tab_object.Render();
 		
-		this.data_tab_object = new Report_Tab('report_tab_div');
-		this.data_tab_object.Render();
+		this.report_tab_object = new Report_Tab('report_tab_div');
+		this.report_tab_object.Render();
 		
 		this.graph_tab_object = new Graph_Tab('graph_tab_div');
 		this.graph_tab_object.Render();
@@ -90,12 +96,11 @@ function Main_Application()
 				{
 					self.task_tab_object.Refresh_Task_Name_List(function()
 					{
-						/*
-						self.data_tab_object.Refresh_Item_Data(function()
+						self.report_tab_object.Refresh(function()
 						{
 							//alert('refresh complete');
 						});
-						*/
+					
 					});
 				});
 				

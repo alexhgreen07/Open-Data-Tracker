@@ -178,6 +178,15 @@ class Data_Interface {
 		return $return_json;
 	}
 	
+	public function Get_Report_Summary_Data()
+	{
+		$report_data_int = $this->report_data_interface;
+		
+		$return_json = $report_data_int->Get_Report_Summary_Data();
+		
+		return $return_json;
+	}
+	
 }
 
 

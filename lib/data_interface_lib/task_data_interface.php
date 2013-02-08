@@ -91,7 +91,7 @@ class Task_Data_Interface {
 		
 			$sql_query = "SELECT DISTINCT `task_id`,`name`,`date_created`, `recurring`, `recurrance_period`, `scheduled_time`, `estimated_time` 
 				FROM `life_management`.`tasks` 
-				WHERE `status` != 'Completed'";
+				WHERE `status` != 'Completed' ORDER BY `name`";
 			$result=mysql_query($sql_query, $this->database_link);
 		
 			if($result)
@@ -366,7 +366,7 @@ class Task_Data_Interface {
 			
 			$return_json['authenticated'] = 'true';
 		
-			$sql_query = "SELECT DISTINCT `name`,`description`,`date_created`,`estimated_time` FROM `life_management`.`tasks`";
+			$sql_query = "SELECT DISTINCT `name`,`description`,`date_created`,`estimated_time` FROM `life_management`.`tasks` ORDER BY `name` ASC";
 			$result=mysql_query($sql_query, $this->database_link);
 		
 			if($result)

@@ -46,7 +46,10 @@ function Report_Tab (data_div_id) {
 	
 	this.On_Summaries_Refresh_Click = function()
 	{
-		this.Refresh_Summary_Data();
+		this.Refresh_Summary_Data(function()
+		{
+			//empty
+		});
 	};
 	
 	this.On_Time_Based_Refresh_Click = function()

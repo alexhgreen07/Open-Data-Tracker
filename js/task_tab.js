@@ -132,13 +132,14 @@ function Task_Tab (task_div_id) {
 			var task_time = $('#' + this.task_entry_start_time.id).val();
 			var duration = $('#' + this.task_entry_duration.id).val();
 			var task_note = $('#' + this.task_entry_note.id).val();
-			
+			var task_status = $('#' + this.add_task_entry_task_status_select.id).val();
 		
 			params[0] = task_time;
 			params[1] = selected_task.task_id;
 			params[2] = duration;
 			params[3] = 0;
-			params[4] = task_note;
+			params[4] = task_status;
+			params[5] = task_note;
 			
 			if(is_completed)
 			{
@@ -165,11 +166,16 @@ function Task_Tab (task_div_id) {
 					
 					alert('Task entry submitted.');
 					
-					self.Refresh_Task_Log_Data(function()
+					self.Refresh_Tasks(function()
 					{
-						refresh_callback();
+						//refresh_callback();
 						
-						self.refresh_task_log_callback();
+						self.Refresh_Task_Name_List(function()
+						{
+							self.refresh_task_log_callback();
+						});
+						
+						
 					});
 			
 				}
@@ -304,12 +310,14 @@ function Task_Tab (task_div_id) {
 					
 					alert('Task completed.');
 					
-					self.Refresh_Task_Log_Data(function()
+					self.Refresh_Tasks(function()
 					{
 						//refresh the list to remove this task
-						self.Refresh_Task_Name_List();
+						self.Refresh_Task_Name_List(function()
+						{
+							self.refresh_task_log_callback();
+						});
 						
-						self.refresh_task_log_callback();
 					});
 				}
 				else
@@ -416,12 +424,16 @@ function Task_Tab (task_div_id) {
 	this.On_Start_Stop_Click_Event = function()
 	{
 		
-		this.Start_Stop_Task();
+		this.Start_Stop_Task(function()
+		{
+		});
 	};
 	
 	this.On_View_Task_Refresh_Click_Event = function()
 	{
-		this.Refresh_Tasks();
+		this.Refresh_Tasks(function()
+		{
+		});
 	};
 	
 	this.On_Add_Task_Click_Event = function()
@@ -651,6 +663,14 @@ function Task_Tab (task_div_id) {
 		this.task_entry_start_time.setAttribute('id','task_entry_start_time');
 		this.task_entry_start_time.setAttribute('type','text');
 		this.data_form_new_entry.appendChild(this.task_entry_start_time);
+		
+		this.data_form_new_entry.innerHTML += 'Status:<br />';
+		
+		this.add_task_entry_task_status_select = document.createElement("select");
+		this.add_task_entry_task_status_select.setAttribute('name',"add_task_entry_status_to_enter");
+		this.add_task_entry_task_status_select.setAttribute('id',"add_task_entry_status_to_enter");
+		this.add_task_entry_task_status_select.innerHTML = '<option>Stopped</option><option>Started</option>';
+		this.data_form_new_entry.appendChild(this.add_task_entry_task_status_select);
 		
 		this.data_form_new_entry.innerHTML += 'Duration:<br />';
 		

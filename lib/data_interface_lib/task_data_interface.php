@@ -13,7 +13,7 @@ class Task_Data_Interface {
 	}
 	
 	
-	public function Insert_Task_Entry($start_time, $task_id, $hours, $completed, $note)
+	public function Insert_Task_Entry($start_time, $task_id, $hours, $completed, $status, $note)
 	{
 		
 		$return_json = array(
@@ -46,7 +46,7 @@ class Task_Data_Interface {
 			}
 			else
 			{
-				$status = "Stopped";
+				//$status = "Stopped";
 			}
 		
 			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`hours`, `status`, `note`) VALUES ('".
@@ -366,7 +366,7 @@ class Task_Data_Interface {
 			
 			$return_json['authenticated'] = 'true';
 		
-			$sql_query = "SELECT DISTINCT `name`,`description`,`date_created`,`estimated_time` FROM `life_management`.`tasks` ORDER BY `name` ASC";
+			$sql_query = "SELECT DISTINCT `name`,`description`,`date_created`,`estimated_time`,`status` FROM `life_management`.`tasks` ORDER BY `name` ASC";
 			$result=mysql_query($sql_query, $this->database_link);
 		
 			if($result)
@@ -382,7 +382,7 @@ class Task_Data_Interface {
 				<b>Database Output</b><br>
 				<table border='1' style='width:100%;'>";
 
-				$return_html .= "<tr><td>Name</td><td>Description</td><td>Estimated Time (hrs)</td></tr>";
+				$return_html .= "<tr><td>Name</td><td>Description</td><td>Estimated Time (hrs)</td><td>Status</td></tr>";
 
 				$i=0;
 				while ($i < $num) {
@@ -390,6 +390,7 @@ class Task_Data_Interface {
 					$field1_name = mysql_result($result,$i,"name");
 					$field2_name = mysql_result($result,$i,"description");
 					$field3_name = mysql_result($result,$i,"estimated_time");
+					$field4_name = mysql_result($result,$i,"status");
 
 					$return_html .= 
 						"<tr><td>". 
@@ -397,7 +398,9 @@ class Task_Data_Interface {
 						"</td><td>" . 
 						$field2_name . 
 						"</td><td>" . 
-						$field3_name . "</td></tr>";
+						$field3_name .
+						"</td><td>" . 
+						$field4_name . "</td></tr>";
 
 					$i++;
 				}
@@ -432,7 +435,7 @@ class Task_Data_Interface {
 		
 		$return_html = '';
 		
-		$query="SELECT `tasks`.`name` AS `name`, `task_log`.`start_time` AS `start_time`, `task_log`.`hours` AS `hours`, `task_log`.`note` AS `note`
+		$query="SELECT `tasks`.`name` AS `name`, `task_log`.`start_time` AS `start_time`, `task_log`.`hours` AS `hours`, `task_log`.`status` AS `status`, `task_log`.`note` AS `note`
 			FROM `tasks` , `task_log`
 			WHERE `tasks`.`task_id` = `task_log`.`task_id` 
 			ORDER BY `task_log`.`start_time` DESC";
@@ -444,7 +447,7 @@ class Task_Data_Interface {
 		<b>Database Output</b><br>
 		<table border='1' style='width:100%;'>";
 
-		$return_html .= "<tr><td>Name</td><td>Start Time</td><td>Duration (Hours)</td><td>Note</td></tr>";
+		$return_html .= "<tr><td>Name</td><td>Start Time</td><td>Duration (Hours)</td><td>Status</td><td>Note</td></tr>";
 
 		$i=0;
 		while ($i < $num) {
@@ -453,6 +456,7 @@ class Task_Data_Interface {
 			$task_entry_start_time = mysql_result($result,$i,"start_time");
 			$task_entry_hours = mysql_result($result,$i,"hours");
 			$task_entry_note = mysql_result($result,$i,"note");
+			$task_entry_status = mysql_result($result,$i,"status");
 
 			$return_html .= 
 				"<tr><td>". 
@@ -461,6 +465,8 @@ class Task_Data_Interface {
 				$task_entry_start_time . 
 				"</td><td>" . 
 				$task_entry_hours . 
+				"</td><td>" . 
+				$task_entry_status . 
 				"</td><td>" . 
 				$task_entry_note . "</td></tr>";
 

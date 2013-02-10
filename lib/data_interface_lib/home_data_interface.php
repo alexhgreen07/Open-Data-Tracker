@@ -21,14 +21,163 @@ class Home_Data_Interface {
 			'html' => '',
 		);
 		
-		
-		$return_json['html'] .= $this->Get_Task_Summary();
+		$return_json['html'] .= $this->Get_Started_Task_Summary();
+		$return_json['html'] .= $this->Get_Scheduled_Task_Summary();
+		$return_json['html'] .= $this->Get_Floating_Task_Summary();
 		$return_json['html'] .= $this->Get_Aggregate_Summary();
 		
 		return $return_json;
 	}
 	
-	private function Get_Task_Summary()
+	private function Get_Floating_Task_Summary()
+	{
+		$return_html = '';
+		
+		$sql = "SELECT 
+			`tasks`.`task_id` AS `task_id`,
+			`tasks`.`name` AS `name`, 
+			`tasks`.`recurring` AS `recurring`,
+			`tasks`.`recurrance_period` AS `recurrance_period`,
+			`tasks`.`estimated_time` AS `estimated_time`
+			FROM `tasks` 
+			WHERE `tasks`.`schedule_type` = 'Floating' 
+			AND `tasks`.`status` != 'Completed'
+			ORDER BY `tasks`.`recurring` DESC, `tasks`.`name`";
+		
+		$result=mysql_query($sql, $this->database_link);
+		$num=mysql_numrows($result);
+		
+		$return_html .= '
+			<b>Valid Floating Tasks</b> <br />
+			<table border="1" style="width:100%;">
+			<tr>
+			<td><b>Task Name</b></td>
+			<td><b>Recurring</b></td>
+			<td><b>Estimated Time</b></td>
+			</tr>';
+		
+		$i=0;
+		while ($i < $num) {
+			
+			$task_is_valid = true;
+			
+			$task_id = mysql_result($result,$i,'task_id');
+			$task_name = mysql_result($result,$i,"name");
+			$task_is_recurring = mysql_result($result,$i,"recurring");
+			$task_recurrance_period = mysql_result($result,$i,'recurrance_period');
+			$task_elapsed = mysql_result($result,$i,"estimated_time");
+			
+			
+			if($task_is_recurring)
+			{
+				$sql = "SELECT `task_log_id`, `start_time` 
+					FROM `task_log` 
+					WHERE `task_id` = ".$task_id." AND
+					`status` = 'Completed' AND
+					TIMESTAMPADD(HOUR,".$task_recurrance_period." + `hours`, `start_time`) > NOW()";
+					
+				$inner_result = mysql_query($sql, $this->database_link);
+				$inner_num = mysql_numrows($inner_result);
+				
+				
+				if($inner_num > 0)
+				{
+					//task has already been completed within the recurrance period
+					$task_is_valid = false;
+				}
+				
+			}
+			
+			if($task_is_valid)
+			{
+			
+			
+				$return_html .= '<tr>';
+
+				$return_html .= '<td>'.$task_name."</td>";
+				$return_html .= '<td>'.$task_is_recurring."</td>";
+				$return_html .= '<td>'.round($task_elapsed,2)."</td>";
+		
+				$return_html .= '</tr>';
+			
+			}
+			
+			$i++;
+		}
+
+		$return_html .= '</table><br />';
+		
+		return $return_html;
+	}
+	
+	private function Get_Scheduled_Task_Summary()
+	{
+		$return_html = '';
+		
+		$sql = "SELECT 
+			`tasks`.`name` AS `name`, 
+			`tasks`.`scheduled_time` AS `scheduled_time`,
+			`tasks`.`estimated_time` AS `estimated_time`,
+			(TIMESTAMPDIFF(SECOND,NOW( ), `tasks`.`scheduled_time`) / 60 / 60) AS `time_to`
+			FROM `tasks` 
+			WHERE `tasks`.`schedule_type` = 'Scheduled' 
+			AND `tasks`.`status` != 'Completed'
+			AND (TIMESTAMPDIFF(SECOND,NOW( ), `tasks`.`scheduled_time`) / 60 / 60) < 24
+			ORDER BY `tasks`.`name`";
+		
+		$result=mysql_query($sql, $this->database_link);
+		$num=mysql_numrows($result);
+		
+		$return_html .= '
+			<b>Upcoming Scheduled Tasks (Next 24 Hours)</b> <br />
+			<table border="1" style="width:100%;">
+			<tr>
+			<td><b>Task Name</b></td>
+			<td><b>Scheduled Time</b></td>
+			<td><b>Time To (hh:mm)</b></td>
+			<td><b>Estimated Time</b></td>
+			</tr>';
+		
+		$i=0;
+		while ($i < $num) {
+
+			$return_html .= '<tr>';
+
+			$task_name = mysql_result($result,$i,"name");
+			$task_scheduled_time = mysql_result($result,$i,"scheduled_time");
+			$task_time_to = mysql_result($result,$i,"time_to");
+			$task_elapsed = mysql_result($result,$i,"estimated_time");
+			
+			
+			
+			$return_html .= '<td>'.$task_name."</td>";
+			$return_html .= '<td>'.$task_scheduled_time."</td>";
+			
+			if($task_time_to >= 0)
+			{
+				$return_html .= '<td>'.floor($task_time_to).":".floor(($task_time_to * 60) % 60)."</td>";
+			}
+			else
+			{
+				$task_time_to = -$task_time_to;
+				$return_html .= '<td>'.ceil($task_time_to).":".ceil(($task_time_to * 60) % 60)." (late)</td>";
+			}
+			
+			
+			
+			$return_html .= '<td>'.round($task_elapsed,2)."</td>";
+		
+			$return_html .= '</tr>';
+
+			$i++;
+		}
+
+		$return_html .= '</table><br />';
+		
+		return $return_html;
+	}
+	
+	private function Get_Started_Task_Summary()
 	{
 		$return_html = '';
 		
@@ -49,7 +198,7 @@ class Home_Data_Interface {
 			<tr>
 			<td><b>Task Name</b></td>
 			<td><b>Start Time</b></td>
-			<td><b>Elapsed</b></td>
+			<td><b>Elapsed (hh:mm)</b></td>
 			</tr>';
 		
 		$i=0;
@@ -63,7 +212,7 @@ class Home_Data_Interface {
 
 			$return_html .= '<td>'.$task_name."</td>";
 			$return_html .= '<td>'.$task_start_time."</td>";
-			$return_html .= '<td>'.round($task_elapsed,2)."</td>";
+			$return_html .= '<td>'.floor($task_elapsed).":".floor(($task_elapsed * 60) % 60)."</td>";
 		
 			$return_html .= '</tr>';
 

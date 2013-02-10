@@ -23,14 +23,14 @@ class Report_Data_Interface {
 		
 		$titles_and_queries = array(
 			
-			"7 Day Item Averages:" => "SELECT `unit` AS `name`, (SUM( `value` ) / 7) AS `agg_value` 
+			"7 Day Item Averages (Units/Day):" => "SELECT `unit` AS `name`, (SUM( `value` ) / 7) AS `agg_value` 
 			FROM `item_log` , `items`
 			WHERE DATEDIFF( NOW( ) , `time` ) <= 7 
 			AND DATEDIFF( NOW( ) , `time` ) > 0 
 			AND `item_log`.`item_id` = `items`.`item_id`
 			GROUP BY `unit`",
 			
-			"7 Day Task Averages:" => "SELECT `tasks`.`name` AS `name`, (SUM(`task_log`.`hours`) / 7) AS `agg_value` 
+			"7 Day Task Averages (Hours/Day):" => "SELECT `tasks`.`name` AS `name`, (SUM(`task_log`.`hours`) / 7) AS `agg_value` 
 			FROM `task_log`, `tasks` 
 			WHERE `task_log`.`task_id` = `tasks`.`task_id` 
 			AND DATEDIFF( NOW( ) , `task_log`.`start_time` ) <= 7 

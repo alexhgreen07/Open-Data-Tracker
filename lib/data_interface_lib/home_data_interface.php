@@ -115,18 +115,22 @@ class Home_Data_Interface {
 		$return_html = '';
 		
 		$sql = "SELECT 
+			`tasks`.`task_id` AS `task_id`,
 			`tasks`.`name` AS `name`, 
 			`tasks`.`scheduled_time` AS `scheduled_time`,
 			`tasks`.`estimated_time` AS `estimated_time`,
+			`tasks`.`recurring` AS `recurring`,
+			`tasks`.`recurrance_type` AS `recurrance_type`,
+			`tasks`.`recurrance_period` AS `recurrance_period`,
 			(TIMESTAMPDIFF(SECOND,NOW( ), `tasks`.`scheduled_time`) / 60 / 60) AS `time_to`
 			FROM `tasks` 
 			WHERE `tasks`.`schedule_type` = 'Scheduled' 
 			AND `tasks`.`status` != 'Completed'
 			AND (TIMESTAMPDIFF(SECOND,NOW( ), `tasks`.`scheduled_time`) / 60 / 60) < 24
-			ORDER BY `tasks`.`name`";
+			ORDER BY `tasks`.`scheduled_time`, `tasks`.`name`";
 		
-		$result=mysql_query($sql, $this->database_link);
-		$num=mysql_numrows($result);
+		$result = mysql_query($sql, $this->database_link);
+		$num = mysql_numrows($result);
 		
 		$return_html .= '
 			<b>Upcoming Scheduled Tasks (Next 24 Hours)</b> <br />
@@ -141,33 +145,92 @@ class Home_Data_Interface {
 		$i=0;
 		while ($i < $num) {
 
-			$return_html .= '<tr>';
-
+			$is_upcoming_task = true;
+			
+			$task_id = mysql_result($result,$i,"task_id");
 			$task_name = mysql_result($result,$i,"name");
 			$task_scheduled_time = mysql_result($result,$i,"scheduled_time");
 			$task_time_to = mysql_result($result,$i,"time_to");
 			$task_elapsed = mysql_result($result,$i,"estimated_time");
+			$task_recurring = mysql_result($result,$i,"recurring");
+			$task_recurrance_period = mysql_result($result,$i,'recurrance_period');
+			$task_recurrance_type = mysql_result($result,$i,'recurrance_type');
 			
-			
-			
-			$return_html .= '<td>'.$task_name."</td>";
-			$return_html .= '<td>'.$task_scheduled_time."</td>";
-			
-			if($task_time_to >= 0)
+			//check if the task is recurring
+			if($task_recurring)
 			{
-				$return_html .= '<td>'.floor($task_time_to).":".floor(($task_time_to * 60) % 60)."</td>";
+				//check if the task has been completed recently
+				$inner_sql = "SELECT 
+					(TIMESTAMPDIFF(SECOND,NOW( ), `start_time`) / 60 / 60) AS `time_since`
+					FROM `task_log` 
+					WHERE `task_id` = '".$task_id."' 
+					AND `status` = 'Completed'";
+				
+				$inner_result = mysql_query($inner_sql, $this->database_link);
+				$inner_num = mysql_numrows($inner_result);
+				
+				$j = 0;
+				while($j < $inner_num)
+				{
+					
+					$time_since = mysql_result($inner_result,$j,"time_since");
+					
+					//check if the task has been executed in the recurrance period.
+					if($time_since < ($task_recurrance_period / 2))
+					{
+						$is_upcoming_task = false;
+						break;
+					}
+					
+					$j++;
+				}
+				
+				//if it is a valid upcoming task
+				if($is_upcoming_task && $inner_num > 0)
+				{
+					//correct the scheduled time according to the recurrance period
+					
+					$task_scheduled_timestamp = strtotime($task_scheduled_time);
+					$current_timestamp = time();
+					
+					while($task_scheduled_timestamp < $current_timestamp)
+					{
+						
+						$task_scheduled_timestamp += (60 * 60 * $task_recurrance_period);
+						
+					}
+					
+					$task_scheduled_time = date('Y-m-d H:i:s', $task_scheduled_timestamp);
+					$task_time_to = ($task_scheduled_timestamp - time()) / 60 / 60;
+				}
+				
 			}
-			else
+			
+			if($is_upcoming_task)
 			{
-				$task_time_to = -$task_time_to;
-				$return_html .= '<td>'.ceil($task_time_to).":".ceil(($task_time_to * 60) % 60)." (late)</td>";
-			}
+			
+				$return_html .= '<tr>';
+			
+				$return_html .= '<td>'.$task_name."</td>";
+				$return_html .= '<td>'.$task_scheduled_time."</td>";
+			
+				if($task_time_to >= 0)
+				{
+					$return_html .= '<td>'.floor($task_time_to).":".floor(($task_time_to * 60) % 60)."</td>";
+				}
+				else
+				{
+					$task_time_to = -$task_time_to;
+					$return_html .= '<td>'.floor($task_time_to).":".floor(($task_time_to * 60) % 60)." (late)</td>";
+				}
 			
 			
 			
-			$return_html .= '<td>'.round($task_elapsed,2)."</td>";
+				$return_html .= '<td>'.round($task_elapsed,2)."</td>";
 		
-			$return_html .= '</tr>';
+				$return_html .= '</tr>';
+			
+			}
 
 			$i++;
 		}

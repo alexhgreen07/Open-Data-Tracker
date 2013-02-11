@@ -324,6 +324,7 @@ class Task_Data_Interface {
 			`schedule_type`, 
 			`scheduled_time`,
 			`recurring`,
+			`recurrance_type`,
 			`recurrance_period`,
 			`note`) VALUES (';
 			
@@ -335,11 +336,14 @@ class Task_Data_Interface {
 		$sql .= "'".$schedule_type."',";
 		$sql .= "'".$scheduled_time."',";
 		$sql .= "".$recurring.",";
+		$sql .= "'".$recurrance_type."',";
 		$sql .= "'".$recurrance_period."',";
 		$sql .= "'".$task_note."')";
 	
 	
 		$success = mysql_query($sql, $this->database_link);
+		
+		$return_json['debug'] = $sql;
 		
 		if($success)
 		{

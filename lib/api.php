@@ -3,6 +3,10 @@
 require_once('auth.php');
 require_once('config.php');
 require_once('data_interface.php');
+require_once('data_interface_lib/home_data_interface.php');
+require_once('data_interface_lib/item_data_interface.php');
+require_once('data_interface_lib/task_data_interface.php');
+require_once('data_interface_lib/report_data_interface.php');
 require_once('../js/json-rpc2php-master/jsonRPC2Server.php');
 
 //this is a protected area. Ensure the session is authorized.
@@ -20,12 +24,24 @@ if(!$db) {
 	die("Unable to select database");
 }
 
-//initialize the API class and the RPC interface
-$myClass = new Data_Interface($link);
+//initialize the API classes and the RPC interface
+$generaldatainterface = new Data_Interface($link);
+$homedatainteface = new Home_Data_Interface($link);
+$itemdatainterface = new Item_Data_Interface($link);
+$taskdatainterface = new Task_Data_Interface($link);
+$reportdatainterface = new Report_Data_Interface($link);
+
+//initialize the jsonRPC server object
 $jsonRpc = new jsonRPCServer();
 
-//register class and process requests
-$jsonRpc->registerClass($myClass);
+//register classes
+$jsonRpc->registerClass($generaldatainterface);
+$jsonRpc->registerClass($homedatainteface);
+$jsonRpc->registerClass($itemdatainterface);
+$jsonRpc->registerClass($taskdatainterface);
+$jsonRpc->registerClass($reportdatainterface);
+
+//handle requests
 $jsonRpc->handle() or die('no request');
 
 

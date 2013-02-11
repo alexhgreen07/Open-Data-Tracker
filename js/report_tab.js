@@ -14,7 +14,7 @@ function Report_Tab (data_div_id) {
 		$('#' + self.report_summaries_loading_image.id).show();
 		
 		//execute the RPC callback for retrieving the item log
-		rpc.Data_Interface.Get_Report_Summary_Data(params,function(jsonRpcObj){
+		rpc.Report_Data_Interface.Get_Report_Summary_Data(params,function(jsonRpcObj){
 			
 			
 			var new_inner_html = '';
@@ -153,7 +153,7 @@ function Report_Tab (data_div_id) {
 		var new_tab;
 		
 		new_tab = new Array();
-		new_tab.push("Summaries");
+		new_tab.push("Sums and Averages");
 		new_tab.push('<div id="reports_summaries_tab"></div>');
 		tabs_array.push(new_tab);
 		

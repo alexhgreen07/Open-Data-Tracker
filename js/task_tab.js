@@ -32,7 +32,7 @@ function Task_Tab (task_div_id) {
 		$('#' + self.add_task_entry_loading_image_new.id).show();
 		
 		//execute the RPC callback for retrieving the item log
-		rpc.Data_Interface.Get_Start_Stop_Task_Names(params,function(jsonRpcObj){
+		rpc.Task_Data_Interface.Get_Start_Stop_Task_Names(params,function(jsonRpcObj){
 			
 			if(jsonRpcObj.result.authenticated == 'true')
 			{
@@ -97,7 +97,7 @@ function Task_Tab (task_div_id) {
 		$('#' + self.loading_image_view.id).show();
 		
 		//execute the RPC callback for retrieving the item log
-		rpc.Data_Interface.Get_Tasks(params,function(jsonRpcObj){
+		rpc.Task_Data_Interface.Get_Tasks(params,function(jsonRpcObj){
 			
 			var new_inner_html = '';
 			
@@ -156,7 +156,7 @@ function Task_Tab (task_div_id) {
 			$('#' + self.add_task_entry_loading_image_new.id).show();
 		
 			//execute the RPC callback for retrieving the item log
-			rpc.Data_Interface.Insert_Task_Entry(params,function(jsonRpcObj){
+			rpc.Task_Data_Interface.Insert_Task_Entry(params,function(jsonRpcObj){
 			
 				if(jsonRpcObj.result.success == 'true')
 				{
@@ -219,7 +219,7 @@ function Task_Tab (task_div_id) {
 			$('#' + self.loading_image_new.id).show();
 		
 			//execute the RPC callback for retrieving the item log
-			rpc.Data_Interface.Task_Start_Stop(params,function(jsonRpcObj){
+			rpc.Task_Data_Interface.Task_Start_Stop(params,function(jsonRpcObj){
 			
 				if(jsonRpcObj.result.success == 'true')
 				{
@@ -259,7 +259,7 @@ function Task_Tab (task_div_id) {
 					{
 						refresh_callback();
 						
-						self.refresh_task_log_callback();
+						//self.refresh_task_log_callback();
 					});
 				
 				}
@@ -282,7 +282,7 @@ function Task_Tab (task_div_id) {
 		}
 	};
 	
-	this.Mark_Task_Complete = function()
+	this.Mark_Task_Complete = function(refresh_callback)
 	{
 		var params = new Array();
 		
@@ -300,22 +300,25 @@ function Task_Tab (task_div_id) {
 			$('#' + self.loading_image_new.id).show();
 		
 			//execute the RPC callback for retrieving the item log
-			rpc.Data_Interface.Task_Mark_Complete(params,function(jsonRpcObj){
+			rpc.Task_Data_Interface.Task_Mark_Complete(params,function(jsonRpcObj){
 			
 				if(jsonRpcObj.result.success == 'true')
 				{
 					
-					//reset the notes
-					$('#' + self.task_timecard_note.id).val('');
 					
 					alert('Task completed.');
+					
+					
+					//reset the notes
+					$('#' + self.task_timecard_note.id).val('');
 					
 					self.Refresh_Tasks(function()
 					{
 						//refresh the list to remove this task
 						self.Refresh_Task_Name_List(function()
 						{
-							self.refresh_task_log_callback();
+							//self.refresh_task_log_callback();
+							refresh_callback();
 						});
 						
 					});
@@ -375,7 +378,7 @@ function Task_Tab (task_div_id) {
 		
 		
 		//execute the RPC callback for retrieving the item log
-		rpc.Data_Interface.Get_Task_Log(params,function(jsonRpcObj){
+		rpc.Task_Data_Interface.Get_Task_Log(params,function(jsonRpcObj){
 			
 			//RPC complete. Set appropriate HTML.
 			var new_html = '';
@@ -389,6 +392,7 @@ function Task_Tab (task_div_id) {
 			$('#' + self.task_log_loading_image.id).hide();
 			
 			refresh_callback();
+			
 		});
 	};
 	
@@ -397,7 +401,10 @@ function Task_Tab (task_div_id) {
 		
 		//alert('calling rpc onclick.');
 		
-		this.Refresh_Task_Log_Data();
+		this.Refresh_Task_Log_Data(function()
+		{
+			//empty
+		});
 		
 	};
 	
@@ -412,12 +419,18 @@ function Task_Tab (task_div_id) {
 		{
 			this.Start_Stop_Task(function()
 			{
-				self.Mark_Task_Complete();
+				self.Mark_Task_Complete(function()
+				{
+					self.refresh_task_log_callback();
+				});
 			});
 		}
 		else
 		{
-			this.Mark_Task_Complete();
+			this.Mark_Task_Complete(function()
+			{
+				self.refresh_task_log_callback();
+			});
 		}
 	};
 	
@@ -427,6 +440,18 @@ function Task_Tab (task_div_id) {
 		this.Start_Stop_Task(function()
 		{
 		});
+	};
+	
+	this.On_Submit_Task_Entry_Click_Event = function()
+	{
+		this.Insert_Task_Entry(false);
+			
+	};
+	
+	this.On_Complete_Task_Entry_Click_Event = function()
+	{
+		//execute the click event
+		this.Insert_Task_Entry(true);
 	};
 	
 	this.On_View_Task_Refresh_Click_Event = function()
@@ -447,7 +472,7 @@ function Task_Tab (task_div_id) {
 		params[5] = $('#' + this.task_scheduled_select.id).val();
 		params[6] = $('#' + this.task_scheduled_date.id).val();
 		params[7] = $('#' + this.task_recurring_select.id).val();
-		params[8] = 'hours';
+		params[8] = $('#' + this.task_recurring_select_type.id).val();
 		params[9] = $('#' + this.task_reccurance_period.id).val();
 		
 		var self = this;
@@ -456,7 +481,7 @@ function Task_Tab (task_div_id) {
 		$('#' + self.loading_image_add.id).show();
 		
 		//execute the RPC callback for retrieving the item log
-		rpc.Data_Interface.Add_New_Task(params,function(jsonRpcObj){
+		rpc.Task_Data_Interface.Add_New_Task(params,function(jsonRpcObj){
 			
 			//hide the loader image
 			$('#' + self.loading_image_add.id).hide();
@@ -467,12 +492,14 @@ function Task_Tab (task_div_id) {
 				self.Refresh_Task_Name_List(function()
 				{
 					alert('New task added.');
+					
 				});
 			
 			}
 			else
 			{
 				alert('Task failed to add.');
+				//alert(jsonRpcObj.result.debug);
 			}
 			
 			
@@ -725,7 +752,7 @@ function Task_Tab (task_div_id) {
 			event.preventDefault();
 			
 			//execute the click event
-			self.Insert_Task_Entry(false);
+			self.On_Submit_Task_Entry_Click_Event();
 		});
 		
 		
@@ -735,9 +762,8 @@ function Task_Tab (task_div_id) {
 			//ensure a normal postback does not occur
 			event.preventDefault();
 			
+			self.On_Complete_Task_Entry_Click_Event();
 			
-			//execute the click event
-			self.Insert_Task_Entry(true);
 		});
 		
 		
@@ -814,6 +840,14 @@ function Task_Tab (task_div_id) {
 		this.task_name.setAttribute('type','text');
 		this.data_form_new_task.appendChild(this.task_name);
 		
+		this.data_form_new_task.innerHTML += 'Category:<br />';
+		
+		//task recurring
+		this.task_category_select = document.createElement("select");
+		this.task_category_select.setAttribute('id','task_category_select');
+		this.task_category_select.innerHTML = '<option>-</option>';
+		this.data_form_new_task.appendChild(this.task_category_select);
+		
 		this.data_form_new_task.innerHTML += 'Description:<br />';
 		
 		//task description creation
@@ -874,21 +908,54 @@ function Task_Tab (task_div_id) {
 		
 		this.data_form_new_task.innerHTML += 'Recurring:<br />';
 		
-		
 		//task recurring
 		this.task_recurring_select = document.createElement("select");
 		this.task_recurring_select.setAttribute('id','task_recurring_select');
 		this.task_recurring_select.innerHTML = '<option>False</option><option>True</option>';
 		this.data_form_new_task.appendChild(this.task_recurring_select);
 		
-		this.data_form_new_task.innerHTML += 'Recurrance Period (Hours):<br />';
+		this.data_form_new_task.innerHTML += 'Recurrance Type:<br />';
+		
+		//task recurring
+		this.task_recurring_select_type = document.createElement("select");
+		this.task_recurring_select_type.setAttribute('id','task_recurring_select_type');
+		this.task_recurring_select_type.innerHTML = 
+			"<option>Minutes</option><option>Hours</option><option>Days</option><option>Weeks</option><option>Weekly</option><option>Months</option><option>Years</option>";
+		this.data_form_new_task.appendChild(this.task_recurring_select_type);
+		
+		this.data_form_new_task.innerHTML += 'Recurrance Period:<br />';
+		
+		this.task_reccurance_period_div = document.createElement('div');
+		this.task_reccurance_period_div.setAttribute('id','task_reccurance_period_div');
 		
 		//task estimate creation
 		this.task_reccurance_period = document.createElement("input");
 		this.task_reccurance_period.setAttribute('id','task_reccurance_period');
 		this.task_reccurance_period.setAttribute('type','text');
 		this.task_reccurance_period.setAttribute('value','0');
-		this.data_form_new_task.appendChild(this.task_reccurance_period);
+		this.task_reccurance_period_div.appendChild(this.task_reccurance_period);
+		this.data_form_new_task.appendChild(this.task_reccurance_period_div);
+		
+		//task estimate creation
+		this.task_reccurance_period_weekly_div = document.createElement('div');
+		this.task_reccurance_period_weekly_div.setAttribute('id','task_reccurance_period_weekly_div');
+		
+		var week_days = Array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
+		this.task_reccurance_period_weekly = Array();
+		
+		for(var i = 0; i < week_days.length; i++)
+		{
+			this.task_reccurance_period_weekly[i] = document.createElement("input");
+			this.task_reccurance_period_weekly[i].setAttribute('id','task_reccurance_period_weekly_' + week_days[i]);
+			this.task_reccurance_period_weekly[i].setAttribute('type','checkbox');
+			this.task_reccurance_period_weekly[i].setAttribute('style','width:auto;');
+			this.task_reccurance_period_weekly[i].setAttribute('value',week_days[i]);
+			this.task_reccurance_period_weekly_div.appendChild(this.task_reccurance_period_weekly[i]);
+			
+			this.task_reccurance_period_weekly_div.innerHTML += week_days[i];
+		}
+		
+		this.data_form_new_task.appendChild(this.task_reccurance_period_weekly_div);
 		
 		this.data_form_new_task.innerHTML += '<br /><br />';
 		
@@ -918,8 +985,33 @@ function Task_Tab (task_div_id) {
 
 		div_tab.appendChild(this.data_form_new_task);
 		
+		//hide ajax loader image
 		$('#' + self.loading_image_add.id).hide();
 		
+		$('#' + this.task_reccurance_period_weekly_div.id).hide();
+		
+		//hook in change event to select
+		$('#' + self.task_recurring_select_type.id).change(function() {
+			
+			var period_type = $('#' + self.task_recurring_select_type.id).val();
+			
+			if(period_type == 'Weekly')
+			{
+				//change event for the box
+				$('#' + self.task_reccurance_period_div.id).hide();
+				$('#' + self.task_reccurance_period_weekly_div.id).show();
+			}
+			else
+			{
+				//change event for the box
+				$('#' + self.task_reccurance_period_div.id).show();
+				$('#' + self.task_reccurance_period_weekly_div.id).hide();
+			}
+			
+			
+		});
+		
+		//initialize the datetime picker
 		$('#' + self.task_scheduled_date.id).datetimepicker({
 			timeFormat: "HH:mm",
 			dateFormat: 'yy-mm-dd'
@@ -996,6 +1088,11 @@ function Task_Tab (task_div_id) {
 		
 		new_tab = new Array();
 		new_tab.push("Edit Task");
+		new_tab.push("Under construction...");
+		tabs_array.push(new_tab);
+		
+		new_tab = new Array();
+		new_tab.push("Edit Task Entry");
 		new_tab.push("Under construction...");
 		tabs_array.push(new_tab);
 		

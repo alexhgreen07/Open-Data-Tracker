@@ -17,7 +17,7 @@ function Home_Tab (home_div_id) {
 		$('#' + self.loading_image.id).show();
 		
 		//execute the RPC callback for retrieving the item log
-		rpc.Data_Interface.Get_Home_Data_Summary(params,function(jsonRpcObj){
+		rpc.Home_Data_Interface.Get_Home_Data_Summary(params,function(jsonRpcObj){
 			
 			
 			var new_inner_html = '';
@@ -45,9 +45,8 @@ function Home_Tab (home_div_id) {
 		});
 	};
 	
-	//render function (div must already exist)
-	this.Render = function() {
-		
+	this.Render_Summary_Home_Data = function(form_div_id)
+	{
 		this.data_form = document.createElement("form");
 		this.data_form.setAttribute('method',"post");
 		this.data_form.setAttribute('id',"home_display_form");
@@ -56,17 +55,6 @@ function Home_Tab (home_div_id) {
 		this.button.setAttribute('type','submit');
 		this.button.setAttribute('id','home_submit_button');
 		this.button.value = 'Refresh';
-		
-		var self = this;
-		$(this.button).button();
-		$(this.button).click(function( event ) {
-			
-			//ensure a normal postback does not occur
-			event.preventDefault();
-			
-			//execute the click event
-			self.On_Click_Event();
-		});
 		
 		this.data_form.appendChild(this.button);
 		
@@ -79,9 +67,65 @@ function Home_Tab (home_div_id) {
 		this.new_data_display_div = document.createElement("div");
 		this.data_form.appendChild(this.new_data_display_div);
 		
-		var div_tab = document.getElementById(this.div_id);
+		var div_tab = document.getElementById(form_div_id);
 		div_tab.innerHTML = '';
 		div_tab.appendChild(this.data_form);
+		
+		var self = this;
+		$('#' + this.button.id).button();
+		$('#' + this.button.id).click(function( event ) {
+			
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			//execute the click event
+			self.On_Click_Event();
+		});
+	};
+	
+	this.Render_General_Home_Form = function(form_div_id)
+	{
+		this.general_form = document.createElement("form");
+		this.general_form.setAttribute('method',"post");
+		this.general_form.setAttribute('id',"home_general_form");
+		
+		var div_tab = document.getElementById(form_div_id);
+		div_tab.innerHTML = 'Under construction...';
+		div_tab.appendChild(this.general_form);
+	};
+	
+	//render function (div must already exist)
+	this.Render = function() {
+		
+		var tabs_array = new Array();
+		
+		var new_tab;
+		
+		new_tab = new Array();
+		new_tab.push("Summary Data");
+		new_tab.push('<div id="home_summary_data_div"></div>');
+		tabs_array.push(new_tab);
+		
+		new_tab = new Array();
+		new_tab.push("General");
+		new_tab.push('<div id="home_general_div"></div>');
+		tabs_array.push(new_tab);
+		
+		var return_html = '';
+		
+		return_html += '<div id="home_accordian"></div>';
+		
+		var div_tab = document.getElementById(this.div_id);
+
+		div_tab.innerHTML = return_html;
+		
+		var items_accordian = new Accordian('home_accordian',tabs_array);
+		
+		items_accordian.Render();
+		
+		
+		this.Render_Summary_Home_Data('home_summary_data_div');
+		this.Render_General_Home_Form('home_general_div');
 		
 		//call the click event function
 		this.On_Click_Event();

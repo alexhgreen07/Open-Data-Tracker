@@ -20,7 +20,7 @@ function Item_Tab (item_div_id) {
 		$('#' + self.loading_image.id).show();
 		
 		//execute the RPC callback for retrieving the item log
-		rpc.Data_Interface.Get_Items(params,function(jsonRpcObj){
+		rpc.Item_Data_Interface.Get_Items(params,function(jsonRpcObj){
 			
 			if(jsonRpcObj.result.authenticated == 'true')
 			{
@@ -117,7 +117,7 @@ function Item_Tab (item_div_id) {
 		
 		
 		//execute the RPC callback for retrieving the item log
-		rpc.Data_Interface.Get_Item_Log(params,function(jsonRpcObj){
+		rpc.Item_Data_Interface.Get_Item_Log(params,function(jsonRpcObj){
 			
 			//RPC complete. Set appropriate HTML.
 			var new_html = '';
@@ -168,7 +168,7 @@ function Item_Tab (item_div_id) {
 			params[2] = note_string;
 		
 			//execute the RPC callback for retrieving the item log
-			rpc.Data_Interface.Insert_Quick_Item_Entry(params,function(jsonRpcObj){
+			rpc.Item_Data_Interface.Insert_Quick_Item_Entry(params,function(jsonRpcObj){
 				
 				if(jsonRpcObj.result.authenticated == 'true')
 				{
@@ -236,7 +236,7 @@ function Item_Tab (item_div_id) {
 			params[3] = note_string;
 		
 			//execute the RPC callback for retrieving the item log
-			rpc.Data_Interface.Insert_Item_Entry(params,function(jsonRpcObj){
+			rpc.Item_Data_Interface.Insert_Item_Entry(params,function(jsonRpcObj){
 				
 				if(jsonRpcObj.result.authenticated == 'true')
 				{
@@ -301,7 +301,7 @@ function Item_Tab (item_div_id) {
 			params[2] = note_string;
 	
 			//execute the RPC callback for retrieving the item log
-			rpc.Data_Interface.Add_New_Item(params,function(jsonRpcObj){
+			rpc.Item_Data_Interface.Add_New_Item(params,function(jsonRpcObj){
 			
 				if(jsonRpcObj.result.authenticated == 'true')
 				{
@@ -455,15 +455,6 @@ function Item_Tab (item_div_id) {
 		this.item_new_add_entry_button.setAttribute('type','submit');
 		this.item_new_add_entry_button.value = 'Submit';
 		var self = this;
-		$(this.item_new_add_entry_button).button();
-		$(this.item_new_add_entry_button).click(function( event ) {
-			
-			//ensure a normal postback does not occur
-			event.preventDefault();
-			
-			//execute the click event
-			self.Add_Item_Entry_Click();
-		});
 		this.item_new_entry_data_form.appendChild(this.item_new_add_entry_button);
 		
 		this.new_loading_image = document.createElement("img");
@@ -477,6 +468,16 @@ function Item_Tab (item_div_id) {
 		
 		//hide the loader image
 		$('#' + self.new_loading_image.id).hide();
+		
+		$('#' + this.item_new_add_entry_button.id).button();
+		$('#' + this.item_new_add_entry_button.id).click(function( event ) {
+			
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			//execute the click event
+			self.Add_Item_Entry_Click();
+		});
 		
 		//initialize the datetime picker
 		$('#' + this.item_new_time.id).datetimepicker({
@@ -514,14 +515,13 @@ function Item_Tab (item_div_id) {
 		this.item_name.setAttribute('type','text');
 		this.item_add_data_form.appendChild(this.item_name);
 		
-		this.item_add_data_form.innerHTML += 'Unit:<br />';
+		this.item_add_data_form.innerHTML += 'Category:<br />';
 		
-		//item note
-		this.item_new_unit = document.createElement("input");
-		this.item_new_unit.setAttribute('name',"add_item_unit");
-		this.item_new_unit.setAttribute('id',"add_item_unit");
-		this.item_new_unit.setAttribute('type','text');
-		this.item_add_data_form.appendChild(this.item_new_unit);
+		//task recurring
+		this.item_category_select = document.createElement("select");
+		this.item_category_select.setAttribute('id','item_category_select');
+		this.item_category_select.innerHTML = '<option>-</option>';
+		this.item_add_data_form.appendChild(this.item_category_select);
 		
 		this.item_add_data_form.innerHTML += 'Description:<br />';
 		
@@ -531,6 +531,15 @@ function Item_Tab (item_div_id) {
 		this.item_description.setAttribute('id',"item_description");
 		this.item_description.setAttribute('type','text');
 		this.item_add_data_form.appendChild(this.item_description);
+		
+		this.item_add_data_form.innerHTML += 'Unit:<br />';
+		
+		//item note
+		this.item_new_unit = document.createElement("input");
+		this.item_new_unit.setAttribute('name',"add_item_unit");
+		this.item_new_unit.setAttribute('id',"add_item_unit");
+		this.item_new_unit.setAttribute('type','text');
+		this.item_add_data_form.appendChild(this.item_new_unit);
 		
 		this.item_add_data_form.innerHTML += '<br /><br />';
 		
@@ -633,6 +642,11 @@ function Item_Tab (item_div_id) {
 		
 		new_tab = new Array();
 		new_tab.push("Edit Item");
+		new_tab.push("Under construction...");
+		tabs_array.push(new_tab);
+		
+		new_tab = new Array();
+		new_tab.push("Edit Item Entry");
 		new_tab.push("Under construction...");
 		tabs_array.push(new_tab);
 		

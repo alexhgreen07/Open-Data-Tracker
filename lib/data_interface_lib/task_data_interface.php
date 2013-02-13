@@ -76,6 +76,72 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 	
+	public function Update_Task_Entry($task_log_id, $task_id, $start_time, $hours, $completed, $status, $note)
+	{
+		
+		$return_json = array(
+			'authenticated' => 'false',
+			'success' => 'false',
+		);
+		
+		$task_log_id = mysql_real_escape_string($task_log_id);
+		$start_time = mysql_real_escape_string($start_time);
+		$task_id = mysql_real_escape_string($task_id);
+		$hours = mysql_real_escape_string($hours);
+		$completed = mysql_real_escape_string($completed);
+		$status = mysql_real_escape_string($status);
+		$note = mysql_real_escape_string($note);
+		
+		try
+		{
+		
+			if($completed)
+			{
+				$status = "Completed";
+			
+				$sql = "UPDATE `tasks` SET `status`='Completed' WHERE `task_id` = ".$task_id." AND `recurring` != 1";
+			
+				$success = mysql_query($sql, $this->database_link);
+				
+				if(!$success)
+				{
+					throw new Exception('SQL error.');
+				}
+			
+			}
+			else
+			{
+				//$status = "Stopped";
+			}
+		
+			$sql = "UPDATE `task_log` 
+				SET `task_id`=".$task_id.",
+				`start_time`=".$start_time.",
+				`hours`=".$hours.",
+				`status`='".$status."',
+				`note`='".$note."'
+				WHERE `task_log_id` = ".$task_log_id."";
+	
+			//execute insert
+			$success = mysql_query($sql, $this->database_link);
+			
+			if(!$success)
+			{
+				throw new Exception('SQL error.');
+			}
+			
+			$return_json['success'] = 'true';
+			
+		
+		}
+		catch(Exception $e)
+		{
+			$return_json['success'] = 'false';
+		}
+		
+		return $return_json;
+	}
+	
 	public function Get_Start_Stop_Task_Names()
 	{
 		$return_json = array(
@@ -286,7 +352,7 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 	
-	public function Add_New_Task(
+	public function Insert_Task(
 		$name,
 		$description = "",
 		$estimated_time = 0,
@@ -339,6 +405,68 @@ class Task_Data_Interface {
 		$sql .= "'".$recurrance_type."',";
 		$sql .= "'".$recurrance_period."',";
 		$sql .= "'".$task_note."')";
+	
+	
+		$success = mysql_query($sql, $this->database_link);
+		
+		$return_json['debug'] = $sql;
+		
+		if($success)
+		{
+			$return_json['success'] = 'true';
+		}
+		else
+		{
+			$return_json['success'] = 'false';
+		}
+		
+		return $return_json;
+	}
+	
+	public function Update_Task(
+		$task_id,
+		$name,
+		$category_id,
+		$description,
+		$estimated_time,
+		$note,
+		$status,
+		$schedule_type,
+		$scheduled_time,
+		$recurring,
+		$recurrance_type,
+		$recurrance_period)
+	{
+		$return_json = array(
+			'authenticated' => 'false',
+			'success' => 'false',
+		);
+		
+		$task_name = mysql_real_escape_string($name);
+		$task_description = mysql_real_escape_string($description);
+		$task_estimated_time = mysql_real_escape_string($estimated_time);
+		$task_note = mysql_real_escape_string($note);
+		$status = mysql_real_escape_string($status);
+		$schedule_type = mysql_real_escape_string($schedule_type);
+		$scheduled_time = mysql_real_escape_string($scheduled_time);
+		$recurring = mysql_real_escape_string($recurring);
+		$recurrance_type = mysql_real_escape_string($recurrance_type);
+		$recurrance_period = mysql_real_escape_string($recurrance_period);
+		
+	
+		$sql = "UPDATE `tasks` 
+			SET `category_id`=".$category_id.",
+			`name`='".$name."',
+			`description`='".$description."',
+			`estimated_time`=".$estimated_time.",
+			`status`='".$status."',
+			`schedule_type`='".$schedule_type."',
+			`scheduled_time`=".$scheduled_time.",
+			`recurring`=".$recurring.",
+			`recurrance_type`='".$recurrance_type."',
+			`recurrance_period`='".$recurrance_period."',
+			`note`='".$note."' 
+			WHERE `task_id`=".$task_id."";
 	
 	
 		$success = mysql_query($sql, $this->database_link);

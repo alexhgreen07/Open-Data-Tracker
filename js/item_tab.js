@@ -636,6 +636,16 @@ function Item_Tab (item_div_id) {
 		tabs_array.push(new_tab);
 		
 		new_tab = new Array();
+		new_tab.push("Edit Item Entry");
+		new_tab.push("Under construction...");
+		tabs_array.push(new_tab);
+		
+		new_tab = new Array();
+		new_tab.push("View Item Log");
+		new_tab.push('<div id="view_item_log_div"></div>');
+		tabs_array.push(new_tab);
+		
+		new_tab = new Array();
 		new_tab.push("New Item");
 		new_tab.push('<div id="add_item_div"></div>');
 		tabs_array.push(new_tab);
@@ -646,20 +656,9 @@ function Item_Tab (item_div_id) {
 		tabs_array.push(new_tab);
 		
 		new_tab = new Array();
-		new_tab.push("Edit Item Entry");
-		new_tab.push("Under construction...");
-		tabs_array.push(new_tab);
-		
-		new_tab = new Array();
 		new_tab.push("View Items");
 		new_tab.push('<div id="view_item_div"></div>');
 		tabs_array.push(new_tab);
-		
-		new_tab = new Array();
-		new_tab.push("View Item Log");
-		new_tab.push('<div id="view_item_log_div"></div>');
-		tabs_array.push(new_tab);
-		
 		
 		var return_html = '';
 		

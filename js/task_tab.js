@@ -259,7 +259,6 @@ function Task_Tab (task_div_id) {
 					{
 						refresh_callback();
 						
-						//self.refresh_task_log_callback();
 					});
 				
 				}
@@ -436,9 +435,11 @@ function Task_Tab (task_div_id) {
 	
 	this.On_Start_Stop_Click_Event = function()
 	{
+		var self = this;
 		
 		this.Start_Stop_Task(function()
 		{
+			self.refresh_task_log_callback();
 		});
 	};
 	
@@ -481,7 +482,7 @@ function Task_Tab (task_div_id) {
 		$('#' + self.loading_image_add.id).show();
 		
 		//execute the RPC callback for retrieving the item log
-		rpc.Task_Data_Interface.Add_New_Task(params,function(jsonRpcObj){
+		rpc.Task_Data_Interface.Insert_Task(params,function(jsonRpcObj){
 			
 			//hide the loader image
 			$('#' + self.loading_image_add.id).hide();
@@ -774,6 +775,353 @@ function Task_Tab (task_div_id) {
 			dateFormat: 'yy-mm-dd'
 		});
 		$('#' + this.task_entry_start_time.id).datetimepicker("setDate", new Date());
+		
+	};
+	
+	this.Render_Edit_Task_Entry_Form = function(form_div_id) {
+		
+		var self = this;
+		
+		//create the top form
+		this.data_form_edit_entry = document.createElement("form");
+		this.data_form_edit_entry.setAttribute('method',"post");
+		this.data_form_edit_entry.setAttribute('id',"edit_task_entry_form");
+		
+		this.data_form_edit_entry.innerHTML += 'Task Entries:<br />';
+		
+		//task name select dropdown
+		this.edit_task_entry_select = document.createElement("select");
+		this.edit_task_entry_select.setAttribute('name',"edit_task_entry_name_to_enter");
+		this.edit_task_entry_select.setAttribute('id',"edit_task_entry_name_to_enter");
+		this.edit_task_entry_select.innerHTML = '<option>-</option>';
+		this.data_form_edit_entry.appendChild(this.edit_task_entry_select);
+		
+		this.data_form_edit_entry.innerHTML += '<br /><br />';
+		
+		this.data_form_edit_entry.innerHTML += 'Task:<br />';
+		
+		//task name select dropdown
+		this.edit_task_entry_task_name_select = document.createElement("select");
+		this.edit_task_entry_task_name_select.setAttribute('name',"edit_task_entry_name_to_enter");
+		this.edit_task_entry_task_name_select.setAttribute('id',"edit_task_entry_name_to_enter");
+		this.edit_task_entry_task_name_select.innerHTML = '<option>-</option>';
+		$(this.edit_task_entry_task_name_select).change(function() {
+			
+			//call the change event function
+			//self.On_Task_Name_Select_Change_Event();
+			
+		});
+		this.data_form_edit_entry.appendChild(this.edit_task_entry_task_name_select);
+		
+		this.data_form_edit_entry.innerHTML += 'Start Time:<br />';
+		
+		this.task_entry_edit_start_time = document.createElement("input");
+		this.task_entry_edit_start_time.setAttribute('name','task_entry_edit_start_time');
+		this.task_entry_edit_start_time.setAttribute('id','task_entry_edit_start_time');
+		this.task_entry_edit_start_time.setAttribute('type','text');
+		this.data_form_edit_entry.appendChild(this.task_entry_edit_start_time);
+		
+		this.data_form_edit_entry.innerHTML += 'Status:<br />';
+		
+		this.edit_task_entry_task_status_select = document.createElement("select");
+		this.edit_task_entry_task_status_select.setAttribute('name',"edit_task_entry_status_to_enter");
+		this.edit_task_entry_task_status_select.setAttribute('id',"edit_task_entry_status_to_enter");
+		this.edit_task_entry_task_status_select.innerHTML = '<option>Stopped</option><option>Started</option>';
+		this.data_form_edit_entry.appendChild(this.edit_task_entry_task_status_select);
+		
+		this.data_form_edit_entry.innerHTML += 'Duration:<br />';
+		
+		this.task_entry_edit_duration = document.createElement("input");
+		this.task_entry_edit_duration.setAttribute('name','task_entry_edit_duration');
+		this.task_entry_edit_duration.setAttribute('id','task_entry_edit_duration');
+		this.task_entry_edit_duration.setAttribute('type','text');
+		this.task_entry_edit_duration.setAttribute('value','0');
+		this.data_form_edit_entry.appendChild(this.task_entry_edit_duration);
+		
+		this.data_form_edit_entry.innerHTML += 'Note:<br />';
+		
+		this.task_entry_edit_note = document.createElement("input");
+		this.task_entry_edit_note.setAttribute('name','task_entry_edit_note');
+		this.task_entry_edit_note.setAttribute('id','task_entry_edit_note');
+		this.task_entry_edit_note.setAttribute('type','text');
+		this.data_form_edit_entry.appendChild(this.task_entry_edit_note);
+		
+		this.data_form_edit_entry.innerHTML += '<br /><br />';
+		
+		//task submit button creation
+		this.edit_task_entry_task_submit_button = document.createElement("input");
+		this.edit_task_entry_task_submit_button.setAttribute('id','new_task_entry_submit');
+		this.edit_task_entry_task_submit_button.setAttribute('type','submit');
+		this.edit_task_entry_task_submit_button.value = 'Submit';
+		this.data_form_edit_entry.appendChild(this.edit_task_entry_task_submit_button);
+		
+		this.data_form_edit_entry.innerHTML += '<br /><br />';
+		
+		//task mark complete button creation
+		this.edit_task_entry_task_complete_button = document.createElement("input");
+		this.edit_task_entry_task_complete_button.setAttribute('id','new_task_entry_complete');
+		this.edit_task_entry_task_complete_button.setAttribute('type','submit');
+		this.edit_task_entry_task_complete_button.value = 'Mark Complete';
+		this.data_form_edit_entry.appendChild(this.edit_task_entry_task_complete_button);
+		
+		this.edit_task_entry_loading_image_new = document.createElement("img");
+		this.edit_task_entry_loading_image_new.setAttribute('id','edit_task_entry_tab_loader_image');
+		this.edit_task_entry_loading_image_new.setAttribute('style','width:100%;height:19px;');
+		this.edit_task_entry_loading_image_new.setAttribute('src','ajax-loader.gif');
+		this.data_form_edit_entry.appendChild(this.edit_task_entry_loading_image_new);
+
+		
+		var div_tab = document.getElementById(form_div_id);
+
+		div_tab.appendChild(this.data_form_edit_entry);
+		
+		$('#' + this.edit_task_entry_task_submit_button.id).button();
+		$('#' + this.edit_task_entry_task_submit_button.id).click(function( event ) {
+			
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			//execute the click event
+			//self.On_Submit_Task_Entry_Click_Event();
+		});
+		
+		
+		$('#' + this.edit_task_entry_task_complete_button.id).button();
+		$('#' + this.edit_task_entry_task_complete_button.id).click(function( event ) {
+			
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			//self.On_Complete_Task_Entry_Click_Event();
+			
+		});
+		
+		
+		$('#' + self.edit_task_entry_loading_image_new.id).hide();
+		
+		$('#' + this.task_entry_edit_start_time.id).datetimepicker({
+			timeFormat: "HH:mm",
+			dateFormat: 'yy-mm-dd'
+		});
+		$('#' + this.task_entry_edit_start_time.id).datetimepicker("setDate", new Date());
+		
+	};
+	
+	this.Render_Edit_Task_Form = function(form_div_id) {
+		
+		var self = this;
+		
+		//create the top form
+		this.data_form_edit_task = document.createElement("form");
+		this.data_form_edit_task.setAttribute('method',"post");
+		this.data_form_edit_task.setAttribute('id',"edit_task_entry_form");
+	
+		this.data_form_edit_task.innerHTML += 'Tasks:<br />';
+		
+		//task name select dropdown
+		this.task_entry_task_edit_name_select = document.createElement("select");
+		this.task_entry_task_edit_name_select.setAttribute('name',"edit_task_entry_name_to_enter");
+		this.task_entry_task_edit_name_select.setAttribute('id',"edit_task_entry_name_to_enter");
+		this.task_entry_task_edit_name_select.innerHTML = '<option>-</option>';
+		$(this.task_entry_task_edit_name_select).change(function() {
+			
+			//call the change event function
+			//self.On_task_edit_name_Select_Change_Event();
+			
+		});
+		this.data_form_edit_task.appendChild(this.task_entry_task_edit_name_select);
+		
+		this.data_form_edit_task.innerHTML += '<br /><br />';
+	
+		this.data_form_edit_task.innerHTML += '<b>General</b><br />';
+		
+		this.data_form_edit_task.innerHTML += 'Name:<br />';
+		
+		//task name creation
+		this.task_edit_name = document.createElement("input");
+		this.task_edit_name.setAttribute('name','task_edit_name');
+		this.task_edit_name.setAttribute('id','task_edit_name');
+		this.task_edit_name.setAttribute('type','text');
+		this.data_form_edit_task.appendChild(this.task_edit_name);
+		
+		this.data_form_edit_task.innerHTML += 'Category:<br />';
+		
+		//task recurring
+		this.task_edit_category_select = document.createElement("select");
+		this.task_edit_category_select.setAttribute('id','task_edit_category_select');
+		this.task_edit_category_select.innerHTML = '<option>-</option>';
+		this.data_form_edit_task.appendChild(this.task_edit_category_select);
+		
+		this.data_form_edit_task.innerHTML += 'Description:<br />';
+		
+		//task description creation
+		this.task_edit_description = document.createElement("input");
+		this.task_edit_description.setAttribute('name','task_edit_description');
+		this.task_edit_description.setAttribute('id','task_edit_description');
+		this.task_edit_description.setAttribute('type','text');
+		this.data_form_edit_task.appendChild(this.task_edit_description);
+		
+		this.data_form_edit_task.innerHTML += 'Estimated Time (Hours):<br />';
+		
+		//task estimate creation
+		this.task_edit_estimate = document.createElement("input");
+		this.task_edit_estimate.setAttribute('name','task_edit_estimated_time');
+		this.task_edit_estimate.setAttribute('id','task_edit_estimated_time');
+		this.task_edit_estimate.setAttribute('type','text');
+		this.task_edit_estimate.setAttribute('value','0');
+		this.data_form_edit_task.appendChild(this.task_edit_estimate);
+		
+		this.data_form_edit_task.innerHTML += 'Status:<br />';
+		
+		//task recurring
+		this.task_status_edit_select = document.createElement("select");
+		this.task_status_edit_select.setAttribute('id','task_status_edit_select');
+		this.task_status_edit_select.innerHTML = '<option>Stopped</option><option>Started</option>';
+		this.data_form_edit_task.appendChild(this.task_status_edit_select);
+		
+		this.data_form_edit_task.innerHTML += 'Note:<br />';
+		
+		//task note creation
+		this.task_edit_note = document.createElement("input");
+		this.task_edit_note.setAttribute('name','task_edit_note');
+		this.task_edit_note.setAttribute('id','task_edit_note');
+		this.task_edit_note.setAttribute('type','text');
+		this.data_form_edit_task.appendChild(this.task_edit_note);
+		
+		this.data_form_edit_task.innerHTML += '<br /><br />';
+		this.data_form_edit_task.innerHTML += '<b>Schedule</b><br />';
+		
+		this.data_form_edit_task.innerHTML += 'Scheduled/Floating:<br />';
+		
+		//task recurring
+		this.task_scheduled_edit_select = document.createElement("select");
+		this.task_scheduled_edit_select.setAttribute('id','task_scheduled_edit_select');
+		this.task_scheduled_edit_select.innerHTML = '<option>Floating</option><option>Scheduled</option>';
+		this.data_form_edit_task.appendChild(this.task_scheduled_edit_select);
+		
+		this.data_form_edit_task.innerHTML += 'Scheduled Date:<br />';
+		
+		//task estimate creation
+		this.task_scheduled_edit_date = document.createElement("input");
+		this.task_scheduled_edit_date.setAttribute('id','task_scheduled_edit_date');
+		this.task_scheduled_edit_date.setAttribute('type','text');
+		this.data_form_edit_task.appendChild(this.task_scheduled_edit_date);
+		
+		this.data_form_edit_task.innerHTML += '<br /><br />';
+		this.data_form_edit_task.innerHTML += '<b>Reccurances</b><br />';
+		
+		this.data_form_edit_task.innerHTML += 'Recurring:<br />';
+		
+		//task recurring
+		this.task_recurring_edit_select = document.createElement("select");
+		this.task_recurring_edit_select.setAttribute('id','task_recurring_edit_select');
+		this.task_recurring_edit_select.innerHTML = '<option>False</option><option>True</option>';
+		this.data_form_edit_task.appendChild(this.task_recurring_edit_select);
+		
+		this.data_form_edit_task.innerHTML += 'Recurrance Type:<br />';
+		
+		//task recurring
+		this.task_recurring_edit_select_type = document.createElement("select");
+		this.task_recurring_edit_select_type.setAttribute('id','task_recurring_edit_select_type');
+		this.task_recurring_edit_select_type.innerHTML = 
+			"<option>Minutes</option><option>Hours</option><option>Days</option><option>Weeks</option><option>Weekly</option><option>Months</option><option>Years</option>";
+		this.data_form_edit_task.appendChild(this.task_recurring_edit_select_type);
+		
+		this.data_form_edit_task.innerHTML += 'Recurrance Period:<br />';
+		
+		this.task_reccurance_edit_period_div = document.createElement('div');
+		this.task_reccurance_edit_period_div.setAttribute('id','task_reccurance_edit_period_div');
+		
+		//task estimate creation
+		this.task_reccurance_period = document.createElement("input");
+		this.task_reccurance_period.setAttribute('id','task_reccurance_period');
+		this.task_reccurance_period.setAttribute('type','text');
+		this.task_reccurance_period.setAttribute('value','0');
+		this.task_reccurance_edit_period_div.appendChild(this.task_reccurance_period);
+		this.data_form_edit_task.appendChild(this.task_reccurance_edit_period_div);
+		
+		//task estimate creation
+		this.task_reccurance_edit_period_weekly_div = document.createElement('div');
+		this.task_reccurance_edit_period_weekly_div.setAttribute('id','task_reccurance_edit_period_weekly_div');
+		
+		var week_days = Array('Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday');
+		this.task_reccurance_period_weekly = Array();
+		
+		for(var i = 0; i < week_days.length; i++)
+		{
+			this.task_reccurance_period_weekly[i] = document.createElement("input");
+			this.task_reccurance_period_weekly[i].setAttribute('id','task_reccurance_period_weekly_' + week_days[i]);
+			this.task_reccurance_period_weekly[i].setAttribute('type','checkbox');
+			this.task_reccurance_period_weekly[i].setAttribute('style','width:auto;');
+			this.task_reccurance_period_weekly[i].setAttribute('value',week_days[i]);
+			this.task_reccurance_edit_period_weekly_div.appendChild(this.task_reccurance_period_weekly[i]);
+			
+			this.task_reccurance_edit_period_weekly_div.innerHTML += week_days[i];
+		}
+		
+		this.data_form_edit_task.appendChild(this.task_reccurance_edit_period_weekly_div);
+		
+		this.data_form_edit_task.innerHTML += '<br /><br />';
+		
+		//task submit creation
+		this.task_edit_submit_button = document.createElement("input");
+		this.task_edit_submit_button.setAttribute('name','task_submit');
+		this.task_edit_submit_button.setAttribute('type','submit');
+		var self = this;
+		$(this.task_edit_submit_button).button();
+		$(this.task_edit_submit_button).click(function( event ) {
+			
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			//execute the click event
+			self.On_Add_Task_Click_Event();
+		});
+		this.data_form_edit_task.appendChild(this.task_edit_submit_button);
+		
+		this.loading_image_task_edit = document.createElement("img");
+		this.loading_image_task_edit.setAttribute('id','task_tab_edit_task_loader_image');
+		this.loading_image_task_edit.setAttribute('style','width:100%;height:19px;');
+		this.loading_image_task_edit.setAttribute('src','ajax-loader.gif');
+		this.data_form_edit_task.appendChild(this.loading_image_task_edit);
+		
+		var div_tab = document.getElementById(form_div_id);
+
+		div_tab.appendChild(this.data_form_edit_task);
+		
+		//hide ajax loader image
+		$('#' + self.loading_image_task_edit.id).hide();
+		
+		$('#' + this.task_reccurance_edit_period_weekly_div.id).hide();
+		
+		//hook in change event to select
+		$('#' + self.task_recurring_edit_select_type.id).change(function() {
+			
+			var period_type = $('#' + self.task_recurring_edit_select_type.id).val();
+			
+			if(period_type == 'Weekly')
+			{
+				//change event for the box
+				$('#' + self.task_reccurance_edit_period_div.id).hide();
+				$('#' + self.task_reccurance_edit_period_weekly_div.id).show();
+			}
+			else
+			{
+				//change event for the box
+				$('#' + self.task_reccurance_edit_period_div.id).show();
+				$('#' + self.task_reccurance_edit_period_weekly_div.id).hide();
+			}
+			
+			
+		});
+		
+		//initialize the datetime picker
+		$('#' + self.task_scheduled_edit_date.id).datetimepicker({
+			timeFormat: "HH:mm",
+			dateFormat: 'yy-mm-dd'
+		});
+		var date_to_set = new Date();
+		$('#' + self.task_scheduled_edit_date.id).datetimepicker("setDate", date_to_set);
 		
 	};
 	
@@ -1082,18 +1430,23 @@ function Task_Tab (task_div_id) {
 		tabs_array.push(new_tab);
 		
 		new_tab = new Array();
+		new_tab.push("Edit Task Entry");
+		new_tab.push('<div id="edit_task_entry_div"></div>');
+		tabs_array.push(new_tab);
+		
+		new_tab = new Array();
+		new_tab.push("View Task Log");
+		new_tab.push('<div id="view_task_log_div"></div>');
+		tabs_array.push(new_tab);
+		
+		new_tab = new Array();
 		new_tab.push("New Task");
 		new_tab.push('<div id="add_task_div"></div>');
 		tabs_array.push(new_tab);
 		
 		new_tab = new Array();
 		new_tab.push("Edit Task");
-		new_tab.push("Under construction...");
-		tabs_array.push(new_tab);
-		
-		new_tab = new Array();
-		new_tab.push("Edit Task Entry");
-		new_tab.push("Under construction...");
+		new_tab.push('<div id="edit_tasks_div"></div>');
 		tabs_array.push(new_tab);
 		
 		new_tab = new Array();
@@ -1102,8 +1455,18 @@ function Task_Tab (task_div_id) {
 		tabs_array.push(new_tab);
 		
 		new_tab = new Array();
-		new_tab.push("View Task Log");
-		new_tab.push('<div id="view_task_log_div"></div>');
+		new_tab.push("New Scheduled Entry");
+		new_tab.push('Under construction...');
+		tabs_array.push(new_tab);
+		
+		new_tab = new Array();
+		new_tab.push("Edit Scheduled Entry");
+		new_tab.push('Under construction...');
+		tabs_array.push(new_tab);
+		
+		new_tab = new Array();
+		new_tab.push("View Schedule");
+		new_tab.push('Under construction...');
 		tabs_array.push(new_tab);
 		
 		var return_html = '';
@@ -1123,6 +1486,10 @@ function Task_Tab (task_div_id) {
 		this.Render_New_Task_Entry_Form('new_task_entry_div');
 		
 		this.Render_New_Task_Form('add_task_div');
+		
+		this.Render_Edit_Task_Form('edit_tasks_div');
+		
+		this.Render_Edit_Task_Entry_Form('edit_task_entry_div');
 		
 		this.Render_View_Tasks_Form('view_tasks_div');
 		

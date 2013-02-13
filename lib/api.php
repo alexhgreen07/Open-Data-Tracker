@@ -1,26 +1,26 @@
 <?php
 
-require_once('auth.php');
-require_once('config.php');
-require_once('data_interface.php');
-require_once('data_interface_lib/home_data_interface.php');
-require_once('data_interface_lib/item_data_interface.php');
-require_once('data_interface_lib/task_data_interface.php');
-require_once('data_interface_lib/report_data_interface.php');
-require_once('../js/json-rpc2php-master/jsonRPC2Server.php');
+require_once ('auth.php');
+require_once ('config.php');
+require_once ('data_interface.php');
+require_once ('data_interface_lib/home_data_interface.php');
+require_once ('data_interface_lib/item_data_interface.php');
+require_once ('data_interface_lib/task_data_interface.php');
+require_once ('data_interface_lib/report_data_interface.php');
+require_once ('../js/json-rpc2php-master/jsonRPC2Server.php');
 
 //this is a protected area. Ensure the session is authorized.
 Authorize_Session();
 
 //Connect to mysql server
 $link = mysql_connect(DB_HOST, DB_USER, DB_PASSWORD);
-if(!$link) {
+if (!$link) {
 	die('Failed to connect to server: ' . mysql_error());
 }
 
 //Select database
 $db = mysql_select_db(DB_DATABASE);
-if(!$db) {
+if (!$db) {
 	die("Unable to select database");
 }
 
@@ -35,15 +35,13 @@ $reportdatainterface = new Report_Data_Interface($link);
 $jsonRpc = new jsonRPCServer();
 
 //register classes
-$jsonRpc->registerClass($generaldatainterface);
-$jsonRpc->registerClass($homedatainteface);
-$jsonRpc->registerClass($itemdatainterface);
-$jsonRpc->registerClass($taskdatainterface);
-$jsonRpc->registerClass($reportdatainterface);
+$jsonRpc -> registerClass($generaldatainterface);
+$jsonRpc -> registerClass($homedatainteface);
+$jsonRpc -> registerClass($itemdatainterface);
+$jsonRpc -> registerClass($taskdatainterface);
+$jsonRpc -> registerClass($reportdatainterface);
 
 //handle requests
-$jsonRpc->handle() or die('no request');
-
-
+$jsonRpc -> handle() or die('no request');
 ?>
 

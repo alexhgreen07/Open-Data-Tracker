@@ -1,4 +1,4 @@
-function Tabs (tab_div_id, tab_array) {
+function Tabs(tab_div_id, tab_array) {
 
 	//class variables
 	this.div_id = tab_div_id;
@@ -12,16 +12,14 @@ function Tabs (tab_div_id, tab_array) {
 		new_inner_html += "<ul>";
 
 		//create all top tab items using ul
-		for (var i = 0; i < this.tabs.length; i++)
-		{
+		for (var i = 0; i < this.tabs.length; i++) {
 			new_inner_html += '<li><a href="#' + this.div_id + '-tab-' + i + '">' + this.tabs[i][0] + '</a></li>';
 		}
 
 		new_inner_html += "</ul>";
 
 		//create all content tab items using div
-		for (var i = 0; i < this.tabs.length; i++)
-		{
+		for (var i = 0; i < this.tabs.length; i++) {
 			new_inner_html += '<div id="' + this.div_id + '-tab-' + i + '">' + this.tabs[i][1] + '</div>';
 		}
 
@@ -36,7 +34,4 @@ function Tabs (tab_div_id, tab_array) {
 
 	};
 }
-
-
-
 

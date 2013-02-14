@@ -7,7 +7,7 @@ require_once ('data_interface_lib/home_data_interface.php');
 require_once ('data_interface_lib/item_data_interface.php');
 require_once ('data_interface_lib/task_data_interface.php');
 require_once ('data_interface_lib/report_data_interface.php');
-require_once ('../js/json-rpc2php-master/jsonRPC2Server.php');
+require_once ('../client/external/json-rpc2php-master/jsonRPC2Server.php');
 
 //this is a protected area. Ensure the session is authorized.
 Authorize_Session();

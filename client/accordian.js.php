@@ -1,3 +1,9 @@
+<?php
+
+Header("content-type: application/x-javascript");
+
+?>
+
 function Accordian(accordian_div_id, accordian_array) {
 
 	//class variables

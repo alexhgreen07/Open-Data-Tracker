@@ -5,13 +5,13 @@
 		<title>Trackanything: Member Index</title>
 
 		<!-- Custom CSS stylsheet -->
-		<link href="css/loginmodule.css" rel="stylesheet" type="text/css" />
+		<link href="client/main.css.php" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
 
 		<?php
 
-		require_once ('lib/config.php');
+		require_once ('server/config.php');
 
 		$html_output = '';
 

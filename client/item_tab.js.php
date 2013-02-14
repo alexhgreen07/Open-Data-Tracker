@@ -1,14 +1,15 @@
+<?php
+
+Header("content-type: application/x-javascript");
+
+require_once('accordian.js.php');
+
+?>
+
 function Item_Tab(item_div_id) {
 
 	//class variables
 	this.div_id = item_div_id;
-	this.item_value
-	this.quick_item_name_select
-	this.new_item_name_select
-	this.item_note
-	this.loading_image
-	this.refresh_item_log_callback
-	this.items_list
 
 	this.Refresh_Items = function(refresh_callback) {
 		var params = new Array();
@@ -300,6 +301,8 @@ function Item_Tab(item_div_id) {
 		this.item_value.setAttribute('id', "value");
 		this.item_value.setAttribute('type', 'text');
 		this.item_quick_entry_data_form.appendChild(this.item_value);
+		
+		this.item_quick_entry_data_form.innerHTML += '<br />';
 
 		this.item_quick_entry_data_form.innerHTML += 'Item:<br />';
 
@@ -309,6 +312,8 @@ function Item_Tab(item_div_id) {
 		this.quick_item_name_select.setAttribute('id', "task_name_dropdown");
 		this.quick_item_name_select.innerHTML = '<option>-</option>';
 		this.item_quick_entry_data_form.appendChild(this.quick_item_name_select);
+
+		this.item_quick_entry_data_form.innerHTML += '<br />';
 
 		this.item_quick_entry_data_form.innerHTML += 'Note:<br />';
 

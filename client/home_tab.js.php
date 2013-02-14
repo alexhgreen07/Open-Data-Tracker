@@ -1,11 +1,15 @@
+<?php
+
+Header("content-type: application/x-javascript");
+
+require_once('accordian.js.php');
+
+?>
+
 function Home_Tab(home_div_id) {
 
 	//class variables
 	this.div_id = home_div_id;
-	this.data_form
-	this.button
-	this.new_data_display_div
-	this.loading_image
 
 	this.Refresh_Data = function(refresh_callback) {
 		var params = new Array();
@@ -241,6 +245,61 @@ function Home_Tab(home_div_id) {
 		this.Render_Edit_Category_Tab('home_category_edit_tab');
 	};
 
+	this.Render_Text_Size_Changer = function(form_div_id) {
+		
+		//append the main tab div
+		this.text_changer_div = document.createElement('div');
+		
+		this.text_changer_div.innerHTML += 'Text Size: <br />';
+		
+		this.smaller_text_link = document.createElement('input');
+		this.smaller_text_link.setAttribute('id','smaller_text_link');
+		this.smaller_text_link.setAttribute('type','submit');
+		this.smaller_text_link.setAttribute('value','Smaller');
+		
+		this.text_changer_div.appendChild(this.smaller_text_link);
+		
+		this.text_changer_div.innerHTML += '<br /><br />';
+		
+		this.larger_text_link = document.createElement('input');
+		this.larger_text_link.setAttribute('id','larger_text_link');
+		this.larger_text_link.setAttribute('type','submit');
+		this.larger_text_link.setAttribute('value','Larger');
+		
+		this.text_changer_div.appendChild(this.larger_text_link);
+		
+		this.text_changer_div.innerHTML += '<br /><br />';
+		
+		var div_tab = document.getElementById(form_div_id);
+		div_tab.appendChild(this.text_changer_div);
+		
+		$('#' + this.smaller_text_link.id).button();
+		
+		//setup actions
+		$('#' + this.smaller_text_link.id).click(function()
+		{
+			var size = parseInt($('body').css('font-size').replace("px",""));
+			
+			if(size > 1)
+			{
+				size--;
+			}
+			
+			$('body').css('font-size',size + 'px');
+		});
+		
+		$('#' + this.larger_text_link.id).button();
+		
+		$('#' + this.larger_text_link.id).click(function()
+		{
+			var size = parseInt($('body').css('font-size').replace("px",""));
+			
+			size++;
+			
+			$('body').css('font-size',size + 'px');
+		});
+	};
+
 	//render function (div must already exist)
 	this.Render = function() {
 
@@ -256,6 +315,11 @@ function Home_Tab(home_div_id) {
 		new_tab.push("General");
 		new_tab.push('<div id="home_general_div"></div>');
 		tabs_array.push(new_tab);
+		
+		new_tab = new Array();
+		new_tab.push("Settings");
+		new_tab.push('<div id="home_settings_div"></div>');
+		tabs_array.push(new_tab);
 
 		var return_html = '';
 
@@ -270,6 +334,7 @@ function Home_Tab(home_div_id) {
 
 		this.Render_Summary_Home_Data('home_summary_data_div');
 		this.Render_General_Home_Form('home_general_div');
+		this.Render_Text_Size_Changer('home_settings_div');
 
 		//call the click event function
 		this.On_Click_Event();

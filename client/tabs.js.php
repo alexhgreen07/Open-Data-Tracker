@@ -1,3 +1,9 @@
+<?php
+
+Header("content-type: application/x-javascript");
+
+?>
+
 function Tabs(tab_div_id, tab_array) {
 
 	//class variables

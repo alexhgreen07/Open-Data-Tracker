@@ -12,7 +12,7 @@ unset($_SESSION['SESS_LAST_NAME']);
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title>Logged Out</title>
-		<link href="css/loginmodule.css" rel="stylesheet" type="text/css" />
+		<link href="client/main.css.php" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
 		<h1>Logout </h1>

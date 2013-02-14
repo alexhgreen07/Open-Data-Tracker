@@ -1,25 +1,15 @@
+<?php
+
+Header("content-type: application/x-javascript");
+
+require_once('accordian.js.php');
+
+?>
+
 function Task_Tab(task_div_id) {
 
 	//class variables
 	this.div_id = task_div_id;
-	this.data_form_new_entry
-	this.data_form_view_tasks
-	this.data_form_new_task
-	this.task_name_select
-	this.task_info_json_array
-	this.task_info_div
-	this.task_timer_div
-	this.task_start_stop_button
-	this.task_name
-	this.task_description
-	this.task_estimate
-	this.task_note
-	this.new_data_display_div
-	this.loading_image_new
-	this.loading_image_add
-	this.loading_image_view
-	this.current_task_start_time
-	this.refresh_task_log_callback
 
 	this.Refresh_Task_Name_List = function(refresh_callback) {
 		var params = new Array();

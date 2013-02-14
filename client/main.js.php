@@ -1,3 +1,29 @@
+<?php
+
+Header("content-type: application/x-javascript");
+
+//jquery code
+include 'external/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js';
+
+//jquery UI code
+include 'external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js';
+
+//jquery datepicker code
+include 'external/jquery-ui-timerpicker-addon/jquery-ui-timepicker-addon.js';
+
+//JSON RPC library
+include 'external/json-rpc2php-master/jsonRPC2php.client.js';
+
+//ensure all include files are present.
+require_once('tabs.js.php');
+require_once('home_tab.js.php');
+require_once('item_tab.js.php');
+require_once('task_tab.js.php');
+require_once('report_tab.js.php');
+require_once('graph_tab.js.php');
+
+?>
+
 function Main_Application() {
 	//initialize the main tab array
 	this.tabs_array = new Array();
@@ -19,9 +45,10 @@ function Main_Application() {
 		});
 
 	};
-
+	
+	
 	//setup the main tabs
-	this.Setup_Main_Tabs = function() {
+	this.Render_Main_Tabs = function() {
 
 		var self = this;
 		var main_tabs_div = "main_tab_navigation_div";
@@ -96,6 +123,12 @@ function Main_Application() {
 			});
 		});
 	};
+	
+	this.Render = function()
+	{
+		//main tabs
+		this.Render_Main_Tabs();
+	};
 
 	//load a script to the head
 	this.Load_Script = function(url, callback) {
@@ -125,13 +158,18 @@ var rpc;
 //this is the main function for the application
 function main() {
 
-	app = new Main_Application();
-
-	rpc = new jsonrpcphp('lib/api.php', function() {
-
-		app.Setup_Main_Tabs();
-
+	$(document).ready(function(){
+		
+		app = new Main_Application();
+	
+		rpc = new jsonrpcphp('server/api.php', function() {
+	
+			app.Render();
+	
+		});
+		
 	});
+
 
 }
 

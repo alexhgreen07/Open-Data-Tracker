@@ -1,3 +1,11 @@
+<?php
+
+Header("content-type: application/x-javascript");
+
+require_once('accordian.js.php');
+
+?>
+
 function Report_Tab(data_div_id) {
 
 	//class variables

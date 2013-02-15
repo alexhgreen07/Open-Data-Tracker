@@ -109,6 +109,94 @@ class Item_Data_Interface {
 		return $return_json;
 
 	}
+	
+	public function Update_Item_Entry($item_entry_id, $time, $value, $item_id, $note){
+		
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+
+		if (Is_Session_Authorized()) {
+
+			$return_json['authenticated'] = 'true';
+			
+			$time = mysql_real_escape_string($time);
+			$value = mysql_real_escape_string($value);
+			$note = mysql_real_escape_string($note);
+			
+			if ($item_id != "-") {
+				$item_id = mysql_real_escape_string($item_id);
+			} else {
+				$item_id = "";
+			}
+
+
+			if ($value != "") {
+
+				$sql_insert = "UPDATE `item_log` SET `item_id` = " . $item_id . ",`time` = ".$time.",`value`=".$value.",`note`='".$note."' WHERE `item_log_id` = " . $item_entry_id;
+
+				//$return_json['debug'] = $sql_insert;
+
+				$success = mysql_query($sql_insert, $this -> database_link);
+
+				if ($success) {
+					$return_json['success'] = 'true';
+				} else {
+					$return_json['success'] = 'false';
+				}
+
+			}
+
+		} else {
+			$return_json['authenticated'] = 'false';
+
+		}
+
+		return $return_json;
+		
+	}
+	
+	public function Delete_Item_Entry($item_entry_id){
+		
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+
+		if (Is_Session_Authorized()) {
+
+			$return_json['authenticated'] = 'true';
+			
+			$time = mysql_real_escape_string($time);
+			$value = mysql_real_escape_string($value);
+			$note = mysql_real_escape_string($note);
+			
+			if ($item_id != "-") {
+				$item_id = mysql_real_escape_string($item_id);
+			} else {
+				$item_id = "";
+			}
+
+
+			if ($value != "") {
+
+				$sql_insert = "DELETE FROM `item_log` WHERE `item_log_id` = " . $item_entry_id;
+
+				//$return_json['debug'] = $sql_insert;
+
+				$success = mysql_query($sql_insert, $this -> database_link);
+
+				if ($success) {
+					$return_json['success'] = 'true';
+				} else {
+					$return_json['success'] = 'false';
+				}
+
+			}
+
+		} else {
+			$return_json['authenticated'] = 'false';
+
+		}
+
+		return $return_json;
+		
+	}
 
 	public function Get_Items() {
 		$return_json = array('authenticated' => 'false', 'success' => 'false', 'items' => array(), );
@@ -154,7 +242,7 @@ class Item_Data_Interface {
 		return $return_json;
 	}
 
-	public function Add_New_Item($name, $unit, $description) {
+	public function Insert_New_Item($name, $unit, $description) {
 
 		$return_json = array('authenticated' => 'false', 'success' => 'false', );
 
@@ -186,12 +274,64 @@ class Item_Data_Interface {
 		return $return_json;
 	}
 
-	public function Edit_Item() {
+	public function Edit_Item($item_id, $name, $unit, $description) {
+		
 		$return_json = array('authenticated' => 'false', 'success' => 'false', );
 
-		//NOT IMPLEMENTED
+		$name = mysql_real_escape_string($name);
+		$unit = mysql_real_escape_string($unit);
+		$description = mysql_real_escape_string($description);
+
+		if (Is_Session_Authorized()) {
+			$return_json['authenticated'] = 'true';
+
+			if ($name != "") {
+
+				$sql_insert = "UPDATE `items` SET `name`='".$name."',`description`='".$description."',`unit`='".$unit."' WHERE `item_id`=" . $item_id;
+
+				$success = mysql_query($sql_insert, $this -> database_link);
+
+				if ($success) {
+					$return_json['success'] = 'true';
+				} else {
+					$return_json['success'] = 'false';
+				}
+
+			}
+		} else {
+			$return_json['authenticated'] = 'false';
+		}
 
 		return $return_json;
+		
+	}
+	
+	public function Delete_Item($item_id) {
+		
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+
+		if (Is_Session_Authorized()) {
+			$return_json['authenticated'] = 'true';
+
+			if ($name != "") {
+
+				$sql_insert = "DELETE FROM `items` WHERE `item_id`=" . $item_id;
+
+				$success = mysql_query($sql_insert, $this -> database_link);
+
+				if ($success) {
+					$return_json['success'] = 'true';
+				} else {
+					$return_json['success'] = 'false';
+				}
+
+			}
+		} else {
+			$return_json['authenticated'] = 'false';
+		}
+
+		return $return_json;
+		
 	}
 
 	public function Get_Item_Log() {

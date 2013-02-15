@@ -69,43 +69,47 @@ class Task_Data_Interface {
 		$status = mysql_real_escape_string($status);
 		$note = mysql_real_escape_string($note);
 
-		try {
+		
+		$sql = "UPDATE `task_log` 
+			SET `task_id`=" . $task_id . ",
+			`start_time`=" . $start_time . ",
+			`hours`=" . $hours . ",
+			`status`='" . $status . "',
+			`note`='" . $note . "'
+			WHERE `task_log_id` = " . $task_log_id . "";
 
-			if ($completed) {
-				$status = "Completed";
+		//execute insert
+		$success = mysql_query($sql, $this -> database_link);
 
-				$sql = "UPDATE `tasks` SET `status`='Completed' WHERE `task_id` = " . $task_id . " AND `recurring` != 1";
-
-				$success = mysql_query($sql, $this -> database_link);
-
-				if (!$success) {
-					throw new Exception('SQL error.');
-				}
-
-			} else {
-				//$status = "Stopped";
-			}
-
-			$sql = "UPDATE `task_log` 
-				SET `task_id`=" . $task_id . ",
-				`start_time`=" . $start_time . ",
-				`hours`=" . $hours . ",
-				`status`='" . $status . "',
-				`note`='" . $note . "'
-				WHERE `task_log_id` = " . $task_log_id . "";
-
-			//execute insert
-			$success = mysql_query($sql, $this -> database_link);
-
-			if (!$success) {
-				throw new Exception('SQL error.');
-			}
-
+		if ($success) {
 			$return_json['success'] = 'true';
-
-		} catch(Exception $e) {
+		}
+		else{
 			$return_json['success'] = 'false';
 		}
+
+
+		return $return_json;
+	}
+
+	public function Delete_Task_Entry($task_log_id) {
+	
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+
+		$task_log_id = mysql_real_escape_string($task_log_id);
+
+		$sql = "DELETE FROM `tasks_log` WHERE `task_log_id` = " . $task_id;
+
+		//execute insert
+		$success = mysql_query($sql, $this -> database_link);
+
+		if ($success) {
+			$return_json['success'] = 'true';
+		}
+		else {
+			$return_json['success'] = 'false';
+		}
+
 
 		return $return_json;
 	}
@@ -303,6 +307,26 @@ class Task_Data_Interface {
 		$sql .= "'" . $recurrance_type . "',";
 		$sql .= "'" . $recurrance_period . "',";
 		$sql .= "'" . $task_note . "')";
+
+		$success = mysql_query($sql, $this -> database_link);
+
+		$return_json['debug'] = $sql;
+
+		if ($success) {
+			$return_json['success'] = 'true';
+		} else {
+			$return_json['success'] = 'false';
+		}
+
+		return $return_json;
+	}
+
+
+	public function Delete_Task($task_id) {
+			
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+
+		$sql = "DELETE FROM `tasks` WHERE `task_id` = " . $task_id;
 
 		$success = mysql_query($sql, $this -> database_link);
 

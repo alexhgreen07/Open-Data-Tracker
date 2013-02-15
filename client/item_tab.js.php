@@ -2,6 +2,19 @@
 
 Header("content-type: application/x-javascript");
 
+//jquery code
+include_once('external/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js');
+
+//jquery UI code
+include_once('external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
+
+//jquery datepicker code
+include_once('external/jquery-ui-timerpicker-addon/jquery-ui-timepicker-addon.js');
+
+//JSON RPC library
+include_once('external/json-rpc2php-master/jsonRPC2php.client.js');
+
+//get accordian
 require_once('accordian.js.php');
 
 ?>
@@ -255,7 +268,7 @@ function Item_Tab(item_div_id) {
 			params[2] = note_string;
 
 			//execute the RPC callback for retrieving the item log
-			rpc.Item_Data_Interface.Add_New_Item(params, function(jsonRpcObj) {
+			rpc.Item_Data_Interface.Insert_New_Item(params, function(jsonRpcObj) {
 
 				if (jsonRpcObj.result.authenticated == 'true') {
 					if (jsonRpcObj.result.success == 'true') {
@@ -369,7 +382,9 @@ function Item_Tab(item_div_id) {
 		this.item_new_time.setAttribute('id', "new_time");
 		this.item_new_time.setAttribute('type', 'text');
 		this.item_new_entry_data_form.appendChild(this.item_new_time);
-
+		
+		this.item_new_entry_data_form.innerHTML += '<br />';
+		
 		this.item_new_entry_data_form.innerHTML += 'Value:<br />';
 
 		//item value
@@ -378,7 +393,9 @@ function Item_Tab(item_div_id) {
 		this.item_new_value.setAttribute('id', "new_value");
 		this.item_new_value.setAttribute('type', 'text');
 		this.item_new_entry_data_form.appendChild(this.item_new_value);
-
+		
+		this.item_new_entry_data_form.innerHTML += '<br />';
+		
 		this.item_new_entry_data_form.innerHTML += 'Item:<br />';
 
 		//item unit
@@ -388,6 +405,8 @@ function Item_Tab(item_div_id) {
 		this.new_item_name_select.innerHTML = '<option>-</option>';
 		this.item_new_entry_data_form.appendChild(this.new_item_name_select);
 
+		this.item_new_entry_data_form.innerHTML += '<br />';
+		
 		this.item_new_entry_data_form.innerHTML += 'Note:<br />';
 
 		//item note
@@ -438,6 +457,134 @@ function Item_Tab(item_div_id) {
 		$('#' + this.item_new_time.id).datetimepicker("setDate", new Date());
 
 	};
+	
+	
+	this.Render_Edit_Item_Entry_Form = function(form_div_id) {
+
+		//create the top form
+		this.item_edit_entry_data_form = document.createElement("form");
+		this.item_edit_entry_data_form.setAttribute('method', "post");
+		this.item_edit_entry_data_form.setAttribute('id', "edit_item_entry_form");
+
+		this.item_edit_entry_data_form.innerHTML += 'Item Entries:<br />';
+
+		//item unit
+		this.edit_item_entry_select = document.createElement("select");
+		this.edit_item_entry_select.setAttribute('name', "edit_task_entry_dropdown");
+		this.edit_item_entry_select.setAttribute('id', "edit_task_entry_dropdown");
+		this.edit_item_entry_select.innerHTML = '<option>-</option>';
+		this.item_edit_entry_data_form.appendChild(this.edit_item_entry_select);
+		
+		this.item_edit_entry_data_form.innerHTML += '<br />';
+		
+		this.item_edit_entry_data_form.innerHTML += 'Time:<br />';
+
+		//item value
+		this.item_edit_time = document.createElement("input");
+		this.item_edit_time.setAttribute('name', "edit_time");
+		this.item_edit_time.setAttribute('id', "edit_time");
+		this.item_edit_time.setAttribute('type', 'text');
+		this.item_edit_entry_data_form.appendChild(this.item_edit_time);
+		
+		this.item_edit_entry_data_form.innerHTML += '<br />';
+		
+		this.item_edit_entry_data_form.innerHTML += 'Value:<br />';
+
+		//item value
+		this.item_edit_value = document.createElement("input");
+		this.item_edit_value.setAttribute('name', "edit_value");
+		this.item_edit_value.setAttribute('id', "edit_value");
+		this.item_edit_value.setAttribute('type', 'text');
+		this.item_edit_entry_data_form.appendChild(this.item_edit_value);
+		
+		this.item_edit_entry_data_form.innerHTML += '<br />';
+		
+		this.item_edit_entry_data_form.innerHTML += 'Item:<br />';
+
+		//item unit
+		this.edit_item_name_select = document.createElement("select");
+		this.edit_item_name_select.setAttribute('name', "edit_task_name_dropdown");
+		this.edit_item_name_select.setAttribute('id', "edit_task_name_dropdown");
+		this.edit_item_name_select.innerHTML = '<option>-</option>';
+		this.item_edit_entry_data_form.appendChild(this.edit_item_name_select);
+		
+		this.item_edit_entry_data_form.innerHTML += '<br />';
+		
+		this.item_edit_entry_data_form.innerHTML += 'Note:<br />';
+
+		//item note
+		this.item_edit_note = document.createElement("input");
+		this.item_edit_note.setAttribute('name', "edit_notes");
+		this.item_edit_note.setAttribute('id', "edit_notes");
+		this.item_edit_note.setAttribute('type', 'text');
+		this.item_edit_entry_data_form.appendChild(this.item_edit_note);
+
+		this.item_edit_entry_data_form.innerHTML += '<br /><br />';
+
+		//item submit button creation
+		this.item_edit_add_entry_button = document.createElement("input");
+		this.item_edit_add_entry_button.setAttribute('id', 'edit_task_entry_submit');
+		this.item_edit_add_entry_button.setAttribute('type', 'submit');
+		this.item_edit_add_entry_button.value = 'Submit';
+		var self = this;
+		this.item_edit_entry_data_form.appendChild(this.item_edit_add_entry_button);
+
+		this.item_edit_entry_data_form.innerHTML += '<br /><br />';
+
+		//item delete button creation
+		this.item_edit_delete_entry_button = document.createElement("input");
+		this.item_edit_delete_entry_button.setAttribute('id', 'item_edit_delete_entry_button');
+		this.item_edit_delete_entry_button.setAttribute('type', 'submit');
+		this.item_edit_delete_entry_button.value = 'Delete';
+		var self = this;
+		this.item_edit_entry_data_form.appendChild(this.item_edit_delete_entry_button);
+
+
+		this.new_loading_image = document.createElement("img");
+		this.new_loading_image.setAttribute('id', 'item_tab_edit_item_entry_loader_image');
+		this.new_loading_image.setAttribute('style', 'width:100%;height:19px;');
+		this.new_loading_image.setAttribute('src', 'ajax-loader.gif');
+		this.item_edit_entry_data_form.appendChild(this.new_loading_image);
+
+		var div_tab = document.getElementById(form_div_id);
+		div_tab.appendChild(this.item_edit_entry_data_form);
+
+		//hide the loader image
+		$('#' + self.new_loading_image.id).hide();
+
+		$('#' + this.item_edit_add_entry_button.id).button();
+		$('#' + this.item_edit_add_entry_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+			alert('Edit item entry submit button click!');
+			
+			//execute the click event
+			//self.Add_Item_Entry_Click();
+		});
+		
+		$('#' + this.item_edit_delete_entry_button.id).button();
+		$('#' + this.item_edit_delete_entry_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			alert('Edit item entry delete button click!');
+			
+			//execute the click event
+			//self.Add_Item_Entry_Click();
+		});
+
+		//initialize the datetime picker
+		$('#' + this.item_edit_time.id).datetimepicker({
+			timeFormat : "HH:mm",
+			dateFormat : 'yy-mm-dd'
+		});
+		$('#' + this.item_edit_time.id).datetimepicker("setDate", new Date());
+		$('#' + this.item_edit_time.id).datetimepicker("setDate", new Date());
+
+	};
 
 	this.Render_View_Items_Form = function(div_id) {
 
@@ -450,6 +597,7 @@ function Item_Tab(item_div_id) {
 	};
 
 	this.Render_Add_Item_Form = function(form_div_id) {
+		
 		//create the top form
 		this.item_add_data_form = document.createElement("form");
 		this.item_add_data_form.setAttribute('method', "post");
@@ -463,7 +611,9 @@ function Item_Tab(item_div_id) {
 		this.item_name.setAttribute('id', "item_name");
 		this.item_name.setAttribute('type', 'text');
 		this.item_add_data_form.appendChild(this.item_name);
-
+		
+		this.item_add_data_form.innerHTML += '<br />';
+		
 		this.item_add_data_form.innerHTML += 'Category:<br />';
 
 		//task recurring
@@ -471,7 +621,9 @@ function Item_Tab(item_div_id) {
 		this.item_category_select.setAttribute('id', 'item_category_select');
 		this.item_category_select.innerHTML = '<option>-</option>';
 		this.item_add_data_form.appendChild(this.item_category_select);
-
+		
+		this.item_add_data_form.innerHTML += '<br />';
+		
 		this.item_add_data_form.innerHTML += 'Description:<br />';
 
 		//item description
@@ -480,7 +632,9 @@ function Item_Tab(item_div_id) {
 		this.item_description.setAttribute('id', "item_description");
 		this.item_description.setAttribute('type', 'text');
 		this.item_add_data_form.appendChild(this.item_description);
-
+		
+		this.item_add_data_form.innerHTML += '<br />';
+		
 		this.item_add_data_form.innerHTML += 'Unit:<br />';
 
 		//item note
@@ -519,6 +673,121 @@ function Item_Tab(item_div_id) {
 
 		var div_tab = document.getElementById(form_div_id);
 		div_tab.appendChild(this.item_add_data_form);
+	};
+	
+	this.Render_Edit_Item_Form = function(form_div_id) {
+		
+		//create the top form
+		this.item_edit_data_form = document.createElement("form");
+		this.item_edit_data_form.setAttribute('method', "post");
+		this.item_edit_data_form.setAttribute('id', "edit_item_entry_form");
+		
+		this.item_edit_data_form.innerHTML += 'Item:<br />';
+
+		//task recurring
+		this.item_edit_select = document.createElement("select");
+		this.item_edit_select.setAttribute('id', 'item_edit_select');
+		this.item_edit_select.innerHTML = '<option>-</option>';
+		this.item_edit_data_form.appendChild(this.item_edit_select);
+		
+		this.item_edit_data_form.innerHTML += '<br />';
+		
+		this.item_edit_data_form.innerHTML += 'Name:<br />';
+
+		//item name
+		this.edit_item_name = document.createElement("input");
+		this.edit_item_name.setAttribute('name', "edit_item_name");
+		this.edit_item_name.setAttribute('id', "edit_item_name");
+		this.edit_item_name.setAttribute('type', 'text');
+		this.item_edit_data_form.appendChild(this.edit_item_name);
+		
+		this.item_edit_data_form.innerHTML += '<br />';
+		
+		this.item_edit_data_form.innerHTML += 'Category:<br />';
+
+		//task recurring
+		this.item_edit_category_select = document.createElement("select");
+		this.item_edit_category_select.setAttribute('id', 'item_edit_category_select');
+		this.item_edit_category_select.innerHTML = '<option>-</option>';
+		this.item_edit_data_form.appendChild(this.item_edit_category_select);
+		
+		this.item_edit_data_form.innerHTML += '<br />';
+		
+		this.item_edit_data_form.innerHTML += 'Description:<br />';
+
+		//item description
+		this.item_edit_description = document.createElement("input");
+		this.item_edit_description.setAttribute('name', "item_edit_description");
+		this.item_edit_description.setAttribute('id', "item_description");
+		this.item_edit_description.setAttribute('type', 'text');
+		this.item_edit_data_form.appendChild(this.item_edit_description);
+		
+		this.item_edit_data_form.innerHTML += '<br />';
+		
+		this.item_edit_data_form.innerHTML += 'Unit:<br />';
+
+		//item note
+		this.edit_item_unit = document.createElement("input");
+		this.edit_item_unit.setAttribute('name', "edit_item_unit");
+		this.edit_item_unit.setAttribute('id', "edit_item_unit");
+		this.edit_item_unit.setAttribute('type', 'text');
+		this.item_edit_data_form.appendChild(this.edit_item_unit);
+
+		this.item_edit_data_form.innerHTML += '<br /><br />';
+
+		//item submit button creation
+		this.item_edit_submit_button = document.createElement("input");
+		this.item_edit_submit_button.setAttribute('id', 'item_edit_submit_button');
+		this.item_edit_submit_button.setAttribute('type', 'submit');
+		this.item_edit_submit_button.value = 'Submit';
+		var self = this;
+
+		this.item_edit_data_form.appendChild(this.item_edit_submit_button);
+		
+		this.item_edit_data_form.innerHTML += '<br /><br />';
+		
+		//item delete button creation
+		this.item_edit_delete_button = document.createElement("input");
+		this.item_edit_delete_button.setAttribute('id', 'item_edit_delete_button');
+		this.item_edit_delete_button.setAttribute('type', 'submit');
+		this.item_edit_delete_button.value = 'Delete';
+		
+		this.item_edit_data_form.appendChild(this.item_edit_delete_button);
+
+		this.loading_image_edit_item = document.createElement("img");
+		this.loading_image_edit_item.setAttribute('id', 'item_tab_edit_item_entry_loader_image');
+		this.loading_image_edit_item.setAttribute('style', 'width:100%;height:19px;');
+		this.loading_image_edit_item.setAttribute('src', 'ajax-loader.gif');
+		this.item_edit_data_form.appendChild(this.loading_image_edit_item);
+
+		$(this.loading_image_edit_item).hide();
+
+		var div_tab = document.getElementById(form_div_id);
+		div_tab.appendChild(this.item_edit_data_form);
+		
+		$('#' + this.item_edit_submit_button.id).button();
+		$('#' + this.item_edit_submit_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			alert('Edit item submit button click!');
+			
+			//execute the click event
+			//self.Add_New_Item_Click();
+		});
+		
+		$('#' + this.item_edit_delete_button.id).button();
+		$('#' + this.item_edit_delete_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			alert('Edit item delete button click!');
+			
+			//execute the click event
+			//self.Add_New_Item_Click();
+		});
 	};
 
 	this.Render_Item_Log = function(form_div_id) {
@@ -583,7 +852,7 @@ function Item_Tab(item_div_id) {
 
 		new_tab = new Array();
 		new_tab.push("Edit Item Entry");
-		new_tab.push("Under construction...");
+		new_tab.push('<div id="edit_item_log_div"></div>');
 		tabs_array.push(new_tab);
 
 		new_tab = new Array();
@@ -598,12 +867,27 @@ function Item_Tab(item_div_id) {
 
 		new_tab = new Array();
 		new_tab.push("Edit Item");
-		new_tab.push("Under construction...");
+		new_tab.push('<div id="edit_item_div"></div>');
 		tabs_array.push(new_tab);
 
 		new_tab = new Array();
 		new_tab.push("View Items");
 		new_tab.push('<div id="view_item_div"></div>');
+		tabs_array.push(new_tab);
+		
+		new_tab = new Array();
+		new_tab.push("New Target Entry");
+		new_tab.push('Under construction...');
+		tabs_array.push(new_tab);
+
+		new_tab = new Array();
+		new_tab.push("Edit Target Entry");
+		new_tab.push('Under construction...');
+		tabs_array.push(new_tab);
+
+		new_tab = new Array();
+		new_tab.push("View Targets");
+		new_tab.push('Under construction...');
 		tabs_array.push(new_tab);
 
 		var return_html = '';
@@ -623,7 +907,11 @@ function Item_Tab(item_div_id) {
 
 		this.Render_New_Item_Entry_Form('new_item_entry_div');
 
+		this.Render_Edit_Item_Entry_Form('edit_item_log_div');
+
 		this.Render_Add_Item_Form('add_item_div');
+	
+		this.Render_Edit_Item_Form('edit_item_div');
 
 		this.Render_View_Items_Form('view_item_div');
 

@@ -2,6 +2,19 @@
 
 Header("content-type: application/x-javascript");
 
+//jquery code
+include_once('external/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js');
+
+//jquery UI code
+include_once('external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
+
+//jquery datepicker code
+include_once('external/jquery-ui-timerpicker-addon/jquery-ui-timepicker-addon.js');
+
+//JSON RPC library
+include_once('external/json-rpc2php-master/jsonRPC2php.client.js');
+
+//get accordian
 require_once('accordian.js.php');
 
 ?>
@@ -710,7 +723,9 @@ function Task_Tab(task_div_id) {
 
 		});
 		this.data_form_edit_entry.appendChild(this.edit_task_entry_task_name_select);
-
+		
+		this.data_form_edit_entry.innerHTML += '<br />';
+		
 		this.data_form_edit_entry.innerHTML += 'Start Time:<br />';
 
 		this.task_entry_edit_start_time = document.createElement("input");
@@ -719,6 +734,8 @@ function Task_Tab(task_div_id) {
 		this.task_entry_edit_start_time.setAttribute('type', 'text');
 		this.data_form_edit_entry.appendChild(this.task_entry_edit_start_time);
 
+		this.data_form_edit_entry.innerHTML += '<br />';
+		
 		this.data_form_edit_entry.innerHTML += 'Status:<br />';
 
 		this.edit_task_entry_task_status_select = document.createElement("select");
@@ -727,6 +744,8 @@ function Task_Tab(task_div_id) {
 		this.edit_task_entry_task_status_select.innerHTML = '<option>Stopped</option><option>Started</option>';
 		this.data_form_edit_entry.appendChild(this.edit_task_entry_task_status_select);
 
+		this.data_form_edit_entry.innerHTML += '<br />';
+		
 		this.data_form_edit_entry.innerHTML += 'Duration:<br />';
 
 		this.task_entry_edit_duration = document.createElement("input");
@@ -736,6 +755,8 @@ function Task_Tab(task_div_id) {
 		this.task_entry_edit_duration.setAttribute('value', '0');
 		this.data_form_edit_entry.appendChild(this.task_entry_edit_duration);
 
+		this.data_form_edit_entry.innerHTML += '<br />';
+		
 		this.data_form_edit_entry.innerHTML += 'Note:<br />';
 
 		this.task_entry_edit_note = document.createElement("input");
@@ -748,7 +769,7 @@ function Task_Tab(task_div_id) {
 
 		//task submit button creation
 		this.edit_task_entry_task_submit_button = document.createElement("input");
-		this.edit_task_entry_task_submit_button.setAttribute('id', 'new_task_entry_submit');
+		this.edit_task_entry_task_submit_button.setAttribute('id', 'edit_task_entry_task_submit_button');
 		this.edit_task_entry_task_submit_button.setAttribute('type', 'submit');
 		this.edit_task_entry_task_submit_button.value = 'Submit';
 		this.data_form_edit_entry.appendChild(this.edit_task_entry_task_submit_button);
@@ -757,9 +778,9 @@ function Task_Tab(task_div_id) {
 
 		//task mark complete button creation
 		this.edit_task_entry_task_complete_button = document.createElement("input");
-		this.edit_task_entry_task_complete_button.setAttribute('id', 'new_task_entry_complete');
+		this.edit_task_entry_task_complete_button.setAttribute('id', 'edit_task_entry_task_complete_button');
 		this.edit_task_entry_task_complete_button.setAttribute('type', 'submit');
-		this.edit_task_entry_task_complete_button.value = 'Mark Complete';
+		this.edit_task_entry_task_complete_button.value = 'Delete';
 		this.data_form_edit_entry.appendChild(this.edit_task_entry_task_complete_button);
 
 		this.edit_task_entry_loading_image_new = document.createElement("img");
@@ -777,21 +798,28 @@ function Task_Tab(task_div_id) {
 
 			//ensure a normal postback does not occur
 			event.preventDefault();
-
+			
+			alert('Submit editted task entry click!');
+			
 			//execute the click event
 			//self.On_Submit_Task_Entry_Click_Event();
 		});
-
+		
+		
 		$('#' + this.edit_task_entry_task_complete_button.id).button();
 		$('#' + this.edit_task_entry_task_complete_button.id).click(function(event) {
 
 			//ensure a normal postback does not occur
 			event.preventDefault();
-
+			
+			alert('Delete task entry click!');
+			
 			//self.On_Complete_Task_Entry_Click_Event();
 
 		});
-
+		
+		
+		
 		$('#' + self.edit_task_entry_loading_image_new.id).hide();
 
 		$('#' + this.task_entry_edit_start_time.id).datetimepicker({
@@ -838,7 +866,9 @@ function Task_Tab(task_div_id) {
 		this.task_edit_name.setAttribute('id', 'task_edit_name');
 		this.task_edit_name.setAttribute('type', 'text');
 		this.data_form_edit_task.appendChild(this.task_edit_name);
-
+		
+		this.data_form_edit_task.innerHTML += '<br />';
+		
 		this.data_form_edit_task.innerHTML += 'Category:<br />';
 
 		//task recurring
@@ -847,6 +877,8 @@ function Task_Tab(task_div_id) {
 		this.task_edit_category_select.innerHTML = '<option>-</option>';
 		this.data_form_edit_task.appendChild(this.task_edit_category_select);
 
+		this.data_form_edit_task.innerHTML += '<br />';
+		
 		this.data_form_edit_task.innerHTML += 'Description:<br />';
 
 		//task description creation
@@ -856,6 +888,8 @@ function Task_Tab(task_div_id) {
 		this.task_edit_description.setAttribute('type', 'text');
 		this.data_form_edit_task.appendChild(this.task_edit_description);
 
+		this.data_form_edit_task.innerHTML += '<br />';
+		
 		this.data_form_edit_task.innerHTML += 'Estimated Time (Hours):<br />';
 
 		//task estimate creation
@@ -866,6 +900,8 @@ function Task_Tab(task_div_id) {
 		this.task_edit_estimate.setAttribute('value', '0');
 		this.data_form_edit_task.appendChild(this.task_edit_estimate);
 
+		this.data_form_edit_task.innerHTML += '<br />';
+		
 		this.data_form_edit_task.innerHTML += 'Status:<br />';
 
 		//task recurring
@@ -874,6 +910,8 @@ function Task_Tab(task_div_id) {
 		this.task_status_edit_select.innerHTML = '<option>Stopped</option><option>Started</option>';
 		this.data_form_edit_task.appendChild(this.task_status_edit_select);
 
+		this.data_form_edit_task.innerHTML += '<br />';
+		
 		this.data_form_edit_task.innerHTML += 'Note:<br />';
 
 		//task note creation
@@ -894,6 +932,8 @@ function Task_Tab(task_div_id) {
 		this.task_scheduled_edit_select.innerHTML = '<option>Floating</option><option>Scheduled</option>';
 		this.data_form_edit_task.appendChild(this.task_scheduled_edit_select);
 
+		this.data_form_edit_task.innerHTML += '<br />';
+		
 		this.data_form_edit_task.innerHTML += 'Scheduled Date:<br />';
 
 		//task estimate creation
@@ -913,6 +953,8 @@ function Task_Tab(task_div_id) {
 		this.task_recurring_edit_select.innerHTML = '<option>False</option><option>True</option>';
 		this.data_form_edit_task.appendChild(this.task_recurring_edit_select);
 
+		this.data_form_edit_task.innerHTML += '<br />';
+		
 		this.data_form_edit_task.innerHTML += 'Recurrance Type:<br />';
 
 		//task recurring
@@ -921,6 +963,8 @@ function Task_Tab(task_div_id) {
 		this.task_recurring_edit_select_type.innerHTML = "<option>Minutes</option><option>Hours</option><option>Days</option><option>Weeks</option><option>Weekly</option><option>Months</option><option>Years</option>";
 		this.data_form_edit_task.appendChild(this.task_recurring_edit_select_type);
 
+		this.data_form_edit_task.innerHTML += '<br />';
+		
 		this.data_form_edit_task.innerHTML += 'Recurrance Period:<br />';
 
 		this.task_reccurance_edit_period_div = document.createElement('div');
@@ -958,19 +1002,22 @@ function Task_Tab(task_div_id) {
 
 		//task submit creation
 		this.task_edit_submit_button = document.createElement("input");
-		this.task_edit_submit_button.setAttribute('name', 'task_submit');
+		this.task_edit_submit_button.setAttribute('name', 'task_edit_submit_button');
+		this.task_edit_submit_button.setAttribute('id', 'task_edit_submit_button');
 		this.task_edit_submit_button.setAttribute('type', 'submit');
-		var self = this;
-		$(this.task_edit_submit_button).button();
-		$(this.task_edit_submit_button).click(function(event) {
-
-			//ensure a normal postback does not occur
-			event.preventDefault();
-
-			//execute the click event
-			self.On_Add_Task_Click_Event();
-		});
+		this.task_edit_submit_button.value = 'Submit';
 		this.data_form_edit_task.appendChild(this.task_edit_submit_button);
+		var self = this;
+		
+		this.data_form_edit_task.innerHTML += '<br /><br />';
+		
+		//task delete creation
+		this.task_edit_delete_button = document.createElement("input");
+		this.task_edit_delete_button.setAttribute('name', 'task_edit_delete');
+		this.task_edit_delete_button.setAttribute('id', 'task_edit_delete_button');
+		this.task_edit_delete_button.setAttribute('type', 'submit');
+		this.task_edit_delete_button.value = 'Delete';
+		this.data_form_edit_task.appendChild(this.task_edit_delete_button);
 
 		this.loading_image_task_edit = document.createElement("img");
 		this.loading_image_task_edit.setAttribute('id', 'task_tab_edit_task_loader_image');
@@ -1003,7 +1050,31 @@ function Task_Tab(task_div_id) {
 			}
 
 		});
+		
+		$('#' + this.task_edit_submit_button.id).button();
+		$('#' + this.task_edit_submit_button.id).click(function(event) {
 
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			alert('Submit editted task click!');
+			
+			//execute the click event
+			//self.On_Add_Task_Click_Event();
+		});
+		
+		$('#' + this.task_edit_delete_button.id).button();
+		$('#' + this.task_edit_delete_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			alert('Submit delete task click!');
+			
+			//execute the click event
+			//self.On_Add_Task_Click_Event();
+		});
+		
 		//initialize the datetime picker
 		$('#' + self.task_scheduled_edit_date.id).datetimepicker({
 			timeFormat : "HH:mm",
@@ -1197,6 +1268,7 @@ function Task_Tab(task_div_id) {
 		this.task_submit_button = document.createElement("input");
 		this.task_submit_button.setAttribute('name', 'task_submit');
 		this.task_submit_button.setAttribute('type', 'submit');
+		this.task_submit_button.value = 'Submit';
 		var self = this;
 		$(this.task_submit_button).button();
 		$(this.task_submit_button).click(function(event) {
@@ -1336,17 +1408,17 @@ function Task_Tab(task_div_id) {
 		tabs_array.push(new_tab);
 
 		new_tab = new Array();
-		new_tab.push("New Scheduled Entry");
+		new_tab.push("New Target Entry");
 		new_tab.push('Under construction...');
 		tabs_array.push(new_tab);
 
 		new_tab = new Array();
-		new_tab.push("Edit Scheduled Entry");
+		new_tab.push("Edit Target Entry");
 		new_tab.push('Under construction...');
 		tabs_array.push(new_tab);
 
 		new_tab = new Array();
-		new_tab.push("View Schedule");
+		new_tab.push("View Targets");
 		new_tab.push('Under construction...');
 		tabs_array.push(new_tab);
 

@@ -3,16 +3,16 @@
 Header("content-type: application/x-javascript");
 
 //jquery code
-include 'external/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js';
+include_once('external/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js');
 
 //jquery UI code
-include 'external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js';
+include_once('external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
 
 //jquery datepicker code
-include 'external/jquery-ui-timerpicker-addon/jquery-ui-timepicker-addon.js';
+include_once('external/jquery-ui-timerpicker-addon/jquery-ui-timepicker-addon.js');
 
 //JSON RPC library
-include 'external/json-rpc2php-master/jsonRPC2php.client.js';
+include_once('external/json-rpc2php-master/jsonRPC2php.client.js');
 
 //ensure all include files are present.
 require_once('tabs.js.php');

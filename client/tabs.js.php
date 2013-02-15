@@ -2,6 +2,12 @@
 
 Header("content-type: application/x-javascript");
 
+//jquery code
+include_once('external/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js');
+
+//jquery UI code
+include_once('external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
+
 ?>
 
 function Tabs(tab_div_id, tab_array) {

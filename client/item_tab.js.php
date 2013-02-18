@@ -1,4 +1,10 @@
 <?php
+/*
+ * NOTE: This is PHP code intended to perform server side includes
+ * and resolve any javascript file dependencies. If PHP is
+ * not installed on the server, this code can be replaced
+ * with client side HTML includes (or dynamic javascript includes.)
+*/
 
 Header("content-type: application/x-javascript");
 
@@ -8,7 +14,7 @@ include_once('external/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js');
 //jquery UI code
 include_once('external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
 
-//jquery datepicker code
+//jquery datepicker code (addon)
 include_once('external/jquery-ui-timerpicker-addon/jquery-ui-timepicker-addon.js');
 
 //JSON RPC library
@@ -23,7 +29,10 @@ function Item_Tab(item_div_id) {
 
 	//class variables
 	this.div_id = item_div_id;
-
+	this.item_log_data = Array();
+	
+	//GENERAL FUNCTIONS
+	
 	this.Refresh_Items = function(refresh_callback) {
 		var params = new Array();
 
@@ -74,6 +83,8 @@ function Item_Tab(item_div_id) {
 
 		document.getElementById(self.quick_item_name_select.id).innerHTML = new_inner_html;
 		document.getElementById(self.new_item_name_select.id).innerHTML = new_inner_html;
+		document.getElementById(self.item_edit_select.id).innerHTML = new_inner_html;
+		document.getElementById(self.edit_item_name_select.id).innerHTML = new_inner_html;
 
 	};
 
@@ -116,23 +127,49 @@ function Item_Tab(item_div_id) {
 
 		//execute the RPC callback for retrieving the item log
 		rpc.Item_Data_Interface.Get_Item_Log(params, function(jsonRpcObj) {
-
-			//RPC complete. Set appropriate HTML.
+			
+			self.item_log_data = jsonRpcObj.result.data;
+			
 			var new_html = '';
-
 			new_html += 'Last refreshed: ' + (new Date()) + '<br />';
-			new_html += jsonRpcObj.result.html;
-
+			new_html += "<b>Database Output</b><br><table border='1' style='width:100%;'>";
+			new_html += "<tr><td>Date</td><td>Name</td><td>Value</td><td>Unit</td><td>Note</td></tr>";
+			
+			var entries_options_list = '<option value="0">-</option>';
+			
+			for (var i = 0; i < self.item_log_data.length; i++) {
+			    
+			    new_html += '<tr>';
+			    
+			    new_html += '<td>' + self.item_log_data[i].time + '</td>';
+			    new_html += '<td>' + self.item_log_data[i].name + '</td>';
+			    new_html += '<td>' + self.item_log_data[i].value + '</td>';
+			    new_html += '<td>' + self.item_log_data[i].unit + '</td>';
+			    new_html += '<td>' + self.item_log_data[i].note + '</td>';
+			    
+			    new_html += '</tr>';
+			    
+			    entries_options_list += '<option value="' + 
+			   		self.item_log_data[i].item_log_id + 
+			   		'">' + self.item_log_data[i].time + '</option>';
+			}
+			
+			new_html += '</table>';
+			
 			document.getElementById(self.new_data_display_div.id).innerHTML = new_html;
-
+			
+			document.getElementById(self.edit_item_entry_select.id).innerHTML = entries_options_list;
+			
 			//hide the loader image
 			$('#' + self.item_log_loading_image.id).hide();
-
+			
 			refresh_callback();
 		});
 	};
-
-	this.On_Click_Event = function() {
+	
+	//UI EVENTS
+	
+	this.Item_Data_Refresh_Click = function() {
 
 		//alert('calling rpc onclick.');
 
@@ -248,7 +285,104 @@ function Item_Tab(item_div_id) {
 		}
 
 	};
-
+	
+	this.Edit_Item_Entry_Click = function()
+	{
+		var self = this;
+		
+		var value = document.getElementById(self.edit_item_entry_select.id).value;
+		
+		if(value != 0)
+		{
+		
+			var params = new Array();
+			params[0] = value;
+			
+			//NOT IMPLEMENTED
+			
+			alert('Item entry editing not implemented!');
+		
+		}
+		else
+		{
+			alert('Select a valid item entry.');
+		}
+		
+	};
+	
+	this.Delete_Item_Entry_Click = function()
+	{
+		var self = this;
+		
+		var value = document.getElementById(self.edit_item_entry_select.id).value;
+		
+		if(value != 0)
+		{
+			
+			var r=confirm("Are you sure you want to delete this item entry?");
+			
+			if (r==true)
+			{
+				var params = new Array();
+				params[0] = value;
+				
+				rpc.Item_Data_Interface.Delete_Item_Entry(params, function(jsonRpcObj) {
+				
+					if(jsonRpcObj.result.success == 'true'){
+						
+						alert('Index deleted: ' + value);
+						
+						self.Refresh_Items(function(){});
+						
+					}
+					else
+					{
+						alert('Failed to delete the entry.');
+					}
+				
+				});
+			}
+			else
+			{
+				//do nothing, operation cancelled.
+			}
+			
+			
+		
+		}
+		else
+		{
+			alert('Select a valid item entry.');
+		}
+	};
+	
+	this.Item_Entry_Select_Change = function()
+	{
+		var self = this;
+		
+		//alert('Select item entry changed!');
+		
+		var selected_index = document.getElementById(self.edit_item_entry_select.id).selectedIndex;
+		
+		if(selected_index != 0)
+		{
+			var selected_item_entry = self.item_log_data[selected_index - 1];
+			
+			document.getElementById(self.item_edit_time.id).value = selected_item_entry.time;
+			document.getElementById(self.item_edit_value.id).value = selected_item_entry.value;
+			document.getElementById(self.edit_item_name_select.id).value = selected_item_entry.name;
+			document.getElementById(self.item_edit_note.id).value = selected_item_entry.note;
+		}
+		else
+		{
+			document.getElementById(self.item_edit_time.id).value = '';
+			document.getElementById(self.item_edit_value.id).value = '0';
+			document.getElementById(self.edit_item_name_select.id).value = '-';
+			document.getElementById(self.item_edit_note.id).value = '';
+		}
+		
+	};
+	
 	this.Add_New_Item_Click = function() {
 		var self = this;
 
@@ -298,7 +432,122 @@ function Item_Tab(item_div_id) {
 		}
 
 	};
-
+	
+	this.Delete_Item_Click = function()
+	{
+		
+		var self = this;
+		
+		var selected_index = document.getElementById(self.item_edit_select.id).selectedIndex;
+		
+		if(selected_index != 0)
+		{
+			var r=confirm("Are you sure you want to delete this item?");
+			
+			if (r==true)
+			{
+				var value = self.items_list[selected_index - 1].item_id;
+			
+				var params = new Array();
+				params[0] = value;
+				
+				rpc.Item_Data_Interface.Delete_Item(params, function(jsonRpcObj) {
+				
+					if(jsonRpcObj.result.success == 'true'){
+						
+						alert('Item deleted: ' + value);
+						
+						self.Refresh_Items(function(){});
+						
+					}
+					else
+					{
+						alert('Failed to delete the entry.');
+					}
+				
+				});
+			}
+			else
+			{
+				//do nothing, operation cancelled.
+			} 
+		
+		}
+		else
+		{
+			alert('Select a valid item.');
+		}
+		
+	};
+	
+	this.Edit_Item_Click = function()
+	{
+		var self = this;
+		
+		var selected_index = document.getElementById(self.item_edit_select.id).selectedIndex;
+		
+		if(selected_index != 0)
+		{
+			var selected_item = self.items_list[selected_index - 1];
+			
+			var params = new Array();
+			params[0] = selected_item.item_id;
+			params[1] = document.getElementById(self.edit_item_name.id).value;
+			params[2] = document.getElementById(self.edit_item_unit.id).value;
+			params[3] = document.getElementById(self.item_edit_description.id).value;
+			
+			rpc.Item_Data_Interface.Edit_Item(params, function(jsonRpcObj) {
+			
+				if(jsonRpcObj.result.success == 'true'){
+					
+					alert('Item successfully edited.');
+					
+					self.Refresh_Items(function(){});
+					
+				}
+				else
+				{
+					alert('Failed to edit the item.');
+				}
+			
+			});
+			
+		
+		}
+		else
+		{
+			alert('Select a valid item.');
+		}
+			
+	};
+	
+	this.Item_Select_Change = function()
+	{
+		var self = this;
+		
+		//alert('Select item entry changed!');
+		
+		var selected_index = document.getElementById(self.item_edit_select.id).selectedIndex;
+		
+		if(selected_index != 0)
+		{
+			var selected_item = self.items_list[selected_index - 1];
+			
+			document.getElementById(self.edit_item_name.id).value = selected_item.item_name;
+			document.getElementById(self.item_edit_description.id).value = selected_item.item_description;
+			document.getElementById(self.edit_item_unit.id).value = selected_item.item_unit;
+		}
+		else
+		{
+			document.getElementById(self.edit_item_name.id).value = '';
+			document.getElementById(self.item_edit_description.id).value = '';
+			document.getElementById(self.edit_item_unit.id).value = '';
+		}
+		
+	};
+	
+	//RENDER FUNCTIONS
+	
 	this.Render_Quick_Item_Entry_Form = function(form_div_id) {
 
 		//create the top form
@@ -458,7 +707,6 @@ function Item_Tab(item_div_id) {
 
 	};
 	
-	
 	this.Render_Edit_Item_Entry_Form = function(form_div_id) {
 
 		//create the top form
@@ -475,7 +723,7 @@ function Item_Tab(item_div_id) {
 		this.edit_item_entry_select.innerHTML = '<option>-</option>';
 		this.item_edit_entry_data_form.appendChild(this.edit_item_entry_select);
 		
-		this.item_edit_entry_data_form.innerHTML += '<br />';
+		this.item_edit_entry_data_form.innerHTML += '<br /><br />';
 		
 		this.item_edit_entry_data_form.innerHTML += 'Time:<br />';
 
@@ -558,10 +806,9 @@ function Item_Tab(item_div_id) {
 			//ensure a normal postback does not occur
 			event.preventDefault();
 
-			alert('Edit item entry submit button click!');
 			
 			//execute the click event
-			//self.Add_Item_Entry_Click();
+			self.Edit_Item_Entry_Click();
 		});
 		
 		$('#' + this.item_edit_delete_entry_button.id).button();
@@ -570,12 +817,18 @@ function Item_Tab(item_div_id) {
 			//ensure a normal postback does not occur
 			event.preventDefault();
 			
-			alert('Edit item entry delete button click!');
 			
 			//execute the click event
-			//self.Add_Item_Entry_Click();
+			self.Delete_Item_Entry_Click();
 		});
+		
+		$('#' + self.edit_item_entry_select.id).change(function() {
+			
+			self.Item_Entry_Select_Change();
+			
 
+		});
+		
 		//initialize the datetime picker
 		$('#' + this.item_edit_time.id).datetimepicker({
 			timeFormat : "HH:mm",
@@ -583,7 +836,7 @@ function Item_Tab(item_div_id) {
 		});
 		$('#' + this.item_edit_time.id).datetimepicker("setDate", new Date());
 		$('#' + this.item_edit_time.id).datetimepicker("setDate", new Date());
-
+		
 	};
 
 	this.Render_View_Items_Form = function(div_id) {
@@ -690,7 +943,7 @@ function Item_Tab(item_div_id) {
 		this.item_edit_select.innerHTML = '<option>-</option>';
 		this.item_edit_data_form.appendChild(this.item_edit_select);
 		
-		this.item_edit_data_form.innerHTML += '<br />';
+		this.item_edit_data_form.innerHTML += '<br /><br />';
 		
 		this.item_edit_data_form.innerHTML += 'Name:<br />';
 
@@ -718,7 +971,7 @@ function Item_Tab(item_div_id) {
 		//item description
 		this.item_edit_description = document.createElement("input");
 		this.item_edit_description.setAttribute('name', "item_edit_description");
-		this.item_edit_description.setAttribute('id', "item_description");
+		this.item_edit_description.setAttribute('id', "item_edit_description");
 		this.item_edit_description.setAttribute('type', 'text');
 		this.item_edit_data_form.appendChild(this.item_edit_description);
 		
@@ -771,10 +1024,9 @@ function Item_Tab(item_div_id) {
 			//ensure a normal postback does not occur
 			event.preventDefault();
 			
-			alert('Edit item submit button click!');
 			
 			//execute the click event
-			//self.Add_New_Item_Click();
+			self.Edit_Item_Click();
 		});
 		
 		$('#' + this.item_edit_delete_button.id).button();
@@ -783,10 +1035,16 @@ function Item_Tab(item_div_id) {
 			//ensure a normal postback does not occur
 			event.preventDefault();
 			
-			alert('Edit item delete button click!');
 			
 			//execute the click event
-			//self.Add_New_Item_Click();
+			self.Delete_Item_Click();
+		});
+		
+		$('#' + self.item_edit_select.id).change(function() {
+			
+			self.Item_Select_Change();
+			
+
 		});
 	};
 
@@ -828,7 +1086,7 @@ function Item_Tab(item_div_id) {
 			event.preventDefault();
 
 			//execute the click event
-			self.On_Click_Event();
+			self.Item_Data_Refresh_Click();
 		});
 
 	};

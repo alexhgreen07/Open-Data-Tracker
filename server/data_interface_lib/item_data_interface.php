@@ -161,33 +161,21 @@ class Item_Data_Interface {
 		if (Is_Session_Authorized()) {
 
 			$return_json['authenticated'] = 'true';
-			
-			$time = mysql_real_escape_string($time);
-			$value = mysql_real_escape_string($value);
-			$note = mysql_real_escape_string($note);
-			
-			if ($item_id != "-") {
-				$item_id = mysql_real_escape_string($item_id);
+
+
+			$sql_insert = "DELETE FROM `item_log` WHERE `item_log_id` = " . $item_entry_id;
+
+			//$return_json['debug'] = $sql_insert;
+
+			$success = mysql_query($sql_insert, $this -> database_link);
+
+			if ($success) {
+				$return_json['success'] = 'true';
 			} else {
-				$item_id = "";
+				$return_json['success'] = 'false';
 			}
 
-
-			if ($value != "") {
-
-				$sql_insert = "DELETE FROM `item_log` WHERE `item_log_id` = " . $item_entry_id;
-
-				//$return_json['debug'] = $sql_insert;
-
-				$success = mysql_query($sql_insert, $this -> database_link);
-
-				if ($success) {
-					$return_json['success'] = 'true';
-				} else {
-					$return_json['success'] = 'false';
-				}
-
-			}
+		
 
 		} else {
 			$return_json['authenticated'] = 'false';
@@ -196,50 +184,6 @@ class Item_Data_Interface {
 
 		return $return_json;
 		
-	}
-
-	public function Get_Items() {
-		$return_json = array('authenticated' => 'false', 'success' => 'false', 'items' => array(), );
-
-		if (Is_Session_Authorized()) {
-
-			$return_json['authenticated'] = 'true';
-
-			$sql_query = "SELECT `item_id`, `name`, `description`, `unit`, `date_created` FROM `life_management`.`items` ORDER BY `name` asc";
-			$result = mysql_query($sql_query, $this -> database_link);
-
-			if ($result) {
-				$return_json['success'] = 'true';
-
-				$num = mysql_numrows($result);
-
-				$i = 0;
-				while ($i < $num) {
-
-					$item_name = mysql_result($result, $i, "name");
-					$item_description = mysql_result($result, $i, 'description');
-					$item_unit = mysql_result($result, $i, "unit");
-					$item_date_created = mysql_result($result, $i, 'date_created');
-					$item_id = mysql_result($result, $i, "item_id");
-
-					if ($item_name != "") {
-						$return_json['items'][$i] = array('item_name' => $item_name, 'item_description' => $item_description, 'item_unit' => $item_unit, 'date_created' => $item_date_created, 'item_id' => $item_id, );
-
-						//$return_json['items'][$i] = $row_result;
-
-					}
-
-					$i++;
-				}
-			} else {
-				$return_json['success'] = 'false';
-			}
-
-		} else {
-			$return_json['authenticated'] = 'false';
-		}
-
-		return $return_json;
 	}
 
 	public function Insert_New_Item($name, $unit, $description) {
@@ -311,19 +255,24 @@ class Item_Data_Interface {
 		$return_json = array('authenticated' => 'false', 'success' => 'false', );
 
 		if (Is_Session_Authorized()) {
+			
 			$return_json['authenticated'] = 'true';
 
-			if ($name != "") {
+			if ($item_id != "") {
 
 				$sql_insert = "DELETE FROM `items` WHERE `item_id`=" . $item_id;
 
 				$success = mysql_query($sql_insert, $this -> database_link);
 
 				if ($success) {
+					
 					$return_json['success'] = 'true';
+					
 				} else {
+					
 					$return_json['success'] = 'false';
 				}
+
 
 			}
 		} else {
@@ -333,14 +282,15 @@ class Item_Data_Interface {
 		return $return_json;
 		
 	}
-
+	
 	public function Get_Item_Log() {
 
-		$return_json = array('authenticated' => 'false', 'success' => 'false', 'html' => '', );
+		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '', );
 
-		$return_html = '';
 
 		$query = "SELECT 
+			`item_log`.`item_log_id` AS `item_log_id`,
+			`item_log`.`item_id` AS `item_id`, 
 			`item_log`.`time` AS `time`, 
 			`item_log`.`value` AS `value`, 
 			`items`.`name` AS `name`,
@@ -349,34 +299,87 @@ class Item_Data_Interface {
 			FROM `life_management`.`item_log`, `life_management`.`items` 
 			WHERE `items`.`item_id` = `item_log`.`item_id` 
 			ORDER BY `time` DESC";
+			
 		$result = mysql_query($query, $this -> database_link);
 
 		$num = mysql_numrows($result);
 
-		$return_html .= "
-		<b>Database Output</b><br>
-		<table border='1' style='width:100%;'>";
-
-		$return_html .= "<tr><td>Date</td><td>Name</td><td>Value</td><td>Unit</td><td>Note</td></tr>";
-
+		
+		$return_json['data'] = array();
+		
 		$i = 0;
 		while ($i < $num) {
-
+			
+			$item_entry_log_id = mysql_result($result, $i, "item_log_id");
+			$item_entry_id = mysql_result($result, $i, "item_id");
 			$item_entry_time = mysql_result($result, $i, "time");
 			$item_entry_value = mysql_result($result, $i, "value");
 			$item_entry_name = mysql_result($result, $i, "name");
 			$item_entry_unit = mysql_result($result, $i, "unit");
 			$item_entry_note = mysql_result($result, $i, "note");
+			
+			$return_json['data'][$i] = array(
+				'item_log_id' => $item_entry_log_id,
+				'item_id' => $item_entry_id,
+				'time' => $item_entry_time,
+				'value' => $item_entry_value,
+				'name' => $item_entry_name,
+				'unit' => $item_entry_unit,
+				'note' => $item_entry_note);
 
-			$return_html .= "<tr><td>" . $item_entry_time . "</td><td>" . $item_entry_name . "</td><td>" . $item_entry_value . "</td><td>" . $item_entry_unit . "</td><td>" . $item_entry_note . "</td></tr>";
 
 			$i++;
 		}
 
-		$return_html .= '
-		</table>';
+		return $return_json;
+	}
 
-		$return_json['html'] = $return_html;
+	public function Get_Items() {
+		$return_json = array('authenticated' => 'false', 'success' => 'false', 'items' => array(), );
+
+		if (Is_Session_Authorized()) {
+
+			$return_json['authenticated'] = 'true';
+
+			$sql_query = "SELECT `item_id`, `name`, `description`, `unit`, `date_created` FROM `life_management`.`items` ORDER BY `name` asc";
+			$result = mysql_query($sql_query, $this -> database_link);
+
+			if ($result) {
+				$return_json['success'] = 'true';
+
+				$num = mysql_numrows($result);
+
+				$i = 0;
+				while ($i < $num) {
+
+					$item_name = mysql_result($result, $i, "name");
+					$item_description = mysql_result($result, $i, 'description');
+					$item_unit = mysql_result($result, $i, "unit");
+					$item_date_created = mysql_result($result, $i, 'date_created');
+					$item_id = mysql_result($result, $i, "item_id");
+
+					if ($item_name != "") {
+						$return_json['items'][$i] = 
+							array(
+							'item_name' => $item_name, 
+							'item_description' => $item_description, 
+							'item_unit' => $item_unit, 
+							'date_created' => $item_date_created, 
+							'item_id' => $item_id, );
+
+						//$return_json['items'][$i] = $row_result;
+
+					}
+
+					$i++;
+				}
+			} else {
+				$return_json['success'] = 'false';
+			}
+
+		} else {
+			$return_json['authenticated'] = 'false';
+		}
 
 		return $return_json;
 	}

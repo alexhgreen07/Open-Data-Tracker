@@ -590,7 +590,7 @@ function Item_Tab(item_div_id) {
 
 		//task start/stop button creation
 		this.item_add_entry_button = document.createElement("input");
-		this.item_add_entry_button.setAttribute('id', 'task_entry_start_stop');
+		this.item_add_entry_button.setAttribute('id', 'item_add_entry_button');
 		this.item_add_entry_button.setAttribute('type', 'submit');
 		this.item_add_entry_button.value = 'Submit';
 		var self = this;
@@ -669,7 +669,7 @@ function Item_Tab(item_div_id) {
 
 		//task start/stop button creation
 		this.item_new_add_entry_button = document.createElement("input");
-		this.item_new_add_entry_button.setAttribute('id', 'new_task_entry_start_stop');
+		this.item_new_add_entry_button.setAttribute('id', 'item_new_add_entry_button');
 		this.item_new_add_entry_button.setAttribute('type', 'submit');
 		this.item_new_add_entry_button.value = 'Submit';
 		var self = this;
@@ -702,7 +702,6 @@ function Item_Tab(item_div_id) {
 			timeFormat : "HH:mm",
 			dateFormat : 'yy-mm-dd'
 		});
-		$('#' + this.item_new_time.id).datetimepicker("setDate", new Date());
 		$('#' + this.item_new_time.id).datetimepicker("setDate", new Date());
 
 	};

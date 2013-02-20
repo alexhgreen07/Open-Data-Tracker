@@ -527,7 +527,7 @@ class Task_Data_Interface {
 
 		$sql .= "'" . $task_id . "',";
 		$sql .= "" . $scheduled . ",";
-		$sql .= "'" . $scheduled_time . "'";
+		$sql .= "'" . $scheduled_time . "',";
 		$sql .= "" . $recurring . ",";
 		$sql .= "'" . $recurrance_type . "',";
 		$sql .= "" . $recurrance_period . ")";

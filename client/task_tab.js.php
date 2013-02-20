@@ -74,6 +74,9 @@ function Task_Tab(task_div_id) {
 					document.getElementById(self.add_task_entry_task_name_select.id).innerHTML = new_inner_html;
 					document.getElementById(self.edit_task_entry_task_name_select.id).innerHTML = new_inner_html;
 					document.getElementById(self.task_entry_task_edit_name_select.id).innerHTML = new_inner_html;
+					document.getElementById(self.task_target_new_name_select.id).innerHTML = new_inner_html;
+					document.getElementById(self.task_target_edit_name_select.id).innerHTML = new_inner_html;
+					
 					
 					//refresh the task info div
 					self.On_Task_Name_Select_Change_Event();
@@ -128,13 +131,19 @@ function Task_Tab(task_div_id) {
 			
 			new_inner_html += '</table>';
 			
-			self.new_data_display_div.innerHTML = new_inner_html;
+			document.getElementById(self.new_data_display_div.id).innerHTML = new_inner_html;
 
 			//hide the loader image
 			$('#' + self.loading_image_view.id).hide();
 
 			self.Refresh_Task_Log_Data(function() {
-				refresh_callback();
+				
+				self.Refresh_Task_Target_Data(function(){
+					
+					refresh_callback();
+					
+				})
+				
 			});
 
 		});
@@ -398,6 +407,60 @@ function Task_Tab(task_div_id) {
 
 			refresh_callback();
 
+		});
+	};
+	
+	this.Refresh_Task_Target_Data = function(refresh_callback)
+	{
+		var self = this;
+
+		var params = new Array();
+		
+		$('#'+self.loading_image_task_target_view.id).show();
+		
+		//execute the RPC callback for retrieving the item log
+		rpc.Task_Data_Interface.Get_Task_Targets(params, function(jsonRpcObj) {
+
+			//RPC complete. Set appropriate HTML.
+			var new_html = '';
+
+			new_html += 'Last refreshed: ' + (new Date()) + '<br />';
+			
+			self.task_targets_log = jsonRpcObj.result.data;
+			
+			new_html += "<b>Database Output</b><br><table border='1' style='width:100%;'>";
+			
+			new_html += "<tr><td>Target ID</td><td>Name</td><td>Scheduled Time</td><td>Recuring</td><td>Recurrance Period</td></tr>";
+			
+			var select_html = '<option value="0">-</option>';
+			
+			for (var i = 0; i < self.task_targets_log.length; i++) {
+			    
+			    new_html += '<tr>';
+			    
+			    new_html += '<td>' + self.task_targets_log[i].task_schedule_id + '</td>';
+			    new_html += '<td>' + self.task_targets_log[i].name + '</td>';
+			    new_html += '<td>' + self.task_targets_log[i].scheduled_time + '</td>';
+			    new_html += '<td>' + self.task_targets_log[i].recurring + '</td>';
+			    new_html += '<td>' + self.task_targets_log[i].recurrance_period + '</td>';
+			    
+			    new_html += '</tr>';
+			    
+			    select_html += '<option value="'
+			    	+ self.task_targets_log[i].task_schedule_id + '">' + 
+			    	self.task_targets_log[i].name + 
+			    	" (" + self.task_targets_log[i].task_schedule_id + ")</option>";
+			    
+			}
+			
+			new_html += '</table>';
+			
+			document.getElementById(self.view_task_target_data_div.id).innerHTML = new_html;
+			document.getElementById(self.task_edit_target_select.id).innerHTML = select_html;
+			
+			$('#'+self.loading_image_task_target_view.id).hide();
+			
+			refresh_callback();
 		});
 	};
 	
@@ -799,6 +862,154 @@ function Task_Tab(task_div_id) {
 			
 	};
 	
+	this.Task_Target_New_Submit_Click = function()
+	{
+		var self = this;
+		var params = new Array();
+
+		//retrieve the selected item from the info array
+		var selected_index = document.getElementById(this.task_target_new_name_select.id).selectedIndex;
+
+		if (selected_index > 0) {
+
+			var selected_task = this.task_info_json_array[selected_index - 1];
+			var scheduled = document.getElementById(self.task_scheduled_target_select.id).value;
+			var scheduled_time = document.getElementById(self.task_scheduled_target_date.id).value;
+			var recurring = document.getElementById(self.task_recurring_target_select.id).value;
+			var recurrance_type = document.getElementById(self.task_recurring_target_select_type.id).value;
+			var recurrance_period = document.getElementById(self.task_reccurance_target_period.id).value;
+			
+			//load all function parameters
+			params[0] = selected_task.task_id;
+			if(scheduled == 'Scheduled')
+			{
+				params[1] = 1;
+			}else{
+				params[1] = 0;
+			}
+			params[2] = scheduled_time;
+			if(recurring == 'True')
+			{
+				params[3] = 1;
+			}else{
+				params[3] = 0;
+			}
+			params[4] = recurrance_type;
+			params[5] = recurrance_period;
+
+			//show the loader image
+			$('#' + self.add_task_entry_loading_image_new.id).show();
+
+			//execute the RPC callback for retrieving the item log
+			rpc.Task_Data_Interface.Insert_Task_Target(params, function(jsonRpcObj) {
+
+				if (jsonRpcObj.result.success == 'true') {
+
+					alert('Task target inserted successfully.');
+
+					self.Refresh_Tasks(function() {
+						
+						self.Refresh_Task_Name_List(function() {
+							
+							self.Refresh_Task_Target_Data(function(){
+								
+								self.refresh_task_log_callback();
+								
+							});
+							
+						});
+
+					});
+
+				} else {
+					alert('Failed to insert task entry.' + jsonRpcObj.result.debug);
+				}
+
+				//hide the loader image
+				$('#' + self.add_task_entry_loading_image_new.id).hide();
+
+			});
+
+		}
+	};
+	
+	this.Task_Target_Edit_Submit_Click = function()
+	{
+		alert('Submit editted task target not implemented.');
+			
+	};
+	
+	this.Task_Target_Edit_Delete_Click = function()
+	{
+		var self = this;
+		
+		var index_to_delete = document.getElementById(this.task_edit_target_select.id).value;
+
+		if(index_to_delete != 0)
+		{
+			
+			var r=confirm("Are you sure you want to delete this task target?");
+			
+			if (r==true)
+			{
+				
+				var params = new Array();
+				params[0] = index_to_delete;
+				
+				rpc.Task_Data_Interface.Delete_Task_Target(params, function(jsonRpcObj) {
+				
+					if(jsonRpcObj.result.success == 'true'){
+						
+						alert('Index deleted: ' + index_to_delete);
+						
+						self.Refresh_Tasks(function() {
+							
+							//refresh the list to remove this task
+							self.Refresh_Task_Name_List(function() {
+								
+								self.Refresh_Task_Target_Data(function(){
+									
+									//do nothing
+									
+								});
+								
+								
+							});
+	
+						});
+						
+					}
+					else
+					{
+						alert('Failed to delete the task target.');
+					}
+				
+				});
+			}
+			else
+			{
+				//do nothing, operation cancelled.
+			}
+			
+			
+		
+		}
+		else
+		{
+			alert('Select a valid task target.');
+		}
+			
+	};
+	
+	this.Task_Target_View_Refresh_Click = function()
+	{
+		
+		this.Refresh_Task_Target_Data(function(){
+			
+		});
+		
+	};
+	
 	//RENDER FUNCTIONS
 	
 	this.Render_Timecard_Task_Entry_Form = function(form_div_id) {
@@ -817,12 +1028,7 @@ function Task_Tab(task_div_id) {
 		this.task_name_select.setAttribute('name', "task_name_to_enter");
 		this.task_name_select.setAttribute('id', "task_name_to_enter");
 		this.task_name_select.innerHTML = '<option>-</option>';
-		$(this.task_name_select).change(function() {
-
-			//call the change event function
-			self.On_Task_Name_Select_Change_Event();
-
-		});
+		
 		this.data_form_timecard_entry.appendChild(this.task_name_select);
 
 		this.task_timecard_note_div = document.createElement("div");
@@ -845,18 +1051,10 @@ function Task_Tab(task_div_id) {
 		//task start/stop button creation
 		this.task_start_stop_button = document.createElement("input");
 		this.task_start_stop_button.setAttribute('id', 'task_entry_start_stop');
+		this.task_start_stop_button.setAttribute('name', 'task_entry_start_stop');
 		this.task_start_stop_button.setAttribute('type', 'submit');
 		this.task_start_stop_button.value = 'Start';
 
-		$(this.task_start_stop_button).button();
-		$(this.task_start_stop_button).click(function(event) {
-
-			//ensure a normal postback does not occur
-			event.preventDefault();
-
-			//execute the click event
-			self.On_Start_Stop_Click_Event();
-		});
 		this.data_form_timecard_entry.appendChild(this.task_start_stop_button);
 
 		this.test_div = document.createElement("div");
@@ -866,18 +1064,11 @@ function Task_Tab(task_div_id) {
 		//task mark complete button creation
 		this.task_start_complete_button = document.createElement("input");
 		this.task_start_complete_button.setAttribute('id', 'task_entry_complete');
+		this.task_start_complete_button.setAttribute('name', 'task_entry_complete');
 		this.task_start_complete_button.setAttribute('type', 'submit');
 		this.task_start_complete_button.value = 'Mark Complete';
 
-		$(this.task_start_complete_button).button();
-		$(this.task_start_complete_button).click(function(event) {
-
-			//ensure a normal postback does not occur
-			event.preventDefault();
-
-			//execute the click event
-			self.On_Complete_Click_Event();
-		});
+		
 		this.data_form_timecard_entry.appendChild(this.task_start_complete_button);
 
 		this.loading_image_new = document.createElement("img");
@@ -892,7 +1083,37 @@ function Task_Tab(task_div_id) {
 
 		//$('#' + self.loading_image_new.id).hide();
 		$('#' + self.task_timecard_note_div.id).hide();
+		
+		$('#' + this.task_name_select.id).change(function() {
 
+			//call the change event function
+			self.On_Task_Name_Select_Change_Event();
+
+		});
+		
+				
+		$('#' + this.task_start_stop_button.id).button();
+		$('#' + this.task_start_stop_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+			//execute the click event
+			self.On_Start_Stop_Click_Event();
+		});
+		
+		
+		$('#' + this.task_start_complete_button.id).button();
+		$('#' + this.task_start_complete_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+			//execute the click event
+			self.On_Complete_Click_Event();
+		});
+
+		
 		//this is used to update the timer value on running tasks
 		window.setInterval(function() {
 
@@ -917,12 +1138,6 @@ function Task_Tab(task_div_id) {
 		this.add_task_entry_task_name_select.setAttribute('name', "add_task_entry_name_to_enter");
 		this.add_task_entry_task_name_select.setAttribute('id', "add_task_entry_name_to_enter");
 		this.add_task_entry_task_name_select.innerHTML = '<option>-</option>';
-		$(this.add_task_entry_task_name_select).change(function() {
-
-			//call the change event function
-			//self.On_Task_Name_Select_Change_Event();
-
-		});
 		this.data_form_new_entry.appendChild(this.add_task_entry_task_name_select);
 		
 		this.data_form_new_entry.innerHTML += '<br />';
@@ -1009,6 +1224,14 @@ function Task_Tab(task_div_id) {
 			self.On_Complete_Task_Entry_Click_Event();
 
 		});
+		
+		$('#' + this.add_task_entry_task_name_select.id).change(function() {
+
+			//call the change event function
+			//self.On_Task_Name_Select_Change_Event();
+
+		});
+		
 
 		//$('#' + self.add_task_entry_loading_image_new.id).hide();
 
@@ -1191,8 +1414,8 @@ function Task_Tab(task_div_id) {
 
 		div_tab.appendChild(this.data_form);
 
-		$(this.task_log_submit_button).button();
-		$(this.task_log_submit_button).click(function(event) {
+		$('#' + this.task_log_submit_button.id).button();
+		$('#' + this.task_log_submit_button.id).click(function(event) {
 
 			//ensure a normal postback does not occur
 			event.preventDefault();
@@ -1258,19 +1481,11 @@ function Task_Tab(task_div_id) {
 
 		//task submit creation
 		this.task_submit_button = document.createElement("input");
-		this.task_submit_button.setAttribute('name', 'task_submit');
+		this.task_submit_button.setAttribute('id', 'task_submit');
 		this.task_submit_button.setAttribute('type', 'submit');
 		this.task_submit_button.value = 'Submit';
 		var self = this;
-		$(this.task_submit_button).button();
-		$(this.task_submit_button).click(function(event) {
-
-			//ensure a normal postback does not occur
-			event.preventDefault();
-
-			//execute the click event
-			self.Task_New_Submit_Click();
-		});
+		
 		this.data_form_new_task.appendChild(this.task_submit_button);
 
 		this.loading_image_add = document.createElement("img");
@@ -1285,6 +1500,16 @@ function Task_Tab(task_div_id) {
 
 		//hide ajax loader image
 		$('#' + self.loading_image_add.id).hide();
+		
+		$('#' + this.task_submit_button.id).button();
+		$('#' + this.task_submit_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+			//execute the click event
+			self.Task_New_Submit_Click();
+		});
 
 	};
 
@@ -1448,6 +1673,7 @@ function Task_Tab(task_div_id) {
 		this.data_form_view_tasks.appendChild(this.loading_image_view);
 
 		this.new_data_display_div = document.createElement("div");
+		this.new_data_display_div.id = 'new_task_view_data_display_div';
 		this.data_form_view_tasks.appendChild(this.new_data_display_div);
 
 		var div_tab = document.getElementById(form_div_id);
@@ -1478,6 +1704,16 @@ function Task_Tab(task_div_id) {
 		this.new_task_target_form = document.createElement("form");
 		this.new_task_target_form.setAttribute('method', "post");
 		this.new_task_target_form.setAttribute('id', "new_task_target_form");
+		
+		this.new_task_target_form.innerHTML += 'Task:<br />';
+
+		//task recurring
+		this.task_target_new_name_select = document.createElement("select");
+		this.task_target_new_name_select.setAttribute('id', 'task_target_new_name_select');
+		this.task_target_new_name_select.innerHTML = '<option>-</option>';
+		this.new_task_target_form.appendChild(this.task_target_new_name_select);
+
+		this.new_task_target_form.innerHTML += '<br /><br />';
 		
 		this.new_task_target_form.innerHTML += 'Scheduled/Floating:<br />';
 
@@ -1564,8 +1800,7 @@ function Task_Tab(task_div_id) {
 			//ensure a normal postback does not occur
 			event.preventDefault();
 			
-			alert('Submit new task target not implemented.');
-			
+			self.Task_Target_New_Submit_Click();
 		});
 		
 		$('#' + this.task_scheduled_target_date.id).datetimepicker({
@@ -1584,7 +1819,7 @@ function Task_Tab(task_div_id) {
 		this.edit_task_target_form.setAttribute('method', "post");
 		this.edit_task_target_form.setAttribute('id', "edit_task_target_form");
 
-		this.edit_task_target_form.innerHTML += 'Target<br />';
+		this.edit_task_target_form.innerHTML += 'Target:<br />';
 		
 		//task recurring
 		this.task_edit_target_select = document.createElement("select");
@@ -1593,6 +1828,17 @@ function Task_Tab(task_div_id) {
 		this.edit_task_target_form.appendChild(this.task_edit_target_select);
 		
 		this.edit_task_target_form.innerHTML += '<br /><br />';
+
+		this.edit_task_target_form.innerHTML += 'Task:<br />';
+
+		//task recurring
+		this.task_target_edit_name_select = document.createElement("select");
+		this.task_target_edit_name_select.setAttribute('id', 'task_target_edit_name_select');
+		this.task_target_edit_name_select.innerHTML = '<option>-</option>';
+		this.edit_task_target_form.appendChild(this.task_target_edit_name_select);
+
+		this.edit_task_target_form.innerHTML += '<br /><br />';
+		
 
 		this.edit_task_target_form.innerHTML += 'Scheduled/Floating:<br />';
 
@@ -1683,7 +1929,7 @@ function Task_Tab(task_div_id) {
 		     //ensure a normal postback does not occur
 			event.preventDefault();
 			
-			alert('Submit editted task target not implemented.');
+			self.Task_Target_Edit_Submit_Click();
 		});
 		
 
@@ -1693,7 +1939,7 @@ function Task_Tab(task_div_id) {
 		     //ensure a normal postback does not occur
 			event.preventDefault();
 			
-			alert('Delete editted task target not implemented.');
+			self.Task_Target_Edit_Delete_Click();
 		});
 		
 		$('#' + this.task_edit_scheduled_target_date.id).datetimepicker({
@@ -1731,6 +1977,9 @@ function Task_Tab(task_div_id) {
 	
 	this.Render_View_Task_Target_Form = function(form_div_id)
 	{
+		var self = this;
+		
+		
 		//create the top form
 		this.view_task_target_form = document.createElement("form");
 		this.view_task_target_form.setAttribute('method', "post");
@@ -1752,6 +2001,10 @@ function Task_Tab(task_div_id) {
 		this.loading_image_task_target_view.setAttribute('src', 'ajax-loader.gif');
 		this.view_task_target_form.appendChild(this.loading_image_task_target_view);
 		
+		this.view_task_target_data_div = document.createElement('div');
+		this.view_task_target_data_div.id = 'view_task_target_data_div';
+		this.view_task_target_form.appendChild(this.view_task_target_data_div);
+		
 		var div_tab = document.getElementById(form_div_id);
 
 		div_tab.innerHTML = '';
@@ -1764,8 +2017,7 @@ function Task_Tab(task_div_id) {
 			//ensure a normal postback does not occur
 			event.preventDefault();
 			
-			alert('Refresh tasks target view not implemented.');
-			
+			self.Task_Target_View_Refresh_Click();
 		});
 
 	};

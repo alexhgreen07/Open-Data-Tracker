@@ -194,7 +194,7 @@ class Task_Data_Interface {
 		$task_start_stop = mysql_real_escape_string($task_start_stop);
 		$note = mysql_real_escape_string($note);
 
-		$sql_query = "SELECT DISTINCT `task_id` FROM `life_management`.`tasks` WHERE `name` = '" . $task_name_to_enter . "' AND `status` != 'Completed'";
+		$sql_query = "SELECT DISTINCT `task_id` FROM `life_management`.`tasks` WHERE `name` = '" . $task_name_to_enter . "'";
 		$result = mysql_query($sql_query, $this -> database_link);
 
 		$task_id = mysql_result($result, 0, "task_id");
@@ -232,7 +232,7 @@ class Task_Data_Interface {
 			$task_start_stop = mysql_real_escape_string($task_start_stop);
 
 			//find the task by its name
-			$sql_query = "SELECT DISTINCT `task_id`, `recurring` FROM `life_management`.`tasks` WHERE `name` = '" . $task_name_to_enter . "'";
+			$sql_query = "SELECT DISTINCT `task_id` FROM `life_management`.`tasks` WHERE `name` = '" . $task_name_to_enter . "'";
 			$result = mysql_query($sql_query, $this -> database_link);
 
 			if (!$result) {
@@ -240,19 +240,6 @@ class Task_Data_Interface {
 			}
 
 			$task_id = mysql_result($result, 0, "task_id");
-			$is_recurring = mysql_result($result, 0, "recurring");
-
-			//if it is not a recurring task, set it to compelete
-			if (!$is_recurring) {
-				$sql = "UPDATE `tasks` SET `status`='Completed' WHERE `task_id`=" . $task_id;
-
-				//execute insert
-				$success = mysql_query($sql, $this -> database_link);
-
-				if (!$success) {
-					throw new Exception('SQL error.');
-				}
-			}
 
 			//insert an entry into the log indicating the task is complete
 			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`status`) VALUES ('" . $task_id . "',NOW(),'Completed')";

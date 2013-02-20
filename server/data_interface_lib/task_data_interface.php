@@ -72,7 +72,7 @@ class Task_Data_Interface {
 		
 		$sql = "UPDATE `task_log` 
 			SET `task_id`=" . $task_id . ",
-			`start_time`=" . $start_time . ",
+			`start_time`='" . $start_time . "',
 			`hours`=" . $hours . ",
 			`status`='" . $status . "',
 			`note`='" . $note . "'
@@ -87,7 +87,7 @@ class Task_Data_Interface {
 		else{
 			$return_json['success'] = 'false';
 		}
-
+		
 
 		return $return_json;
 	}
@@ -98,7 +98,7 @@ class Task_Data_Interface {
 
 		$task_log_id = mysql_real_escape_string($task_log_id);
 
-		$sql = "DELETE FROM `tasks_log` WHERE `task_log_id` = " . $task_id;
+		$sql = "DELETE FROM `task_log` WHERE `task_log_id` = " . $task_log_id;
 
 		//execute insert
 		$success = mysql_query($sql, $this -> database_link);
@@ -121,9 +121,8 @@ class Task_Data_Interface {
 
 			$return_json['authenticated'] = 'true';
 
-			$sql_query = "SELECT DISTINCT `task_id`,`name`,`date_created`, `recurring`, `recurrance_period`, `scheduled_time`, `estimated_time` 
-				FROM `life_management`.`tasks` 
-				WHERE `status` != 'Completed' ORDER BY `name`";
+			$sql_query = "SELECT DISTINCT `task_id`,`name`,`date_created`, `estimated_time`, `description`, `note` 
+				FROM `life_management`.`tasks` ORDER BY `name`";
 			$result = mysql_query($sql_query, $this -> database_link);
 
 			if ($result) {
@@ -137,10 +136,9 @@ class Task_Data_Interface {
 					$item_name = mysql_result($result, $i, "name");
 					$task_id = mysql_result($result, $i, "task_id");
 					$date_created = mysql_result($result, $i, 'date_created');
-					$recurring = mysql_result($result, $i, 'recurring');
-					$recurrance_period = mysql_result($result, $i, 'recurrance_period');
-					$scheduled_time = mysql_result($result, $i, 'scheduled_time');
 					$estimated_time = mysql_result($result, $i, 'estimated_time');
+					$description = mysql_result($result,$i,'description');
+					$note = mysql_result($result,$i,'note');
 
 					//check if the task has been started yet
 					$inner_sql_query = "SELECT `task_id`, `start_time` 
@@ -163,7 +161,16 @@ class Task_Data_Interface {
 					}
 
 					if ($item_name != "") {
-						$return_json['items'][$i] = array('item_name' => $item_name, 'item_status' => $status, 'task_id' => $task_id, 'date_created' => $date_created, 'recurring' => $recurring, 'recurrance_period' => $recurrance_period, 'scheduled_time' => $scheduled_time, 'estimated_time' => $estimated_time, 'start_time' => $start_time, );
+						$return_json['items'][$i] = 
+							array(
+							'item_name' => $item_name, 
+							'item_status' => $status, 
+							'task_id' => $task_id, 
+							'date_created' => $date_created, 
+							'estimated_time' => $estimated_time, 
+							'start_time' => $start_time, 
+							'description' => $description,
+							'note' => $note, );
 
 					}
 
@@ -269,43 +276,25 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 
-	public function Insert_Task($name, $description = "", $estimated_time = 0, $note = "", $status = "Stopped", $schedule_type = "", $scheduled_time = "", $recurring = 0, $recurrance_type = "", $recurrance_period = "") {
+	public function Insert_Task($name, $description = "", $estimated_time = 0, $note = "") {
 		$return_json = array('authenticated' => 'false', 'success' => 'false', );
 
 		$task_name = mysql_real_escape_string($name);
 		$task_description = mysql_real_escape_string($description);
 		$task_estimated_time = mysql_real_escape_string($estimated_time);
 		$task_note = mysql_real_escape_string($note);
-		$status = mysql_real_escape_string($status);
-		$schedule_type = mysql_real_escape_string($schedule_type);
-		$scheduled_time = mysql_real_escape_string($scheduled_time);
-		$recurring = mysql_real_escape_string($recurring);
-		$recurrance_type = mysql_real_escape_string($recurrance_type);
-		$recurrance_period = mysql_real_escape_string($recurrance_period);
 
 		$sql = 'INSERT INTO `life_management`.`tasks` 
 			(`name`, 
 			`description`, 
 			`date_created`, 
 			`estimated_time`,
-			`status`, 
-			`schedule_type`, 
-			`scheduled_time`,
-			`recurring`,
-			`recurrance_type`,
-			`recurrance_period`,
 			`note`) VALUES (';
 
 		$sql .= "'" . $task_name . "',";
 		$sql .= "'" . $task_description . "',";
 		$sql .= "NOW(),";
 		$sql .= "" . $task_estimated_time . ",";
-		$sql .= "'" . $status . "',";
-		$sql .= "'" . $schedule_type . "',";
-		$sql .= "'" . $scheduled_time . "',";
-		$sql .= "" . $recurring . ",";
-		$sql .= "'" . $recurrance_type . "',";
-		$sql .= "'" . $recurrance_period . "',";
 		$sql .= "'" . $task_note . "')";
 
 		$success = mysql_query($sql, $this -> database_link);
@@ -320,7 +309,6 @@ class Task_Data_Interface {
 
 		return $return_json;
 	}
-
 
 	public function Delete_Task($task_id) {
 			
@@ -341,31 +329,19 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 
-	public function Update_Task($task_id, $name, $category_id, $description, $estimated_time, $note, $status, $schedule_type, $scheduled_time, $recurring, $recurrance_type, $recurrance_period) {
+	public function Update_Task($task_id, $name, $category_id, $description, $estimated_time, $note) {
 		$return_json = array('authenticated' => 'false', 'success' => 'false', );
 
 		$task_name = mysql_real_escape_string($name);
 		$task_description = mysql_real_escape_string($description);
 		$task_estimated_time = mysql_real_escape_string($estimated_time);
 		$task_note = mysql_real_escape_string($note);
-		$status = mysql_real_escape_string($status);
-		$schedule_type = mysql_real_escape_string($schedule_type);
-		$scheduled_time = mysql_real_escape_string($scheduled_time);
-		$recurring = mysql_real_escape_string($recurring);
-		$recurrance_type = mysql_real_escape_string($recurrance_type);
-		$recurrance_period = mysql_real_escape_string($recurrance_period);
 
 		$sql = "UPDATE `tasks` 
 			SET `category_id`=" . $category_id . ",
 			`name`='" . $name . "',
 			`description`='" . $description . "',
 			`estimated_time`=" . $estimated_time . ",
-			`status`='" . $status . "',
-			`schedule_type`='" . $schedule_type . "',
-			`scheduled_time`=" . $scheduled_time . ",
-			`recurring`=" . $recurring . ",
-			`recurrance_type`='" . $recurrance_type . "',
-			`recurrance_period`='" . $recurrance_period . "',
 			`note`='" . $note . "' 
 			WHERE `task_id`=" . $task_id . "";
 
@@ -383,45 +359,49 @@ class Task_Data_Interface {
 	}
 
 	public function Get_Tasks() {
-		$return_json = array('authenticated' => 'false', 'success' => 'false', 'html' => '', );
+		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '');
 
 		if (Is_Session_Authorized()) {
 
 			$return_json['authenticated'] = 'true';
 
-			$sql_query = "SELECT DISTINCT `name`,`description`,`date_created`,`estimated_time`,`status` FROM `life_management`.`tasks` ORDER BY `name` ASC";
+			$sql_query = "SELECT DISTINCT 
+				`task_id`,
+				`name`,
+				`description`,
+				`date_created`,
+				`note`,
+				`estimated_time` FROM `life_management`.`tasks` ORDER BY `name` ASC";
 			$result = mysql_query($sql_query, $this -> database_link);
 
 			if ($result) {
 				$return_json['success'] = 'true';
 
-				$return_html = '';
-
 				$num = mysql_numrows($result);
 
-				$return_html .= "
-				<b>Database Output</b><br>
-				<table border='1' style='width:100%;'>";
-
-				$return_html .= "<tr><td>Name</td><td>Description</td><td>Estimated Time (hrs)</td><td>Status</td></tr>";
-
+				$return_json['data'] = array();
+				
 				$i = 0;
 				while ($i < $num) {
-
-					$field1_name = mysql_result($result, $i, "name");
-					$field2_name = mysql_result($result, $i, "description");
-					$field3_name = mysql_result($result, $i, "estimated_time");
-					$field4_name = mysql_result($result, $i, "status");
-
-					$return_html .= "<tr><td>" . $field1_name . "</td><td>" . $field2_name . "</td><td>" . $field3_name . "</td><td>" . $field4_name . "</td></tr>";
-
+					
+					$task_id= mysql_result($result,$i,"task_id");
+					$task_name = mysql_result($result, $i, "name");
+					$task_description = mysql_result($result, $i, "description");
+					$task_estimated_time = mysql_result($result, $i, "estimated_time");
+					$task_note = mysql_result($result,$i,'note');
+					
+					$return_json['data'][$i] = array(
+						'task_id' => $task_id,
+						'name' => $task_name,
+						'description' => $task_description,
+						'estimated_time' => $task_estimated_time, 
+						'note' => $task_note,);
+					
+					
 					$i++;
 				}
 
-				$return_html .= '
-				</table>';
-
-				$return_json['html'] = $return_html;
+				
 			} else {
 				$return_json['success'] = 'false';
 			}
@@ -435,11 +415,15 @@ class Task_Data_Interface {
 
 	public function Get_Task_Log() {
 
-		$return_json = array('authenticated' => 'false', 'success' => 'false', 'html' => '', );
+		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '');
 
-		$return_html = '';
-
-		$query = "SELECT `tasks`.`name` AS `name`, `task_log`.`start_time` AS `start_time`, `task_log`.`hours` AS `hours`, `task_log`.`status` AS `status`, `task_log`.`note` AS `note`
+		$query = "SELECT 
+			`tasks`.`name` AS `name`, 
+			`task_log`.`task_log_id` AS `task_log_id`,
+			`task_log`.`start_time` AS `start_time`, 
+			`task_log`.`hours` AS `hours`, 
+			`task_log`.`status` AS `status`, 
+			`task_log`.`note` AS `note`
 			FROM `tasks` , `task_log`
 			WHERE `tasks`.`task_id` = `task_log`.`task_id` 
 			ORDER BY `task_log`.`start_time` DESC";
@@ -447,33 +431,169 @@ class Task_Data_Interface {
 
 		$num = mysql_numrows($result);
 
-		$return_html .= "
-		<b>Database Output</b><br>
-		<table border='1' style='width:100%;'>";
-
-		$return_html .= "<tr><td>Name</td><td>Start Time</td><td>Duration (Hours)</td><td>Status</td><td>Note</td></tr>";
+		$return_json['data'] = array();
 
 		$i = 0;
 		while ($i < $num) {
-
+			
+			$task_entry_id = mysql_result($result, $i, "task_log_id");
 			$task_entry_name = mysql_result($result, $i, "name");
 			$task_entry_start_time = mysql_result($result, $i, "start_time");
 			$task_entry_hours = mysql_result($result, $i, "hours");
 			$task_entry_note = mysql_result($result, $i, "note");
 			$task_entry_status = mysql_result($result, $i, "status");
 
-			$return_html .= "<tr><td>" . $task_entry_name . "</td><td>" . $task_entry_start_time . "</td><td>" . $task_entry_hours . "</td><td>" . $task_entry_status . "</td><td>" . $task_entry_note . "</td></tr>";
-
+			$return_json['data'][$i] = array(
+				'task_log_id' => $task_entry_id,
+				'name' => $task_entry_name,
+				'start_time' => $task_entry_start_time,
+				'hours' => $task_entry_hours,
+				'note' => $task_entry_note,
+				'status' => $task_entry_status,);
+			
+			
 			$i++;
 		}
 
-		$return_html .= '
-		</table>';
+		return $return_json;
+	}
+	
+	public function Get_Task_Targets()
+	{
+		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '');
 
-		$return_json['html'] = $return_html;
+		$query = "SELECT 
+			`task_targets`.`task_schedule_id` AS `task_schedule_id`, 
+			`task_targets`.`scheduled` AS `scheduled`, 
+			`task_targets`.`scheduled_time` AS `scheduled_time`, 
+			`task_targets`.`recurring` AS `recurring`, 
+			`task_targets`.`recurrance_type` AS `recurrance_type`, 
+			`task_targets`.`recurrance_period` AS `recurrance_period`, 
+			`tasks`.`name` AS `name` 
+			FROM `task_targets`, `tasks`
+			WHERE `tasks`.`task_id` = `task_targets`.`task_id` 
+			ORDER BY `task_targets`.`scheduled_time` DESC";
+			
+		$result = mysql_query($query, $this -> database_link);
+
+		$num = mysql_numrows($result);
+
+		$return_json['data'] = array();
+
+		$i = 0;
+		while ($i < $num) {
+			
+			$task_schedule_id = mysql_result($result, $i, "task_schedule_id");
+			$task_entry_name = mysql_result($result, $i, "name");
+			$task_entry_scheduled = mysql_result($result, $i, "scheduled");
+			$task_entry_scheduled_time = mysql_result($result, $i, "scheduled_time");
+			$task_entry_recurring = mysql_result($result, $i, "recurring");
+			$task_entry_recurrance_type = mysql_result($result, $i, "recurrance_type");
+			$task_entry_recurrance_period = mysql_result($result, $i, "recurrance_period");
+
+			$return_json['data'][$i] = array(
+				'task_schedule_id' => $task_schedule_id,
+				'name' => $task_entry_name,
+				'scheduled_time' => $task_entry_scheduled_time,
+				'scheduled' => $task_entry_scheduled,
+				'recurring' => $task_entry_recurring,
+				'recurrance_type' => $task_entry_recurrance_type,
+				'recurrance_period' => $task_entry_recurrance_period,);
+			
+			
+			$i++;
+		}
 
 		return $return_json;
 	}
 
+	public function Insert_Task_Target($task_id, $scheduled, $scheduled_time, $recurring, $recurrance_type, $recurrance_period)
+	{
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+
+		$scheduled = mysql_real_escape_string($scheduled);
+		$scheduled_time = mysql_real_escape_string($scheduled_time);
+		$recurring = mysql_real_escape_string($recurring);
+		$recurrance_type = mysql_real_escape_string($recurrance_type);
+		$recurrance_period = mysql_real_escape_string($recurrance_period);
+
+		$sql = 'INSERT INTO `task_targets`(
+			`task_id`, 
+			`scheduled`, 
+			`scheduled_time`, 
+			`recurring`, 
+			`recurrance_type`, 
+			`recurrance_period`) VALUES (';
+
+		$sql .= "'" . $task_id . "',";
+		$sql .= "" . $scheduled . ",";
+		$sql .= "'" . $scheduled_time . "'";
+		$sql .= "" . $recurring . ",";
+		$sql .= "'" . $recurrance_type . "',";
+		$sql .= "" . $recurrance_period . ")";
+
+		$success = mysql_query($sql, $this -> database_link);
+
+		$return_json['debug'] = $sql;
+
+		if ($success) {
+			$return_json['success'] = 'true';
+		} else {
+			$return_json['success'] = 'false';
+		}
+
+		return $return_json;
+	}
+	
+	public function Update_Task_Target($task_target_id, $task_id, $scheduled, $scheduled_time, $recurring, $recurrance_type, $recurrance_period)
+	{
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+
+		$scheduled = mysql_real_escape_string($scheduled);
+		$scheduled_time = mysql_real_escape_string($scheduled_time);
+		$recurring = mysql_real_escape_string($recurring);
+		$recurrance_type = mysql_real_escape_string($recurrance_type);
+		$recurrance_period = mysql_real_escape_string($recurrance_period);
+
+		$sql = "UPDATE `task_targets` SET 
+			`task_id`=".$task_id.",
+			`scheduled`=".$scheduled.",
+			`scheduled_time`='".$scheduled_time."',
+			`recurring`=".$recurring.",
+			`recurrance_type`='".$recurrance_type."',
+			`recurrance_period`=".$recurrance_period." 
+			WHERE `task_schedule_id`=" . $task_target_id;
+
+		$success = mysql_query($sql, $this -> database_link);
+
+		$return_json['debug'] = $sql;
+
+		if ($success) {
+			$return_json['success'] = 'true';
+		} else {
+			$return_json['success'] = 'false';
+		}
+
+		return $return_json;
+	}
+
+	public function Delete_Task_Target($task_target_id)
+	{
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+
+		$sql = "DELETE FROM `task_targets` WHERE `task_schedule_id` = " . $task_target_id;
+
+		$success = mysql_query($sql, $this -> database_link);
+
+		$return_json['debug'] = $sql;
+
+		if ($success) {
+			$return_json['success'] = 'true';
+		} else {
+			$return_json['success'] = 'false';
+		}
+
+		return $return_json;
+	}
 }
 ?>

@@ -29,13 +29,13 @@ class Home_Data_Interface {
 		$sql = "SELECT 
 			`tasks`.`task_id` AS `task_id`,
 			`tasks`.`name` AS `name`, 
-			`tasks`.`recurring` AS `recurring`,
-			`tasks`.`recurrance_period` AS `recurrance_period`,
+			`task_targets`.`recurring` AS `recurring`,
+			`task_targets`.`recurrance_period` AS `recurrance_period`,
 			`tasks`.`estimated_time` AS `estimated_time`
-			FROM `tasks` 
-			WHERE `tasks`.`schedule_type` = 'Floating' 
-			AND `tasks`.`status` != 'Completed'
-			ORDER BY `tasks`.`recurring` DESC, `tasks`.`name`";
+			FROM `tasks`, `task_targets`
+			WHERE NOT `task_targets`.`scheduled`
+			AND `task_targets`.`task_id` = `tasks`.`task_id`
+			ORDER BY `task_targets`.`recurring` DESC, `tasks`.`name`";
 
 		$result = mysql_query($sql, $this -> database_link);
 		$num = mysql_numrows($result);
@@ -103,21 +103,21 @@ class Home_Data_Interface {
 		$sql = "SELECT 
 			`tasks`.`task_id` AS `task_id`,
 			`tasks`.`name` AS `name`, 
-			`tasks`.`scheduled_time` AS `scheduled_time`,
+			`task_targets`.`scheduled_time` AS `scheduled_time`,
 			`tasks`.`estimated_time` AS `estimated_time`,
-			`tasks`.`recurring` AS `recurring`,
-			`tasks`.`recurrance_type` AS `recurrance_type`,
-			`tasks`.`recurrance_period` AS `recurrance_period`,
-			(TIMESTAMPDIFF(SECOND,NOW( ), `tasks`.`scheduled_time`) / 60 / 60) AS `time_to`
-			FROM `tasks` 
-			WHERE `tasks`.`schedule_type` = 'Scheduled' 
-			AND `tasks`.`status` != 'Completed'
-			AND (TIMESTAMPDIFF(SECOND,NOW( ), `tasks`.`scheduled_time`) / 60 / 60) < 24
-			ORDER BY `tasks`.`scheduled_time`, `tasks`.`name`";
+			`task_targets`.`recurring` AS `recurring`,
+			`task_targets`.`recurrance_type` AS `recurrance_type`,
+			`task_targets`.`recurrance_period` AS `recurrance_period`,
+			(TIMESTAMPDIFF(SECOND,NOW( ), `task_targets`.`scheduled_time`) / 60 / 60) AS `time_to`
+			FROM `tasks` , `task_targets`
+			WHERE `task_targets`.`scheduled`
+			AND (TIMESTAMPDIFF(SECOND,NOW( ), `task_targets`.`scheduled_time`) / 60 / 60) < 24
+			AND `tasks`.`task_id` = `task_targets`.`task_id`
+			ORDER BY `task_targets`.`scheduled_time`, `tasks`.`name`";
 
 		$result = mysql_query($sql, $this -> database_link);
 		$num = mysql_numrows($result);
-
+		
 		$return_html .= '
 			<b>Upcoming Scheduled Tasks (Next 24 Hours)</b> <br />
 			<table border="1" style="width:100%;">
@@ -160,7 +160,7 @@ class Home_Data_Interface {
 					$time_since = mysql_result($inner_result, $j, "time_since");
 
 					//check if the task has been executed in the recurrance period.
-					if ($time_since < ($task_recurrance_period / 2)) {
+					if ($time_since < $task_recurrance_period / 2) {
 						$is_upcoming_task = false;
 						break;
 					}

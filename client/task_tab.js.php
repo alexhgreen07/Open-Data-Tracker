@@ -1013,7 +1013,7 @@ function Task_Tab(task_div_id) {
 	
 	this.Task_Target_Edit_Select_Change = function()
 	{
-		alert('hello world!');
+		//alert('hello world!');
 	};
 	
 	//RENDER FUNCTIONS

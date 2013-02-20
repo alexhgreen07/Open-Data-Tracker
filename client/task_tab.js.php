@@ -412,6 +412,7 @@ function Task_Tab(task_div_id) {
 	
 	this.Refresh_Task_Target_Data = function(refresh_callback)
 	{
+		
 		var self = this;
 
 		var params = new Array();
@@ -1008,6 +1009,11 @@ function Task_Tab(task_div_id) {
 			
 		});
 		
+	};
+	
+	this.Task_Target_Edit_Select_Change = function()
+	{
+		alert('hello world!');
 	};
 	
 	//RENDER FUNCTIONS
@@ -1837,8 +1843,7 @@ function Task_Tab(task_div_id) {
 		this.task_target_edit_name_select.innerHTML = '<option>-</option>';
 		this.edit_task_target_form.appendChild(this.task_target_edit_name_select);
 
-		this.edit_task_target_form.innerHTML += '<br /><br />';
-		
+		this.edit_task_target_form.innerHTML += '<br /><br />';	
 
 		this.edit_task_target_form.innerHTML += 'Scheduled/Floating:<br />';
 
@@ -1879,7 +1884,7 @@ function Task_Tab(task_div_id) {
 		this.edit_task_target_form.appendChild(this.task_edit_recurring_target_select_type);
 
 		this.edit_task_target_form.innerHTML += '<br />';
-		
+
 		this.edit_task_target_form.innerHTML += 'Recurrance Period:<br />';
 
 		//task estimate creation
@@ -1890,10 +1895,11 @@ function Task_Tab(task_div_id) {
 		this.edit_task_target_form.appendChild(this.task_edit_reccurance_target_period);
 
 		this.edit_task_target_form.innerHTML += '<br /><br />';
-		
-		//task delete creation
+
+		//task submit creation
 		this.task_target_edit_submit_button = document.createElement("input");
 		this.task_target_edit_submit_button.setAttribute('id', 'task_target_edit_button');
+		this.task_target_edit_submit_button.setAttribute('name', 'task_target_edit_button');
 		this.task_target_edit_submit_button.setAttribute('type', 'submit');
 		this.task_target_edit_submit_button.value = 'Submit';
 		this.edit_task_target_form.appendChild(this.task_target_edit_submit_button);
@@ -1903,6 +1909,7 @@ function Task_Tab(task_div_id) {
 		//task delete creation
 		this.task_target_edit_delete_button = document.createElement("input");
 		this.task_target_edit_delete_button.setAttribute('id', 'task_target_edit_delete_button');
+		this.task_target_edit_delete_button.setAttribute('name', 'task_target_edit_delete_button');
 		this.task_target_edit_delete_button.setAttribute('type', 'submit');
 		this.task_target_edit_delete_button.value = 'Delete';
 		this.edit_task_target_form.appendChild(this.task_target_edit_delete_button);
@@ -1924,7 +1931,7 @@ function Task_Tab(task_div_id) {
 		$('#' + this.loading_image_task_target_edit.id).hide();
 		
 		$('#' + this.task_target_edit_submit_button.id).button();
-		$(document).on('click', '#' + this.task_target_edit_submit_button.id, function(event){
+		$('#' + this.task_target_edit_submit_button.id).click(function(event){
 			
 		     //ensure a normal postback does not occur
 			event.preventDefault();
@@ -1934,7 +1941,7 @@ function Task_Tab(task_div_id) {
 		
 
 		$('#' + this.task_target_edit_delete_button.id).button();
-		$(document).on('click', '#' + this.task_target_edit_delete_button.id, function(event){
+		$('#' + this.task_target_edit_delete_button.id).click(function(event){
 			
 		     //ensure a normal postback does not occur
 			event.preventDefault();
@@ -1948,30 +1955,11 @@ function Task_Tab(task_div_id) {
 		});
 		$('#' + this.task_edit_scheduled_target_date.id).datetimepicker("setDate", new Date());
 		
-		/*
-		
-		//UNKNOWN WHY THIS CODE DOES NOT WORK!!!! HAS BEEN REPLACED WITH '.on()' function calls above.
-		
-		$('#' + this.task_target_edit_submit_button.id).click(function(event){
+		$('#' + this.task_edit_target_select.id).change(function(){
 			
-			//ensure a normal postback does not occur
-			event.preventDefault();
-			
-			alert('Submit editted task target not implemented.');
+			self.Task_Target_Edit_Select_Change();
 			
 		});
-		
-		$('#' + this.task_target_edit_delete_button.id).click(function(event){
-			
-			//ensure a normal postback does not occur
-			event.preventDefault();
-			
-			alert('Delete task target not implemented.');
-			
-		});
-		*/
-		
-
 
 	};
 	
@@ -1993,7 +1981,7 @@ function Task_Tab(task_div_id) {
 		this.task_target_view_refresh_button.value = 'Refresh';
 		this.view_task_target_form.appendChild(this.task_target_view_refresh_button);
 		
-		this.edit_task_target_form.innerHTML += '<br />';
+		this.view_task_target_form.innerHTML += '<br />';
 		
 		this.loading_image_task_target_view = document.createElement("img");
 		this.loading_image_task_target_view.setAttribute('id', 'loading_image_task_target_view');
@@ -2107,9 +2095,10 @@ function Task_Tab(task_div_id) {
 		
 		this.Render_New_Task_Target_Form('new_target_task_entry_div');
 		
+		this.Render_View_Task_Target_Form('view_target_task_entry_div');
+		
 		this.Render_Edit_Task_Target_Form('edit_target_task_entry_div');
 		
-		this.Render_View_Task_Target_Form('view_target_task_entry_div');
 	};
 }
 

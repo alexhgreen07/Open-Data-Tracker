@@ -26,71 +26,89 @@ class Home_Data_Interface {
 	private function Get_Floating_Task_Summary() {
 		$return_html = '';
 
-		$sql = "SELECT 
-			`tasks`.`task_id` AS `task_id`,
-			`tasks`.`name` AS `name`, 
-			`task_targets`.`recurring` AS `recurring`,
-			`task_targets`.`recurrance_period` AS `recurrance_period`,
-			`tasks`.`estimated_time` AS `estimated_time`
-			FROM `tasks`, `task_targets`
-			WHERE NOT `task_targets`.`scheduled`
-			AND `task_targets`.`task_id` = `tasks`.`task_id`
-			ORDER BY `task_targets`.`recurring` DESC, `tasks`.`name`";
-
+		$sql = "SELECT DISTINCT `tasks`.`task_id` AS `task_id` , `tasks`.`name` AS `name` , `task_targets`.`recurring` AS `recurring` , `task_targets`.`recurrance_period` AS `recurrance_period` , `tasks`.`estimated_time` AS `estimated_time` , MAX( `task_log`.`start_time` ) AS `start_time`, `task_log`.`status` AS `status`
+			FROM `tasks`
+			LEFT JOIN `task_targets` ON `task_targets`.`task_id` = `tasks`.`task_id`
+			LEFT JOIN `task_log` ON `task_log`.`task_id` = `tasks`.`task_id`
+			WHERE (
+			(NOT `task_targets`.`task_id` IS NULL AND NOT `task_log`.`task_id` IS NULL)
+			AND
+			(NOT `task_targets`.`scheduled`)
+			AND
+			(`task_log`.`status` = 'Completed')
+			AND
+			(`task_targets`.`recurring`)
+			AND NOT
+			((`task_targets`.`task_id` IS NULL AND NOT `task_log`.`task_id` IS NULL) AND (`task_log`.`status` = 'Completed'))
+			)
+			OR
+			(`task_log`.`task_id` IS NULL AND `task_targets`.`task_id` IS NULL)
+			GROUP BY `tasks`.`task_id`, `task_targets`.`task_id`, `task_log`.`task_id`
+			ORDER BY `recurring` DESC, `start_time`";
+		
 		$result = mysql_query($sql, $this -> database_link);
 		$num = mysql_numrows($result);
 
 		$return_html .= '
-			<b>Valid Floating Tasks</b> <br />
+			<b>Valid Floating Tasks (Next 24 Hours)</b> <br />
 			<table border="1" style="width:100%;">
 			<tr>
 			<td><b>Task Name</b></td>
 			<td><b>Recurring</b></td>
 			<td><b>Estimated Time</b></td>
 			</tr>';
-
+		
+		$task_totals = 0;
+		
 		$i = 0;
 		while ($i < $num) {
-
-			$task_is_valid = true;
 
 			$task_id = mysql_result($result, $i, 'task_id');
 			$task_name = mysql_result($result, $i, "name");
 			$task_is_recurring = mysql_result($result, $i, "recurring");
 			$task_recurrance_period = mysql_result($result, $i, 'recurrance_period');
 			$task_elapsed = mysql_result($result, $i, "estimated_time");
-
-			if ($task_is_recurring) {
-				$sql = "SELECT `task_log_id`, `start_time` 
-					FROM `task_log` 
-					WHERE `task_id` = " . $task_id . " AND
-					`status` = 'Completed' AND
-					TIMESTAMPADD(HOUR," . $task_recurrance_period . " + `hours`, `start_time`) > NOW()";
-
-				$inner_result = mysql_query($sql, $this -> database_link);
-				$inner_num = mysql_numrows($inner_result);
-
-				if ($inner_num > 0) {
-					//task has already been completed within the recurrance period
-					$task_is_valid = false;
-				}
-
+			
+			//ensure this gets set (could be null)
+			if(!$task_is_recurring)
+			{
+				$task_is_recurring = 0;
 			}
+			
+			$return_html .= '<tr>';
 
-			if ($task_is_valid) {
+			$return_html .= '<td>' . $task_name . "</td>";
+			$return_html .= '<td>' . $task_is_recurring . "</td>";
+			$return_html .= '<td>' . round($task_elapsed, 2) . "</td>";
 
-				$return_html .= '<tr>';
-
-				$return_html .= '<td>' . $task_name . "</td>";
-				$return_html .= '<td>' . $task_is_recurring . "</td>";
-				$return_html .= '<td>' . round($task_elapsed, 2) . "</td>";
-
-				$return_html .= '</tr>';
-
-			}
+			$return_html .= '</tr>';
+			
+			$task_totals += $task_elapsed;
 
 			$i++;
 		}
+
+		//render the floating task totals
+		$return_html .= '<td><b>Total</b></td>';
+		$return_html .= '<td></td>';
+		
+		$style = '';
+		
+		if($task_totals > 24)
+		{
+			$style = 'color:#FF0000;';
+		}
+		else if($task_totals > 22)
+		{
+			$style = 'color:#FF6600;';
+		}
+		else {
+			$style = 'color:#00FF00;';
+		}
+				
+		$return_html .= '<td style="'.$style.'"><b>' . round($task_totals, 2) . "</b></td>";
+	
+		$return_html .= '</tr>';
 
 		$return_html .= '</table><br />';
 
@@ -127,7 +145,8 @@ class Home_Data_Interface {
 			<td><b>Time To (hh:mm)</b></td>
 			<td><b>Estimated Time</b></td>
 			</tr>';
-
+		
+		$hours_sum = 0;
 		$i = 0;
 		while ($i < $num) {
 
@@ -204,11 +223,38 @@ class Home_Data_Interface {
 				$return_html .= '<td>' . round($task_elapsed, 2) . "</td>";
 
 				$return_html .= '</tr>';
+				
+				$hours_sum += $task_elapsed;
 
 			}
 
 			$i++;
 		}
+
+		//render the floating task totals
+		$return_html .= '<td><b>Total</b></td>';
+		$return_html .= '<td></td>';
+		$return_html .= '<td></td>';
+		
+		$style = '';
+		
+		if($hours_sum > 24)
+		{
+			$style = 'color:#FF0000;';
+		}
+		else if($task_totals > 22)
+		{
+			$style = 'color:#FF6600;';
+		}
+		else {
+			$style = 'color:#00FF00;';
+		}
+				
+		$return_html .= '<td style="'.$style.'"><b>' . round($hours_sum, 2) . "</b></td>";
+	
+		$return_html .= '</tr>';
+
+		$return_html .= '</table><br />';
 
 		$return_html .= '</table><br />';
 

@@ -26,14 +26,15 @@ class Task_Data_Interface {
 
 			if ($completed) {
 				$status = "Completed";
-
+				
+				/*
 				$sql = "UPDATE `tasks` SET `status`='Completed' WHERE `task_id` = " . $task_id . " AND `recurring` != 1";
 
 				$success = mysql_query($sql, $this -> database_link);
 
 				if (!$success) {
 					throw new Exception('SQL error.');
-				}
+				}*/
 
 			} else {
 				//$status = "Stopped";

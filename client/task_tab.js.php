@@ -565,10 +565,7 @@ function Task_Tab(task_div_id) {
 
 			new_html += 'Task ID: ' + new_item.task_id + '<br />';
 			new_html += 'Date Created: ' + new_item.date_created + '<br />';
-			new_html += 'Recurring: ' + new_item.recurring + '<br />';
-			new_html += 'Recurrance Period: ' + new_item.recurrance_period + '<br />';
 			new_html += 'Estimated Time (Hours): ' + new_item.estimated_time + '<br />';
-			new_html += 'Scheduled Time: ' + new_item.scheduled_time + '<br />';
 			new_html += 'Status: ' + new_item.item_status + '<br />';
 			new_html += 'Start Time: ' + new_item.start_time + '<br />';
 

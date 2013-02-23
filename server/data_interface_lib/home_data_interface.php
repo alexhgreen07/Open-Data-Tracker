@@ -98,7 +98,7 @@ class Home_Data_Interface {
 					}
 					else if($recurring)
 					{
-						if($diff > $recurrance_period)
+						if(($diff + 24) > $recurrance_period)
 						{
 							$is_valid_floating_task = true;
 							break;
@@ -135,10 +135,7 @@ class Home_Data_Interface {
 
 		for ($i=0; $i < count($valid_floating_task_list); $i++) { 
 			
-			
-			$task_name = $valid_floating_task_list[$i]['name'];
 			$task_id = $valid_floating_task_list[$i]['task_id'];
-			$task_estimate = $valid_floating_task_list[$i]['estimate'];
 			
 			if($i > 0)
 			{
@@ -163,6 +160,8 @@ class Home_Data_Interface {
 			<td><b>Estimated Time</b></td>
 			</tr>';
 		
+		$task_total = 0;
+		
 		for ($i=0; $i < $end_num; $i++) {
 					
 			$task_name = mysql_result($end_result, $i, 'name');
@@ -176,7 +175,31 @@ class Home_Data_Interface {
 			$return_html .= '<td>' . round($task_estimate, 2) . "</td>";
 
 			$return_html .= '</tr>';
+			
+			$task_total += $task_estimate;
 		}
+		
+		//render the floating task totals
+		$return_html .= '<tr><td><b>Total</b></td>';
+		$return_html .= '<td></td>';
+		
+		$style = '';
+		
+		if($task_total > 24)
+		{
+			$style = 'color:#FF0000;';
+		}
+		else if($task_totals > 22)
+		{
+			$style = 'color:#FF6600;';
+		}
+		else {
+			$style = 'color:#00FF00;';
+		}
+				
+		$return_html .= '<td style="'.$style.'"><b>' . round($task_total, 2) . "</b></td>";
+	
+		$return_html .= '</tr>';
 
 		$return_html .= '</table><br />';
 		
@@ -310,7 +333,7 @@ class Home_Data_Interface {
 		{
 			$style = 'color:#FF0000;';
 		}
-		else if($task_totals > 22)
+		else if($hours_sum > 22)
 		{
 			$style = 'color:#FF6600;';
 		}
@@ -321,8 +344,6 @@ class Home_Data_Interface {
 		$return_html .= '<td style="'.$style.'"><b>' . round($hours_sum, 2) . "</b></td>";
 	
 		$return_html .= '</tr>';
-
-		$return_html .= '</table><br />';
 
 		$return_html .= '</table><br />';
 

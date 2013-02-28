@@ -121,17 +121,11 @@ class Item_Data_Interface {
 			$time = mysql_real_escape_string($time);
 			$value = mysql_real_escape_string($value);
 			$note = mysql_real_escape_string($note);
-			
-			if ($item_id != "-") {
-				$item_id = mysql_real_escape_string($item_id);
-			} else {
-				$item_id = "";
-			}
 
 
 			if ($value != "") {
 
-				$sql_insert = "UPDATE `item_log` SET `item_id` = " . $item_id . ",`time` = ".$time.",`value`=".$value.",`note`='".$note."' WHERE `item_log_id` = " . $item_entry_id;
+				$sql_insert = "UPDATE `item_log` SET `item_id` = " . $item_id . ",`time` = '".$time."',`value`=".$value.",`note`='".$note."' WHERE `item_log_id` = " . $item_entry_id;
 
 				//$return_json['debug'] = $sql_insert;
 

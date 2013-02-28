@@ -290,17 +290,44 @@ function Item_Tab(item_div_id) {
 	{
 		var self = this;
 		
-		var value = document.getElementById(self.edit_item_entry_select.id).value;
+		var item_entry_id = document.getElementById(self.edit_item_entry_select.id).value;
+		var selected_index = document.getElementById(self.edit_item_entry_select.id).selectedIndex;
+		var item_select_index = document.getElementById(self.edit_item_name_select.id).selectedIndex;
 		
-		if(value != 0)
+		
+		if(item_entry_id != 0)
 		{
-		
+			
+			var selected_item_entry = self.item_log_data[selected_index - 1];
+			
 			var params = new Array();
-			params[0] = value;
+			params.push(item_entry_id);
+			params.push(document.getElementById(self.item_edit_time.id).value);
+			params.push(document.getElementById(self.item_edit_value.id).value);
+			params.push(self.items_list[item_select_index - 1].item_id);
+			params.push(document.getElementById(self.item_edit_note.id).value);
 			
-			//NOT IMPLEMENTED
-			
-			alert('Item entry editing not implemented!');
+			//execute the RPC callback for retrieving the item log
+			rpc.Item_Data_Interface.Update_Item_Entry(params, function(jsonRpcObj) {
+
+				if (jsonRpcObj.result.authenticated == 'true') {
+					if (jsonRpcObj.result.success == 'true') {
+						//alert(jsonRpcObj.result.debug);
+						alert('Item entry updated!');
+
+						self.Refresh_Item_Data(function() {
+							self.refresh_item_log_callback();
+						});
+					} else {
+						alert('Item entry failed to update.');
+						//alert(jsonRpcObj.result.debug);
+					}
+
+				} else {
+					alert('You are not logged in. Please refresh the page and login again.');
+				}
+
+			});
 		
 		}
 		else

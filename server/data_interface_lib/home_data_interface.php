@@ -14,10 +14,18 @@ class Home_Data_Interface {
 
 	public function Get_Home_Data_Summary() {
 		$return_json = array('authenticated' => 'false', 'success' => 'false', 'html' => '', );
-
+		
+		$scheduled_task_summary = $this -> Get_Scheduled_Task_Summary();
+		$recurring_task_summary = $this -> Get_Floating_Task_Summary();
+		
 		$return_json['html'] .= $this -> Get_Started_Task_Summary();
-		$return_json['html'] .= $this -> Get_Scheduled_Task_Summary();
-		$return_json['html'] .= $this -> Get_Floating_Task_Summary();
+		$return_json['html'] .= 
+			$this -> Get_Total_Task_Summary(
+			$scheduled_task_summary['hours_total'],
+			$recurring_task_summary['hours_total']);
+		$return_json['html'] .= $scheduled_task_summary['html'];
+		$return_json['html'] .= $recurring_task_summary['html'];
+		$return_json['html'] .= $this -> Get_Untargetted_Task_Summary();
 		$return_json['html'] .= $this -> Get_Aggregate_Summary();
 
 		return $return_json;
@@ -174,7 +182,51 @@ class Home_Data_Interface {
 	}
 	
 	
+	private function Get_Total_Task_Summary($scheduled_total, $recurring_total){
+		
+		$return_html = '';
+		$hours_total = ($scheduled_total + $recurring_total);
+		$style = '';
+		
+		if($hours_total > 24)
+		{
+			$style = 'color:#FF0000;';
+		}
+		else if($hours_total > 22)
+		{
+			$style = 'color:#FF6600;';
+		}
+		else {
+			$style = 'color:#00FF00;';
+		}
+		
+		$return_html .= '<b>Target Task Sums (24 Hours)</b> <br />
+			<table border="1" style="width:100%;">
+			<tr>
+			<td><b>Task Type</b></td>
+			<td><b>Hours Total</b></td>
+			</tr>
+			<tr>
+			<td>Scheduled</td>
+			<td>'.$scheduled_total.'</td>
+			</tr>
+			<tr>
+			<td>Recurring</td>
+			<td>'.$recurring_total.'</td>
+			</tr>
+			<tr>
+			<td><b>Total</b></td>
+			<td style="'.$style.'"><b>'.$hours_total.'</b></td>
+			</tr>
+			</table><br/>';	
+			
+		return $return_html;
+	}
+	
 	private function Get_Floating_Task_Summary() {
+			
+		$return_array = array('html' => '', 'hours_total' => 0);
+			
 		$return_html = '';
 		
 		$valid_floating_task_list = array();
@@ -224,13 +276,6 @@ class Home_Data_Interface {
 		
 			$log_result = mysql_query($sql, $this -> database_link);
 			$log_num = mysql_numrows($log_result);
-			
-			if($log_num == 0 && $target_num == 0)
-			{
-				//no targets or entries found, this is a valid row.
-				$is_valid_floating_task = true;
-			}
-			
 			
 			for ($j=0; $j < $target_num; $j++) {
 					
@@ -303,7 +348,7 @@ class Home_Data_Interface {
 		$end_num = mysql_numrows($end_result);
 		
 		$return_html .= '
-			<b>Valid Floating Tasks (Next 24 Hours)</b> <br />
+			<b>Upcoming Recurring Tasks (Next 24 Hours)</b> <br />
 			<table border="1" style="width:100%;">
 			<tr>
 			<td><b>Task Name</b></td>
@@ -354,10 +399,155 @@ class Home_Data_Interface {
 
 		$return_html .= '</table><br />';
 		
+		$return_array['html'] = $return_html;
+		$return_array['hours_total'] = $task_total;
+		
+		return $return_array;
+	}
+
+	private function Get_Untargetted_Task_Summary() {
+		$return_html = '';
+		
+		$valid_untargetted_task_list = array();
+		
+		$sql = 'SELECT 
+			`tasks`.`name` AS `name`, 
+			`tasks`.`task_id` AS `task_id`,
+			`tasks`.`estimated_time` AS `estimated_time`
+			FROM `tasks`';
+		
+		$task_result = mysql_query($sql, $this -> database_link);
+		$task_num = mysql_numrows($task_result);
+		
+		for ($i=0; $i < $task_num; $i++) { 
+			
+			$task_id = mysql_result($task_result, $i, 'task_id');
+			$task_name = mysql_result($task_result, $i, "name");
+			$task_estimate = mysql_result($task_result, $i, "estimated_time");
+			
+			$is_valid_untargetted_task = false;
+			
+			$sql = 'SELECT 
+				`task_targets`.`scheduled` AS `scheduled`,
+				`task_targets`.`scheduled_time` AS `scheduled_time`,
+				`task_targets`.`recurring` AS `recurring`,
+				`task_targets`.`recurrance_type` AS `recurrance_type`,
+				`task_targets`.`recurrance_period` AS `recurrance_period`
+				FROM `task_targets` 
+				WHERE 
+				`task_targets`.`task_id` = ' .$task_id .
+				' ORDER BY `scheduled`';
+			
+			$target_result = mysql_query($sql, $this -> database_link);
+			$target_num = mysql_numrows($target_result);
+			
+			$sql = "SELECT 
+			`task_log`.`task_id` AS `task_id`,
+			MAX(`task_log`.`start_time`) AS `start_time`,
+			(TIMESTAMPDIFF(SECOND, MAX( `task_log`.`start_time` ), NOW()) / 60 / 60) AS `diff`,
+			`task_log`.`hours` AS `hours`,
+			`task_log`.`status` AS `status`
+			FROM `task_log` 
+			WHERE `task_log`.`task_id` = " .$task_id .
+			" AND `task_log`.`status` = 'Completed' 
+			GROUP BY `task_id`
+			ORDER BY `start_time`";
+		
+			$log_result = mysql_query($sql, $this -> database_link);
+			$log_num = mysql_numrows($log_result);
+			
+			if($log_num == 0 && $target_num == 0)
+			{
+				//no targets or entries found, this is a valid row.
+				$is_valid_untargetted_task = true;
+			}
+			
+			
+			if($is_valid_untargetted_task)
+			{
+				$valid_untargetted_task_list[] = array(
+					'name' => $task_name,
+					'task_id' => $task_id,
+					'estimate' => $task_estimate,);
+				
+				$task_totals += $task_elapsed;
+			}
+		}
+
+		$sql = 'SELECT DISTINCT 
+			`tasks`.`task_id` AS `task_id` , 
+			`tasks`.`name` AS `name` , 
+			`task_targets`.`recurring` AS `recurring` , 
+			`task_targets`.`recurrance_period` AS `recurrance_period` , 
+			`tasks`.`estimated_time` AS `estimated_time` , 
+			MAX( `task_log`.`start_time` ) AS `start_time`, 
+			`task_log`.`status` AS `status`,
+			(TIMESTAMPDIFF(SECOND, MAX( `task_log`.`start_time` ), NOW()) / 60 / 60) AS `time_diff`
+			FROM `tasks`
+			LEFT JOIN `task_targets` ON `task_targets`.`task_id` = `tasks`.`task_id`
+			LEFT JOIN `task_log` ON `task_log`.`task_id` = `tasks`.`task_id`
+			WHERE `tasks`.`task_id` IN (';
+
+		for ($i=0; $i < count($valid_untargetted_task_list); $i++) { 
+			
+			$task_id = $valid_untargetted_task_list[$i]['task_id'];
+			
+			if($i > 0)
+			{
+				$sql .= ',';
+			}
+			
+			$sql .= $task_id;
+			
+		}
+		
+		$sql .= ') GROUP BY `task_id` ORDER BY `recurring` DESC, `start_time`, `name`';
+		
+		$end_result = mysql_query($sql, $this -> database_link);
+		$end_num = mysql_numrows($end_result);
+		
+		$return_html .= '
+			<b>Un-Targetted Pending Tasks</b> <br />
+			<table border="1" style="width:100%;">
+			<tr>
+			<td><b>Task Name</b></td>
+			<td><b>Estimated Time</b></td>
+			</tr>';
+		
+		$task_total = 0;
+		
+		for ($i=0; $i < $end_num; $i++) {
+					
+			$task_name = mysql_result($end_result, $i, 'name');
+			$last_start_time = mysql_result($end_result, $i, 'start_time');
+			$task_estimate = mysql_result($end_result, $i, 'estimated_time');	 
+			
+			$return_html .= '<tr>';
+
+			$return_html .= '<td>' . $task_name . "</td>";
+			$return_html .= '<td>' . round($task_estimate, 2) . "</td>";
+
+			$return_html .= '</tr>';
+			
+			$task_total += $task_estimate;
+		}
+		
+		//render the floating task totals
+		$return_html .= '<tr><td><b>Total</b></td>';
+		
+		$return_html .= '<td><b>' . round($task_total, 2) . "</b></td>";
+	
+		$return_html .= '</tr>';
+
+		$return_html .= '</table><br />';
+		
 		return $return_html;
 	}
 
 	private function Get_Scheduled_Task_Summary() {
+		
+		$return_array = array('html' => '', 'hours_total' => 0);
+		
 		$return_html = '';
 
 		$sql = "SELECT 
@@ -373,7 +563,7 @@ class Home_Data_Interface {
 			WHERE `task_targets`.`scheduled`
 			AND (TIMESTAMPDIFF(SECOND,NOW( ), `task_targets`.`scheduled_time`) / 60 / 60) < 24
 			AND `tasks`.`task_id` = `task_targets`.`task_id`
-			ORDER BY `task_targets`.`scheduled_time`, `tasks`.`name`";
+			ORDER BY `task_targets`.`scheduled_time`";
 
 		$result = mysql_query($sql, $this -> database_link);
 		$num = mysql_numrows($result);
@@ -407,43 +597,53 @@ class Home_Data_Interface {
 			if ($task_recurring) {
 				//check if the task has been completed recently
 				$inner_sql = "SELECT 
-					(TIMESTAMPDIFF(SECOND,NOW( ), `start_time`) / 60 / 60) AS `time_since`
+					`start_time`
 					FROM `task_log` 
 					WHERE `task_id` = '" . $task_id . "' 
 					AND `status` = 'Completed'";
 
 				$inner_result = mysql_query($inner_sql, $this -> database_link);
 				$inner_num = mysql_numrows($inner_result);
+				
+				
+				//correct the scheduled time according to the recurrance period
+				$task_scheduled_timestamp = strtotime($task_scheduled_time);
+				$current_timestamp = time();
+				
+				//loop until the time is within 24 hours
+				while ($task_scheduled_timestamp < ($current_timestamp - 24*60*60)) {
 
-				$j = 0;
-				while ($j < $inner_num) {
+					$task_scheduled_timestamp += (60 * 60 * $task_recurrance_period);
 
-					$time_since = mysql_result($inner_result, $j, "time_since");
-
-					//check if the task has been executed in the recurrance period.
-					if ($time_since < $task_recurrance_period / 2) {
-						$is_upcoming_task = false;
-						break;
-					}
-
-					$j++;
 				}
 
-				//if it is a valid upcoming task
-				if ($is_upcoming_task && $inner_num > 0) {
-					//correct the scheduled time according to the recurrance period
-
-					$task_scheduled_timestamp = strtotime($task_scheduled_time);
-					$current_timestamp = time();
-
-					while ($task_scheduled_timestamp < $current_timestamp) {
-
-						$task_scheduled_timestamp += (60 * 60 * $task_recurrance_period);
-
+				$task_scheduled_time = date('Y-m-d H:i:s', $task_scheduled_timestamp);
+				$task_time_to = ($task_scheduled_timestamp - time()) / 60 / 60;
+				
+				//only take tasks within 24 hours
+				if(abs($task_time_to) > 24)
+				{
+					$is_upcoming_task = false;
+				}
+				
+				if($is_upcoming_task)
+				{
+					//This loop checks for previously completed entries.
+					$j = 0;
+					while ($j < $inner_num) {
+						
+						$start_time = strtotime(mysql_result($inner_result, $j, "start_time"));
+						
+						$time_since = $task_scheduled_timestamp - $start_time;
+						
+						//check if the task has been executed in the recurrance period.
+						if (abs($time_since) < $task_recurrance_period / 2) {
+							$is_upcoming_task = false;
+							break;
+						}
+	
+						$j++;
 					}
-
-					$task_scheduled_time = date('Y-m-d H:i:s', $task_scheduled_timestamp);
-					$task_time_to = ($task_scheduled_timestamp - time()) / 60 / 60;
 				}
 
 			}
@@ -497,8 +697,11 @@ class Home_Data_Interface {
 		$return_html .= '</tr>';
 
 		$return_html .= '</table><br />';
-
-		return $return_html;
+		
+		$return_array['html'] = $return_html;
+		$return_array['hours_total'] = $hours_sum;
+		
+		return $return_array;
 	}
 
 	private function Get_Started_Task_Summary() {

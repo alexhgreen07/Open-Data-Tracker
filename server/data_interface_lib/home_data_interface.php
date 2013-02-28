@@ -23,6 +23,157 @@ class Home_Data_Interface {
 		return $return_json;
 	}
 
+	public function Get_Categories()
+	{
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		
+		if (Is_Session_Authorized()) {
+
+			$return_json['authenticated'] = 'true';
+
+			$sql_query = "SELECT 
+				`a`.`category_id` AS `category_id`, 
+				`a`.`name` AS `name`, 
+				`a`.`description` AS `description`, 
+				`a`.`parent_category_id` AS `parent_category_id`,
+				`b`.`name` AS `parent_category_name` 
+				FROM `categories` `a` 
+				LEFT JOIN `categories` `b` 
+				ON (`b`.`category_id` = `a`.`parent_category_id`) 
+				ORDER BY `b`.`name`";
+			$result = mysql_query($sql_query, $this -> database_link);
+
+			if ($result) {
+				$return_json['success'] = 'true';
+
+				$num = mysql_numrows($result);
+
+				$i = 0;
+				while ($i < $num) {
+
+					$category_id = mysql_result($result, $i, "category_id");
+					$name = mysql_result($result, $i, "name");
+					$description = mysql_result($result, $i, 'description');
+					$parent_category_id = mysql_result($result, $i, 'parent_category_id');
+					$parent_category_name = mysql_result($result, $i, 'parent_category_name');
+					
+					$return_json['data'][$i] = 
+						array(
+						'category_id' => $category_id, 
+						'name' => $name, 
+						'description' => $description, 
+						'parent_category_id' => $parent_category_id,
+						'parent_category_name' => $parent_category_name);
+
+					$i++;
+				}
+			} else {
+				$return_json['success'] = 'false';
+			}
+
+		} else {
+			$return_json['authenticated'] = 'false';
+		}
+		
+		return $return_json;
+		
+	}
+	
+	public function Insert_Category($name, $description, $parent_category_id){
+		
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		
+		
+		if (Is_Session_Authorized()) {
+
+			$return_json['authenticated'] = 'true';
+
+			$sql_query = "INSERT INTO `categories`
+				(`member_id`, 
+				`name`, 
+				`description`, 
+				`parent_category_id`) 
+				VALUES 
+				(0,
+				'".$name."',
+				'".$description."',
+				".$parent_category_id.")";
+				
+			$result = mysql_query($sql_query, $this -> database_link);
+
+			if ($result) {
+				$return_json['success'] = 'true';
+
+			} else {
+				$return_json['success'] = 'false';
+			}
+
+		} else {
+			$return_json['authenticated'] = 'false';
+		}
+		
+		return $return_json;
+	}
+	
+	public function Update_Category($category_id, $name, $description, $parent_category_id){
+		
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		
+		
+		if (Is_Session_Authorized()) {
+
+			$return_json['authenticated'] = 'true';
+
+			$sql_query = "UPDATE `categories` 
+				SET `name`='".$name."',
+				`description`='".$description."',
+				`parent_category_id`=".$parent_category_id." 
+				WHERE `category_id` = ".$category_id;
+				
+			$result = mysql_query($sql_query, $this -> database_link);
+
+			if ($result) {
+				$return_json['success'] = 'true';
+
+			} else {
+				$return_json['success'] = 'false';
+			}
+
+		} else {
+			$return_json['authenticated'] = 'false';
+		}
+		
+		return $return_json;
+	}
+	
+	public function Delete_Category($category_id){
+		
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		
+		
+		if (Is_Session_Authorized()) {
+
+			$return_json['authenticated'] = 'true';
+
+			$sql_query = "DELETE FROM `categories` WHERE `category_id` = ".$category_id;
+				
+			$result = mysql_query($sql_query, $this -> database_link);
+
+			if ($result) {
+				$return_json['success'] = 'true';
+
+			} else {
+				$return_json['success'] = 'false';
+			}
+
+		} else {
+			$return_json['authenticated'] = 'false';
+		}
+		
+		return $return_json;
+	}
+	
+	
 	private function Get_Floating_Task_Summary() {
 		$return_html = '';
 		
@@ -146,7 +297,7 @@ class Home_Data_Interface {
 			
 		}
 		
-		$sql .= ') GROUP BY `task_id` ORDER BY `recurring` DESC, `start_time`';
+		$sql .= ') GROUP BY `task_id` ORDER BY `recurring` DESC, `start_time`, `name`';
 		
 		$end_result = mysql_query($sql, $this -> database_link);
 		$end_num = mysql_numrows($end_result);
@@ -440,6 +591,6 @@ class Home_Data_Interface {
 
 		return $return_html;
 	}
-
+	 
 }
 ?>

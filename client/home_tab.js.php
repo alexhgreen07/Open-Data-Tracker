@@ -27,6 +27,19 @@ function Home_Tab(home_div_id) {
 	this.div_id = home_div_id;
 
 	this.Refresh_Data = function(refresh_callback) {
+		var self = this;
+		
+		self.Summary_Data_Refresh_Click_Event(function(){
+			
+			self.Category_Data_Refresh_Click_Event(function(){
+			
+				refresh_callback();
+			});
+		});
+		
+	};
+
+	this.Summary_Data_Refresh_Click_Event = function(refresh_callback) {
 		var params = new Array();
 
 		var self = this;
@@ -52,14 +65,227 @@ function Home_Tab(home_div_id) {
 		});
 	};
 
-	this.On_Click_Event = function() {
+	this.Category_Data_Refresh_Click_Event = function(refresh_callback) {
+		
+		var params = new Array();
+
 		var self = this;
 
-		this.Refresh_Data(function() {
-			//empty
-		});
-	};
 
+		//execute the RPC callback for retrieving the item log
+		rpc.Home_Data_Interface.Get_Categories(params, function(jsonRpcObj) {
+
+			var new_inner_html = '';
+			var select_html = '';
+
+			new_inner_html += 'Last refreshed: ' + (new Date()) + '<br />';
+			
+			new_inner_html += '<table border="1" style="width:100%;">';
+			new_inner_html += '<tr><td>Name</td><td>Description</td><td>Parent Category</td></tr>';
+			
+			select_html += '<option value="0">-</option>';
+			
+			for (var i=0; i < jsonRpcObj.result.data.length; i++) {
+				
+
+				var current_row = jsonRpcObj.result.data[i];
+
+				new_inner_html += '<tr>';
+				new_inner_html += '<td>';
+				new_inner_html += current_row.name;
+				new_inner_html += '</td>';
+				new_inner_html += '<td>';
+				new_inner_html += current_row.description;
+				new_inner_html += '</td>';
+				new_inner_html += '<td>';
+
+				if (current_row.parent_category_name) {
+					new_inner_html += current_row.parent_category_name;
+				}
+
+				new_inner_html += '</td>';
+				new_inner_html += '</tr>';
+
+				select_html += '<option value="' + current_row.category_id + '">' + current_row.name + '</option>';
+		
+			  
+			};
+			
+			self.categories_list = jsonRpcObj.result.data;
+			
+			new_inner_html += '</table>';
+			
+			
+			document.getElementById(self.category_data_div.id).innerHTML = new_inner_html;
+			document.getElementById(self.add_new_category_parent_select.id).innerHTML = select_html;
+			document.getElementById(self.edit_category_select.id).innerHTML = select_html;
+			document.getElementById(self.edit_category_parent_select.id).innerHTML = select_html;
+			
+			refresh_callback();
+		});
+			
+		
+	}
+	
+	this.Category_Insert_Submit_Click_Event = function(refresh_callback){
+		
+		var params = new Array();
+		params.push(document.getElementById(this.add_new_category_name.id).value);
+		params.push(document.getElementById(this.add_new_category_description.id).value);
+		params.push(document.getElementById(this.add_new_category_parent_select.id).value);
+
+		var self = this;
+
+
+		//execute the RPC callback for retrieving the item log
+		rpc.Home_Data_Interface.Insert_Category(params, function(jsonRpcObj) {
+
+
+			if (jsonRpcObj.result.success == 'true') {
+
+				alert('New category added.');
+					
+				
+				self.Refresh_Data(function(){
+					
+					refresh_callback();
+				});
+				
+
+			} else {
+				alert('Category failed to add.');
+				//alert(jsonRpcObj.result.debug);
+			}
+
+		});
+		
+	};
+	
+	this.Category_Edit_Submit_Click_Event = function(refresh_callback){
+		
+		
+		var selected_category_index = document.getElementById(this.edit_category_select.id).value;
+		
+		if(selected_category_index != 0)
+		{
+			
+		
+		
+			var params = new Array();
+			params.push(selected_category_index);
+			params.push(document.getElementById(this.edit_category_name.id).value);
+			params.push(document.getElementById(this.edit_category_description.id).value);
+			params.push(document.getElementById(this.edit_category_parent_select.id).value);
+
+	
+			var self = this;
+	
+	
+			//execute the RPC callback for retrieving the item log
+			rpc.Home_Data_Interface.Update_Category(params, function(jsonRpcObj) {
+	
+	
+				if (jsonRpcObj.result.success == 'true') {
+	
+					alert('Category successfully updated.');
+						
+					
+					self.Refresh_Data(function(){
+						
+						refresh_callback();
+					});
+					
+	
+				} else {
+					alert('Category failed to update.');
+					//alert(jsonRpcObj.result.debug);
+				}
+	
+			});
+			
+			
+		}
+		else
+		{
+			alert('Select a valid category.');
+		}
+	};
+	
+	this.Category_Delete_Click_Event = function(refresh_callback){
+		
+		var selected_category_index = document.getElementById(this.edit_category_select.id).value;
+		
+		if(selected_category_index != 0)
+		{
+			
+			var r=confirm("Are you sure you want to delete this task target?");
+				
+			if (r==true)
+			{
+			
+				var params = new Array();
+				params.push(selected_category_index);
+		
+				var self = this;
+		
+		
+				//execute the RPC callback for retrieving the item log
+				rpc.Home_Data_Interface.Delete_Category(params, function(jsonRpcObj) {
+		
+		
+					if (jsonRpcObj.result.success == 'true') {
+		
+						alert('Category deleted.');
+							
+						
+						self.Refresh_Data(function(){
+							
+							refresh_callback();
+						});
+						
+		
+					} else {
+						alert('Category failed to delete.');
+						//alert(jsonRpcObj.result.debug);
+					}
+		
+				});
+			
+			}
+		}
+		else
+		{
+			alert('Select a valid category.');
+		}
+		
+		
+	};
+	
+	this.Category_Edit_Select_Change_Event = function(){
+		
+		var selected_index = document.getElementById(this.edit_category_select.id).selectedIndex;
+		
+		if(selected_index > 0)
+		{
+			var selected_category = this.categories_list[selected_index - 1];
+		
+			document.getElementById(this.edit_category_name.id).value = selected_category.name;
+			document.getElementById(this.edit_category_description.id).value = selected_category.description;
+			document.getElementById(this.edit_category_parent_select.id).value = selected_category.parent_category_id;
+			
+		}
+		else{
+			
+			document.getElementById(this.edit_category_name.id).value = "";
+			document.getElementById(this.edit_category_description.id).value = "";
+			document.getElementById(this.edit_category_parent_select.id).value = "0";
+			
+			
+		}
+		
+		
+	};
+	
 	this.Render_Summary_Home_Data = function(form_div_id) {
 		this.data_form = document.createElement("form");
 		this.data_form.setAttribute('method', "post");
@@ -93,22 +319,45 @@ function Home_Tab(home_div_id) {
 			event.preventDefault();
 
 			//execute the click event
-			self.On_Click_Event();
+			self.Summary_Data_Refresh_Click_Event();
 		});
 	};
 
 	this.Render_View_Category_Tab = function(form_div_id) {
 
+		var self = this;
+		
 		this.view_category_form = document.createElement("form");
 		this.view_category_form.setAttribute('method', "post");
 		this.view_category_form.setAttribute('id', "home_view_category_form");
-
+		
+		this.refresh_category_data_button = document.createElement("input");
+		this.refresh_category_data_button.setAttribute('type', "submit");
+		this.refresh_category_data_button.setAttribute('id', "refresh_category_data_button");
+		this.refresh_category_data_button.value = "Refresh";
+		this.view_category_form.appendChild(this.refresh_category_data_button);
+		
+		this.category_data_div = document.createElement("div");
+		this.category_data_div.setAttribute('id', "category_data_div");
+		this.view_category_form.appendChild(this.category_data_div);
+		
 		var div_tab = document.getElementById(form_div_id);
-		div_tab.innerHTML = 'Under construction...';
 		div_tab.appendChild(this.view_category_form);
+		
+		$('#' + this.refresh_category_data_button.id).button();
+		$('#' + this.refresh_category_data_button.id).click(function(event){
+			
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			self.Category_Data_Refresh_Click_Event(function(){});
+		});
 	};
 
 	this.Render_Add_New_Category_Tab = function(form_div_id) {
+		
+		var self = this;
+		
 		this.add_new_category_form = document.createElement("form");
 		this.add_new_category_form.setAttribute('method', "post");
 		this.add_new_category_form.setAttribute('id', "home_add_new_category_form");
@@ -131,7 +380,7 @@ function Home_Tab(home_div_id) {
 
 		this.add_new_category_parent_select = document.createElement("select");
 		this.add_new_category_parent_select.setAttribute('id', "add_new_category_parent_select");
-		this.add_new_category_parent_select.innerHTML = '<option>-</option>';
+		this.add_new_category_parent_select.innerHTML = '<option value="0">-</option>';
 		this.add_new_category_form.appendChild(this.add_new_category_parent_select);
 
 		this.add_new_category_form.innerHTML += '<br /><br />';
@@ -150,21 +399,25 @@ function Home_Tab(home_div_id) {
 		$('#' + this.add_new_category_submit_button.id).click(function(event) {
 			//ensure a normal postback does not occur
 			event.preventDefault();
-
+			
+			self.Category_Insert_Submit_Click_Event(function(){});
 		});
 	};
 
 	this.Render_Edit_Category_Tab = function(form_div_id) {
+		
+		var self = this;
+		
 		this.edit_category_form = document.createElement("form");
 		this.edit_category_form.setAttribute('method', "post");
 		this.edit_category_form.setAttribute('id', "home_edit_category_form");
 
 		this.edit_category_form.innerHTML += 'Category:<br />';
 
-		this.edit_category_parent_select = document.createElement("select");
-		this.edit_category_parent_select.setAttribute('id', "edit_category_parent_select");
-		this.edit_category_parent_select.innerHTML = '<option>-</option>';
-		this.edit_category_form.appendChild(this.edit_category_parent_select);
+		this.edit_category_select = document.createElement("select");
+		this.edit_category_select.setAttribute('id', "edit_category_select");
+		this.edit_category_select.innerHTML = '<option>-</option>';
+		this.edit_category_form.appendChild(this.edit_category_select);
 
 		this.edit_category_form.innerHTML += '<br /><br />';
 
@@ -186,7 +439,7 @@ function Home_Tab(home_div_id) {
 
 		this.edit_category_parent_select = document.createElement("select");
 		this.edit_category_parent_select.setAttribute('id', "edit_category_parent_select");
-		this.edit_category_parent_select.innerHTML = '<option>-</option>';
+		this.edit_category_parent_select.innerHTML = '<option value="0">-</option>';
 		this.edit_category_form.appendChild(this.edit_category_parent_select);
 
 		this.edit_category_form.innerHTML += '<br /><br />';
@@ -215,13 +468,22 @@ function Home_Tab(home_div_id) {
 		$('#' + this.edit_category_submit_button.id).click(function(event) {
 			//ensure a normal postback does not occur
 			event.preventDefault();
-
+			
+			self.Category_Edit_Submit_Click_Event(function(){});
 		});
 
 		$('#' + this.edit_category_delete_button.id).click(function(event) {
 			//ensure a normal postback does not occur
 			event.preventDefault();
+			
+			self.Category_Delete_Click_Event(function(){});
 
+		});
+		
+		$('#' + this.edit_category_select.id).change(function(){
+			
+			self.Category_Edit_Select_Change_Event();
+			
 		});
 	};
 
@@ -262,10 +524,29 @@ function Home_Tab(home_div_id) {
 
 	this.Render_Text_Size_Changer = function(form_div_id) {
 		
+		var self = this;
+		
 		//append the main tab div
 		this.text_changer_div = document.createElement('div');
 		
 		this.text_changer_div.innerHTML += 'Text Size: <br />';
+		
+		this.change_text_box = document.createElement('input');
+		this.change_text_box.setAttribute('id','change_text_box');
+		this.change_text_box.setAttribute('type','text');
+		
+		this.text_changer_div.appendChild(this.change_text_box);
+		
+		this.text_changer_div.innerHTML += '<br /><br />';
+		
+		this.change_text_link = document.createElement('input');
+		this.change_text_link.setAttribute('id','change_text_link');
+		this.change_text_link.setAttribute('type','submit');
+		this.change_text_link.setAttribute('value','Change');
+		
+		this.text_changer_div.appendChild(this.change_text_link);
+		
+		this.text_changer_div.innerHTML += '<br /><br />';
 		
 		this.smaller_text_link = document.createElement('input');
 		this.smaller_text_link.setAttribute('id','smaller_text_link');
@@ -288,6 +569,15 @@ function Home_Tab(home_div_id) {
 		var div_tab = document.getElementById(form_div_id);
 		div_tab.appendChild(this.text_changer_div);
 		
+		$('#' + this.change_text_link.id).button();
+		$('#' + this.change_text_link.id).click(function(){
+			
+			var size = document.getElementById(self.change_text_box.id).value;
+			
+			$('body').css('font-size',size + 'px');
+			
+		});
+		
 		$('#' + this.smaller_text_link.id).button();
 		
 		//setup actions
@@ -301,6 +591,8 @@ function Home_Tab(home_div_id) {
 			}
 			
 			$('body').css('font-size',size + 'px');
+			
+			document.getElementById(self.change_text_box.id).value = size;
 		});
 		
 		$('#' + this.larger_text_link.id).button();
@@ -312,7 +604,14 @@ function Home_Tab(home_div_id) {
 			size++;
 			
 			$('body').css('font-size',size + 'px');
+			
+			document.getElementById(self.change_text_box.id).value = size;
 		});
+		
+		var size = parseInt($('body').css('font-size').replace("px",""));
+		
+		document.getElementById(this.change_text_box.id).value = size;
+		
 	};
 
 	//render function (div must already exist)
@@ -352,7 +651,7 @@ function Home_Tab(home_div_id) {
 		this.Render_Text_Size_Changer('home_settings_div');
 
 		//call the click event function
-		this.On_Click_Event();
+		//this.Summary_Data_Refresh_Click_Event();
 
 	};
 }

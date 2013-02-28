@@ -933,8 +933,81 @@ function Task_Tab(task_div_id) {
 	
 	this.Task_Target_Edit_Submit_Click = function()
 	{
-		alert('Submit editted task target not implemented.');
+		var self = this;
+		
+		var index_to_edit = document.getElementById(this.task_edit_target_select.id).selectedIndex;
+		var selected_index = document.getElementById(this.task_target_edit_name_select.id).selectedIndex;
+		var selected_task = this.task_info_json_array[selected_index - 1];
+		var new_task_id = selected_task.task_id;
+		var new_scheduled = 0;
+		if(document.getElementById(this.task_edit_scheduled_target_select.id).value == "Scheduled")
+		{
+			new_scheduled = 1;
+		}
+		else{
+			new_scheduled = 0;
+		}
+		var new_scheduled_time = document.getElementById(this.task_edit_scheduled_target_date.id).value;
+		var new_recurring = 0;
+		if(document.getElementById(this.task_edit_recurring_target_select.id).value == "True")
+		{
+			new_recurring = 1;
+		}
+		else{
+			new_recurring = 0;
+		}
+		var new_recurrance_type = document.getElementById(this.task_edit_recurring_target_select_type.id).value;
+		var new_recurrance_period = document.getElementById(this.task_edit_reccurance_target_period.id).value;
+		
+		
+		if(index_to_edit != 0)
+		{
 			
+			var params = new Array();
+			params.push(self.task_targets_log[index_to_edit - 1].task_schedule_id);
+			params.push(new_task_id);
+			params.push(new_scheduled);
+			params.push(new_scheduled_time);
+			params.push(new_recurring);
+			params.push(new_recurrance_type);
+			params.push(new_recurrance_period);
+			
+			rpc.Task_Data_Interface.Update_Task_Target(params, function(jsonRpcObj) {
+			
+				if(jsonRpcObj.result.success == 'true'){
+					
+					alert('Index updated successfully.');
+					
+					self.Refresh_Tasks(function() {
+						
+						//refresh the list to remove this task
+						self.Refresh_Task_Name_List(function() {
+							
+							self.Refresh_Task_Target_Data(function(){
+								
+								//do nothing
+								
+							});
+							
+							
+						});
+
+					});
+					
+				}
+				else
+				{
+					alert('Failed to edit the task target.');
+					alert(jsonRpcObj.result.debug);
+				}
+			
+			});
+		
+		}
+		else
+		{
+			alert('Select a valid task target.');
+		}
 	};
 	
 	this.Task_Target_Edit_Delete_Click = function()
@@ -1010,7 +1083,47 @@ function Task_Tab(task_div_id) {
 	
 	this.Task_Target_Edit_Select_Change = function()
 	{
-		//alert('hello world!');
+		//fill all target info in
+		
+		var self = this;
+		
+		var index_to_fill = document.getElementById(this.task_edit_target_select.id).selectedIndex;
+
+		if(index_to_fill != 0)
+		{
+			document.getElementById(this.task_target_edit_name_select.id).value = self.task_targets_log[index_to_fill - 1].name;
+			if(self.task_targets_log[index_to_fill - 1].scheduled == 1)
+			{
+				document.getElementById(this.task_edit_scheduled_target_select.id).value = "Scheduled";
+			
+			}
+			else{
+				document.getElementById(this.task_edit_scheduled_target_select.id).value = "Floating";
+			
+			}
+			
+			document.getElementById(this.task_edit_scheduled_target_date.id).value = self.task_targets_log[index_to_fill - 1].scheduled_time;
+			if(self.task_targets_log[index_to_fill - 1].recurring == 1)
+			{
+				document.getElementById(this.task_edit_recurring_target_select.id).value = "True";
+			}
+			else{
+				document.getElementById(this.task_edit_recurring_target_select.id).value = "False";
+			}
+			
+			document.getElementById(this.task_edit_recurring_target_select_type.id).value = self.task_targets_log[index_to_fill - 1].recurrance_type;
+			document.getElementById(this.task_edit_reccurance_target_period.id).value = self.task_targets_log[index_to_fill - 1].recurrance_period;
+		
+		}
+		else
+		{
+			document.getElementById(this.task_target_edit_name_select.id).value = "-";
+			document.getElementById(this.task_edit_scheduled_target_select.id).value = "Floating";
+			document.getElementById(this.task_edit_recurring_target_select.id).value = "False";
+			document.getElementById(this.task_edit_recurring_target_select_type.id).value = "Minutes";
+			document.getElementById(this.task_edit_reccurance_target_period.id).value = "0";
+		}
+		
 	};
 	
 	//RENDER FUNCTIONS

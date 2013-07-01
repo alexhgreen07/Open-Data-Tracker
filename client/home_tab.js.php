@@ -74,52 +74,72 @@ function Home_Tab(home_div_id) {
 
 		//execute the RPC callback for retrieving the item log
 		rpc.Home_Data_Interface.Get_Categories(params, function(jsonRpcObj) {
-
-			var new_inner_html = '';
-			var select_html = '';
-
-			new_inner_html += 'Last refreshed: ' + (new Date()) + '<br />';
 			
-			new_inner_html += '<table border="1" style="width:100%;">';
-			new_inner_html += '<tr><td>Name</td><td>Description</td><td>Parent Category</td></tr>';
-			
-			select_html += '<option value="0">-</option>';
-			
-			for (var i=0; i < jsonRpcObj.result.data.length; i++) {
-				
-
-				var current_row = jsonRpcObj.result.data[i];
-
-				new_inner_html += '<tr>';
-				new_inner_html += '<td>';
-				new_inner_html += current_row.name;
-				new_inner_html += '</td>';
-				new_inner_html += '<td>';
-				new_inner_html += current_row.description;
-				new_inner_html += '</td>';
-				new_inner_html += '<td>';
-
-				if (current_row.parent_category_name) {
-					new_inner_html += current_row.parent_category_name;
-				}
-
-				new_inner_html += '</td>';
-				new_inner_html += '</tr>';
-
-				select_html += '<option value="' + current_row.category_id + '">' + current_row.name + '</option>';
+			if(jsonRpcObj.result.authenticated)
+			{
+				if(jsonRpcObj.result.success)
+				{
+					var new_inner_html = '';
+					var select_html = '';
 		
-			  
-			};
+					new_inner_html += 'Last refreshed: ' + (new Date()) + '<br />';
+					
+					new_inner_html += '<table border="1" style="width:100%;">';
+					new_inner_html += '<tr><td>Name</td><td>Description</td><td>Parent Category</td></tr>';
+					
+					select_html += '<option value="0">-</option>';
+					
+					
+					for (var i=0; i < jsonRpcObj.result.data.length; i++) {
+						
+		
+						var current_row = jsonRpcObj.result.data[i];
+		
+						new_inner_html += '<tr>';
+						new_inner_html += '<td>';
+						new_inner_html += current_row.name;
+						new_inner_html += '</td>';
+						new_inner_html += '<td>';
+						new_inner_html += current_row.description;
+						new_inner_html += '</td>';
+						new_inner_html += '<td>';
+		
+						if (current_row.parent_category_name) {
+							new_inner_html += current_row.parent_category_name;
+						}
+		
+						new_inner_html += '</td>';
+						new_inner_html += '</tr>';
+		
+						select_html += '<option value="' + current_row.category_id + '">' + current_row.name + '</option>';
+				
+					  
+					};
+					
+					
+					self.categories_list = jsonRpcObj.result.data;
+					
+					new_inner_html += '</table>';
+					
+					
+					document.getElementById(self.category_data_div.id).innerHTML = new_inner_html;
+					document.getElementById(self.add_new_category_parent_select.id).innerHTML = select_html;
+					document.getElementById(self.edit_category_select.id).innerHTML = select_html;
+					document.getElementById(self.edit_category_parent_select.id).innerHTML = select_html;
+				}
+				else
+				{
+					alert('Refresh failed.');
+				}
+				
+			}
+			else
+			{
+				alert('Not authenticated. Refresh failed.');
+			}
 			
-			self.categories_list = jsonRpcObj.result.data;
-			
-			new_inner_html += '</table>';
 			
 			
-			document.getElementById(self.category_data_div.id).innerHTML = new_inner_html;
-			document.getElementById(self.add_new_category_parent_select.id).innerHTML = select_html;
-			document.getElementById(self.edit_category_select.id).innerHTML = select_html;
-			document.getElementById(self.edit_category_parent_select.id).innerHTML = select_html;
 			
 			refresh_callback();
 		});

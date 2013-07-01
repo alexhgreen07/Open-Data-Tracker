@@ -53,7 +53,9 @@ class Home_Data_Interface {
 
 			if ($result) {
 				$return_json['success'] = 'true';
-
+				
+				$return_json['data'] = array();
+				
 				$num = mysql_numrows($result);
 
 				$i = 0;

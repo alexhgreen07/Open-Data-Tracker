@@ -8,8 +8,10 @@
 		<link href="client/main.css.php" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
-
-		<?php
+	<h1>TrackAnything Login</h1>
+	<a href="new_member.php">Sign Up</a>
+	
+	<?php
 
 		require_once ('server/config.php');
 
@@ -20,19 +22,22 @@
 		$password = mysql_real_escape_string($_POST['password']);
 
 		if ($_POST["password"] == "" && $_POST["login"] == "") {
+			
 			$html_output .= '
-		<h1>TrackAnything Login</h1>
+		
 
-		<form id="loginForm" name="loginForm" method="post">
-
-		Login:
-		<input name="login" type="text" id="login" class="text"/><br/>
-		Password:
-		<input name="password" type="password" id="password" class="text"/><br /><br />
-		<input type="submit" name="Submit" value="Login" /><br />
-		</form>
-		';
+				<form id="loginForm" name="loginForm" method="post">
+		
+				Login:
+				<input name="login" type="text" id="login" class="text"/><br/>
+				Password:
+				<input name="password" type="password" id="password" class="text"/><br /><br />
+				<input type="submit" name="Submit" value="Login" /><br />
+				</form>
+				';
+				
 		} else if ($_POST["password"] != "" && $_POST["login"] != "") {
+			
 			//Start session
 			session_start();
 
@@ -87,23 +92,32 @@
 				}
 
 			} else {
+				
 				die("Query failed");
+				
 			}
 		} else {
+			
 			//Input Validations
 			if ($login == '') {
+				
 				$errmsg_arr[] = 'Login ID missing';
 				$errflag = true;
 			}
+			
 			if ($password == '') {
+				
 				$errmsg_arr[] = 'Password missing';
 				$errflag = true;
+				
 			}
 
 			//If there are input validations, redirect back to the login form
 			if ($errflag) {
+				
 				$_SESSION['ERRMSG_ARR'] = $errmsg_arr;
 				session_write_close();
+				
 			}
 
 			header("location: index.php");
@@ -112,6 +126,7 @@
 
 		echo $html_output;
 	?>
+	
 	</body>
 </html>
 

@@ -31,6 +31,7 @@ function Task_Tab(task_div_id) {
 	this.div_id = task_div_id;
 	this.task_log = Array();
 	this.task_list = Array();
+	this.refresh_task_log_callback = function(){};
 	
 	//GENERAL FUNCTIONS
 	
@@ -81,7 +82,7 @@ function Task_Tab(task_div_id) {
 					//refresh the task info div
 					self.On_Task_Name_Select_Change_Event();
 				} else {
-					alert('Items failed to refresh.');
+					alert('Tasks failed to refresh.');
 				}
 
 			} else {
@@ -465,6 +466,20 @@ function Task_Tab(task_div_id) {
 		});
 	};
 	
+	this.Set_Categories = function(categories)
+	{
+		self = this;
+		
+		for (var i = 0; i < categories.length; i++)
+		{
+			
+			categories[i].name
+			categories[i].id
+			
+		}
+		
+	};
+	
 	//UI EVENTS
 	
 	this.On_Click_Event = function() {
@@ -525,6 +540,7 @@ function Task_Tab(task_div_id) {
 		params[1] = $("#" + this.task_description.id).val();
 		params[2] = $("#" + this.task_estimate.id).val();
 		params[3] = $("#" + this.task_note.id).val();
+		params[4] = $("#" + this.task_category_select.id).val();
 
 		var self = this;
 
@@ -715,6 +731,7 @@ function Task_Tab(task_div_id) {
 			document.getElementById(self.edit_task_entry_task_status_select.id).value = selected_task_entry.status;
 			document.getElementById(self.task_entry_edit_duration.id).value = selected_task_entry.hours;
 			document.getElementById(self.task_entry_edit_note.id).value = selected_task_entry.note;
+			
 		}
 		else
 		{
@@ -739,7 +756,7 @@ function Task_Tab(task_div_id) {
 			var params = new Array();
 			params[0] = selected_task.task_id;
 			params[1] = document.getElementById(this.task_edit_name.id).value;
-			params[2] = 0;
+			params[2] = document.getElementById(this.task_edit_category_select.id).value;
 			params[3] = document.getElementById(this.task_edit_description.id).value;
 			params[4] = document.getElementById(this.task_edit_estimate.id).value;
 			params[5] = document.getElementById(this.task_edit_note.id).value;
@@ -764,6 +781,7 @@ function Task_Tab(task_div_id) {
 				else
 				{
 					alert('Failed to update the task.');
+					alert(jsonRpcObj.result.debug);
 				}
 			
 			});
@@ -849,6 +867,8 @@ function Task_Tab(task_div_id) {
 			document.getElementById(this.task_edit_description.id).value = selected_task.description;
 			document.getElementById(this.task_edit_estimate.id).value = selected_task.estimated_time;
 			document.getElementById(this.task_edit_note.id).value = selected_task.note;
+			document.getElementById(self.task_edit_category_select.id).value = selected_task.category_id;
+			
 		}
 		else
 		{
@@ -856,6 +876,7 @@ function Task_Tab(task_div_id) {
 			document.getElementById(this.task_edit_description.id).value = '';
 			document.getElementById(this.task_edit_estimate.id).value = '0';
 			document.getElementById(this.task_edit_note.id).value = '';
+			document.getElementById(self.task_edit_category_select.id).selectedIndex = 0;
 		}
 			
 	};
@@ -1007,6 +1028,7 @@ function Task_Tab(task_div_id) {
 		else
 		{
 			alert('Select a valid task target.');
+			
 		}
 	};
 	

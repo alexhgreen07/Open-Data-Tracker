@@ -52,6 +52,16 @@ function Main_Application() {
 
 	};
 	
+	this.Refresh_Categories = function(){
+		
+		
+		category_select = document.getElementById(self.add_new_category_parent_select.id).innerHTML;
+		document.getElementById(this.task_tab_object.task_category_select.id).innerHTML = category_select;
+		document.getElementById(this.task_tab_object.task_edit_category_select.id).innerHTML = category_select;
+		document.getElementById(this.item_tab_object.item_category_select.id).innerHTML = category_select;
+		document.getElementById(this.item_tab_object.item_edit_category_select.id).innerHTML = category_select;
+	};
+	
 	
 	//setup the main tabs
 	this.Render_Main_Tabs = function() {
@@ -88,6 +98,12 @@ function Main_Application() {
 
 		this.home_tab_object = new Home_Tab('home_tab_div');
 		this.home_tab_object.Render();
+		
+		this.home_tab_object.refresh_categories_callback = function(){
+			
+			self.Refresh_Categories();
+			
+		};
 
 		this.item_tab_object = new Item_Tab('item_tab_div');
 
@@ -116,11 +132,19 @@ function Main_Application() {
 		var self = this;
 
 		self.home_tab_object.Refresh_Data(function() {
+			
 			self.item_tab_object.Refresh_Items(function() {
+				
 				self.task_tab_object.Refresh_Tasks(function() {
+					
 					self.task_tab_object.Refresh_Task_Name_List(function() {
+						
 						self.report_tab_object.Refresh(function() {
+							
+							self.Refresh_Categories();
+							
 							//alert('refresh complete');
+							
 						});
 
 					});

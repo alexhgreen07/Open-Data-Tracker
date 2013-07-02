@@ -40,15 +40,12 @@ class Home_Data_Interface {
 			$return_json['authenticated'] = 'true';
 
 			$sql_query = "SELECT 
-				`a`.`category_id` AS `category_id`, 
-				`a`.`name` AS `name`, 
-				`a`.`description` AS `description`, 
-				`a`.`parent_category_id` AS `parent_category_id`,
-				`b`.`name` AS `parent_category_name` 
-				FROM `categories` `a` 
-				LEFT JOIN `categories` `b` 
-				ON (`b`.`category_id` = `a`.`parent_category_id`) 
-				ORDER BY `b`.`name`";
+				`category_id`, 
+				`name`, 
+				`description`, 
+				`parent_category_id`,
+				`category_path` 
+				FROM `categories` ORDER BY `category_path`";
 			$result = mysql_query($sql_query, $this -> database_link);
 
 			if ($result) {
@@ -65,7 +62,7 @@ class Home_Data_Interface {
 					$name = mysql_result($result, $i, "name");
 					$description = mysql_result($result, $i, 'description');
 					$parent_category_id = mysql_result($result, $i, 'parent_category_id');
-					$parent_category_name = mysql_result($result, $i, 'parent_category_name');
+					$category_path = mysql_result($result, $i, 'category_path');
 					
 					$return_json['data'][$i] = 
 						array(
@@ -73,7 +70,7 @@ class Home_Data_Interface {
 						'name' => $name, 
 						'description' => $description, 
 						'parent_category_id' => $parent_category_id,
-						'parent_category_name' => $parent_category_name);
+						'category_path' => $category_path);
 
 					$i++;
 				}
@@ -97,26 +94,51 @@ class Home_Data_Interface {
 		if (Is_Session_Authorized()) {
 
 			$return_json['authenticated'] = 'true';
-
-			$sql_query = "INSERT INTO `categories`
-				(`member_id`, 
-				`name`, 
-				`description`, 
-				`parent_category_id`) 
-				VALUES 
-				(0,
-				'".$name."',
-				'".$description."',
-				".$parent_category_id.")";
-				
+			
+			$sql_query = "SELECT `category_path` FROM `categories` WHERE `category_id` = '".$parent_category_id."'";
+			
 			$result = mysql_query($sql_query, $this -> database_link);
-
+			
 			if ($result) {
-				$return_json['success'] = 'true';
+				
+				$num = mysql_numrows($result);
+
+				$i = 0;
+				while ($i < $num) {
+
+					$category_path = mysql_result($result, $i, "category_path");
+					$i++;
+				}
+				
+				$category_path = $category_path . '/' . $name;
+				
+				$sql_query = "INSERT INTO `categories`
+					(`member_id`, 
+					`name`, 
+					`description`, 
+					`parent_category_id`,
+					`category_path`) 
+					VALUES 
+					('".$_SESSION['SESS_MEMBER_ID']."',
+					'".$name."',
+					'".$description."',
+					".$parent_category_id.",
+					'".$category_path."')";
+				
+				$result = mysql_query($sql_query, $this -> database_link);
+	
+				if ($result) {
+					$return_json['success'] = 'true';
+	
+				} else {
+					$return_json['success'] = 'false';
+				}
+				
 
 			} else {
 				$return_json['success'] = 'false';
 			}
+			
 
 		} else {
 			$return_json['authenticated'] = 'false';

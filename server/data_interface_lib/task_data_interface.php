@@ -41,7 +41,7 @@ class Task_Data_Interface {
 			}
 
 			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`hours`, `status`, `note`) VALUES ('" . $task_id . "','" . $start_time . "','" . $hours . "', '" . $status . "','" . $note . "')";
-
+			
 			//execute insert
 			$success = mysql_query($sql, $this -> database_link);
 
@@ -122,12 +122,13 @@ class Task_Data_Interface {
 
 			$return_json['authenticated'] = 'true';
 
-			$sql_query = "SELECT DISTINCT `task_id`,`name`,`date_created`, `estimated_time`, `description`, `note` 
+			$sql_query = "SELECT DISTINCT `task_id`,`name`,`date_created`, `estimated_time`, `description`, `note` , `category_id`
 				FROM `life_management`.`tasks` ORDER BY `name`";
 			$result = mysql_query($sql_query, $this -> database_link);
 
 			if ($result) {
 				$return_json['success'] = 'true';
+				$return_json['items'] = array();
 
 				$num = mysql_numrows($result);
 
@@ -140,6 +141,7 @@ class Task_Data_Interface {
 					$estimated_time = mysql_result($result, $i, 'estimated_time');
 					$description = mysql_result($result,$i,'description');
 					$note = mysql_result($result,$i,'note');
+					$category_id = mysql_result($result,$i,'category_id');
 
 					//check if the task has been started yet
 					$inner_sql_query = "SELECT `task_id`, `start_time` 
@@ -171,7 +173,8 @@ class Task_Data_Interface {
 							'estimated_time' => $estimated_time, 
 							'start_time' => $start_time, 
 							'description' => $description,
-							'note' => $note, );
+							'note' => $note, 
+							'category_id' => $category_id);
 
 					}
 
@@ -264,7 +267,7 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 
-	public function Insert_Task($name, $description = "", $estimated_time = 0, $note = "") {
+	public function Insert_Task($name, $description = "", $estimated_time = 0, $note = "", $category_id = 0) {
 		$return_json = array('authenticated' => 'false', 'success' => 'false', );
 
 		$task_name = mysql_real_escape_string($name);
@@ -277,13 +280,15 @@ class Task_Data_Interface {
 			`description`, 
 			`date_created`, 
 			`estimated_time`,
-			`note`) VALUES (';
+			`note`,
+			`category_id`) VALUES (';
 
 		$sql .= "'" . $task_name . "',";
 		$sql .= "'" . $task_description . "',";
 		$sql .= "NOW(),";
 		$sql .= "" . $task_estimated_time . ",";
-		$sql .= "'" . $task_note . "')";
+		$sql .= "'" . $task_note . "',";
+		$sql .= "" . $category_id . ")";
 
 		$success = mysql_query($sql, $this -> database_link);
 
@@ -359,7 +364,8 @@ class Task_Data_Interface {
 				`description`,
 				`date_created`,
 				`note`,
-				`estimated_time` FROM `life_management`.`tasks` ORDER BY `name` ASC";
+				`estimated_time`,
+				`category_id` FROM `life_management`.`tasks` ORDER BY `name` ASC";
 			$result = mysql_query($sql_query, $this -> database_link);
 
 			if ($result) {
@@ -377,13 +383,15 @@ class Task_Data_Interface {
 					$task_description = mysql_result($result, $i, "description");
 					$task_estimated_time = mysql_result($result, $i, "estimated_time");
 					$task_note = mysql_result($result,$i,'note');
+					$category_id = mysql_result($result,$i,'category_id');
 					
 					$return_json['data'][$i] = array(
 						'task_id' => $task_id,
 						'name' => $task_name,
 						'description' => $task_description,
 						'estimated_time' => $task_estimated_time, 
-						'note' => $task_note,);
+						'note' => $task_note,
+						'category_id' => $category_id);
 					
 					
 					$i++;

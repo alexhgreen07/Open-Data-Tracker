@@ -25,6 +25,7 @@ function Home_Tab(home_div_id) {
 
 	//class variables
 	this.div_id = home_div_id;
+	this.refresh_categories_callback = function(){};
 
 	this.Refresh_Data = function(refresh_callback) {
 		var self = this;
@@ -85,7 +86,7 @@ function Home_Tab(home_div_id) {
 					new_inner_html += 'Last refreshed: ' + (new Date()) + '<br />';
 					
 					new_inner_html += '<table border="1" style="width:100%;">';
-					new_inner_html += '<tr><td>Name</td><td>Description</td><td>Parent Category</td></tr>';
+					new_inner_html += '<tr><td>Name</td><td>Description</td><td>Category Path</td></tr>';
 					
 					select_html += '<option value="0">-</option>';
 					
@@ -104,14 +105,14 @@ function Home_Tab(home_div_id) {
 						new_inner_html += '</td>';
 						new_inner_html += '<td>';
 		
-						if (current_row.parent_category_name) {
-							new_inner_html += current_row.parent_category_name;
+						if (current_row.category_path) {
+							new_inner_html += current_row.category_path;
 						}
 		
 						new_inner_html += '</td>';
 						new_inner_html += '</tr>';
 		
-						select_html += '<option value="' + current_row.category_id + '">' + current_row.name + '</option>';
+						select_html += '<option value="' + current_row.category_id + '">' + current_row.category_path + '</option>';
 				
 					  
 					};
@@ -168,13 +169,15 @@ function Home_Tab(home_div_id) {
 				
 				self.Refresh_Data(function(){
 					
+					self.refresh_categories_callback();
+					
 					refresh_callback();
 				});
 				
 
 			} else {
 				alert('Category failed to add.');
-				//alert(jsonRpcObj.result.debug);
+				alert(jsonRpcObj.result.debug);
 			}
 
 		});
@@ -211,6 +214,8 @@ function Home_Tab(home_div_id) {
 						
 					
 					self.Refresh_Data(function(){
+						
+						self.refresh_categories_callback();
 						
 						refresh_callback();
 					});
@@ -259,6 +264,8 @@ function Home_Tab(home_div_id) {
 							
 						
 						self.Refresh_Data(function(){
+							
+							self.refresh_categories_callback();
 							
 							refresh_callback();
 						});

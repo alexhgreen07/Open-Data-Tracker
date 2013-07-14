@@ -1,10 +1,5 @@
 <?php
-/*
- * NOTE: This is PHP code intended to perform server side includes
- * and resolve any javascript file dependencies. If PHP is
- * not installed on the server, this code can be replaced
- * with client side HTML includes (or dynamic javascript includes.)
-*/
+
 
 Header("content-type: application/x-javascript");
 
@@ -30,11 +25,17 @@ require_once('graph_tab.js.php');
 
 ?>
 
-/** \class Main_Application
- * \brief This is the javascript class for the main application.
- * */
+
+/**
+ * @class Main_Application
+ * @classdesc Represents the main application.
+ * @constructor
+ */
 function Main_Application() {
-	//initialize the main tab array
+	
+	/** @member {Object} tabs_array
+	 * @desc This is the tabs array for the main application.
+	 * */
 	this.tabs_array = new Array();
 	this.main_tab_nav
 	this.home_tab_object
@@ -43,7 +44,10 @@ function Main_Application() {
 	this.report_tab_object
 	this.graph_tab_object
 
-	//refresh data view
+	/**
+	 * @method Refresh_Data
+	 * @desc This should be called to refresh all main data.
+	 * */
 	this.Refresh_Data = function() {
 		var self = this;
 

@@ -1,4 +1,8 @@
 <?php
+/** \file api.php
+ * This file contains the RPC API. It is where a client calls back to.
+ * */
+
 
 require_once ('auth.php');
 require_once ('config.php');

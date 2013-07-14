@@ -1,5 +1,13 @@
 <?php
+/** \file task_data_interface.php
+ * \brief This file contains the class definition for the item data interface class.
+ * */
 
+/** \class Task_Data_Interface
+ * \brief This class contains functions related to tasks. All
+ * task insert, update, and delete functionality is done through
+ * this class. Also all task data retrieval will come from this.
+ * */
 class Task_Data_Interface {
 
 	//this will store the open database link

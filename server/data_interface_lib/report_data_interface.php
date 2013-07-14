@@ -1,5 +1,12 @@
 <?php
+/** \file report_data_interface.php
+ * \brief This file contains the class definition for the item data interface class.
+ * */
 
+/** \class Report_Data_Interface
+ * \brief This class contains functions related to report generation. 
+ * Special queries and data views will be availabe from here.
+ * */
 class Report_Data_Interface {
 
 	//this will store the open database link

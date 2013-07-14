@@ -1,5 +1,13 @@
 <?php
+/** \file item_data_interface.php
+ * \brief This file contains the class definition for the item data interface class.
+ * */
 
+/** \class Item_Data_Interface
+ * \brief This class contains functions related to item tracking. All
+ * insert, update, and delete functions, as well as data retrieval 
+ * functions are present.
+ * */
 class Item_Data_Interface {
 
 	//this will store the open database link

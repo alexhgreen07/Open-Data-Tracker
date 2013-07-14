@@ -1,10 +1,24 @@
 <?php
+/** \file home_data_interface.php
+ * \brief This file contains the class definition for the home data interface class.
+ * */
 
+/** \class Home_Data_Interface
+ * \brief This class contains the functions for the home data interface.
+ * 
+ * The class contains functions related to data summary and general settings.
+ * It has the interfaces to categories as well.
+ * */
 class Home_Data_Interface {
 
 	//this will store the open database link
 	private $database_link;
 
+	/** \fn public function Home_Data_Interface($new_database_link)
+     * \brief This is the constructor for the class.
+     * \param new_database_link This is the link to the database which the class will be interacting with.
+     * \return None.
+     * */
 	public function Home_Data_Interface($new_database_link) {
 
 		//note this is expected to be initialized and open to the proper database
@@ -12,6 +26,10 @@ class Home_Data_Interface {
 
 	}
 
+	/** \fn public function Get_Home_Data_Summary()
+     * \brief This function gets an HTML table summary of general data.
+     * \return Returns a JSON array with HTML tables for the data summary.
+     * */
 	public function Get_Home_Data_Summary() {
 		$return_json = array('authenticated' => 'false', 'success' => 'false', 'html' => '', );
 		
@@ -31,6 +49,10 @@ class Home_Data_Interface {
 		return $return_json;
 	}
 
+	/** \fn public function Get_Categories()
+     * \brief This functions retrieves and compiles the categories into a JSON arrary.
+     * \return A JSON array with format: {success:<value>,authenticated:<value>,data:<value>}
+     * */
 	public function Get_Categories()
 	{
 		$return_json = array('authenticated' => 'false', 'success' => 'false', );
@@ -86,6 +108,13 @@ class Home_Data_Interface {
 		
 	}
 	
+	/** \fn public function Insert_Category($name, $description, $parent_category_id)
+     * \brief This function inserts a new category into the database.
+     * \param name This is the name string of the new category.
+     * \param description This is the description string related to the category.
+     * \param parent_category_id The parent category integer ID.
+     * \return A JSON array with format: {success:<value>,authenticated:<value>}
+     * */
 	public function Insert_Category($name, $description, $parent_category_id){
 		
 		$return_json = array('authenticated' => 'false', 'success' => 'false', );
@@ -147,6 +176,14 @@ class Home_Data_Interface {
 		return $return_json;
 	}
 	
+	/** \fn public function Update_Category($category_id, $name, $description, $parent_category_id)
+     * \brief This function updates a category in the database.
+     * \param category_id The category integer ID to update.
+     * \param name This is the new name string of the category.
+     * \param description This is the new description string related to the category.
+     * \param parent_category_id The new parent category integer ID.
+     * \return A JSON array with format: {success:<value>,authenticated:<value>}
+     * */
 	public function Update_Category($category_id, $name, $description, $parent_category_id){
 		
 		$return_json = array('authenticated' => 'false', 'success' => 'false', );
@@ -178,6 +215,14 @@ class Home_Data_Interface {
 		return $return_json;
 	}
 	
+	/** \fn public function Delete_Category($category_id)
+     * \brief This function deletes a category from the database.
+     * \param category_id The category integer ID to update.
+     * \param name This is the new name string of the category.
+     * \param description This is the new description string related to the category.
+     * \param parent_category_id The new parent category integer ID.
+     * \return A JSON array with format: {success:<value>,authenticated:<value>}
+     * */
 	public function Delete_Category($category_id){
 		
 		$return_json = array('authenticated' => 'false', 'success' => 'false', );

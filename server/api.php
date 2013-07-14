@@ -1,6 +1,6 @@
 <?php
 /** \file api.php
- * This file contains the RPC API. It is where a client calls back to.
+ * \brief This file contains the RPC API. It is where a client calls back to.
  * */
 
 

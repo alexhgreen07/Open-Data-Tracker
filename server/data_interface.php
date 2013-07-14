@@ -1,5 +1,11 @@
 <?php
+/** \file data_interface.php
+ * \brief This file contains the class definition for the Data_Interface class.
+ * */
 
+/** \class Data_Interface
+ * \brief This class contains a database link for use in connecting with the database.
+ * */
 class Data_Interface {
 
 	//this will store the open database link

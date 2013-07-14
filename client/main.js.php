@@ -30,6 +30,9 @@ require_once('graph_tab.js.php');
 
 ?>
 
+/** \class Main_Application
+ * \brief This is the javascript class for the main application.
+ * */
 function Main_Application() {
 	//initialize the main tab array
 	this.tabs_array = new Array();

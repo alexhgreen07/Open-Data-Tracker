@@ -1,6 +1,6 @@
 <?php
 /** \file auth.php
- * This file contains functions to authorize users.
+ * \brief This file contains functions to authorize users.
  * */
 
 /** \fn function Authorize_Session()

@@ -60,7 +60,7 @@
 			}
 
 			//Create query
-			$qry = "SELECT * FROM members WHERE login='$login' AND passwd='" . md5($password) . "'";
+			$qry = "SELECT * FROM members WHERE login='".$login."' AND passwd='" . md5($password) . "'";
 			$result = mysql_query($qry);
 
 			//Check whether the query was successful or not
@@ -81,14 +81,14 @@
 
 				} else {
 
-					$html_output .= '<h1>Login Failed </h1>
-				<p align="center">&nbsp;</p>
-				<h4 align="center" class="err">Login Failed!<br />
-				  Please check your username and password
-				<br />
-				<a href="index.php">Login Page</a>
-				</h4>
-				';
+					$html_output .= '
+						<p align="center">&nbsp;</p>
+						<h4 align="center" class="err">Login Failed!<br />
+						  Please check your username and password
+						<br />
+						<a href="index.php">Login Page</a>
+						</h4>
+						';
 				}
 
 			} else {

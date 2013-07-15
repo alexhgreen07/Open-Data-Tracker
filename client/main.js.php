@@ -26,27 +26,58 @@ require_once('graph_tab.js.php');
 ?>
 
 
-/**
- * @class Main_Application
- * @classdesc Represents the main application.
- * @constructor
+/** Represents the main application.
+ * @constructor Main_Application
  */
 function Main_Application() {
 	
-	/** @member {Object} tabs_array
-	 * @desc This is the tabs array for the main application.
+	/** @member {Array} tabs_array
+	 * @desc This is the tabs array for the main application. 
+	 * @memberof Main_Application
+	 * @instance
 	 * */
 	this.tabs_array = new Array();
+	/** @member {Tabs} main_tab_nav
+	 * @desc This is the main tab navigation object.
+	 * @memberof Main_Application
+	 * @instance
+	 * */
 	this.main_tab_nav
+	/** @member {Home_Tab} home_tab_object
+	 * @desc This is the home tab navigation object.
+	 * @memberof Main_Application
+	 * @instance
+	 * */
 	this.home_tab_object
+	/** @member {Item_Tab} item_tab_object
+	 * @desc This is the item tab navigation object.
+	 * @memberof Main_Application
+	 * @instance
+	 * */
 	this.item_tab_object
+	/** @member {Task_Tab} task_tab_object
+	 * @desc This is the task tab navigation object.
+	 * @memberof Main_Application
+	 * @instance
+	 * */
 	this.task_tab_object
+	/** @member {Report_Tab} report_tab_object
+	 * @desc This is the report tab navigation object.
+	 * @memberof Main_Application
+	 * @instance
+	 * */
 	this.report_tab_object
+	/** @member {Graph_Tab} graph_tab_object
+	 * @desc This is the graph tab navigation object.
+	 * @memberof Main_Application
+	 * @instance
+	 * */
 	this.graph_tab_object
 
-	/**
-	 * @method Refresh_Data
-	 * @desc This should be called to refresh all main data.
+	/** @method Refresh_Data
+	 * @desc This should be called to refresh all main data. 
+	 * @memberof Main_Application
+	 * @instance
 	 * */
 	this.Refresh_Data = function() {
 		var self = this;
@@ -59,6 +90,10 @@ function Main_Application() {
 
 	};
 	
+	/** @method Refresh_Categories
+	 * @memberof Main_Application
+	 * @instance
+	 * */
 	this.Refresh_Categories = function(){
 		
 		
@@ -69,8 +104,10 @@ function Main_Application() {
 		document.getElementById(this.item_tab_object.item_edit_category_select.id).innerHTML = category_select;
 	};
 	
-	
-	//setup the main tabs
+	/** @method Render_Main_Tabs
+	 * @memberof Main_Application
+	 * @instance
+	 * */
 	this.Render_Main_Tabs = function() {
 
 		var self = this;
@@ -161,13 +198,20 @@ function Main_Application() {
 		});
 	};
 	
+	/** @method Render
+	 * @memberof Main_Application
+	 * @instance
+	 * */
 	this.Render = function()
 	{
 		//main tabs
 		this.Render_Main_Tabs();
 	};
 
-	//load a script to the head
+	/** @method Load_Script
+	 * @memberof Main_Application
+	 * @instance
+	 * */
 	this.Load_Script = function(url, callback) {
 
 		// adding the script tag to the head as suggested before

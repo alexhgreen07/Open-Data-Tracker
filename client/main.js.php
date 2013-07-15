@@ -75,7 +75,8 @@ function Main_Application() {
 	this.graph_tab_object
 
 	/** @method Refresh_Data
-	 * @desc This should be called to refresh all main data. 
+	 * @desc This should be called to refresh data in
+	 * the home tab and report tab.
 	 * @memberof Main_Application
 	 * @instance
 	 * */
@@ -91,6 +92,9 @@ function Main_Application() {
 	};
 	
 	/** @method Refresh_Categories
+	 * @desc This should be called to refresh the category selects.
+	 * This function will go through all tabs and update any category 
+	 * select HTML objects.
 	 * @memberof Main_Application
 	 * @instance
 	 * */
@@ -105,6 +109,8 @@ function Main_Application() {
 	};
 	
 	/** @method Render_Main_Tabs
+	 * @desc This function renders the main navigation tab object
+	 * and all sub-tab objects.
 	 * @memberof Main_Application
 	 * @instance
 	 * */
@@ -199,6 +205,8 @@ function Main_Application() {
 	};
 	
 	/** @method Render
+	 * @desc This function will render the main application
+	 * and all sub-elements.
 	 * @memberof Main_Application
 	 * @instance
 	 * */
@@ -209,6 +217,9 @@ function Main_Application() {
 	};
 
 	/** @method Load_Script
+	 * @desc This function attempts to dynamically load a javscript
+	 * library. It has known instabilities and should not be used
+	 * at this time.
 	 * @memberof Main_Application
 	 * @instance
 	 * */
@@ -232,8 +243,15 @@ function Main_Application() {
 
 }
 
-//define the global variables
+/** @member {Main_Application} app
+ * @desc This is the main application object to be used
+ * during operation.
+ * */
 var app;
+/** @member {jsonrpcphp} rpc
+ * @desc This is the RPC object to be used by the main
+ * application for use by the server.
+ * */
 var rpc;
 
 //this is the main function for the application

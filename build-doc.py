@@ -28,7 +28,7 @@ def main(args):
 	
 	print '\n\n'
 	
-	proc = subprocess.Popen('jsdoc -d=doc/out client/*', shell=True)
+	proc = subprocess.Popen('jsdoc -a -d=doc/out client/*', shell=True)
 	proc.wait()
 	
 	print '\n\n'

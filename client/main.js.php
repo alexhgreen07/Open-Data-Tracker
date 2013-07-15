@@ -31,10 +31,9 @@ require_once('graph_tab.js.php');
  */
 function Main_Application() {
 	
-	/** @member {Array} tabs_array
-	 * @desc This is the tabs array for the main application. 
+	/** This is the tabs array for the main application. 
 	 * @memberof Main_Application
-	 * @instance
+	 * @type {Array}
 	 * */
 	this.tabs_array = new Array();
 	/** @member {Tabs} main_tab_nav

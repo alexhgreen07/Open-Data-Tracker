@@ -30,14 +30,27 @@ require_once('accordian.js.php');
  */
 function Task_Tab(task_div_id) {
 
-	//class variables
+	/** This is the parent div ID where the task tab is.
+	 * @type String
+	 * */
 	this.div_id = task_div_id;
+	/** This is the array for the task log.
+	 * @type Array
+	 * */
 	this.task_log = Array();
+	/** This is the array for the tasks.
+	 * @type Array
+	 * */
 	this.task_list = Array();
+	/** This is the callback function for the refresh event of the task log.
+	 * @type function
+	 * */
 	this.refresh_task_log_callback = function(){};
 	
-	//GENERAL FUNCTIONS
-	
+	/** @method Refresh_Task_Name_List
+	 * @desc This function refreshes the valid start/stop task name list from the server.
+	 * @param {function} refresh_callback The callback to call after the refresh of data has completed.
+	 * */
 	this.Refresh_Task_Name_List = function(refresh_callback) {
 		var params = new Array();
 
@@ -100,6 +113,10 @@ function Task_Tab(task_div_id) {
 		});
 	};
 
+	/** @method Refresh_Tasks
+	 * @desc This function refreshes all the tasks from the server.
+	 * @param {function} refresh_callback The callback to call after the refresh of data has completed.
+	 * */
 	this.Refresh_Tasks = function(refresh_callback) {
 		var params = new Array();
 
@@ -153,6 +170,10 @@ function Task_Tab(task_div_id) {
 		});
 	};
 
+	/** @method Insert_Task_Entry
+	 * @desc This function inserts a task entry from the insert entry form.
+	 * @param {bool} is_completed If 'True' the task entry should be marked complete. Otherwise the entry will not be marked complete.
+	 * */
 	this.Insert_Task_Entry = function(is_completed) {
 		var self = this;
 		var params = new Array();
@@ -217,6 +238,10 @@ function Task_Tab(task_div_id) {
 		}
 	};
 
+	/** @method Start_Stop_Task
+	 * @desc This function starts and stops a task with the server.
+	 * @param {function} refresh_callback The callback to call after the data operation has completed.
+	 * */
 	this.Start_Stop_Task = function(refresh_callback) {
 		var params = new Array();
 
@@ -290,6 +315,10 @@ function Task_Tab(task_div_id) {
 		}
 	};
 
+	/** @method Mark_Task_Complete
+	 * @desc This function marks a task complete based on the information in the form.
+	 * @param {function} refresh_callback The callback to call after the data operation has completed.
+	 * */
 	this.Mark_Task_Complete = function(refresh_callback) {
 		var params = new Array();
 
@@ -337,6 +366,9 @@ function Task_Tab(task_div_id) {
 		}
 	};
 
+	/** @method Refresh_Timer_Display
+	 * @desc This function will refresh the start/stop task timer UI elements. It is setup to be called every 1 second.
+	 * */
 	this.Refresh_Timer_Display = function() {
 		var self = this;
 		var new_html = '';
@@ -359,6 +391,10 @@ function Task_Tab(task_div_id) {
 		self.task_timer_div.innerHTML = new_html;
 	};
 
+	/** @method Refresh_Task_Log_Data
+	 * @desc This function will refresh the task log data from the server.
+	 * @param {function} refresh_callback The function to call when the refresh is complete.
+	 * */
 	this.Refresh_Task_Log_Data = function(refresh_callback) {
 		var self = this;
 
@@ -414,6 +450,10 @@ function Task_Tab(task_div_id) {
 		});
 	};
 	
+	/** @method Refresh_Task_Target_Data
+	 * @desc This function will refresh the task log data from the server.
+	 * @param {function} refresh_callback The function to call when the refresh is complete.
+	 * */
 	this.Refresh_Task_Target_Data = function(refresh_callback)
 	{
 		
@@ -469,22 +509,9 @@ function Task_Tab(task_div_id) {
 		});
 	};
 	
-	this.Set_Categories = function(categories)
-	{
-		self = this;
-		
-		for (var i = 0; i < categories.length; i++)
-		{
-			
-			categories[i].name
-			categories[i].id
-			
-		}
-		
-	};
-	
-	//UI EVENTS
-	
+	/** @method Refresh_Task_Target_Data
+	 * @desc This function will refresh the task log data from the server.
+	 * */
 	this.On_Click_Event = function() {
 
 		//alert('calling rpc onclick.');
@@ -495,6 +522,9 @@ function Task_Tab(task_div_id) {
 
 	};
 
+	/** @method On_Complete_Click_Event
+	 * @desc This function is the complete button click event.
+	 * */
 	this.On_Complete_Click_Event = function() {
 		var task_name = $('#' + this.task_name_select.id).val();
 		var task_start_stop = this.task_start_stop_button.value;

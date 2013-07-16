@@ -26,10 +26,19 @@ require_once('accordian.js.php');
  */
 function Home_Tab(home_div_id) {
 
-	//class variables
+	/** This is the parent div ID where the home tab is.
+	 * @type String
+	 * */
 	this.div_id = home_div_id;
+	/** This is the refresh categories callback.
+	 * @type function
+	 * */
 	this.refresh_categories_callback = function(){};
 
+	/** @method Refresh_Data
+	 * @desc This function retrieves the home data from the server.
+	 * @param {function} refresh_callback The callback to call after the refresh of data has completed.
+	 * */
 	this.Refresh_Data = function(refresh_callback) {
 		var self = this;
 		
@@ -43,6 +52,10 @@ function Home_Tab(home_div_id) {
 		
 	};
 
+	/** @method Summary_Data_Refresh_Click_Event
+	 * @desc This is the summary data refresh button click event handler.
+	 * @param {function} refresh_callback The callback to call after the refresh of data has completed.
+	 * */
 	this.Summary_Data_Refresh_Click_Event = function(refresh_callback) {
 		var params = new Array();
 
@@ -69,6 +82,10 @@ function Home_Tab(home_div_id) {
 		});
 	};
 
+	/** @method Category_Data_Refresh_Click_Event
+	 * @desc This is the category data refresh button click event handler.
+	 * @param {function} refresh_callback The callback to call after the refresh of data has completed.
+	 * */
 	this.Category_Data_Refresh_Click_Event = function(refresh_callback) {
 		
 		var params = new Array();
@@ -151,6 +168,10 @@ function Home_Tab(home_div_id) {
 		
 	}
 	
+	/** @method Category_Insert_Submit_Click_Event
+	 * @desc This is the insert category submit button click event handler.
+	 * @param {function} refresh_callback The callback to call after the data operation has completed.
+	 * */
 	this.Category_Insert_Submit_Click_Event = function(refresh_callback){
 		
 		var params = new Array();
@@ -187,6 +208,10 @@ function Home_Tab(home_div_id) {
 		
 	};
 	
+	/** @method Category_Edit_Submit_Click_Event
+	 * @desc This is the edit category submit button click event handler.
+	 * @param {function} refresh_callback The callback to call after the data operation has completed.
+	 * */
 	this.Category_Edit_Submit_Click_Event = function(refresh_callback){
 		
 		
@@ -239,6 +264,10 @@ function Home_Tab(home_div_id) {
 		}
 	};
 	
+	/** @method Category_Delete_Click_Event
+	 * @desc This is the delete category submit button click event handler.
+	 * @param {function} refresh_callback The callback to call after the data operation has completed.
+	 * */
 	this.Category_Delete_Click_Event = function(refresh_callback){
 		
 		var selected_category_index = document.getElementById(this.edit_category_select.id).value;
@@ -291,6 +320,9 @@ function Home_Tab(home_div_id) {
 		
 	};
 	
+	/** @method Category_Edit_Select_Change_Event
+	 * @desc This is the category edit HTML select index change event handler.
+	 * */
 	this.Category_Edit_Select_Change_Event = function(){
 		
 		var selected_index = document.getElementById(this.edit_category_select.id).selectedIndex;
@@ -316,6 +348,10 @@ function Home_Tab(home_div_id) {
 		
 	};
 	
+	/** @method Render_Summary_Home_Data
+	 * @desc This function will render the home data form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in.
+	 * */
 	this.Render_Summary_Home_Data = function(form_div_id) {
 		this.data_form = document.createElement("form");
 		this.data_form.setAttribute('method', "post");
@@ -353,6 +389,10 @@ function Home_Tab(home_div_id) {
 		});
 	};
 
+	/** @method Render_View_Category_Tab
+	 * @desc This function will render the view category tab in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in.
+	 * */
 	this.Render_View_Category_Tab = function(form_div_id) {
 
 		var self = this;
@@ -384,6 +424,10 @@ function Home_Tab(home_div_id) {
 		});
 	};
 
+	/** @method Render_Add_New_Category_Tab
+	 * @desc This function will render the add new category tab in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in.
+	 * */
 	this.Render_Add_New_Category_Tab = function(form_div_id) {
 		
 		var self = this;
@@ -434,6 +478,10 @@ function Home_Tab(home_div_id) {
 		});
 	};
 
+	/** @method Render_Edit_Category_Tab
+	 * @desc This function will render the edit category tab in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in.
+	 * */
 	this.Render_Edit_Category_Tab = function(form_div_id) {
 		
 		var self = this;
@@ -517,6 +565,10 @@ function Home_Tab(home_div_id) {
 		});
 	};
 
+	/** @method Render_General_Home_Form
+	 * @desc This function will render the general home form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in.
+	 * */
 	this.Render_General_Home_Form = function(form_div_id) {
 		var tabs_array = new Array();
 		var new_tab;
@@ -551,7 +603,11 @@ function Home_Tab(home_div_id) {
 		this.Render_Add_New_Category_Tab('home_category_add_new_tab');
 		this.Render_Edit_Category_Tab('home_category_edit_tab');
 	};
-
+	
+	/** @method Render_Text_Size_Changer
+	 * @desc This function will render the text size changer in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in.
+	 * */
 	this.Render_Text_Size_Changer = function(form_div_id) {
 		
 		var self = this;
@@ -644,7 +700,9 @@ function Home_Tab(home_div_id) {
 		
 	};
 
-	//render function (div must already exist)
+	/** @method Render
+	 * @desc This function will render the tab in the div that it was initialized with.
+	 * */
 	this.Render = function() {
 
 		var tabs_array = new Array();

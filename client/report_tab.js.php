@@ -21,6 +21,9 @@ require_once('accordian.js.php');
 
 ?>
 
+/** This is the report tab object which holds all UI objects for detailed data interaction.
+ * @constructor Report_Tab
+ */
 function Report_Tab(data_div_id) {
 
 	//class variables

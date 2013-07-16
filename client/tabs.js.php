@@ -16,6 +16,9 @@ include_once('external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
 
 ?>
 
+/** This is a wrapper for an array of panes in a JQuery tab object.
+ * @constructor Tabs
+ */
 function Tabs(tab_div_id, tab_array) {
 
 	//class variables

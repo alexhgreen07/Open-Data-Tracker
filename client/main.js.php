@@ -58,12 +58,12 @@ function Main_Application() {
 	this.task_tab_object = null;
 	/** This is the report tab navigation object.
 	 * @memberof Main_Application
-	 * @member Report_Tab
+	 * @type Report_Tab
 	 * */
 	this.report_tab_object = null;
 	/** This is the graph tab navigation object.
 	 * @memberof Main_Application
-	 * @member Graph_Tab
+	 * @type Graph_Tab
 	 * */
 	this.graph_tab_object = null;
 

@@ -30,12 +30,23 @@ require_once('accordian.js.php');
  */
 function Item_Tab(item_div_id) {
 
-	//class variables
+	/** This is the parent div ID where the item tab is.
+	 * @memberof Item_Tab
+	 * @type String
+	 * */
 	this.div_id = item_div_id;
+	/** This is the array for the item log.
+	 * @memberof Item_Tab
+	 * @type Array
+	 * */
 	this.item_log_data = Array();
 	
-	//GENERAL FUNCTIONS
-	
+	/** @method Refresh_Items
+	 * @desc This function retrieves the item list from the database.
+	 * @param {function} refresh_callback The callback to call after the refresh of data has completed.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Refresh_Items = function(refresh_callback) {
 		var params = new Array();
 
@@ -73,7 +84,12 @@ function Item_Tab(item_div_id) {
 		});
 
 	};
-
+	
+	/** @method Refresh_Item_Entry_List
+	 * @desc This function refreshes the items HTML select objects.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Refresh_Item_Entry_List = function() {
 		var self = this;
 		var new_inner_html = '';
@@ -91,6 +107,11 @@ function Item_Tab(item_div_id) {
 
 	};
 
+	/** @method Refresh_Item_View
+	 * @desc This function refreshes the item display pane table.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Refresh_Item_View = function() {
 		var new_inner_html = '';
 
@@ -120,6 +141,12 @@ function Item_Tab(item_div_id) {
 		this.item_display_div.innerHTML = new_inner_html;
 	};
 
+	/** @method Refresh_Item_Data
+	 * @desc This function refreshes the item display pane table.
+	 * @param {function} refresh_callback The function to call after the data has refreshed successfully.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Refresh_Item_Data = function(refresh_callback) {
 		var self = this;
 

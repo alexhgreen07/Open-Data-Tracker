@@ -36,40 +36,34 @@ function Main_Application() {
 	 * @type {Array}
 	 * */
 	this.tabs_array = new Array();
-	/** @member {Tabs} main_tab_nav
-	 * @desc This is the main tab navigation object.
+	/** This is the main tab navigation object.
 	 * @memberof Main_Application
-	 * @instance
+	 * @type {Tabs}
 	 * */
 	this.main_tab_nav
-	/** @member {Home_Tab} home_tab_object
-	 * @desc This is the home tab navigation object.
+	/** This is the home tab navigation object.
 	 * @memberof Main_Application
-	 * @instance
+	 * @type {Home_Tab}
 	 * */
 	this.home_tab_object
-	/** @member {Item_Tab} item_tab_object
-	 * @desc This is the item tab navigation object.
+	/** This is the item tab navigation object.
 	 * @memberof Main_Application
-	 * @instance
+	 * @type {Item_Tab}
 	 * */
 	this.item_tab_object
-	/** @member {Task_Tab} task_tab_object
-	 * @desc This is the task tab navigation object.
+	/** This is the task tab navigation object.
 	 * @memberof Main_Application
-	 * @instance
+	 * @type {Task_Tab}
 	 * */
 	this.task_tab_object
-	/** @member {Report_Tab} report_tab_object
-	 * @desc This is the report tab navigation object.
+	/** This is the report tab navigation object.
 	 * @memberof Main_Application
-	 * @instance
+	 * @member {Report_Tab}
 	 * */
 	this.report_tab_object
-	/** @member {Graph_Tab} graph_tab_object
-	 * @desc This is the graph tab navigation object.
+	/** This is the graph tab navigation object.
 	 * @memberof Main_Application
-	 * @instance
+	 * @member {Graph_Tab}
 	 * */
 	this.graph_tab_object
 

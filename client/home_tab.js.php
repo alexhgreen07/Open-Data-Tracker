@@ -21,6 +21,9 @@ require_once('accordian.js.php');
 
 ?>
 
+/** This is the home tab class which holds all UI objects for general data.
+ * @constructor Home_Tab
+ */
 function Home_Tab(home_div_id) {
 
 	//class variables

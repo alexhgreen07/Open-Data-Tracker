@@ -16,6 +16,9 @@ include_once('external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
 
 ?>
 
+/** This is a wrapper class for an array of JQuery accordian panes.
+ * @constructor Accordian
+ */
 function Accordian(accordian_div_id, accordian_array) {
 
 	//class variables

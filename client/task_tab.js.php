@@ -25,6 +25,9 @@ require_once('accordian.js.php');
 
 ?>
 
+/** This is the task tab object which holds all UI objects for task data interaction.
+ * @constructor Task_Tab
+ */
 function Task_Tab(task_div_id) {
 
 	//class variables

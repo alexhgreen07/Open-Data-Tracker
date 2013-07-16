@@ -20,7 +20,9 @@ include_once('external/json-rpc2php-master/jsonRPC2php.client.js');
 require_once('accordian.js.php');
 
 ?>
-
+/** This is the graph tab which will have graphs to display data.
+ * @constructor Graph_Tab
+ */
 function Graph_Tab(data_div_id) {
 
 	//class variables

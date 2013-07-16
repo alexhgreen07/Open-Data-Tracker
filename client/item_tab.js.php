@@ -25,6 +25,9 @@ require_once('accordian.js.php');
 
 ?>
 
+/** This is the item tab class which holds all UI objects for item data.
+ * @constructor Item_Tab
+ */
 function Item_Tab(item_div_id) {
 
 	//class variables

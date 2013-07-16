@@ -197,8 +197,11 @@ function Item_Tab(item_div_id) {
 		});
 	};
 	
-	//UI EVENTS
-	
+	/** @method Item_Data_Refresh_Click
+	 * @desc This is the event function for the item data refresh button click event.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Item_Data_Refresh_Click = function() {
 
 		//alert('calling rpc onclick.');
@@ -206,7 +209,12 @@ function Item_Tab(item_div_id) {
 		this.Refresh_Item_Data();
 
 	};
-
+	
+	/** @method Add_Quick_Item_Entry_Click
+	 * @desc This is the event function for the item quick item entry button click.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Add_Quick_Item_Entry_Click = function() {
 
 		var self = this;
@@ -259,7 +267,12 @@ function Item_Tab(item_div_id) {
 		}
 
 	};
-
+	
+	/** @method Add_Item_Entry_Click
+	 * @desc This is the event function for the add item entry button click.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Add_Item_Entry_Click = function() {
 
 		var self = this;
@@ -316,6 +329,11 @@ function Item_Tab(item_div_id) {
 
 	};
 	
+	/** @method Edit_Item_Entry_Click
+	 * @desc This is the event function for the edit item entry button click.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Edit_Item_Entry_Click = function()
 	{
 		var self = this;
@@ -367,6 +385,11 @@ function Item_Tab(item_div_id) {
 		
 	};
 	
+	/** @method Delete_Item_Entry_Click
+	 * @desc This is the event function for the delete item entry button click.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Delete_Item_Entry_Click = function()
 	{
 		var self = this;
@@ -413,6 +436,11 @@ function Item_Tab(item_div_id) {
 		}
 	};
 	
+	/** @method Item_Entry_Select_Change
+	 * @desc This is the event function for the item entry HTML select index change.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Item_Entry_Select_Change = function()
 	{
 		var self = this;
@@ -440,6 +468,11 @@ function Item_Tab(item_div_id) {
 		
 	};
 	
+	/** @method Add_New_Item_Click
+	 * @desc This is the event function for the add new item button click.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Add_New_Item_Click = function() {
 		var self = this;
 
@@ -490,6 +523,11 @@ function Item_Tab(item_div_id) {
 
 	};
 	
+	/** @method Delete_Item_Click
+	 * @desc This is the event function for the delete item button click.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Delete_Item_Click = function()
 	{
 		
@@ -537,6 +575,11 @@ function Item_Tab(item_div_id) {
 		
 	};
 	
+	/** @method Edit_Item_Click
+	 * @desc This is the event function for the edit item button click.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Edit_Item_Click = function()
 	{
 		var self = this;
@@ -578,6 +621,11 @@ function Item_Tab(item_div_id) {
 			
 	};
 	
+	/** @method Item_Select_Change
+	 * @desc This is the event function for the item HTML select index change.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Item_Select_Change = function()
 	{
 		var self = this;
@@ -603,8 +651,12 @@ function Item_Tab(item_div_id) {
 		
 	};
 	
-	//RENDER FUNCTIONS
-	
+	/** @method Render_Quick_Item_Entry_Form
+	 * @desc This function will render the quick item entry form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Render_Quick_Item_Entry_Form = function(form_div_id) {
 
 		//create the top form
@@ -673,6 +725,12 @@ function Item_Tab(item_div_id) {
 
 	};
 
+	/** @method Render_New_Item_Entry_Form
+	 * @desc This function will render the new item entry form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Render_New_Item_Entry_Form = function(form_div_id) {
 
 		//create the top form
@@ -763,6 +821,12 @@ function Item_Tab(item_div_id) {
 
 	};
 	
+	/** @method Render_Edit_Item_Entry_Form
+	 * @desc This function will render the edit item entry form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Render_Edit_Item_Entry_Form = function(form_div_id) {
 
 		//create the top form
@@ -895,6 +959,12 @@ function Item_Tab(item_div_id) {
 		
 	};
 
+	/** @method Render_View_Items_Form
+	 * @desc This function will render the view item entries form in the specified div.
+	 * @param {String} div_id The div ID to render the form in.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Render_View_Items_Form = function(div_id) {
 
 		//create the top form
@@ -905,6 +975,12 @@ function Item_Tab(item_div_id) {
 
 	};
 
+	/** @method Render_Add_Item_Form
+	 * @desc This function will render the add item form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Render_Add_Item_Form = function(form_div_id) {
 		
 		//create the top form
@@ -984,6 +1060,12 @@ function Item_Tab(item_div_id) {
 		div_tab.appendChild(this.item_add_data_form);
 	};
 	
+	/** @method Render_Edit_Item_Form
+	 * @desc This function will render the edit item form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Render_Edit_Item_Form = function(form_div_id) {
 		
 		//create the top form
@@ -1104,6 +1186,12 @@ function Item_Tab(item_div_id) {
 		});
 	};
 
+	/** @method Render_Item_Log
+	 * @desc This function will render the item log in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Render_Item_Log = function(form_div_id) {
 		var self = this;
 		var return_html = '';
@@ -1147,7 +1235,11 @@ function Item_Tab(item_div_id) {
 
 	};
 
-	//render function (div must already exist)
+	/** @method Render
+	 * @desc This function will render the full tab in the div that it was initialized with.
+	 * @memberof Item_Tab
+	 * @instance
+	 * */
 	this.Render = function() {
 
 		var tabs_array = new Array();

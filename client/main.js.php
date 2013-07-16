@@ -40,32 +40,32 @@ function Main_Application() {
 	 * @memberof Main_Application
 	 * @type {Tabs}
 	 * */
-	this.main_tab_nav;
+	this.main_tab_nav = null;
 	/** This is the home tab navigation object.
 	 * @memberof Main_Application
 	 * @type {Home_Tab}
 	 * */
-	this.home_tab_object;
+	this.home_tab_object = null;
 	/** This is the item tab navigation object.
 	 * @memberof Main_Application
 	 * @type {Item_Tab}
 	 * */
-	this.item_tab_object;
+	this.item_tab_object = null;
 	/** This is the task tab navigation object.
 	 * @memberof Main_Application
 	 * @type {Task_Tab}
 	 * */
-	this.task_tab_object;
+	this.task_tab_object = null;
 	/** This is the report tab navigation object.
 	 * @memberof Main_Application
 	 * @member {Report_Tab}
 	 * */
-	this.report_tab_object;
+	this.report_tab_object = null;
 	/** This is the graph tab navigation object.
 	 * @memberof Main_Application
 	 * @member {Graph_Tab}
 	 * */
-	this.graph_tab_object;
+	this.graph_tab_object = null;
 
 	/** @method Refresh_Data
 	 * @desc This should be called to refresh data in

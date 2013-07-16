@@ -247,7 +247,9 @@ var app;
  * */
 var rpc;
 
-//this is the main function for the application
+/** @function Refresh_Data
+ * @desc This is the main function of the application and initializes all javascript objects.
+ * */
 function main() {
 
 	$(document).ready(function(){

@@ -544,6 +544,9 @@ function Task_Tab(task_div_id) {
 		}
 	};
 
+	/** @method On_Start_Stop_Click_Event
+	 * @desc This function is the start/stop button click event handler.
+	 * */
 	this.On_Start_Stop_Click_Event = function() {
 		var self = this;
 
@@ -552,21 +555,33 @@ function Task_Tab(task_div_id) {
 		});
 	};
 
+	/** @method On_Submit_Task_Entry_Click_Event
+	 * @desc This function is the submit task entry button click event handler.
+	 * */
 	this.On_Submit_Task_Entry_Click_Event = function() {
 		this.Insert_Task_Entry(false);
 
 	};
 
+	/** @method On_Complete_Task_Entry_Click_Event
+	 * @desc This function is the complete task entry button click event handler.
+	 * */
 	this.On_Complete_Task_Entry_Click_Event = function() {
 		//execute the click event
 		this.Insert_Task_Entry(true);
 	};
 
+	/** @method On_View_Task_Refresh_Click_Event
+	 * @desc This function is the task entry view refresh button click event handler.
+	 * */
 	this.On_View_Task_Refresh_Click_Event = function() {
 		this.Refresh_Tasks(function() {
 		});
 	};
 
+	/** @method Task_New_Submit_Click
+	 * @desc This function is the new task submit button click event handler.
+	 * */
 	this.Task_New_Submit_Click = function() {
 		var params = new Array();
 		params[0] = $("#" + this.task_name.id).val();
@@ -601,6 +616,9 @@ function Task_Tab(task_div_id) {
 		});
 	};
 
+	/** @method On_Task_Name_Select_Change_Event
+	 * @desc This function is the HTML select task start/stop index change event handler.
+	 * */
 	this.On_Task_Name_Select_Change_Event = function() {
 		//alert('Handler for task name select change called.');
 
@@ -640,6 +658,9 @@ function Task_Tab(task_div_id) {
 
 	};
 	
+	/** @method Task_Edit_Entry_Submit_Click
+	 * @desc This is the edit task entry submit button click event handler.
+	 * */
 	this.Task_Edit_Entry_Submit_Click = function()
 	{
 		var self = this;
@@ -692,6 +713,9 @@ function Task_Tab(task_div_id) {
 			
 	};
 	
+	/** @method Task_Edit_Entry_Delete_Click
+	 * @desc This is the delete task entry button click event handler.
+	 * */
 	this.Task_Edit_Entry_Delete_Click = function()
 	{
 		var self = this;
@@ -747,6 +771,9 @@ function Task_Tab(task_div_id) {
 		
 	};
 	
+	/** @method Task_Edit_Entry_Select_Change
+	 * @desc This is the edit task HTML select index change event handler.
+	 * */
 	this.Task_Edit_Entry_Select_Change = function()
 	{
 		var self = this;
@@ -776,6 +803,9 @@ function Task_Tab(task_div_id) {
 		}
 	};
 	
+	/** @method Task_Edit_Submit_Click
+	 * @desc This is the edit task submit button click event handler.
+	 * */
 	this.Task_Edit_Submit_Click = function()
 	{
 		var self = this;
@@ -830,6 +860,9 @@ function Task_Tab(task_div_id) {
 			
 	};
 	
+	/** @method Task_Edit_Delete_Click
+	 * @desc This is the delete task submit button click event handler.
+	 * */
 	this.Task_Edit_Delete_Click = function()
 	{
 		var self = this;
@@ -888,6 +921,9 @@ function Task_Tab(task_div_id) {
 			
 	};
 	
+	/** @method Task_Edit_Select_Change
+	 * @desc This is the edit task HTML select change event handler.
+	 * */
 	this.Task_Edit_Select_Change = function()
 	{
 		var selected_index = document.getElementById(this.task_entry_task_edit_name_select.id).selectedIndex;
@@ -914,6 +950,9 @@ function Task_Tab(task_div_id) {
 			
 	};
 	
+	/** @method Task_Target_New_Submit_Click
+	 * @desc This is the new task target submit button click event handler.
+	 * */
 	this.Task_Target_New_Submit_Click = function()
 	{
 		var self = this;
@@ -985,6 +1024,9 @@ function Task_Tab(task_div_id) {
 		}
 	};
 	
+	/** @method Task_Target_Edit_Submit_Click
+	 * @desc This is the edit task target submit button click event handler.
+	 * */
 	this.Task_Target_Edit_Submit_Click = function()
 	{
 		var self = this;
@@ -1065,6 +1107,9 @@ function Task_Tab(task_div_id) {
 		}
 	};
 	
+	/** @method Task_Target_Edit_Delete_Click
+	 * @desc This is the delete task target submit button click event handler.
+	 * */
 	this.Task_Target_Edit_Delete_Click = function()
 	{
 		var self = this;
@@ -1127,6 +1172,9 @@ function Task_Tab(task_div_id) {
 			
 	};
 	
+	/** @method Task_Target_View_Refresh_Click
+	 * @desc This is the task target view refresh submit click button.
+	 * */
 	this.Task_Target_View_Refresh_Click = function()
 	{
 		
@@ -1136,6 +1184,9 @@ function Task_Tab(task_div_id) {
 		
 	};
 	
+	/** @method Task_Target_Edit_Select_Change
+	 * @desc This is the task target edit HTML select index change event handler.
+	 * */
 	this.Task_Target_Edit_Select_Change = function()
 	{
 		//fill all target info in
@@ -1181,8 +1232,10 @@ function Task_Tab(task_div_id) {
 		
 	};
 	
-	//RENDER FUNCTIONS
-	
+	/** @method Render_Timecard_Task_Entry_Form
+	 * @desc This function renders the timecard task entry form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in. 
+	 * */
 	this.Render_Timecard_Task_Entry_Form = function(form_div_id) {
 
 		var self = this;
@@ -1293,6 +1346,10 @@ function Task_Tab(task_div_id) {
 		}, 1000);
 	};
 
+	/** @method Render_New_Task_Entry_Form
+	 * @desc This function renders the new task entry form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in. 
+	 * */
 	this.Render_New_Task_Entry_Form = function(form_div_id) {
 
 		var self = this;
@@ -1414,6 +1471,10 @@ function Task_Tab(task_div_id) {
 
 	};
 
+	/** @method Render_Edit_Task_Entry_Form
+	 * @desc This function renders the edit task entry form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in. 
+	 * */
 	this.Render_Edit_Task_Entry_Form = function(form_div_id) {
 
 		var self = this;
@@ -1554,6 +1615,10 @@ function Task_Tab(task_div_id) {
 
 	};
 
+	/** @method Render_View_Task_Log_Form
+	 * @desc This function renders the view task log form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in. 
+	 * */
 	this.Render_View_Task_Log_Form = function(form_div_id) {
 		var self = this;
 		var return_html = '';
@@ -1596,6 +1661,10 @@ function Task_Tab(task_div_id) {
 		});
 	};
 
+	/** @method Render_New_Task_Form
+	 * @desc This function renders the new task form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in. 
+	 * */
 	this.Render_New_Task_Form = function(form_div_id) {
 
 		//create the top form
@@ -1684,6 +1753,10 @@ function Task_Tab(task_div_id) {
 
 	};
 
+	/** @method Render_Edit_Task_Form
+	 * @desc This function renders the edit task form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in. 
+	 * */
 	this.Render_Edit_Task_Form = function(form_div_id) {
 
 		var self = this;
@@ -1820,6 +1893,10 @@ function Task_Tab(task_div_id) {
 		
 	};
 
+	/** @method Render_View_Tasks_Form
+	 * @desc This function renders the view tasks form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in. 
+	 * */
 	this.Render_View_Tasks_Form = function(form_div_id) {
 
 		var return_html = '';
@@ -1866,6 +1943,10 @@ function Task_Tab(task_div_id) {
 
 	};
 
+	/** @method Render_New_Task_Target_Form
+	 * @desc This function renders the new task targets form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in. 
+	 * */
 	this.Render_New_Task_Target_Form = function(form_div_id)
 	{
 		
@@ -1981,6 +2062,10 @@ function Task_Tab(task_div_id) {
 		$('#' + this.task_scheduled_target_date.id).datetimepicker("setDate", new Date());
 	};
 	
+	/** @method Render_Edit_Task_Target_Form
+	 * @desc This function renders the edit task targets form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in. 
+	 * */
 	this.Render_Edit_Task_Target_Form = function(form_div_id)
 	{
 		var self = this;
@@ -2128,6 +2213,10 @@ function Task_Tab(task_div_id) {
 
 	};
 	
+	/** @method Render_View_Task_Target_Form
+	 * @desc This function renders the view task targets form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in. 
+	 * */
 	this.Render_View_Task_Target_Form = function(form_div_id)
 	{
 		var self = this;
@@ -2175,7 +2264,10 @@ function Task_Tab(task_div_id) {
 
 	};
 
-	//render function (div must already exist)
+	/** @method Render
+	 * @desc This function renders the tab in the div the object was initialized with.
+	 * @param {String} form_div_id The div ID to render the form in. 
+	 * */
 	this.Render = function() {
 
 		var tabs_array = new Array();

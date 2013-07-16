@@ -32,37 +32,30 @@ require_once('graph_tab.js.php');
 function Main_Application() {
 	
 	/** This is the tabs array for the main application. 
-	 * @memberof Main_Application
 	 * @type Array
 	 * */
 	this.tabs_array = new Array();
 	/** This is the main tab navigation object.
-	 * @memberof Main_Application
 	 * @type Tabs
 	 * */
 	this.main_tab_nav = null;
 	/** This is the home tab navigation object.
-	 * @memberof Main_Application
 	 * @type Home_Tab
 	 * */
 	this.home_tab_object = null;
 	/** This is the item tab navigation object.
-	 * @memberof Main_Application
 	 * @type Item_Tab
 	 * */
 	this.item_tab_object = null;
 	/** This is the task tab navigation object.
-	 * @memberof Main_Application
 	 * @type Task_Tab
 	 * */
 	this.task_tab_object = null;
 	/** This is the report tab navigation object.
-	 * @memberof Main_Application
 	 * @type Report_Tab
 	 * */
 	this.report_tab_object = null;
 	/** This is the graph tab navigation object.
-	 * @memberof Main_Application
 	 * @type Graph_Tab
 	 * */
 	this.graph_tab_object = null;
@@ -70,8 +63,6 @@ function Main_Application() {
 	/** @method Refresh_Data
 	 * @desc This should be called to refresh data in
 	 * the home tab and report tab.
-	 * @memberof Main_Application
-	 * @instance
 	 * */
 	this.Refresh_Data = function() {
 		var self = this;
@@ -88,8 +79,6 @@ function Main_Application() {
 	 * @desc This should be called to refresh the category selects.
 	 * This function will go through all tabs and update any category 
 	 * select HTML objects.
-	 * @memberof Main_Application
-	 * @instance
 	 * */
 	this.Refresh_Categories = function(){
 		
@@ -104,8 +93,6 @@ function Main_Application() {
 	/** @method Render_Main_Tabs
 	 * @desc This function renders the main navigation tab object
 	 * and all sub-tab objects.
-	 * @memberof Main_Application
-	 * @instance
 	 * */
 	this.Render_Main_Tabs = function() {
 
@@ -200,8 +187,6 @@ function Main_Application() {
 	/** @method Render
 	 * @desc This function will render the main application
 	 * and all sub-elements.
-	 * @memberof Main_Application
-	 * @instance
 	 * */
 	this.Render = function()
 	{
@@ -213,8 +198,6 @@ function Main_Application() {
 	 * @desc This function attempts to dynamically load a javscript
 	 * library. It has known instabilities and should not be used
 	 * at this time.
-	 * @memberof Main_Application
-	 * @instance
 	 * */
 	this.Load_Script = function(url, callback) {
 
@@ -236,13 +219,11 @@ function Main_Application() {
 
 }
 
-/** @member {Main_Application} app
- * @desc This is the main application object to be used
+/** This is the main application object to be used
  * during operation.
  * */
 var app;
-/** @member {jsonrpcphp} rpc
- * @desc This is the RPC object to be used by the main
+/** This is the RPC object to be used by the main
  * application for use by the server.
  * */
 var rpc;

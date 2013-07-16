@@ -31,12 +31,10 @@ require_once('accordian.js.php');
 function Item_Tab(item_div_id) {
 
 	/** This is the parent div ID where the item tab is.
-	 * @memberof Item_Tab
 	 * @type String
 	 * */
 	this.div_id = item_div_id;
 	/** This is the array for the item log.
-	 * @memberof Item_Tab
 	 * @type Array
 	 * */
 	this.item_log_data = Array();
@@ -44,8 +42,6 @@ function Item_Tab(item_div_id) {
 	/** @method Refresh_Items
 	 * @desc This function retrieves the item list from the database.
 	 * @param {function} refresh_callback The callback to call after the refresh of data has completed.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Refresh_Items = function(refresh_callback) {
 		var params = new Array();
@@ -87,8 +83,6 @@ function Item_Tab(item_div_id) {
 	
 	/** @method Refresh_Item_Entry_List
 	 * @desc This function refreshes the items HTML select objects.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Refresh_Item_Entry_List = function() {
 		var self = this;
@@ -109,8 +103,6 @@ function Item_Tab(item_div_id) {
 
 	/** @method Refresh_Item_View
 	 * @desc This function refreshes the item display pane table.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Refresh_Item_View = function() {
 		var new_inner_html = '';
@@ -144,8 +136,6 @@ function Item_Tab(item_div_id) {
 	/** @method Refresh_Item_Data
 	 * @desc This function refreshes the item display pane table.
 	 * @param {function} refresh_callback The function to call after the data has refreshed successfully.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Refresh_Item_Data = function(refresh_callback) {
 		var self = this;
@@ -199,8 +189,6 @@ function Item_Tab(item_div_id) {
 	
 	/** @method Item_Data_Refresh_Click
 	 * @desc This is the event function for the item data refresh button click event.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Item_Data_Refresh_Click = function() {
 
@@ -212,8 +200,6 @@ function Item_Tab(item_div_id) {
 	
 	/** @method Add_Quick_Item_Entry_Click
 	 * @desc This is the event function for the item quick item entry button click.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Add_Quick_Item_Entry_Click = function() {
 
@@ -270,8 +256,6 @@ function Item_Tab(item_div_id) {
 	
 	/** @method Add_Item_Entry_Click
 	 * @desc This is the event function for the add item entry button click.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Add_Item_Entry_Click = function() {
 
@@ -331,8 +315,6 @@ function Item_Tab(item_div_id) {
 	
 	/** @method Edit_Item_Entry_Click
 	 * @desc This is the event function for the edit item entry button click.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Edit_Item_Entry_Click = function()
 	{
@@ -387,8 +369,6 @@ function Item_Tab(item_div_id) {
 	
 	/** @method Delete_Item_Entry_Click
 	 * @desc This is the event function for the delete item entry button click.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Delete_Item_Entry_Click = function()
 	{
@@ -438,8 +418,6 @@ function Item_Tab(item_div_id) {
 	
 	/** @method Item_Entry_Select_Change
 	 * @desc This is the event function for the item entry HTML select index change.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Item_Entry_Select_Change = function()
 	{
@@ -470,8 +448,6 @@ function Item_Tab(item_div_id) {
 	
 	/** @method Add_New_Item_Click
 	 * @desc This is the event function for the add new item button click.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Add_New_Item_Click = function() {
 		var self = this;
@@ -525,8 +501,6 @@ function Item_Tab(item_div_id) {
 	
 	/** @method Delete_Item_Click
 	 * @desc This is the event function for the delete item button click.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Delete_Item_Click = function()
 	{
@@ -577,8 +551,6 @@ function Item_Tab(item_div_id) {
 	
 	/** @method Edit_Item_Click
 	 * @desc This is the event function for the edit item button click.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Edit_Item_Click = function()
 	{
@@ -623,8 +595,6 @@ function Item_Tab(item_div_id) {
 	
 	/** @method Item_Select_Change
 	 * @desc This is the event function for the item HTML select index change.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Item_Select_Change = function()
 	{
@@ -654,8 +624,6 @@ function Item_Tab(item_div_id) {
 	/** @method Render_Quick_Item_Entry_Form
 	 * @desc This function will render the quick item entry form in the specified div.
 	 * @param {String} form_div_id The div ID to render the form in.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Render_Quick_Item_Entry_Form = function(form_div_id) {
 
@@ -728,8 +696,6 @@ function Item_Tab(item_div_id) {
 	/** @method Render_New_Item_Entry_Form
 	 * @desc This function will render the new item entry form in the specified div.
 	 * @param {String} form_div_id The div ID to render the form in.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Render_New_Item_Entry_Form = function(form_div_id) {
 
@@ -824,8 +790,6 @@ function Item_Tab(item_div_id) {
 	/** @method Render_Edit_Item_Entry_Form
 	 * @desc This function will render the edit item entry form in the specified div.
 	 * @param {String} form_div_id The div ID to render the form in.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Render_Edit_Item_Entry_Form = function(form_div_id) {
 
@@ -962,8 +926,6 @@ function Item_Tab(item_div_id) {
 	/** @method Render_View_Items_Form
 	 * @desc This function will render the view item entries form in the specified div.
 	 * @param {String} div_id The div ID to render the form in.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Render_View_Items_Form = function(div_id) {
 
@@ -978,8 +940,6 @@ function Item_Tab(item_div_id) {
 	/** @method Render_Add_Item_Form
 	 * @desc This function will render the add item form in the specified div.
 	 * @param {String} form_div_id The div ID to render the form in.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Render_Add_Item_Form = function(form_div_id) {
 		
@@ -1063,8 +1023,6 @@ function Item_Tab(item_div_id) {
 	/** @method Render_Edit_Item_Form
 	 * @desc This function will render the edit item form in the specified div.
 	 * @param {String} form_div_id The div ID to render the form in.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Render_Edit_Item_Form = function(form_div_id) {
 		
@@ -1189,8 +1147,6 @@ function Item_Tab(item_div_id) {
 	/** @method Render_Item_Log
 	 * @desc This function will render the item log in the specified div.
 	 * @param {String} form_div_id The div ID to render the form in.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Render_Item_Log = function(form_div_id) {
 		var self = this;
@@ -1237,8 +1193,6 @@ function Item_Tab(item_div_id) {
 
 	/** @method Render
 	 * @desc This function will render the full tab in the div that it was initialized with.
-	 * @memberof Item_Tab
-	 * @instance
 	 * */
 	this.Render = function() {
 

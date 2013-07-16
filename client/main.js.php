@@ -33,37 +33,37 @@ function Main_Application() {
 	
 	/** This is the tabs array for the main application. 
 	 * @memberof Main_Application
-	 * @type {Array}
+	 * @type Array
 	 * */
 	this.tabs_array = new Array();
 	/** This is the main tab navigation object.
 	 * @memberof Main_Application
-	 * @type {Tabs}
+	 * @type Tabs
 	 * */
 	this.main_tab_nav = null;
 	/** This is the home tab navigation object.
 	 * @memberof Main_Application
-	 * @type {Home_Tab}
+	 * @type Home_Tab
 	 * */
 	this.home_tab_object = null;
 	/** This is the item tab navigation object.
 	 * @memberof Main_Application
-	 * @type {Item_Tab}
+	 * @type Item_Tab
 	 * */
 	this.item_tab_object = null;
 	/** This is the task tab navigation object.
 	 * @memberof Main_Application
-	 * @type {Task_Tab}
+	 * @type Task_Tab
 	 * */
 	this.task_tab_object = null;
 	/** This is the report tab navigation object.
 	 * @memberof Main_Application
-	 * @member {Report_Tab}
+	 * @member Report_Tab
 	 * */
 	this.report_tab_object = null;
 	/** This is the graph tab navigation object.
 	 * @memberof Main_Application
-	 * @member {Graph_Tab}
+	 * @member Graph_Tab
 	 * */
 	this.graph_tab_object = null;
 

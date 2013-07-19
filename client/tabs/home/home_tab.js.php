@@ -19,6 +19,8 @@ include_once(dirname(__FILE__).'/../../external/json-rpc2php-master/jsonRPC2php.
 
 require_once(dirname(__FILE__).'/../../accordian.js.php');
 
+require_once(dirname(__FILE__).'/forms/settings_form.js.php');
+
 ?>
 
 /** This is the home tab class which holds all UI objects for general data.
@@ -30,6 +32,12 @@ function Home_Tab(home_div_id) {
 	 * @type String
 	 * */
 	this.div_id = home_div_id;
+	
+	/** This is the form for the application settings.
+	 * @type Settings_Form
+	 * */
+	this.settings_form = new Settings_Form();
+	
 	/** This is the refresh categories callback.
 	 * @type function
 	 * */
@@ -603,102 +611,6 @@ function Home_Tab(home_div_id) {
 		this.Render_Add_New_Category_Tab('home_category_add_new_tab');
 		this.Render_Edit_Category_Tab('home_category_edit_tab');
 	};
-	
-	/** @method Render_Text_Size_Changer
-	 * @desc This function will render the text size changer in the specified div.
-	 * @param {String} form_div_id The div ID to render the form in.
-	 * */
-	this.Render_Text_Size_Changer = function(form_div_id) {
-		
-		var self = this;
-		
-		//append the main tab div
-		this.text_changer_div = document.createElement('div');
-		
-		this.text_changer_div.innerHTML += 'Text Size: <br />';
-		
-		this.change_text_box = document.createElement('input');
-		this.change_text_box.setAttribute('id','change_text_box');
-		this.change_text_box.setAttribute('type','text');
-		
-		this.text_changer_div.appendChild(this.change_text_box);
-		
-		this.text_changer_div.innerHTML += '<br /><br />';
-		
-		this.change_text_link = document.createElement('input');
-		this.change_text_link.setAttribute('id','change_text_link');
-		this.change_text_link.setAttribute('type','submit');
-		this.change_text_link.setAttribute('value','Change');
-		
-		this.text_changer_div.appendChild(this.change_text_link);
-		
-		this.text_changer_div.innerHTML += '<br /><br />';
-		
-		this.smaller_text_link = document.createElement('input');
-		this.smaller_text_link.setAttribute('id','smaller_text_link');
-		this.smaller_text_link.setAttribute('type','submit');
-		this.smaller_text_link.setAttribute('value','Smaller');
-		
-		this.text_changer_div.appendChild(this.smaller_text_link);
-		
-		this.text_changer_div.innerHTML += '<br /><br />';
-		
-		this.larger_text_link = document.createElement('input');
-		this.larger_text_link.setAttribute('id','larger_text_link');
-		this.larger_text_link.setAttribute('type','submit');
-		this.larger_text_link.setAttribute('value','Larger');
-		
-		this.text_changer_div.appendChild(this.larger_text_link);
-		
-		this.text_changer_div.innerHTML += '<br /><br />';
-		
-		var div_tab = document.getElementById(form_div_id);
-		div_tab.appendChild(this.text_changer_div);
-		
-		$('#' + this.change_text_link.id).button();
-		$('#' + this.change_text_link.id).click(function(){
-			
-			var size = document.getElementById(self.change_text_box.id).value;
-			
-			$('body').css('font-size',size + 'px');
-			
-		});
-		
-		$('#' + this.smaller_text_link.id).button();
-		
-		//setup actions
-		$('#' + this.smaller_text_link.id).click(function()
-		{
-			var size = parseInt($('body').css('font-size').replace("px",""));
-			
-			if(size > 1)
-			{
-				size--;
-			}
-			
-			$('body').css('font-size',size + 'px');
-			
-			document.getElementById(self.change_text_box.id).value = size;
-		});
-		
-		$('#' + this.larger_text_link.id).button();
-		
-		$('#' + this.larger_text_link.id).click(function()
-		{
-			var size = parseInt($('body').css('font-size').replace("px",""));
-			
-			size++;
-			
-			$('body').css('font-size',size + 'px');
-			
-			document.getElementById(self.change_text_box.id).value = size;
-		});
-		
-		var size = parseInt($('body').css('font-size').replace("px",""));
-		
-		document.getElementById(this.change_text_box.id).value = size;
-		
-	};
 
 	/** @method Render
 	 * @desc This function will render the tab in the div that it was initialized with.
@@ -736,7 +648,7 @@ function Home_Tab(home_div_id) {
 
 		this.Render_Summary_Home_Data('home_summary_data_div');
 		this.Render_General_Home_Form('home_general_div');
-		this.Render_Text_Size_Changer('home_settings_div');
+		this.settings_form.Render('home_settings_div');
 
 		//call the click event function
 		//this.Summary_Data_Refresh_Click_Event();

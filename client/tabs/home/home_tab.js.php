@@ -63,7 +63,7 @@ function Home_Tab(home_div_id) {
 		
 		self.home_form.Summary_Data_Refresh_Click_Event(function(){
 			
-			self.category_form.Category_Data_Refresh_Click_Event(function(){
+			self.category_form.view_categories_forms.Category_Data_Refresh_Click_Event(function(){
 			
 				refresh_callback();
 			});

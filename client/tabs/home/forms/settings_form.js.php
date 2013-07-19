@@ -21,6 +21,9 @@ require_once(dirname(__FILE__).'/../../../accordian.js.php');
 
 ?>
 
+/** This is the form to enter general settings for the application.
+ * @constructor Settings_Form
+ */
 function Settings_Form(){
 	
 	/** @method Render_Text_Size_Changer
@@ -119,6 +122,10 @@ function Settings_Form(){
 		
 	};
 	
+	/** @method Render
+	 * @desc This function will render the tab in the div that it was initialized with.
+	 * @param {String} form_div_id The div ID to render the form in.
+	 * */
 	this.Render = function(form_div_id){
 		
 		this.Render_Text_Size_Changer(form_div_id);

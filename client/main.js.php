@@ -4,24 +4,24 @@
 Header("content-type: application/x-javascript");
 
 //jquery code
-include_once('external/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js');
+include_once(dirname(__FILE__).'/external/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js');
 
 //jquery UI code
-include_once('external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
+include_once(dirname(__FILE__).'/external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
 
 //jquery datepicker code
-include_once('external/jquery-ui-timerpicker-addon/jquery-ui-timepicker-addon.js');
+include_once(dirname(__FILE__).'/external/jquery-ui-timerpicker-addon/jquery-ui-timepicker-addon.js');
 
 //JSON RPC library
-include_once('external/json-rpc2php-master/jsonRPC2php.client.js');
+include_once(dirname(__FILE__).'/external/json-rpc2php-master/jsonRPC2php.client.js');
 
 //ensure all include files are present.
-require_once('tabs.js.php');
-require_once('home_tab.js.php');
-require_once('item_tab.js.php');
-require_once('task_tab.js.php');
-require_once('report_tab.js.php');
-require_once('graph_tab.js.php');
+require_once(dirname(__FILE__).'/tabs.js.php');
+require_once(dirname(__FILE__).'/tabs/home/home_tab.js.php');
+require_once(dirname(__FILE__).'/tabs/items/item_tab.js.php');
+require_once(dirname(__FILE__).'/tabs/tasks/task_tab.js.php');
+require_once(dirname(__FILE__).'/tabs/report/report_tab.js.php');
+require_once(dirname(__FILE__).'/tabs/graph/graph_tab.js.php');
 
 ?>
 

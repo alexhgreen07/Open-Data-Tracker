@@ -9,10 +9,10 @@
 header("Content-type: text/css; charset: UTF-8");
 
 //jquery style sheet
-include 'external/jquery-ui-1.10.0.custom/development-bundle/themes/base/jquery-ui.css';
+include_once(dirname(__FILE__).'/external/jquery-ui-1.10.0.custom/development-bundle/themes/base/jquery-ui.css');
 
 //jquery timepicker style sheet
-include 'external/jquery-ui-timerpicker-addon/jquery-ui-timepicker-addon.css';
+include_once(dirname(__FILE__).'/external/jquery-ui-timerpicker-addon/jquery-ui-timepicker-addon.css');
 
 ?>
 

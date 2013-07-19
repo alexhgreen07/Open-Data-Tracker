@@ -9,15 +9,15 @@
 Header("content-type: application/x-javascript");
 
 //jquery code
-include_once('external/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js');
+include_once(dirname(__FILE__).'/../../external/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js');
 
 //jquery UI code
-include_once('external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
+include_once(dirname(__FILE__).'/../../external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
 
 //JSON RPC library
-include_once('external/json-rpc2php-master/jsonRPC2php.client.js');
+include_once(dirname(__FILE__).'/../../external/json-rpc2php-master/jsonRPC2php.client.js');
 
-require_once('accordian.js.php');
+require_once(dirname(__FILE__).'/../../accordian.js.php');
 
 ?>
 /** This is the graph tab which will have graphs to display data.

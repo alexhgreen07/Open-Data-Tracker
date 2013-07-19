@@ -21,6 +21,9 @@ require_once(dirname(__FILE__).'/../../../accordian.js.php');
 
 ?>
 
+/** This is the view category form class which holds all UI objects for the category view.
+ * @constructor View_Category_Form
+ */
 function View_Category_Form(){
 	
 	/** @method Category_Data_Refresh_Click_Event

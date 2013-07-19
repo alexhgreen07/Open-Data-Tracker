@@ -9,15 +9,13 @@
 Header("content-type: application/x-javascript");
 
 //jquery code
-include_once(dirname(__FILE__).'/../../../external/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js');
+include_once(dirname(__FILE__).'/../../../../external/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js');
 
 //jquery UI code
-include_once(dirname(__FILE__).'/../../../external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
+include_once(dirname(__FILE__).'/../../../../external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
 
 //JSON RPC library
-include_once(dirname(__FILE__).'/../../../external/json-rpc2php-master/jsonRPC2php.client.js');
-
-require_once(dirname(__FILE__).'/../../../accordian.js.php');
+include_once(dirname(__FILE__).'/../../../../external/json-rpc2php-master/jsonRPC2php.client.js');
 
 ?>
 

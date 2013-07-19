@@ -16,12 +16,12 @@ include_once(dirname(__FILE__).'/external/jquery-ui-timerpicker-addon/jquery-ui-
 include_once(dirname(__FILE__).'/external/json-rpc2php-master/jsonRPC2php.client.js');
 
 //ensure all include files are present.
-require_once(dirname(__FILE__).'/tabs.js.php');
-require_once(dirname(__FILE__).'/tabs/home/home_tab.js.php');
-require_once(dirname(__FILE__).'/tabs/items/item_tab.js.php');
-require_once(dirname(__FILE__).'/tabs/tasks/task_tab.js.php');
-require_once(dirname(__FILE__).'/tabs/report/report_tab.js.php');
-require_once(dirname(__FILE__).'/tabs/graph/graph_tab.js.php');
+require_once(dirname(__FILE__).'/ui/tabs.js.php');
+require_once(dirname(__FILE__).'/ui/tabs/home/home_tab.js.php');
+require_once(dirname(__FILE__).'/ui/tabs/items/item_tab.js.php');
+require_once(dirname(__FILE__).'/ui/tabs/tasks/task_tab.js.php');
+require_once(dirname(__FILE__).'/ui/tabs/report/report_tab.js.php');
+require_once(dirname(__FILE__).'/ui/tabs/graph/graph_tab.js.php');
 
 ?>
 

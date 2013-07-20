@@ -41,6 +41,10 @@ require_once(dirname(__FILE__).'/forms/new_item_form.js.php');
 //get edit item form
 require_once(dirname(__FILE__).'/forms/edit_item_form.js.php');
 
+//get view items form
+require_once(dirname(__FILE__).'/forms/view_items_form.js.php');
+
+
 ?>
 
 /** This is the item tab class which holds all UI objects for item data.
@@ -87,6 +91,12 @@ function Item_Tab(item_div_id) {
 	 * @type Edit_Item_Form
 	 * */
 	this.edit_item_form = new Edit_Item_Form();
+	
+	/** This is the view items form object.
+	 * @type View_Items_Form
+	 * */
+	this.view_items_form = new View_Items_Form();
+	
 	
 	/** @method Refresh_Items
 	 * @desc This function retrieves the item list from the database.
@@ -147,52 +157,6 @@ function Item_Tab(item_div_id) {
 		document.getElementById(self.new_item_name_select.id).innerHTML = new_inner_html;
 		document.getElementById(self.item_edit_select.id).innerHTML = new_inner_html;
 		document.getElementById(self.edit_item_name_select.id).innerHTML = new_inner_html;
-
-	};
-
-	/** @method Refresh_Item_View
-	 * @desc This function refreshes the item display pane table.
-	 * */
-	this.Refresh_Item_View = function() {
-		var new_inner_html = '';
-
-		new_inner_html += '<table width="100%" border="1">';
-
-		new_inner_html += '<tr>';
-		new_inner_html += '<td>Name</td>';
-		new_inner_html += '<td>Description</td>';
-		new_inner_html += '<td>Unit</td>';
-		new_inner_html += '<td>Date Created</td>';
-		new_inner_html += '</tr>';
-
-		for (var i = 0; i < this.items_list.length; i++) {
-
-			new_inner_html += '<tr>';
-
-			new_inner_html += '<td>' + this.items_list[i].item_name + '</td>';
-			new_inner_html += '<td>' + this.items_list[i].item_description + '</td>';
-			new_inner_html += '<td>' + this.items_list[i].item_unit + '</td>';
-			new_inner_html += '<td>' + this.items_list[i].date_created + '</td>';
-
-			new_inner_html += '</tr>';
-		}
-
-		new_inner_html += '</table>';
-
-		this.item_display_div.innerHTML = new_inner_html;
-	};
-	
-	/** @method Render_View_Items_Form
-	 * @desc This function will render the view item entries form in the specified div.
-	 * @param {String} div_id The div ID to render the form in.
-	 * */
-	this.Render_View_Items_Form = function(div_id) {
-
-		//create the top form
-		this.item_display_div = document.getElementById(div_id);
-
-		//unknown if this will work...
-		//this.Refresh_Item_View();
 
 	};
 
@@ -280,7 +244,7 @@ function Item_Tab(item_div_id) {
 	
 		this.edit_item_form.Render('edit_item_div');
 
-		this.Render_View_Items_Form('view_item_div');
+		this.view_items_form.Render('view_item_div');
 
 	};
 }

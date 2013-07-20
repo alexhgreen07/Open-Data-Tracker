@@ -1,0 +1,279 @@
+<?php
+/*
+ * NOTE: This is PHP code intended to perform server side includes
+ * and resolve any javascript file dependencies. If PHP is
+ * not installed on the server, this code can be replaced
+ * with client side HTML includes (or dynamic javascript includes.)
+*/
+
+Header("content-type: application/x-javascript");
+
+//jquery code
+include_once(dirname(__FILE__).'/../../../external/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js');
+
+//jquery UI code
+include_once(dirname(__FILE__).'/../../../../external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
+
+//jquery datepicker code (addon)
+include_once(dirname(__FILE__).'/../../../../external/jquery-ui-timerpicker-addon/jquery-ui-timepicker-addon.js');
+
+//JSON RPC library
+include_once(dirname(__FILE__).'/../../../../external/json-rpc2php-master/jsonRPC2php.client.js');
+
+?>
+
+/** This is the edit item form class which holds all UI objects for editing items.
+ * @constructor Edit_Item_Form
+ */
+function Edit_Item_Form(){
+
+	
+	/** @method Edit_Item_Click
+	 * @desc This is the event function for the edit item button click.
+	 * */
+	this.Edit_Item_Click = function()
+	{
+		var self = this;
+		
+		var selected_index = document.getElementById(self.item_edit_select.id).selectedIndex;
+		
+		if(selected_index != 0)
+		{
+			var selected_item = self.items_list[selected_index - 1];
+			
+			var params = new Array();
+			params[0] = selected_item.item_id;
+			params[1] = document.getElementById(self.edit_item_name.id).value;
+			params[2] = document.getElementById(self.edit_item_unit.id).value;
+			params[3] = document.getElementById(self.item_edit_description.id).value;
+			
+			rpc.Item_Data_Interface.Edit_Item(params, function(jsonRpcObj) {
+			
+				if(jsonRpcObj.result.success == 'true'){
+					
+					alert('Item successfully edited.');
+					
+					self.Refresh_Items(function(){});
+					
+				}
+				else
+				{
+					alert('Failed to edit the item.');
+				}
+			
+			});
+			
+		
+		}
+		else
+		{
+			alert('Select a valid item.');
+		}
+			
+	};
+	
+	/** @method Item_Select_Change
+	 * @desc This is the event function for the item HTML select index change.
+	 * */
+	this.Item_Select_Change = function()
+	{
+		var self = this;
+		
+		//alert('Select item entry changed!');
+		
+		var selected_index = document.getElementById(self.item_edit_select.id).selectedIndex;
+		
+		if(selected_index != 0)
+		{
+			var selected_item = self.items_list[selected_index - 1];
+			
+			document.getElementById(self.edit_item_name.id).value = selected_item.item_name;
+			document.getElementById(self.item_edit_description.id).value = selected_item.item_description;
+			document.getElementById(self.edit_item_unit.id).value = selected_item.item_unit;
+		}
+		else
+		{
+			document.getElementById(self.edit_item_name.id).value = '';
+			document.getElementById(self.item_edit_description.id).value = '';
+			document.getElementById(self.edit_item_unit.id).value = '';
+		}
+		
+	};
+
+
+	/** @method Delete_Item_Click
+	 * @desc This is the event function for the delete item button click.
+	 * */
+	this.Delete_Item_Click = function()
+	{
+		
+		var self = this;
+		
+		var selected_index = document.getElementById(self.item_edit_select.id).selectedIndex;
+		
+		if(selected_index != 0)
+		{
+			var r=confirm("Are you sure you want to delete this item?");
+			
+			if (r==true)
+			{
+				var value = self.items_list[selected_index - 1].item_id;
+			
+				var params = new Array();
+				params[0] = value;
+				
+				rpc.Item_Data_Interface.Delete_Item(params, function(jsonRpcObj) {
+				
+					if(jsonRpcObj.result.success == 'true'){
+						
+						alert('Item deleted: ' + value);
+						
+						self.Refresh_Items(function(){});
+						
+					}
+					else
+					{
+						alert('Failed to delete the entry.');
+					}
+				
+				});
+			}
+			else
+			{
+				//do nothing, operation cancelled.
+			} 
+		
+		}
+		else
+		{
+			alert('Select a valid item.');
+		}
+		
+	};
+	
+	
+	/** @method Render
+	 * @desc This function will render the edit item form in the specified div.
+	 * @param {String} form_div_id The div ID to render the form in.
+	 * */
+	this.Render = function(form_div_id) {
+		
+		//create the top form
+		this.item_edit_data_form = document.createElement("form");
+		this.item_edit_data_form.setAttribute('method', "post");
+		this.item_edit_data_form.setAttribute('id', "edit_item_entry_form");
+		
+		this.item_edit_data_form.innerHTML += 'Item:<br />';
+
+		//task recurring
+		this.item_edit_select = document.createElement("select");
+		this.item_edit_select.setAttribute('id', 'item_edit_select');
+		this.item_edit_select.innerHTML = '<option>-</option>';
+		this.item_edit_data_form.appendChild(this.item_edit_select);
+		
+		this.item_edit_data_form.innerHTML += '<br /><br />';
+		
+		this.item_edit_data_form.innerHTML += 'Name:<br />';
+
+		//item name
+		this.edit_item_name = document.createElement("input");
+		this.edit_item_name.setAttribute('name', "edit_item_name");
+		this.edit_item_name.setAttribute('id', "edit_item_name");
+		this.edit_item_name.setAttribute('type', 'text');
+		this.item_edit_data_form.appendChild(this.edit_item_name);
+		
+		this.item_edit_data_form.innerHTML += '<br />';
+		
+		this.item_edit_data_form.innerHTML += 'Category:<br />';
+
+		//task recurring
+		this.item_edit_category_select = document.createElement("select");
+		this.item_edit_category_select.setAttribute('id', 'item_edit_category_select');
+		this.item_edit_category_select.innerHTML = '<option>-</option>';
+		this.item_edit_data_form.appendChild(this.item_edit_category_select);
+		
+		this.item_edit_data_form.innerHTML += '<br />';
+		
+		this.item_edit_data_form.innerHTML += 'Description:<br />';
+
+		//item description
+		this.item_edit_description = document.createElement("input");
+		this.item_edit_description.setAttribute('name', "item_edit_description");
+		this.item_edit_description.setAttribute('id', "item_edit_description");
+		this.item_edit_description.setAttribute('type', 'text');
+		this.item_edit_data_form.appendChild(this.item_edit_description);
+		
+		this.item_edit_data_form.innerHTML += '<br />';
+		
+		this.item_edit_data_form.innerHTML += 'Unit:<br />';
+
+		//item note
+		this.edit_item_unit = document.createElement("input");
+		this.edit_item_unit.setAttribute('name', "edit_item_unit");
+		this.edit_item_unit.setAttribute('id', "edit_item_unit");
+		this.edit_item_unit.setAttribute('type', 'text');
+		this.item_edit_data_form.appendChild(this.edit_item_unit);
+
+		this.item_edit_data_form.innerHTML += '<br /><br />';
+
+		//item submit button creation
+		this.item_edit_submit_button = document.createElement("input");
+		this.item_edit_submit_button.setAttribute('id', 'item_edit_submit_button');
+		this.item_edit_submit_button.setAttribute('type', 'submit');
+		this.item_edit_submit_button.value = 'Submit';
+		var self = this;
+
+		this.item_edit_data_form.appendChild(this.item_edit_submit_button);
+		
+		this.item_edit_data_form.innerHTML += '<br /><br />';
+		
+		//item delete button creation
+		this.item_edit_delete_button = document.createElement("input");
+		this.item_edit_delete_button.setAttribute('id', 'item_edit_delete_button');
+		this.item_edit_delete_button.setAttribute('type', 'submit');
+		this.item_edit_delete_button.value = 'Delete';
+		
+		this.item_edit_data_form.appendChild(this.item_edit_delete_button);
+
+		this.loading_image_edit_item = document.createElement("img");
+		this.loading_image_edit_item.setAttribute('id', 'item_tab_edit_item_entry_loader_image');
+		this.loading_image_edit_item.setAttribute('style', 'width:100%;height:19px;');
+		this.loading_image_edit_item.setAttribute('src', 'ajax-loader.gif');
+		this.item_edit_data_form.appendChild(this.loading_image_edit_item);
+
+		$(this.loading_image_edit_item).hide();
+
+		var div_tab = document.getElementById(form_div_id);
+		div_tab.appendChild(this.item_edit_data_form);
+		
+		$('#' + this.item_edit_submit_button.id).button();
+		$('#' + this.item_edit_submit_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			
+			//execute the click event
+			self.Edit_Item_Click();
+		});
+		
+		$('#' + this.item_edit_delete_button.id).button();
+		$('#' + this.item_edit_delete_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
+			
+			//execute the click event
+			self.Delete_Item_Click();
+		});
+		
+		$('#' + self.item_edit_select.id).change(function() {
+			
+			self.Item_Select_Change();
+			
+
+		});
+	};
+
+}

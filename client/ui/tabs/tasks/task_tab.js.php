@@ -26,6 +26,9 @@ require_once(dirname(__FILE__).'/../../accordian.js.php');
 //get the timecard task entry form
 require_once(dirname(__FILE__).'/forms/timecard_task_entry_form.js.php');
 
+//get the new task entry form
+require_once(dirname(__FILE__).'/forms/new_task_entry_form.js.php');
+
 ?>
 
 /** This is the task tab object which holds all UI objects for task data interaction.
@@ -48,10 +51,15 @@ function Task_Tab(task_div_id) {
 	 * */
 	this.task_list = Array();
 	
-	/** This is the array for the tasks.
-	 * @type Array
+	/** This is the timecard task entry form.
+	 * @type Timecard_Task_Entry_Form
 	 * */
-	this.timecard_task_entry = new Timecard_Task_Entry_Form();
+	this.timecard_task_entry_form = new Timecard_Task_Entry_Form();
+	
+	/** This is the new task entry form.
+	 * @type New_Task_Entry_Form
+	 * */
+	this.new_task_entry_form = new New_Task_Entry_Form();
 	
 	/** This is the callback function for the refresh event of the task log.
 	 * @type function
@@ -179,74 +187,6 @@ function Task_Tab(task_div_id) {
 			});
 
 		});
-	};
-
-	/** @method Insert_Task_Entry
-	 * @desc This function inserts a task entry from the insert entry form.
-	 * @param {bool} is_completed If 'True' the task entry should be marked complete. Otherwise the entry will not be marked complete.
-	 * */
-	this.Insert_Task_Entry = function(is_completed) {
-		var self = this;
-		var params = new Array();
-
-		//retrieve the selected item from the info array
-		var selected_index = document.getElementById(this.add_task_entry_task_name_select.id).selectedIndex;
-
-		if (selected_index > 0) {
-
-			var selected_task = this.task_info_json_array[selected_index - 1];
-			var task_time = $('#' + this.task_entry_start_time.id).val();
-			var duration = $('#' + this.task_entry_duration.id).val();
-			var task_note = $('#' + this.task_entry_note.id).val();
-			var task_status = $('#' + this.add_task_entry_task_status_select.id).val();
-
-			params[0] = task_time;
-			params[1] = selected_task.task_id;
-			params[2] = duration;
-			params[3] = 0;
-			params[4] = task_status;
-			params[5] = task_note;
-
-			if (is_completed) {
-
-				params[3] = 1;
-
-			} else {
-				params[3] = 0;
-			}
-
-			//show the loader image
-			$('#' + self.add_task_entry_loading_image_new.id).show();
-
-			//execute the RPC callback for retrieving the item log
-			rpc.Task_Data_Interface.Insert_Task_Entry(params, function(jsonRpcObj) {
-
-				if (jsonRpcObj.result.success == 'true') {
-
-					$('#' + self.task_entry_duration.id).val('0');
-					$('#' + self.task_entry_note.id).val('');
-
-					alert('Task entry submitted.');
-
-					self.Refresh_Tasks(function() {
-						//refresh_callback();
-
-						self.Refresh_Task_Name_List(function() {
-							self.refresh_task_log_callback();
-						});
-
-					});
-
-				} else {
-					alert('Failed to insert task entry.');
-				}
-
-				//hide the loader image
-				$('#' + self.add_task_entry_loading_image_new.id).hide();
-
-			});
-
-		}
 	};
 
 	/** @method Refresh_Task_Log_Data
@@ -378,22 +318,6 @@ function Task_Tab(task_div_id) {
 			//empty
 		});
 
-	};
-
-	/** @method On_Submit_Task_Entry_Click_Event
-	 * @desc This function is the submit task entry button click event handler.
-	 * */
-	this.On_Submit_Task_Entry_Click_Event = function() {
-		this.Insert_Task_Entry(false);
-
-	};
-
-	/** @method On_Complete_Task_Entry_Click_Event
-	 * @desc This function is the complete task entry button click event handler.
-	 * */
-	this.On_Complete_Task_Entry_Click_Event = function() {
-		//execute the click event
-		this.Insert_Task_Entry(true);
 	};
 
 	/** @method On_View_Task_Refresh_Click_Event
@@ -1055,132 +979,6 @@ function Task_Tab(task_div_id) {
 			document.getElementById(this.task_edit_reccurance_target_period.id).value = "0";
 		}
 		
-	};
-	
-
-	/** @method Render_New_Task_Entry_Form
-	 * @desc This function renders the new task entry form in the specified div.
-	 * @param {String} form_div_id The div ID to render the form in. 
-	 * */
-	this.Render_New_Task_Entry_Form = function(form_div_id) {
-
-		var self = this;
-
-		//create the top form
-		this.data_form_new_entry = document.createElement("form");
-		this.data_form_new_entry.setAttribute('method', "post");
-		this.data_form_new_entry.setAttribute('id', "add_task_entry_form");
-
-		this.data_form_new_entry.innerHTML += 'Tasks:<br />';
-
-		//task name select dropdown
-		this.add_task_entry_task_name_select = document.createElement("select");
-		this.add_task_entry_task_name_select.setAttribute('name', "add_task_entry_name_to_enter");
-		this.add_task_entry_task_name_select.setAttribute('id', "add_task_entry_name_to_enter");
-		this.add_task_entry_task_name_select.innerHTML = '<option>-</option>';
-		this.data_form_new_entry.appendChild(this.add_task_entry_task_name_select);
-		
-		this.data_form_new_entry.innerHTML += '<br />';
-		this.data_form_new_entry.innerHTML += 'Start Time:<br />';
-
-		this.task_entry_start_time = document.createElement("input");
-		this.task_entry_start_time.setAttribute('name', 'task_entry_start_time');
-		this.task_entry_start_time.setAttribute('id', 'task_entry_start_time');
-		this.task_entry_start_time.setAttribute('type', 'text');
-		this.data_form_new_entry.appendChild(this.task_entry_start_time);
-		
-		this.data_form_new_entry.innerHTML += '<br />';
-		this.data_form_new_entry.innerHTML += 'Status:<br />';
-
-		this.add_task_entry_task_status_select = document.createElement("select");
-		this.add_task_entry_task_status_select.setAttribute('name', "add_task_entry_status_to_enter");
-		this.add_task_entry_task_status_select.setAttribute('id', "add_task_entry_status_to_enter");
-		this.add_task_entry_task_status_select.innerHTML = '<option>Stopped</option><option>Started</option>';
-		this.data_form_new_entry.appendChild(this.add_task_entry_task_status_select);
-
-		this.data_form_new_entry.innerHTML += '<br />';
-		this.data_form_new_entry.innerHTML += 'Duration:<br />';
-
-		this.task_entry_duration = document.createElement("input");
-		this.task_entry_duration.setAttribute('name', 'task_entry_duration');
-		this.task_entry_duration.setAttribute('id', 'task_entry_duration');
-		this.task_entry_duration.setAttribute('type', 'text');
-		this.task_entry_duration.setAttribute('value', '0');
-		this.data_form_new_entry.appendChild(this.task_entry_duration);
-
-		this.data_form_new_entry.innerHTML += '<br />';
-		this.data_form_new_entry.innerHTML += 'Note:<br />';
-
-		this.task_entry_note = document.createElement("input");
-		this.task_entry_note.setAttribute('name', 'task_entry_note');
-		this.task_entry_note.setAttribute('id', 'task_entry_note');
-		this.task_entry_note.setAttribute('type', 'text');
-		this.data_form_new_entry.appendChild(this.task_entry_note);
-
-		this.data_form_new_entry.innerHTML += '<br /><br />';
-
-		//task submit button creation
-		this.add_task_entry_task_submit_button = document.createElement("input");
-		this.add_task_entry_task_submit_button.setAttribute('id', 'new_task_entry_submit');
-		this.add_task_entry_task_submit_button.setAttribute('type', 'submit');
-		this.add_task_entry_task_submit_button.value = 'Submit';
-		this.data_form_new_entry.appendChild(this.add_task_entry_task_submit_button);
-
-		this.data_form_new_entry.innerHTML += '<br /><br />';
-
-		//task mark complete button creation
-		this.add_task_entry_task_complete_button = document.createElement("input");
-		this.add_task_entry_task_complete_button.setAttribute('id', 'new_task_entry_complete');
-		this.add_task_entry_task_complete_button.setAttribute('type', 'submit');
-		this.add_task_entry_task_complete_button.value = 'Mark Complete';
-		this.data_form_new_entry.appendChild(this.add_task_entry_task_complete_button);
-
-		this.add_task_entry_loading_image_new = document.createElement("img");
-		this.add_task_entry_loading_image_new.setAttribute('id', 'add_task_entry_tab_new_entry_loader_image');
-		this.add_task_entry_loading_image_new.setAttribute('style', 'width:100%;height:19px;');
-		this.add_task_entry_loading_image_new.setAttribute('src', 'ajax-loader.gif');
-		this.data_form_new_entry.appendChild(this.add_task_entry_loading_image_new);
-
-		var div_tab = document.getElementById(form_div_id);
-
-		div_tab.appendChild(this.data_form_new_entry);
-
-		$('#' + this.add_task_entry_task_submit_button.id).button();
-		$('#' + this.add_task_entry_task_submit_button.id).click(function(event) {
-
-			//ensure a normal postback does not occur
-			event.preventDefault();
-
-			//execute the click event
-			self.On_Submit_Task_Entry_Click_Event();
-		});
-
-		$('#' + this.add_task_entry_task_complete_button.id).button();
-		$('#' + this.add_task_entry_task_complete_button.id).click(function(event) {
-
-			//ensure a normal postback does not occur
-			event.preventDefault();
-
-			self.On_Complete_Task_Entry_Click_Event();
-
-		});
-		
-		$('#' + this.add_task_entry_task_name_select.id).change(function() {
-
-			//call the change event function
-			//self.On_Task_Name_Select_Change_Event();
-
-		});
-		
-
-		//$('#' + self.add_task_entry_loading_image_new.id).hide();
-
-		$('#' + this.task_entry_start_time.id).datetimepicker({
-			timeFormat : "HH:mm",
-			dateFormat : 'yy-mm-dd'
-		});
-		$('#' + this.task_entry_start_time.id).datetimepicker("setDate", new Date());
-
 	};
 
 	/** @method Render_Edit_Task_Entry_Form
@@ -2048,11 +1846,11 @@ function Task_Tab(task_div_id) {
 		task_accordian.Render();
 
 		//now render all accordian tabs
-		this.timecard_task_entry.Render('timecard_task_entry_div');
+		this.timecard_task_entry_form.Render('timecard_task_entry_div');
 
-		this.Render_New_Task_Entry_Form('new_task_entry_div');
+		this.new_task_entry_form.Render('new_task_entry_div');
 
-		this.Render_New_Task_Form('add_task_div');
+		this.new_task_entry_form.Render('add_task_div');
 
 		this.Render_Edit_Task_Form('edit_tasks_div');
 

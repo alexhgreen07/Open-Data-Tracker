@@ -50,12 +50,12 @@ require_once(dirname(__FILE__).'/forms/view_items_form.js.php');
 /** This is the item tab class which holds all UI objects for item data.
  * @constructor Item_Tab
  */
-function Item_Tab(item_div_id) {
+function Item_Tab() {
 
 	/** This is the parent div ID where the item tab is.
 	 * @type String
 	 * */
-	this.div_id = item_div_id;
+	this.div_id = null;
 	
 	/** This is the array for the item log.
 	 * @type Array
@@ -163,8 +163,10 @@ function Item_Tab(item_div_id) {
 	/** @method Render
 	 * @desc This function will render the full tab in the div that it was initialized with.
 	 * */
-	this.Render = function() {
-
+	this.Render = function(item_div_id) {
+		
+		this.div_id = item_div_id;
+		
 		var tabs_array = new Array();
 
 		var new_tab;

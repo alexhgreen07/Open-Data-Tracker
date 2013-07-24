@@ -58,12 +58,12 @@ require_once(dirname(__FILE__).'/forms/view_task_targets_form.js.php');
 /** This is the task tab object which holds all UI objects for task data interaction.
  * @constructor Task_Tab
  */
-function Task_Tab(task_div_id) {
+function Task_Tab() {
 
 	/** This is the parent div ID where the task tab is.
 	 * @type String
 	 * */
-	this.div_id = task_div_id;
+	this.div_id = null;
 	
 	/** This is the array for the task log.
 	 * @type Array
@@ -242,8 +242,10 @@ function Task_Tab(task_div_id) {
 	 * @desc This function renders the tab in the div the object was initialized with.
 	 * @param {String} form_div_id The div ID to render the form in. 
 	 * */
-	this.Render = function() {
-
+	this.Render = function(task_div_id) {
+		
+		this.div_id = task_div_id;
+		
 		var tabs_array = new Array();
 
 		var new_tab;

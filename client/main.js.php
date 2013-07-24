@@ -51,25 +51,23 @@ function Main_Application() {
 	/** This is the home tab navigation object.
 	 * @type Home_Tab
 	 * */
-	this.home_tab_object = null;
+	this.home_tab_object = new Home_Tab();
 	/** This is the item tab navigation object.
 	 * @type Item_Tab
 	 * */
-	this.item_tab_object = null;
+	this.item_tab_object = new Item_Tab();
 	/** This is the task tab navigation object.
 	 * @type Task_Tab
 	 * */
-	this.task_tab_object = null;
+	this.task_tab_object = new Task_Tab();
 	/** This is the report tab navigation object.
 	 * @type Report_Tab
 	 * */
-	this.report_tab_object = null;
+	this.report_tab_object = new Report_Tab();
 	/** This is the graph tab navigation object.
 	 * @type Graph_Tab
 	 * */
-	this.graph_tab_object = null;
-	
-	
+	this.graph_tab_object = new Graph_Tab();
 	
 	/** @method Connect
 	 * @desc Connects to the specified server.
@@ -151,8 +149,8 @@ function Main_Application() {
 		this.main_tab_nav = new Tabs(main_tabs_div, this.tabs_array);
 		this.main_tab_nav.Render();
 
-		this.home_tab_object = new Home_Tab('home_tab_div');
-		this.home_tab_object.Render();
+		
+		this.home_tab_object.Render('home_tab_div');
 		
 		this.home_tab_object.refresh_categories_callback = function(){
 			
@@ -160,28 +158,22 @@ function Main_Application() {
 			
 		};
 
-		this.item_tab_object = new Item_Tab('item_tab_div');
-
 		this.item_tab_object.refresh_item_log_callback = function() {
 			//ensure the data tab gets refreshed when a new item is added
 			self.Refresh_Data();
 		};
-		this.item_tab_object.Render();
-
-		this.task_tab_object = new Task_Tab('task_tab_div');
+		this.item_tab_object.Render('item_tab_div');
 
 		this.task_tab_object.refresh_task_log_callback = function() {
 			//ensure the data tab gets refreshed when a new task is added
 			self.Refresh_Data();
 		};
 
-		this.task_tab_object.Render();
+		this.task_tab_object.Render('task_tab_div');
 
-		this.report_tab_object = new Report_Tab('report_tab_div');
-		this.report_tab_object.Render();
+		this.report_tab_object.Render('report_tab_div');
 
-		this.graph_tab_object = new Graph_Tab('graph_tab_div');
-		this.graph_tab_object.Render();
+		this.graph_tab_object.Render('graph_tab_div');
 
 		//perform asynchronous refresh operations
 		var self = this;

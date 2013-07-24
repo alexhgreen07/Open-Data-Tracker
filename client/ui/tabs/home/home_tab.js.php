@@ -30,12 +30,12 @@ require_once(dirname(__FILE__).'/forms/settings_form.js.php');
 /** This is the home tab class which holds all UI objects for general data.
  * @constructor Home_Tab
  */
-function Home_Tab(home_div_id) {
+function Home_Tab() {
 
 	/** This is the parent div ID where the home tab is.
 	 * @type String
 	 * */
-	this.div_id = home_div_id;
+	this.div_id = null;
 	
 	this.home_form = new Home_Form();
 	
@@ -74,8 +74,10 @@ function Home_Tab(home_div_id) {
 	/** @method Render
 	 * @desc This function will render the tab in the div that it was initialized with.
 	 * */
-	this.Render = function() {
-
+	this.Render = function(home_div_id) {
+		
+		this.div_id = home_div_id;
+		
 		var tabs_array = new Array();
 		var new_tab;
 

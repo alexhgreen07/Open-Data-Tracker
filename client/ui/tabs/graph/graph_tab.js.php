@@ -23,14 +23,16 @@ require_once(dirname(__FILE__).'/../../accordian.js.php');
 /** This is the graph tab which will have graphs to display data.
  * @constructor Graph_Tab
  */
-function Graph_Tab(data_div_id) {
+function Graph_Tab() {
 
 	//class variables
-	this.div_id = data_div_id;
+	this.div_id = null;
 
 	//render function (div must already exist)
-	this.Render = function() {
-
+	this.Render = function(data_div_id) {
+		
+		this.div_id = data_div_id;
+		
 		var tabs_array = new Array();
 
 		var new_tab;

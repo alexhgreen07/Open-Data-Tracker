@@ -24,10 +24,10 @@ require_once(dirname(__FILE__).'/../../accordian.js.php');
 /** This is the report tab object which holds all UI objects for detailed data interaction.
  * @constructor Report_Tab
  */
-function Report_Tab(data_div_id) {
+function Report_Tab() {
 
 	//class variables
-	this.div_id = data_div_id;
+	this.div_id = null;
 
 	this.Refresh_Summary_Data = function(refresh_callback) {
 		var params = new Array();
@@ -161,8 +161,10 @@ function Report_Tab(data_div_id) {
 	};
 
 	//render function (div must already exist)
-	this.Render = function() {
-
+	this.Render = function(data_div_id) {
+		
+		this.div_id = data_div_id;
+		
 		var tabs_array = new Array();
 
 		var new_tab;

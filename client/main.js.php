@@ -69,33 +69,30 @@ function Main_Application() {
 	 * */
 	this.graph_tab_object = new Graph_Tab();
 	
+	/** @method Refresh_Data
+	 * @desc This should be called to refresh data in all forms.
+	 * */
+	this.Refresh_Data = function() {
+		
+		//refresh all data in all forms
+
+	};
+	
 	/** @method Connect
 	 * @desc Connects to the specified server.
 	 * @param 
 	 * */
 	this.Connect = function(url, callback) {
+		
 		var self = this;
 		
-		this.api.Connect(url, function () {
+		self.api.data_changed_callback = self.Refresh_Data;
 		
+		self.api.Connect(url, function () {
+			
 			callback();
 			
 		});
-	};
-	
-	/** @method Refresh_Data
-	 * @desc This should be called to refresh data in
-	 * the home tab and report tab.
-	 * */
-	this.Refresh_Data = function() {
-		var self = this;
-
-		self.home_tab_object.Refresh_Data(function() {
-			self.report_tab_object.Refresh(function() {
-				//alert('refresh complete');
-			});
-		});
-
 	};
 	
 	/** @method Refresh_Categories
@@ -151,23 +148,8 @@ function Main_Application() {
 
 		
 		this.home_tab_object.Render('home_tab_div');
-		
-		this.home_tab_object.refresh_categories_callback = function(){
-			
-			self.Refresh_Categories();
-			
-		};
 
-		this.item_tab_object.refresh_item_log_callback = function() {
-			//ensure the data tab gets refreshed when a new item is added
-			self.Refresh_Data();
-		};
 		this.item_tab_object.Render('item_tab_div');
-
-		this.task_tab_object.refresh_task_log_callback = function() {
-			//ensure the data tab gets refreshed when a new task is added
-			self.Refresh_Data();
-		};
 
 		this.task_tab_object.Render('task_tab_div');
 
@@ -175,30 +157,6 @@ function Main_Application() {
 
 		this.graph_tab_object.Render('graph_tab_div');
 
-		//perform asynchronous refresh operations
-		var self = this;
-
-		self.home_tab_object.Refresh_Data(function() {
-			
-			self.item_tab_object.Refresh_Items(function() {
-				
-				self.task_tab_object.Refresh_Tasks(function() {
-					
-					self.task_tab_object.Refresh_Task_Name_List(function() {
-						
-						self.report_tab_object.Refresh(function() {
-							
-							self.Refresh_Categories();
-							
-							//alert('refresh complete');
-							
-						});
-
-					});
-				});
-
-			});
-		});
 	};
 	
 	/** @method Render

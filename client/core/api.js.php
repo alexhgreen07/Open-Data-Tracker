@@ -29,10 +29,16 @@ function Server_API() {
 	
 	this.rpc = null;
 	
+	this.data_changed_callback = function(){};
+	
 	this.Connect = function(url, callback){
 		
+		var self = this;
+		
 		this.rpc = new jsonrpcphp(url, function() {
-
+			
+			self.Refresh_Data(function(){});
+			
 			callback();
 	
 		});
@@ -49,6 +55,9 @@ function Server_API() {
 			function(jsonRpcObj){
 				
 				self.data = jsonRpcObj.result.data;
+				
+				//call the data changed callback since the data was refreshed.
+				self.data_changed_callback();
 				
 				callback();
 				

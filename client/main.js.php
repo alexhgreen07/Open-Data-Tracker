@@ -270,16 +270,6 @@ function main() {
 			
 			
 		});
-	
-		/*
-		rpc = new jsonrpcphp('server/api.php', function() {
-	
-			app.Render();
-	
-		});
-		*/
-		
-		
 		
 	});
 

@@ -15,6 +15,9 @@ include_once(dirname(__FILE__).'/external/jquery-ui-timerpicker-addon/jquery-ui-
 //JSON RPC library
 include_once(dirname(__FILE__).'/external/json-rpc2php-master/jsonRPC2php.client.js');
 
+//include the server API
+require_once(dirname(__FILE__).'/core/api.js.php');
+
 //ensure all include files are present.
 require_once(dirname(__FILE__).'/ui/tabs.js.php');
 require_once(dirname(__FILE__).'/ui/tabs/home/home_tab.js.php');
@@ -30,6 +33,12 @@ require_once(dirname(__FILE__).'/ui/tabs/graph/graph_tab.js.php');
  * @constructor Main_Application
  */
 function Main_Application() {
+	
+	
+	/** This is the server api object. 
+	 * @type Server_API
+	 * */
+	this.api = new Server_API();
 	
 	/** This is the tabs array for the main application. 
 	 * @type Array
@@ -59,7 +68,23 @@ function Main_Application() {
 	 * @type Graph_Tab
 	 * */
 	this.graph_tab_object = null;
-
+	
+	
+	
+	/** @method Connect
+	 * @desc Connects to the specified server.
+	 * @param 
+	 * */
+	this.Connect = function(url, callback) {
+		var self = this;
+		
+		this.api.Connect(url, function () {
+		
+			callback();
+			
+		});
+	};
+	
 	/** @method Refresh_Data
 	 * @desc This should be called to refresh data in
 	 * the home tab and report tab.
@@ -236,12 +261,25 @@ function main() {
 	$(document).ready(function(){
 		
 		app = new Main_Application();
+		
+		app.Connect('server/api.php', function() {
+			
+			rpc = app.api.rpc;
+			app.Render();
+			
+			
+			
+		});
 	
+		/*
 		rpc = new jsonrpcphp('server/api.php', function() {
 	
 			app.Render();
 	
 		});
+		*/
+		
+		
 		
 	});
 

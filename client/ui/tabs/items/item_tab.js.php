@@ -102,41 +102,13 @@ function Item_Tab() {
 	 * @desc This function retrieves the item list from the database.
 	 * @param {function} refresh_callback The callback to call after the refresh of data has completed.
 	 * */
-	this.Refresh_Items = function(refresh_callback) {
-		var params = new Array();
-
-		var self = this;
-
-		//show the loader image
-		$('#' + self.loading_image.id).show();
-
-		//execute the RPC callback for retrieving the item log
-		rpc.Item_Data_Interface.Get_Items(params, function(jsonRpcObj) {
-
-			if (jsonRpcObj.result.authenticated == 'true') {
-				if (jsonRpcObj.result.success == 'true') {
-					self.items_list = jsonRpcObj.result.items;
-
-					self.Refresh_Item_Entry_List();
-
-					self.Refresh_Item_View();
-
-					self.Refresh_Item_Data(function() {
-						refresh_callback();
-					});
-
-				} else {
-					alert('Items failed to refresh.');
-				}
-
-			} else {
-				alert('You are not logged in. Please refresh the page and login again.');
-			}
-
-			//hide the loader image
-			$('#' + self.loading_image.id).hide();
-
-		});
+	this.Refresh_Items = function(data) {
+		
+		
+		
+		this.items_list = data.items;
+		
+		this.Refresh_Item_Entry_List();
 
 	};
 	
@@ -153,10 +125,10 @@ function Item_Tab() {
 			new_inner_html += '<option>' + self.items_list[i].item_name + '</option>';
 		}
 
-		document.getElementById(self.quick_item_name_select.id).innerHTML = new_inner_html;
-		document.getElementById(self.new_item_name_select.id).innerHTML = new_inner_html;
-		document.getElementById(self.item_edit_select.id).innerHTML = new_inner_html;
-		document.getElementById(self.edit_item_name_select.id).innerHTML = new_inner_html;
+		document.getElementById(self.quick_item_entry_form.quick_item_name_select.id).innerHTML = new_inner_html;
+		document.getElementById(self.new_item_entry_form.new_item_name_select.id).innerHTML = new_inner_html;
+		document.getElementById(self.edit_item_form.item_edit_select.id).innerHTML = new_inner_html;
+		document.getElementById(self.edit_item_entry_form.edit_item_name_select.id).innerHTML = new_inner_html;
 
 	};
 

@@ -34,6 +34,7 @@ require_once(dirname(__FILE__).'/ui/tabs/graph/graph_tab.js.php');
  */
 function Main_Application() {
 	
+	var self = this;
 	
 	/** This is the server api object. 
 	 * @type Server_API
@@ -75,6 +76,7 @@ function Main_Application() {
 	this.Refresh_Data = function() {
 		
 		//refresh all data in all forms
+		self.item_tab_object.Refresh_Items(self.api.data);
 
 	};
 	

@@ -25,17 +25,53 @@ include_once(dirname(__FILE__).'/json_rpc_queue.js.php');
  */
 function Server_API() {
 	
+	
 	this.rpc_queue = new JSON_RPC_Queue();
 	
 	this.rpc = null;
 	
 	this.data_changed_callback = function(){};
 	
+	this.Add_RPC_Methods = function(rpc_object, destination_object)
+	{
+		var self = this;
+	
+	    for(var member in rpc_object) {
+	    	
+        	if(typeof rpc_object[member] == "function"){
+        	
+	            destination_object[member.toString()] = function(args,callback){
+	            	
+	            	self.rpc_queue.Queue_RPC(
+						rpc_object[member],
+						args,
+						function(jsonRpcObj){
+							
+							
+							callback(jsonRpcObj);
+							
+						});
+	            	
+	            };
+	            
+            }
+            else if(typeof rpc_object[member] == "object")
+            {
+            	destination_object[member.toString()] = [];
+            	self.Add_RPC_Methods(rpc_object[member], self[member.toString()]);
+            }
+        
+	    }
+	    
+	}
+	
 	this.Connect = function(url, callback){
 		
 		var self = this;
 		
-		this.rpc = new jsonrpcphp(url, function() {
+		self.rpc = new jsonrpcphp(url, function() {
+			
+			self.Add_RPC_Methods(self.rpc, self);
 			
 			self.Refresh_Data(function(){
 				
@@ -53,9 +89,7 @@ function Server_API() {
 		
 		var self = this;
 		
-		this.rpc_queue.Queue_RPC(
-			this.rpc.Data_Interface.Refresh_All_Data,
-			[],
+		self.Data_Interface.Refresh_All_Data([],
 			function(jsonRpcObj){
 				
 				self.data = jsonRpcObj.result.data;
@@ -68,17 +102,6 @@ function Server_API() {
 			});
 		
 	};
-	
-	this.Insert_Quick_Item_Entry = function() {
-		
-		
-		
-	};
-	
-	this.Insert_Item_Entry = function() {
-		
-		
-		
-	};
+
 	
 }

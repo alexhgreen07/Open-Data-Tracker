@@ -270,12 +270,6 @@ function Edit_Task_Entry_Form(){
 		this.edit_task_entry_task_complete_button.value = 'Delete';
 		this.data_form_edit_entry.appendChild(this.edit_task_entry_task_complete_button);
 
-		this.edit_task_entry_loading_image_new = document.createElement("img");
-		this.edit_task_entry_loading_image_new.setAttribute('id', 'edit_task_entry_tab_loader_image');
-		this.edit_task_entry_loading_image_new.setAttribute('style', 'width:100%;height:19px;');
-		this.edit_task_entry_loading_image_new.setAttribute('src', 'ajax-loader.gif');
-		this.data_form_edit_entry.appendChild(this.edit_task_entry_loading_image_new);
-
 		var div_tab = document.getElementById(form_div_id);
 
 		div_tab.appendChild(this.data_form_edit_entry);
@@ -309,9 +303,6 @@ function Edit_Task_Entry_Form(){
 			self.Task_Edit_Entry_Select_Change();
 
 		});
-		
-		
-		$('#' + self.edit_task_entry_loading_image_new.id).hide();
 
 		$('#' + this.task_entry_edit_start_time.id).datetimepicker({
 			timeFormat : "HH:mm",

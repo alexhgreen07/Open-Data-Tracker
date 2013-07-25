@@ -62,9 +62,6 @@ function New_Task_Entry_Form(){
 				params[3] = 0;
 			}
 
-			//show the loader image
-			$('#' + self.add_task_entry_loading_image_new.id).show();
-
 			//execute the RPC callback for retrieving the item log
 			rpc.Task_Data_Interface.Insert_Task_Entry(params, function(jsonRpcObj) {
 
@@ -87,9 +84,6 @@ function New_Task_Entry_Form(){
 				} else {
 					alert('Failed to insert task entry.');
 				}
-
-				//hide the loader image
-				$('#' + self.add_task_entry_loading_image_new.id).hide();
 
 			});
 
@@ -190,12 +184,6 @@ function New_Task_Entry_Form(){
 		this.add_task_entry_task_complete_button.value = 'Mark Complete';
 		this.data_form_new_entry.appendChild(this.add_task_entry_task_complete_button);
 
-		this.add_task_entry_loading_image_new = document.createElement("img");
-		this.add_task_entry_loading_image_new.setAttribute('id', 'add_task_entry_tab_new_entry_loader_image');
-		this.add_task_entry_loading_image_new.setAttribute('style', 'width:100%;height:19px;');
-		this.add_task_entry_loading_image_new.setAttribute('src', 'ajax-loader.gif');
-		this.data_form_new_entry.appendChild(this.add_task_entry_loading_image_new);
-
 		var div_tab = document.getElementById(form_div_id);
 
 		div_tab.appendChild(this.data_form_new_entry);
@@ -227,9 +215,6 @@ function New_Task_Entry_Form(){
 
 		});
 		
-
-		//$('#' + self.add_task_entry_loading_image_new.id).hide();
-
 		$('#' + this.task_entry_start_time.id).datetimepicker({
 			timeFormat : "HH:mm",
 			dateFormat : 'yy-mm-dd'

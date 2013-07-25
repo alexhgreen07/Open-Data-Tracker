@@ -31,6 +31,8 @@ require_once(dirname(__FILE__).'/view_categories_form.js.php');
  */
 function Category_Form(){
 	
+	var self = this;
+	
 	/** This is the form for new categories.
 	 * @type New_Category_Form
 	 * */
@@ -49,7 +51,7 @@ function Category_Form(){
 	this.Refresh = function(data){
 		
 		var select_html = '';
-		var self = this;
+		
 
 		select_html += '<option value="0">-</option>';
 		

@@ -41,14 +41,8 @@ function New_Task_Form(){
 
 		var self = this;
 
-		//show the loader image
-		$('#' + self.loading_image_add.id).show();
-
 		//execute the RPC callback for retrieving the item log
 		rpc.Task_Data_Interface.Insert_Task(params, function(jsonRpcObj) {
-
-			//hide the loader image
-			$('#' + self.loading_image_add.id).hide();
 
 			if (jsonRpcObj.result.success == 'true') {
 
@@ -133,19 +127,10 @@ function New_Task_Form(){
 		
 		this.data_form_new_task.appendChild(this.task_submit_button);
 
-		this.loading_image_add = document.createElement("img");
-		this.loading_image_add.setAttribute('id', 'task_tab_add_task_loader_image');
-		this.loading_image_add.setAttribute('style', 'width:100%;height:19px;');
-		this.loading_image_add.setAttribute('src', 'ajax-loader.gif');
-		this.data_form_new_task.appendChild(this.loading_image_add);
-
 		var div_tab = document.getElementById(form_div_id);
 
 		div_tab.appendChild(this.data_form_new_task);
 
-		//hide ajax loader image
-		$('#' + self.loading_image_add.id).hide();
-		
 		$('#' + this.task_submit_button.id).button();
 		$('#' + this.task_submit_button.id).click(function(event) {
 

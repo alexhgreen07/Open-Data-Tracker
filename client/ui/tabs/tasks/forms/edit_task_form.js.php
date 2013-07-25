@@ -275,19 +275,10 @@ function Edit_Task_Form(){
 		this.task_edit_delete_button.value = 'Delete';
 		this.data_form_edit_task.appendChild(this.task_edit_delete_button);
 
-		this.loading_image_task_edit = document.createElement("img");
-		this.loading_image_task_edit.setAttribute('id', 'task_tab_edit_task_loader_image');
-		this.loading_image_task_edit.setAttribute('style', 'width:100%;height:19px;');
-		this.loading_image_task_edit.setAttribute('src', 'ajax-loader.gif');
-		this.data_form_edit_task.appendChild(this.loading_image_task_edit);
-
 		var div_tab = document.getElementById(form_div_id);
 
 		div_tab.appendChild(this.data_form_edit_task);
 
-		//hide ajax loader image
-		$('#' + self.loading_image_task_edit.id).hide();
-		
 		$('#' + this.task_edit_submit_button.id).button();
 		$('#' + this.task_edit_submit_button.id).click(function(event) {
 

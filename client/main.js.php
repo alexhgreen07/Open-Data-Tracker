@@ -78,6 +78,7 @@ function Main_Application() {
 		//refresh all data in all forms
 		self.home_tab_object.Refresh(self.api.data);
 		self.item_tab_object.Refresh(self.api.data);
+		self.task_tab_object.Refresh(self.api.data);
 		
 
 	};
@@ -216,10 +217,11 @@ function main() {
 		
 		app = new Main_Application();
 		
+		app.Render();
 		app.Connect('server/api.php', function() {
 			
 			rpc = app.api.rpc;
-			app.Render();
+			
 			
 			
 			

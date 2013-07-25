@@ -52,9 +52,6 @@ function Timecard_Task_Entry_Form(){
 
 			var self = this;
 
-			//show the loader image
-			$('#' + self.loading_image_new.id).show();
-
 			//execute the RPC callback for retrieving the item log
 			rpc.Task_Data_Interface.Task_Start_Stop(params, function(jsonRpcObj) {
 
@@ -95,9 +92,6 @@ function Timecard_Task_Entry_Form(){
 					alert('Task failed to start/stop.');
 				}
 
-				//hide the loader image
-				$('#' + self.loading_image_new.id).hide();
-
 			});
 
 		} else {
@@ -122,9 +116,6 @@ function Timecard_Task_Entry_Form(){
 
 			var self = this;
 
-			//show the loader image
-			$('#' + self.loading_image_new.id).show();
-
 			//execute the RPC callback for retrieving the item log
 			rpc.Task_Data_Interface.Task_Mark_Complete(params, function(jsonRpcObj) {
 
@@ -146,9 +137,6 @@ function Timecard_Task_Entry_Form(){
 				} else {
 					alert('Task failed to complete.');
 				}
-
-				//hide the loader image
-				$('#' + self.loading_image_new.id).hide();
 
 			});
 
@@ -281,17 +269,10 @@ function Timecard_Task_Entry_Form(){
 		
 		this.data_form_timecard_entry.appendChild(this.task_start_complete_button);
 
-		this.loading_image_new = document.createElement("img");
-		this.loading_image_new.setAttribute('id', 'task_tab_new_entry_loader_image');
-		this.loading_image_new.setAttribute('style', 'width:100%;height:19px;');
-		this.loading_image_new.setAttribute('src', 'ajax-loader.gif');
-		this.data_form_timecard_entry.appendChild(this.loading_image_new);
-
 		var div_tab = document.getElementById(form_div_id);
 
 		div_tab.appendChild(this.data_form_timecard_entry);
 
-		//$('#' + self.loading_image_new.id).hide();
 		$('#' + self.task_timecard_note_div.id).hide();
 		
 		$('#' + this.task_name_select.id).change(function() {

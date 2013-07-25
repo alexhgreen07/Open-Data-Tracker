@@ -134,66 +134,44 @@ function Task_Tab() {
 	 * @desc This function refreshes the valid start/stop task name list from the server.
 	 * @param {function} refresh_callback The callback to call after the refresh of data has completed.
 	 * */
-	this.Refresh_Task_Name_List = function(refresh_callback) {
-		var params = new Array();
-
+	this.Refresh = function(data) {
+		
 		var self = this;
+		
+		//ensure the task info array is saved
+		self.task_info_json_array = data.tasks;
 
-		//show the loader image
-		$('#' + self.loading_image_new.id).show();
-		$('#' + self.add_task_entry_loading_image_new.id).show();
+		//create a list of options for the select
+		var new_inner_html = '';
 
-		//execute the RPC callback for retrieving the item log
-		rpc.Task_Data_Interface.Get_Start_Stop_Task_Names(params, function(jsonRpcObj) {
+		new_inner_html += '<option>-</option>';
 
-			if (jsonRpcObj.result.authenticated == 'true') {
-				if (jsonRpcObj.result.success == 'true') {
+		//iterate through all tasks
+		for (var i = 0; i < self.task_info_json_array.length; i++) {
+			//add task option to select
+			new_inner_html += '<option>' + self.task_info_json_array[i].item_name + '</option>';
 
-					//ensure the task info array is saved
-					self.task_info_json_array = jsonRpcObj.result.items;
-
-					//create a list of options for the select
-					var new_inner_html = '';
-
-					new_inner_html += '<option>-</option>';
-
-					//iterate through all tasks
-					for (var i = 0; i < self.task_info_json_array.length; i++) {
-						//add task option to select
-						new_inner_html += '<option>' + self.task_info_json_array[i].item_name + '</option>';
-
-						//format task start datetime
-						if (self.task_info_json_array[i].start_time != '') {
-							//change start date string to javascript date object
-							var t = self.task_info_json_array[i].start_time.split(/[- :]/);
-							self.task_info_json_array[i].start_time = new Date(t[0], t[1] - 1, t[2], t[3], t[4], t[5]);
-						}
-					}
-
-					document.getElementById(self.task_name_select.id).innerHTML = new_inner_html;
-					document.getElementById(self.add_task_entry_task_name_select.id).innerHTML = new_inner_html;
-					document.getElementById(self.edit_task_entry_task_name_select.id).innerHTML = new_inner_html;
-					document.getElementById(self.task_entry_task_edit_name_select.id).innerHTML = new_inner_html;
-					document.getElementById(self.task_target_new_name_select.id).innerHTML = new_inner_html;
-					document.getElementById(self.task_target_edit_name_select.id).innerHTML = new_inner_html;
-					
-					
-					//refresh the task info div
-					self.On_Task_Name_Select_Change_Event();
-				} else {
-					alert('Tasks failed to refresh.');
-				}
-
-			} else {
-				alert('You are not logged in. Please refresh the page and login again.');
+			//format task start datetime
+			if (self.task_info_json_array[i].start_time != '') {
+				//change start date string to javascript date object
+				var t = self.task_info_json_array[i].start_time.split(/[- :]/);
+				self.task_info_json_array[i].start_time = new Date(t[0], t[1] - 1, t[2], t[3], t[4], t[5]);
 			}
+		}
 
-			//hide the loader image
-			$('#' + self.loading_image_new.id).hide();
-			$('#' + self.add_task_entry_loading_image_new.id).hide();
-
-			refresh_callback();
-		});
+		document.getElementById(self.timecard_task_entry_form.task_name_select.id).innerHTML = new_inner_html;
+		document.getElementById(self.new_task_entry_form.add_task_entry_task_name_select.id).innerHTML = new_inner_html;
+		document.getElementById(self.edit_task_entry_form.edit_task_entry_task_name_select.id).innerHTML = new_inner_html;
+		document.getElementById(self.edit_task_form.task_entry_task_edit_name_select.id).innerHTML = new_inner_html;
+		document.getElementById(self.new_task_target_form.task_target_new_name_select.id).innerHTML = new_inner_html;
+		document.getElementById(self.edit_task_target_form.task_target_edit_name_select.id).innerHTML = new_inner_html;
+		
+		this.view_task_entries_form.Refresh(data);
+		this.view_tasks_form.Refresh(data);
+		this.view_task_targets_form.Refresh(data);
+		
+		//refresh the task info div
+		//self.On_Task_Name_Select_Change_Event();
 	};
 
 	/** @method On_Task_Name_Select_Change_Event

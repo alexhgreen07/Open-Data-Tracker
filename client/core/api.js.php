@@ -37,9 +37,13 @@ function Server_API() {
 		
 		this.rpc = new jsonrpcphp(url, function() {
 			
-			self.Refresh_Data(function(){});
+			self.Refresh_Data(function(){
+				
+				callback();
+				
+			});
 			
-			callback();
+			
 	
 		});
 		

@@ -76,7 +76,9 @@ function Main_Application() {
 	this.Refresh_Data = function() {
 		
 		//refresh all data in all forms
-		self.item_tab_object.Refresh_Items(self.api.data);
+		self.home_tab_object.Refresh(self.api.data);
+		self.item_tab_object.Refresh(self.api.data);
+		
 
 	};
 	

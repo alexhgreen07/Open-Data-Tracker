@@ -56,18 +56,11 @@ function Home_Tab() {
 
 	/** @method Refresh_Data
 	 * @desc This function retrieves the home data from the server.
-	 * @param {function} refresh_callback The callback to call after the refresh of data has completed.
+	 * @param {function} data The callback to call after the refresh of data has completed.
 	 * */
-	this.Refresh_Data = function(refresh_callback) {
-		var self = this;
+	this.Refresh = function(data) {
 		
-		self.home_form.Summary_Data_Refresh_Click_Event(function(){
-			
-			self.category_form.view_categories_forms.Category_Data_Refresh_Click_Event(function(){
-			
-				refresh_callback();
-			});
-		});
+		this.category_form.Refresh(data);
 		
 	};
 

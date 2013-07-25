@@ -38,7 +38,7 @@ function New_Category_Form(){
 
 		var self = this;
 
-
+		/*
 		//execute the RPC callback for retrieving the item log
 		rpc.Home_Data_Interface.Insert_Category(params, function(jsonRpcObj) {
 
@@ -62,6 +62,7 @@ function New_Category_Form(){
 			}
 
 		});
+		*/
 		
 	};
 	

@@ -46,6 +46,32 @@ function Category_Form(){
 	 * */
 	this.view_categories_forms = new View_Category_Form();
 	
+	this.Refresh = function(data){
+		
+		var select_html = '';
+		var self = this;
+
+		select_html += '<option value="0">-</option>';
+		
+		self.categories_list = data.categories;
+		
+		for (var i=0; i < self.categories_list.length; i++) {
+			
+
+			var current_row = self.categories_list[i];
+
+			select_html += '<option value="' + current_row.category_id + '">' + current_row.category_path + '</option>';
+	
+		  
+		};
+		
+		document.getElementById(self.new_category_form.add_new_category_parent_select.id).innerHTML = select_html;
+		document.getElementById(self.edit_category_form.edit_category_select.id).innerHTML = select_html;
+		document.getElementById(self.edit_category_form.edit_category_parent_select.id).innerHTML = select_html;
+		
+		this.view_categories_forms.Refresh(data);
+	};
+	
 	/** @method Render
 	 * @desc This function will render the general home form in the specified div.
 	 * @param {String} form_div_id The div ID to render the form in.

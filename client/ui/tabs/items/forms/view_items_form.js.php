@@ -28,10 +28,13 @@ include_once(dirname(__FILE__).'/../../../../external/json-rpc2php-master/jsonRP
 function View_Items_Form(){
 	
 	
-	/** @method Refresh_Item_View
+	/** @method Refresh
 	 * @desc This function refreshes the item display pane table.
 	 * */
-	this.Refresh_Item_View = function() {
+	this.Refresh = function(data) {
+		
+		this.items_list = data.items;
+		
 		var new_inner_html = '';
 
 		new_inner_html += '<table width="100%" border="1">';

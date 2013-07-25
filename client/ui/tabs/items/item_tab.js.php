@@ -102,13 +102,14 @@ function Item_Tab() {
 	 * @desc This function retrieves the item list from the database.
 	 * @param {function} refresh_callback The callback to call after the refresh of data has completed.
 	 * */
-	this.Refresh_Items = function(data) {
-		
-		
+	this.Refresh = function(data) {
 		
 		this.items_list = data.items;
 		
 		this.Refresh_Item_Entry_List();
+		
+		this.view_item_entries_form.Refresh(data);
+		this.view_items_form.Refresh(data);
 
 	};
 	

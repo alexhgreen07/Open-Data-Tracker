@@ -28,6 +28,12 @@ include_once(dirname(__FILE__).'/../../../../external/json-rpc2php-master/jsonRP
 function Quick_Item_Entry_Form(){
 	
 	
+	this.Refresh = function(data){
+		
+		
+		
+	};
+	
 	/** @method Add_Quick_Item_Entry_Click
 	 * @desc This is the event function for the item quick item entry button click.
 	 * */
@@ -145,12 +151,6 @@ function Quick_Item_Entry_Form(){
 			self.Add_Quick_Item_Entry_Click();
 		});
 		this.item_quick_entry_data_form.appendChild(this.item_add_entry_button);
-
-		this.loading_image = document.createElement("img");
-		this.loading_image.setAttribute('id', 'item_tab_quick_item_entry_loader_image');
-		this.loading_image.setAttribute('style', 'width:100%;height:19px;');
-		this.loading_image.setAttribute('src', 'ajax-loader.gif');
-		this.item_quick_entry_data_form.appendChild(this.loading_image);
 
 		var div_tab = document.getElementById(form_div_id);
 		div_tab.appendChild(this.item_quick_entry_data_form);

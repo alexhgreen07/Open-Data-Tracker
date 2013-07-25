@@ -150,17 +150,8 @@ function New_Item_Entry_Form(){
 		var self = this;
 		this.item_new_entry_data_form.appendChild(this.item_new_add_entry_button);
 
-		this.new_loading_image = document.createElement("img");
-		this.new_loading_image.setAttribute('id', 'item_tab_new_item_entry_loader_image');
-		this.new_loading_image.setAttribute('style', 'width:100%;height:19px;');
-		this.new_loading_image.setAttribute('src', 'ajax-loader.gif');
-		this.item_new_entry_data_form.appendChild(this.new_loading_image);
-
 		var div_tab = document.getElementById(form_div_id);
 		div_tab.appendChild(this.item_new_entry_data_form);
-
-		//hide the loader image
-		$('#' + self.new_loading_image.id).hide();
 
 		$('#' + this.item_new_add_entry_button.id).button();
 		$('#' + this.item_new_add_entry_button.id).click(function(event) {

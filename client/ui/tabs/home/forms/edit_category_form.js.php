@@ -48,7 +48,7 @@ function Edit_Category_Form(){
 	
 			var self = this;
 	
-	
+			/*
 			//execute the RPC callback for retrieving the item log
 			rpc.Home_Data_Interface.Update_Category(params, function(jsonRpcObj) {
 	
@@ -72,7 +72,7 @@ function Edit_Category_Form(){
 				}
 	
 			});
-			
+			*/
 			
 		}
 		else
@@ -81,6 +81,11 @@ function Edit_Category_Form(){
 		}
 	};
 	
+	this.Refresh = function(data){
+		
+		
+		
+	};
 	
 	/** @method Category_Delete_Click_Event
 	 * @desc This is the delete category submit button click event handler.
@@ -103,7 +108,7 @@ function Edit_Category_Form(){
 		
 				var self = this;
 		
-		
+				/*
 				//execute the RPC callback for retrieving the item log
 				rpc.Home_Data_Interface.Delete_Category(params, function(jsonRpcObj) {
 		
@@ -127,6 +132,7 @@ function Edit_Category_Form(){
 					}
 		
 				});
+				*/
 			
 			}
 		}

@@ -36,7 +36,8 @@ function Report_Tab() {
 
 		//show the loader image
 		$('#' + self.report_summaries_loading_image.id).show();
-
+		
+		/*
 		//execute the RPC callback for retrieving the item log
 		rpc.Report_Data_Interface.Get_Report_Summary_Data(params, function(jsonRpcObj) {
 
@@ -55,6 +56,7 @@ function Report_Tab() {
 			refresh_callback();
 
 		});
+		*/
 	};
 
 	this.Refresh = function(refresh_callback) {

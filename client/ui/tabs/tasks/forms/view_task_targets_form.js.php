@@ -72,7 +72,6 @@ function View_Task_Targets_Form(){
 		new_html += '</table>';
 		
 		document.getElementById(self.view_task_target_data_div.id).innerHTML = new_html;
-		document.getElementById(self.task_edit_target_select.id).innerHTML = select_html;
 		
 	};
 	

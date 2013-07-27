@@ -4,16 +4,16 @@
 Header("content-type: application/x-javascript");
 
 //jquery code
-include_once(dirname(__FILE__).'/../external/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js');
+include_once(dirname(__FILE__).'/../../externals/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js');
 
 //jquery UI code
-include_once(dirname(__FILE__).'/../external/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
+include_once(dirname(__FILE__).'/../../externals/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
 
 //jquery datepicker code
-include_once(dirname(__FILE__).'/../external/jquery-ui-timerpicker-addon/jquery-ui-timepicker-addon.js');
+include_once(dirname(__FILE__).'/../../externals/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js');
 
 //JSON RPC library
-include_once(dirname(__FILE__).'/../external/json-rpc2php-master/jsonRPC2php.client.js');
+include_once(dirname(__FILE__).'/../../externals/json-rpc2php/jsonRPC2php.client.js');
 
 include_once(dirname(__FILE__).'/json_rpc_queue.js.php');
 

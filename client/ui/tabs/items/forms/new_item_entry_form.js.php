@@ -28,6 +28,12 @@ include_once(dirname(__FILE__).'/../../../../external/json-rpc2php-master/jsonRP
 function New_Item_Entry_Form(){
 	
 	
+	this.Refresh = function(data){
+		
+		
+		
+	};
+	
 	/** @method Add_Item_Entry_Click
 	 * @desc This is the event function for the add item entry button click.
 	 * */
@@ -44,26 +50,24 @@ function New_Item_Entry_Form(){
 		//check that the string is numeric
 		if (!isNaN(Number(value_string)) && value_string != '') {
 
-			//show the loader image
-			$('#' + self.new_loading_image.id).show();
-
 			var params = new Array();
 			params[0] = time_string;
 			params[1] = value_string;
-			params[2] = self.items_list[item_select_index - 1].item_id;
+			params[2] = app.api.data.items[item_select_index - 1].item_id;
 			params[3] = note_string;
 
 			//execute the RPC callback for retrieving the item log
-			rpc.Item_Data_Interface.Insert_Item_Entry(params, function(jsonRpcObj) {
+			app.api.Item_Data_Interface.Insert_Item_Entry(params, function(jsonRpcObj) {
 
 				if (jsonRpcObj.result.authenticated == 'true') {
 					if (jsonRpcObj.result.success == 'true') {
-						//alert(jsonRpcObj.result.debug);
+						
 						alert('New item entry added!');
 
-						self.Refresh_Item_Data(function() {
-							self.refresh_item_log_callback();
+						app.api.Refresh_Data(function() {
+							//self.refresh_item_log_callback();
 						});
+						
 					} else {
 						alert('Item entry failed to add.');
 					}
@@ -71,9 +75,6 @@ function New_Item_Entry_Form(){
 				} else {
 					alert('You are not logged in. Please refresh the page and login again.');
 				}
-
-				//hide the loader image
-				$('#' + self.new_loading_image.id).hide();
 
 				//reset all the fields to default
 				$("#" + self.item_new_value.id).val('');

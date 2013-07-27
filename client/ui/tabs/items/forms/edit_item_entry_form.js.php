@@ -28,6 +28,29 @@ include_once(dirname(__FILE__).'/../../../../external/json-rpc2php-master/jsonRP
 function Edit_Item_Entry_Form(){
 	
 	
+	this.Refresh = function(data){
+		
+		var self = this;
+		var new_inner_html = '';
+		
+		this.item_log_data = data.item_entries;
+		this.items_list = data.items;
+		
+		new_inner_html += '<option>-</option>';
+
+		for (var i = 0; i < self.item_log_data.length; i++) {
+			
+			new_inner_html += '<option value="' + self.item_log_data[i].item_log_id + '">';
+			
+			new_inner_html += '(' + self.item_log_data[i].item_log_id + ') ';
+			new_inner_html += self.item_log_data[i].time + '</option>';
+			
+		}
+
+		document.getElementById(self.edit_item_entry_select.id).innerHTML = new_inner_html;
+		
+	};
+	
 	/** @method Edit_Item_Entry_Click
 	 * @desc This is the event function for the edit item entry button click.
 	 * */
@@ -53,16 +76,18 @@ function Edit_Item_Entry_Form(){
 			params.push(document.getElementById(self.item_edit_note.id).value);
 			
 			//execute the RPC callback for retrieving the item log
-			rpc.Item_Data_Interface.Update_Item_Entry(params, function(jsonRpcObj) {
+			app.api.Item_Data_Interface.Update_Item_Entry(params, function(jsonRpcObj) {
 
 				if (jsonRpcObj.result.authenticated == 'true') {
 					if (jsonRpcObj.result.success == 'true') {
-						//alert(jsonRpcObj.result.debug);
+						
+						
 						alert('Item entry updated!');
 
-						self.Refresh_Item_Data(function() {
-							self.refresh_item_log_callback();
+						app.api.Refresh_Data(function() {
+							//self.refresh_item_log_callback();
 						});
+						
 					} else {
 						alert('Item entry failed to update.');
 						//alert(jsonRpcObj.result.debug);
@@ -101,13 +126,15 @@ function Edit_Item_Entry_Form(){
 				var params = new Array();
 				params[0] = value;
 				
-				rpc.Item_Data_Interface.Delete_Item_Entry(params, function(jsonRpcObj) {
+				app.api.Item_Data_Interface.Delete_Item_Entry(params, function(jsonRpcObj) {
 				
 					if(jsonRpcObj.result.success == 'true'){
 						
 						alert('Index deleted: ' + value);
 						
-						self.Refresh_Items(function(){});
+						app.api.Refresh_Data(function() {
+							//self.refresh_item_log_callback();
+						});
 						
 					}
 					else

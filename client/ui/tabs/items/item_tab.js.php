@@ -104,22 +104,21 @@ function Item_Tab() {
 	 * */
 	this.Refresh = function(data) {
 		
-		this.items_list = data.items;
-		
-		this.Refresh_Item_Entry_List();
-		
-		this.view_item_entries_form.Refresh(data);
-		this.view_items_form.Refresh(data);
+		this.Refresh_Items(data);
+		this.Refresh_Item_Entries(data);
 
 	};
 	
-	/** @method Refresh_Item_Entry_List
+	/** @method Refresh_Items
 	 * @desc This function refreshes the items HTML select objects.
 	 * */
-	this.Refresh_Item_Entry_List = function() {
+	this.Refresh_Items = function(data) {
 		var self = this;
 		var new_inner_html = '';
-
+		
+		this.items_list = data.items;
+		
+		
 		new_inner_html += '<option>-</option>';
 
 		for (var i = 0; i < self.items_list.length; i++) {
@@ -128,9 +127,20 @@ function Item_Tab() {
 
 		document.getElementById(self.quick_item_entry_form.quick_item_name_select.id).innerHTML = new_inner_html;
 		document.getElementById(self.new_item_entry_form.new_item_name_select.id).innerHTML = new_inner_html;
-		document.getElementById(self.edit_item_form.item_edit_select.id).innerHTML = new_inner_html;
 		document.getElementById(self.edit_item_entry_form.edit_item_name_select.id).innerHTML = new_inner_html;
+		
+		this.edit_item_entry_form.Refresh(data);
+		this.edit_item_form.Refresh(data);
+		this.view_items_form.Refresh(data);
 
+	};
+	
+	this.Refresh_Item_Entries = function(data){
+		
+		
+		this.edit_item_entry_form.Refresh(data);
+		this.view_item_entries_form.Refresh(data);
+		
 	};
 
 	/** @method Render

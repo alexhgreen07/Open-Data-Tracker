@@ -41,8 +41,6 @@ function New_Item_Form(){
 
 		if (name_string != '') {
 
-			//show the loader image
-			$('#' + self.loading_image_add_item.id).show();
 
 			var params = new Array();
 			params[0] = name_string;
@@ -50,7 +48,7 @@ function New_Item_Form(){
 			params[2] = note_string;
 
 			//execute the RPC callback for retrieving the item log
-			rpc.Item_Data_Interface.Insert_New_Item(params, function(jsonRpcObj) {
+			app.api.Item_Data_Interface.Insert_New_Item(params, function(jsonRpcObj) {
 
 				if (jsonRpcObj.result.authenticated == 'true') {
 					if (jsonRpcObj.result.success == 'true') {
@@ -63,16 +61,15 @@ function New_Item_Form(){
 					alert('You are not logged in. Please refresh the page and login again.');
 				}
 
-				//hide the loader image
-				$('#' + self.loading_image_add_item.id).hide();
-
 				//reset all the fields to default
 				$("#" + self.item_name.id).val('');
 				$("#" + self.item_description.id).val('');
 				$("#" + self.item_new_unit.id).val('');
 
 				//refresh the items
-				self.Refresh_Items();
+				app.api.Refresh_Data(function() {
+					//self.refresh_item_log_callback();
+				});
 			});
 
 		} else {

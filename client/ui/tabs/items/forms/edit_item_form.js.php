@@ -27,6 +27,23 @@ include_once(dirname(__FILE__).'/../../../../external/json-rpc2php-master/jsonRP
  */
 function Edit_Item_Form(){
 
+	this.Refresh = function(data){
+		
+		var self = this;
+		var new_inner_html = '';
+		
+		this.items_list = data.items;
+		
+		
+		new_inner_html += '<option>-</option>';
+
+		for (var i = 0; i < self.items_list.length; i++) {
+			new_inner_html += '<option>' + self.items_list[i].item_name + '</option>';
+		}
+
+		document.getElementById(self.item_edit_select.id).innerHTML = new_inner_html;
+		
+	};
 	
 	/** @method Edit_Item_Click
 	 * @desc This is the event function for the edit item button click.
@@ -47,13 +64,15 @@ function Edit_Item_Form(){
 			params[2] = document.getElementById(self.edit_item_unit.id).value;
 			params[3] = document.getElementById(self.item_edit_description.id).value;
 			
-			rpc.Item_Data_Interface.Edit_Item(params, function(jsonRpcObj) {
+			app.api.Item_Data_Interface.Edit_Item(params, function(jsonRpcObj) {
 			
 				if(jsonRpcObj.result.success == 'true'){
 					
 					alert('Item successfully edited.');
 					
-					self.Refresh_Items(function(){});
+					app.api.Refresh_Data(function() {
+						//self.refresh_item_log_callback();
+					});
 					
 				}
 				else
@@ -122,13 +141,15 @@ function Edit_Item_Form(){
 				var params = new Array();
 				params[0] = value;
 				
-				rpc.Item_Data_Interface.Delete_Item(params, function(jsonRpcObj) {
+				app.api.Item_Data_Interface.Delete_Item(params, function(jsonRpcObj) {
 				
 					if(jsonRpcObj.result.success == 'true'){
 						
 						alert('Item deleted: ' + value);
 						
-						self.Refresh_Items(function(){});
+						app.api.Refresh_Data(function() {
+							//self.refresh_item_log_callback();
+						});
 						
 					}
 					else

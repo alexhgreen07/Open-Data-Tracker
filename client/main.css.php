@@ -9,10 +9,27 @@
 header("Content-type: text/css; charset: UTF-8");
 
 //jquery style sheet
-include_once(dirname(__FILE__).'/../externals/jquery-ui-1.10.0.custom/development-bundle/themes/base/jquery-ui.css');
+//include_once(dirname(__FILE__).'/../externals/jquery-ui/themes/base/jquery.ui.all.css');
+include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.core.css");
+
+include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.accordion.css");
+include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.autocomplete.css");
+include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.button.css");
+include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.datepicker.css");
+include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.dialog.css");
+include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.menu.css");
+include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.progressbar.css");
+include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.resizable.css");
+include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.selectable.css");
+include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.slider.css");
+include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.spinner.css");
+include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.tabs.css");
+include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.tooltip.css");
+
+include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.theme.css");
 
 //jquery timepicker style sheet
-include_once(dirname(__FILE__).'/../externals/jquery-ui-timerpicker-addon/jquery-ui-timepicker-addon.css');
+include_once(dirname(__FILE__).'/../externals/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css');
 
 ?>
 

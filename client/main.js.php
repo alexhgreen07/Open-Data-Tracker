@@ -9,10 +9,23 @@ include_once(dirname(__FILE__).'/../externals/jquery-ui/jquery-1.10.2.js');
 //jquery UI code
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.core.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.widget.js');
+include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.mouse.js');
+//include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.position.js');
+include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.draggable.js');
+include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.droppable.js');
+include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.resizable.js');
+include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.selectable.js');
+include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.sortable.js');
+include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.effect.js');
+
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.button.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.tabs.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.accordion.js');
+include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.slider.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.datepicker.js');
+include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.dialog.js');
+include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.menu.js');
+include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.tooltip.js');
 
 //jquery datepicker code
 include_once(dirname(__FILE__).'/../externals/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js');

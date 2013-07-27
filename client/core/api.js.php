@@ -32,33 +32,48 @@ function Server_API() {
 	
 	this.data_changed_callback = function(){};
 	
-	this.Add_RPC_Methods = function(rpc_object, destination_object)
+	this.Build_Method = function(method, source_object){
+		
+		var self = this;
+		
+		var return_function = function(args,callback){
+        	
+        	
+        	self.rpc_queue.Queue_RPC(
+				source_object[method],
+				args,
+				function(jsonRpcObj){
+					
+					
+					callback(jsonRpcObj);
+					
+				});
+        	
+        };
+        
+        return return_function;
+		
+	};
+	
+	this.Add_Object_Methods = function(source_object, destination_object)
 	{
 		var self = this;
-	
-	    for(var member in rpc_object) {
+		//iterate through all the members of the object
+	    for(var member in source_object) {
 	    	
-        	if(typeof rpc_object[member] == "function"){
-        	
-	            destination_object[member.toString()] = function(args,callback){
-	            	
-	            	self.rpc_queue.Queue_RPC(
-						rpc_object[member],
-						args,
-						function(jsonRpcObj){
-							
-							
-							callback(jsonRpcObj);
-							
-						});
-	            	
-	            };
+	    	//if the member is a function, add the function
+        	if(typeof(source_object[member]) == "function"){
+        		
+        		
+        		destination_object[member] = self.Build_Method(member, source_object);
 	            
             }
-            else if(typeof rpc_object[member] == "object")
+            else if(typeof(source_object[member]) == "object")
             {
-            	destination_object[member.toString()] = [];
-            	self.Add_RPC_Methods(rpc_object[member], self[member.toString()]);
+            	
+            	destination_object[member] = {};
+            	self.Add_Object_Methods(source_object[member], destination_object[member]);
+            	
             }
         
 	    }
@@ -71,7 +86,7 @@ function Server_API() {
 		
 		self.rpc = new jsonrpcphp(url, function() {
 			
-			self.Add_RPC_Methods(self.rpc, self);
+			self.Add_Object_Methods(self.rpc, self);
 			
 			self.Refresh_Data(function(){
 				

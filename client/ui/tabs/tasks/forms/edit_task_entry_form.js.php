@@ -27,6 +27,62 @@ include_once(dirname(__FILE__).'/../../../../external/json-rpc2php-master/jsonRP
  */
 function Edit_Task_Entry_Form(){
 	
+	this.Refresh = function(data){
+		
+		this.Refresh_Task_Select(data);
+		this.Refresh_Task_Entry_Select(data);
+		
+	};
+	
+	this.Refresh_Task_Select = function(data){
+		
+		var self = this;
+		
+		//ensure the task info array is saved
+		self.task_info_json_array = data.tasks;
+
+		//create a list of options for the select
+		var new_inner_html = '';
+
+		new_inner_html += '<option>-</option>';
+
+		//iterate through all tasks
+		for (var i = 0; i < self.task_info_json_array.length; i++) {
+			//add task option to select
+			new_inner_html += '<option>' + self.task_info_json_array[i].name + '</option>';
+
+			//format task start datetime
+			if (self.task_info_json_array[i].start_time != '') {
+				//change start date string to javascript date object
+				//var t = self.task_info_json_array[i].start_time.split(/[- :]/);
+				//self.task_info_json_array[i].start_time = new Date(t[0], t[1] - 1, t[2], t[3], t[4], t[5]);
+			}
+		}
+		
+		document.getElementById(self.edit_task_entry_task_name_select.id).innerHTML = new_inner_html;
+		
+		
+	};
+	
+	this.Refresh_Task_Entry_Select = function(data){
+		
+		var self = this;
+		
+		self.task_log = data.task_entries;
+		
+		var task_entry_options = '<option value="0">-</option>';
+		
+		for (var i = 0; i < self.task_log.length; i++) {
+		    
+		    task_entry_options += '<option value="' + 
+		    	self.task_log[i].task_log_id + '">' +
+		    	self.task_log[i].start_time + '</option>';
+		    
+		}
+		
+		document.getElementById(self.edit_task_entry_select.id).innerHTML = task_entry_options;
+		
+	};
 	
 	/** @method Task_Edit_Entry_Submit_Click
 	 * @desc This is the edit task entry submit button click event handler.
@@ -57,19 +113,14 @@ function Edit_Task_Entry_Form(){
 			params[6] = task_note;
 
 			//execute the RPC callback for retrieving the item log
-			rpc.Task_Data_Interface.Update_Task_Entry(params, function(jsonRpcObj) {
+			app.api.Task_Data_Interface.Update_Task_Entry(params, function(jsonRpcObj) {
 
 				if (jsonRpcObj.result.success == 'true') {
 
 					alert('Task entry submitted.');
 
-					self.Refresh_Tasks(function() {
-						//refresh_callback();
-
-						self.Refresh_Task_Name_List(function() {
-							self.refresh_task_log_callback();
-						});
-
+					app.api.Refresh_Data(function() {
+						//self.refresh_item_log_callback();
 					});
 
 				} else {
@@ -103,20 +154,14 @@ function Edit_Task_Entry_Form(){
 				var params = new Array();
 				params[0] = value;
 				
-				rpc.Task_Data_Interface.Delete_Task_Entry(params, function(jsonRpcObj) {
+				app.api.Task_Data_Interface.Delete_Task_Entry(params, function(jsonRpcObj) {
 				
 					if(jsonRpcObj.result.success == 'true'){
 						
 						alert('Index deleted: ' + value);
 						
-						self.Refresh_Tasks(function() {
-							//refresh the list to remove this task
-							self.Refresh_Task_Name_List(function() {
-								
-								//do nothing
-								
-							});
-	
+						app.api.Refresh_Data(function() {
+							//self.refresh_item_log_callback();
 						});
 						
 					}

@@ -149,71 +149,28 @@ function Task_Tab() {
 		//iterate through all tasks
 		for (var i = 0; i < self.task_info_json_array.length; i++) {
 			//add task option to select
-			new_inner_html += '<option>' + self.task_info_json_array[i].item_name + '</option>';
+			new_inner_html += '<option>' + self.task_info_json_array[i].name + '</option>';
 
 			//format task start datetime
 			if (self.task_info_json_array[i].start_time != '') {
 				//change start date string to javascript date object
-				var t = self.task_info_json_array[i].start_time.split(/[- :]/);
-				self.task_info_json_array[i].start_time = new Date(t[0], t[1] - 1, t[2], t[3], t[4], t[5]);
+				//var t = self.task_info_json_array[i].start_time.split(/[- :]/);
+				//self.task_info_json_array[i].start_time = new Date(t[0], t[1] - 1, t[2], t[3], t[4], t[5]);
 			}
 		}
 
 		document.getElementById(self.timecard_task_entry_form.task_name_select.id).innerHTML = new_inner_html;
-		document.getElementById(self.new_task_entry_form.add_task_entry_task_name_select.id).innerHTML = new_inner_html;
-		document.getElementById(self.edit_task_entry_form.edit_task_entry_task_name_select.id).innerHTML = new_inner_html;
-		document.getElementById(self.edit_task_form.task_entry_task_edit_name_select.id).innerHTML = new_inner_html;
-		document.getElementById(self.new_task_target_form.task_target_new_name_select.id).innerHTML = new_inner_html;
-		document.getElementById(self.edit_task_target_form.task_target_edit_name_select.id).innerHTML = new_inner_html;
 		
+		this.timecard_task_entry_form.Refresh(data);
+		this.new_task_entry_form.Refresh(data);
+		this.edit_task_entry_form.Refresh(data);
 		this.view_task_entries_form.Refresh(data);
+		this.edit_task_form.Refresh(data);
 		this.view_tasks_form.Refresh(data);
+		this.new_task_target_form.Refresh(data);
+		this.edit_task_target_form.Refresh(data);
 		this.view_task_targets_form.Refresh(data);
 		
-		//refresh the task info div
-		//self.On_Task_Name_Select_Change_Event();
-	};
-
-	/** @method On_Task_Name_Select_Change_Event
-	 * @desc This function is the HTML select task start/stop index change event handler.
-	 * */
-	this.On_Task_Name_Select_Change_Event = function() {
-		//alert('Handler for task name select change called.');
-
-		var selected_index = document.getElementById(this.task_name_select.id).selectedIndex;
-		var new_html = '';
-		new_html += 'Info:<br /><br />';
-
-		if (selected_index > 0) {
-
-			var new_item = this.task_info_json_array[selected_index - 1];
-
-			new_html += 'Task ID: ' + new_item.task_id + '<br />';
-			new_html += 'Date Created: ' + new_item.date_created + '<br />';
-			new_html += 'Estimated Time (Hours): ' + new_item.estimated_time + '<br />';
-			new_html += 'Status: ' + new_item.item_status + '<br />';
-			new_html += 'Start Time: ' + new_item.start_time + '<br />';
-
-			if (new_item.item_status == 'Started') {
-				//set the start time and button value
-				this.current_task_start_time = new_item.start_time;
-				$('#' + this.task_timecard_note_div.id).show();
-				this.task_start_stop_button.value = 'Stop';
-			} else {
-				$('#' + this.task_timecard_note_div.id).hide();
-				this.task_start_stop_button.value = 'Start';
-			}
-		} else {
-			this.task_start_stop_button.value = 'Start';
-		}
-
-		new_html += '<br />';
-
-		this.task_info_div.innerHTML = new_html;
-
-		//refresh the timer
-		this.Refresh_Timer_Display();
-
 	};
 
 	/** @method Render

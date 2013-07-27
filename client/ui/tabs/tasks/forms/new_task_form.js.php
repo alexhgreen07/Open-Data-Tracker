@@ -42,13 +42,14 @@ function New_Task_Form(){
 		var self = this;
 
 		//execute the RPC callback for retrieving the item log
-		rpc.Task_Data_Interface.Insert_Task(params, function(jsonRpcObj) {
+		app.api.Task_Data_Interface.Insert_Task(params, function(jsonRpcObj) {
 
 			if (jsonRpcObj.result.success == 'true') {
 
-				self.Refresh_Task_Name_List(function() {
-					alert('New task added.');
+				alert('New task added.');
 
+				app.api.Refresh_Data(function() {
+					//self.refresh_item_log_callback();
 				});
 
 			} else {
@@ -85,7 +86,7 @@ function New_Task_Form(){
 		//task recurring
 		this.task_category_select = document.createElement("select");
 		this.task_category_select.setAttribute('id', 'task_category_select');
-		this.task_category_select.innerHTML = '<option>-</option>';
+		this.task_category_select.innerHTML = '<option value="0">-</option>';
 		this.data_form_new_task.appendChild(this.task_category_select);
 
 		this.data_form_new_task.innerHTML += 'Description:<br />';

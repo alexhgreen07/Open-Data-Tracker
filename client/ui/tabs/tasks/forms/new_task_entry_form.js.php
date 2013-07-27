@@ -27,6 +27,34 @@ include_once(dirname(__FILE__).'/../../../../external/json-rpc2php-master/jsonRP
  */
 function New_Task_Entry_Form(){
 	
+	this.Refresh = function(data){
+		
+		var self = this;
+		
+		//ensure the task info array is saved
+		self.task_info_json_array = data.tasks;
+
+		//create a list of options for the select
+		var new_inner_html = '';
+
+		new_inner_html += '<option>-</option>';
+
+		//iterate through all tasks
+		for (var i = 0; i < self.task_info_json_array.length; i++) {
+			//add task option to select
+			new_inner_html += '<option>' + self.task_info_json_array[i].name + '</option>';
+
+			//format task start datetime
+			if (self.task_info_json_array[i].start_time != '') {
+				//change start date string to javascript date object
+				//var t = self.task_info_json_array[i].start_time.split(/[- :]/);
+				//self.task_info_json_array[i].start_time = new Date(t[0], t[1] - 1, t[2], t[3], t[4], t[5]);
+			}
+		}
+
+		document.getElementById(self.add_task_entry_task_name_select.id).innerHTML = new_inner_html;
+		
+	};
 	
 	/** @method Insert_Task_Entry
 	 * @desc This function inserts a task entry from the insert entry form.
@@ -63,7 +91,7 @@ function New_Task_Entry_Form(){
 			}
 
 			//execute the RPC callback for retrieving the item log
-			rpc.Task_Data_Interface.Insert_Task_Entry(params, function(jsonRpcObj) {
+			app.api.Task_Data_Interface.Insert_Task_Entry(params, function(jsonRpcObj) {
 
 				if (jsonRpcObj.result.success == 'true') {
 
@@ -72,13 +100,8 @@ function New_Task_Entry_Form(){
 
 					alert('Task entry submitted.');
 
-					self.Refresh_Tasks(function() {
-						//refresh_callback();
-
-						self.Refresh_Task_Name_List(function() {
-							self.refresh_task_log_callback();
-						});
-
+					app.api.Refresh_Data(function() {
+						//self.refresh_item_log_callback();
 					});
 
 				} else {

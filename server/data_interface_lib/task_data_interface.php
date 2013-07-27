@@ -390,6 +390,7 @@ class Task_Data_Interface {
 					$task_name = mysql_result($result, $i, "name");
 					$task_description = mysql_result($result, $i, "description");
 					$task_estimated_time = mysql_result($result, $i, "estimated_time");
+					$date_created = mysql_result($result,$i,'date_created');
 					$task_note = mysql_result($result,$i,'note');
 					$category_id = mysql_result($result,$i,'category_id');
 					
@@ -398,6 +399,7 @@ class Task_Data_Interface {
 						'name' => $task_name,
 						'description' => $task_description,
 						'estimated_time' => $task_estimated_time, 
+						'date_created' => $date_created,
 						'note' => $task_note,
 						'category_id' => $category_id);
 					

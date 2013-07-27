@@ -27,6 +27,78 @@ include_once(dirname(__FILE__).'/../../../../external/json-rpc2php-master/jsonRP
  */
 function Timecard_Task_Entry_Form(){
 	
+	this.Refresh = function(data){
+		
+		var self = this;
+		
+		//ensure the task info array is saved
+		self.task_info_json_array = data.tasks;
+
+		//create a list of options for the select
+		var new_inner_html = '';
+
+		new_inner_html += '<option>-</option>';
+
+		//iterate through all tasks
+		for (var i = 0; i < self.task_info_json_array.length; i++) {
+			//add task option to select
+			new_inner_html += '<option>' + self.task_info_json_array[i].name + '</option>';
+
+			//format task start datetime
+			if (self.task_info_json_array[i].start_time != '') {
+				//change start date string to javascript date object
+				//var t = self.task_info_json_array[i].start_time.split(/[- :]/);
+				//self.task_info_json_array[i].start_time = new Date(t[0], t[1] - 1, t[2], t[3], t[4], t[5]);
+			}
+		}
+
+		document.getElementById(self.task_name_select.id).innerHTML = new_inner_html;
+		
+		
+	};
+	
+	
+	/** @method On_Task_Name_Select_Change_Event
+	 * @desc This function is the HTML select task start/stop index change event handler.
+	 * */
+	this.On_Task_Name_Select_Change_Event = function() {
+		//alert('Handler for task name select change called.');
+
+		var selected_index = document.getElementById(this.task_name_select.id).selectedIndex;
+		var new_html = '';
+		new_html += 'Info:<br /><br />';
+
+		if (selected_index > 0) {
+
+			var new_item = this.task_info_json_array[selected_index - 1];
+
+			new_html += 'Task ID: ' + new_item.task_id + '<br />';
+			new_html += 'Date Created: ' + new_item.date_created + '<br />';
+			new_html += 'Estimated Time (Hours): ' + new_item.estimated_time + '<br />';
+			new_html += 'Status: ' + new_item.item_status + '<br />';
+			new_html += 'Start Time: ' + new_item.start_time + '<br />';
+
+			if (new_item.item_status == 'Started') {
+				//set the start time and button value
+				this.current_task_start_time = new_item.start_time;
+				$('#' + this.task_timecard_note_div.id).show();
+				this.task_start_stop_button.value = 'Stop';
+			} else {
+				$('#' + this.task_timecard_note_div.id).hide();
+				this.task_start_stop_button.value = 'Start';
+			}
+		} else {
+			this.task_start_stop_button.value = 'Start';
+		}
+
+		new_html += '<br />';
+
+		this.task_info_div.innerHTML = new_html;
+
+		//refresh the timer
+		this.Refresh_Timer_Display();
+
+	};
 	
 	/** @method Start_Stop_Task
 	 * @desc This function starts and stops a task with the server.
@@ -53,7 +125,7 @@ function Timecard_Task_Entry_Form(){
 			var self = this;
 
 			//execute the RPC callback for retrieving the item log
-			rpc.Task_Data_Interface.Task_Start_Stop(params, function(jsonRpcObj) {
+			app.api.Task_Data_Interface.Task_Start_Stop(params, function(jsonRpcObj) {
 
 				if (jsonRpcObj.result.success == 'true') {
 
@@ -83,9 +155,8 @@ function Timecard_Task_Entry_Form(){
 					//refresh the timer
 					self.Refresh_Timer_Display();
 
-					self.Refresh_Task_Log_Data(function() {
-						refresh_callback();
-
+					app.api.Refresh_Data(function() {
+						//self.refresh_item_log_callback();
 					});
 
 				} else {
@@ -117,7 +188,7 @@ function Timecard_Task_Entry_Form(){
 			var self = this;
 
 			//execute the RPC callback for retrieving the item log
-			rpc.Task_Data_Interface.Task_Mark_Complete(params, function(jsonRpcObj) {
+			app.api.Task_Data_Interface.Task_Mark_Complete(params, function(jsonRpcObj) {
 
 				if (jsonRpcObj.result.success == 'true') {
 
@@ -126,14 +197,10 @@ function Timecard_Task_Entry_Form(){
 					//reset the notes
 					$('#' + self.task_timecard_note.id).val('');
 
-					self.Refresh_Tasks(function() {
-						//refresh the list to remove this task
-						self.Refresh_Task_Name_List(function() {
-							//self.refresh_task_log_callback();
-							refresh_callback();
-						});
-
+					app.api.Refresh_Data(function() {
+						//self.refresh_item_log_callback();
 					});
+					
 				} else {
 					alert('Task failed to complete.');
 				}

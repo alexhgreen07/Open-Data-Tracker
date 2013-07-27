@@ -27,6 +27,28 @@ include_once(dirname(__FILE__).'/../../../../external/json-rpc2php-master/jsonRP
  */
 function New_Task_Target_Form(){
 	
+	this.Refresh = function(data){
+		
+		var self = this;
+		
+		//ensure the task info array is saved
+		self.task_info_json_array = data.tasks;
+
+		//create a list of options for the select
+		var new_inner_html = '';
+
+		new_inner_html += '<option>-</option>';
+
+		//iterate through all tasks
+		for (var i = 0; i < self.task_info_json_array.length; i++) {
+			//add task option to select
+			new_inner_html += '<option>' + self.task_info_json_array[i].name + '</option>';
+
+		}
+
+		document.getElementById(self.task_target_new_name_select.id).innerHTML = new_inner_html;
+		
+	};
 	
 	/** @method Task_Target_New_Submit_Click
 	 * @desc This is the new task target submit button click event handler.
@@ -66,36 +88,22 @@ function New_Task_Target_Form(){
 			params[4] = recurrance_type;
 			params[5] = recurrance_period;
 
-			//show the loader image
-			$('#' + self.add_task_entry_loading_image_new.id).show();
 
 			//execute the RPC callback for retrieving the item log
-			rpc.Task_Data_Interface.Insert_Task_Target(params, function(jsonRpcObj) {
+			app.api.Task_Data_Interface.Insert_Task_Target(params, function(jsonRpcObj) {
 
 				if (jsonRpcObj.result.success == 'true') {
 
 					alert('Task target inserted successfully.');
-
-					self.Refresh_Tasks(function() {
-						
-						self.Refresh_Task_Name_List(function() {
-							
-							self.Refresh_Task_Target_Data(function(){
-								
-								self.refresh_task_log_callback();
-								
-							});
-							
-						});
-
+					
+					app.api.Refresh_Data(function() {
+						//self.refresh_item_log_callback();
 					});
 
 				} else {
 					alert('Failed to insert task entry.' + jsonRpcObj.result.debug);
 				}
 
-				//hide the loader image
-				$('#' + self.add_task_entry_loading_image_new.id).hide();
 
 			});
 

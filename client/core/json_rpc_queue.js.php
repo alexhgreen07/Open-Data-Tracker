@@ -4,10 +4,10 @@
 Header("content-type: application/x-javascript");
 
 //jquery code
-include_once(dirname(__FILE__).'/../../externals/jquery-ui-1.10.0.custom/js/jquery-1.9.0.js');
+include_once(dirname(__FILE__).'/../../externals/jquery-ui/jquery-1.10.2.js');
 
 //jquery UI code
-include_once(dirname(__FILE__).'/../../externals/jquery-ui-1.10.0.custom/js/jquery-ui-1.10.0.custom.js');
+include_once(dirname(__FILE__).'/../../externals/jquery-ui/ui/jquery.ui.core.js');
 
 //jquery datepicker code
 include_once(dirname(__FILE__).'/../../externals/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js');

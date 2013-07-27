@@ -100,21 +100,6 @@ function Main_Application() {
 		});
 	};
 	
-	/** @method Refresh_Categories
-	 * @desc This should be called to refresh the category selects.
-	 * This function will go through all tabs and update any category 
-	 * select HTML objects.
-	 * */
-	this.Refresh_Categories = function(){
-		
-		
-		category_select = document.getElementById(self.add_new_category_parent_select.id).innerHTML;
-		document.getElementById(this.task_tab_object.task_category_select.id).innerHTML = category_select;
-		document.getElementById(this.task_tab_object.task_edit_category_select.id).innerHTML = category_select;
-		document.getElementById(this.item_tab_object.item_category_select.id).innerHTML = category_select;
-		document.getElementById(this.item_tab_object.item_edit_category_select.id).innerHTML = category_select;
-	};
-	
 	/** @method Render_Main_Tabs
 	 * @desc This function renders the main navigation tab object
 	 * and all sub-tab objects.

@@ -20,3 +20,10 @@ Developer Notes
 ===============
 * This is still in ALPHA stages.
 * If you'd like to contribute, check out: https://github.com/alexhgreen07/Open-Data-Tracker
+
+Documentation Generation
+------------------------
+* The documentation was written for 'doxygen' (PHP) and 'jsdoc' (javascript).
+* If you'd like to generate documentation, excute the commands below in Ubuntu:
+ * ```sudo apt-get install jsdoc doxygen```
+ * ```./build-doc.py```

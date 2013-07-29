@@ -24,9 +24,9 @@
 
 			<form id="loginForm" name="loginForm" method="post">
 	
-			Login:
+			Login:<br/>
 			<input name="login" type="text" id="login" class="text"/><br/>
-			Password:
+			Password:<br/>
 			<input name="password" type="password" id="password" class="text"/><br /><br />
 			<input type="submit" name="Submit" value="Login" /><br />
 			</form>

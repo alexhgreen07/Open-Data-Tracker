@@ -7,6 +7,3 @@
 [submodule "externals/jquery-ui-timepicker-addon"]
 	path = externals/jquery-ui-timepicker-addon
 	url = https://github.com/trentrichardson/jQuery-Timepicker-Addon.git
-[submodule "externals/jquery-ui"]
-	path = externals/jquery-ui
-	url = https://github.com/jquery/jquery-ui.git

@@ -34,7 +34,7 @@ include_once(dirname(__FILE__).'/../externals/jquery-ui-timepicker-addon/jquery-
 ?>
 
 body {
-	font: 28px Verdana, Arial, Helvetica, sans-serif;
+	font: 16px Verdana, Arial, Helvetica, sans-serif;
 	color: #666666;
 	margin: 0px;
 	padding: 20px 10px 0px;

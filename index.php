@@ -6,13 +6,13 @@
 		<html xmlns="http://www.w3.org/1999/xhtml">
 			<head>
 				<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-				<title>Trackanything: Member Index</title>
+				<title>Open Data Tracker: Member Login</title>
 		
 				<!-- Custom CSS stylsheet -->
 				<link href="client/main.css.php" rel="stylesheet" type="text/css" />
 			</head>
 			<body>
-			<h1>TrackAnything Login</h1>
+			<h1>Open Data Tracker Login</h1>
 			<a href="new_member.php">Sign Up</a>';
 
 	if (!isset($_POST["password"]) && !isset($_POST["login"])) {

@@ -68,9 +68,14 @@
 		if ($result) {
 
 			if (mysql_num_rows($result) == 1) {
-
+						
 				//Login Successful
 				session_regenerate_id();
+				
+				$cookieLifetime = 365 * 24 * 60 * 60; // A year in seconds
+				setcookie(session_name(),session_id(),time()+$cookieLifetime);	
+				
+				
 				$member = mysql_fetch_assoc($result);
 				$_SESSION['SESS_MEMBER_ID'] = $member['member_id'];
 				$_SESSION['SESS_FIRST_NAME'] = $member['firstname'];

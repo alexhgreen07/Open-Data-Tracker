@@ -176,18 +176,72 @@ User Management
 User registration
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+Username
+\end_layout
+
+\begin_layout Itemize
+Password
+\end_layout
+
+\begin_layout Itemize
+Email (optional)
+\end_layout
+
+\begin_layout Itemize
+First Name (optional)
+\end_layout
+
+\begin_layout Itemize
+Last Name (optional)
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 User permissions
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+User can only see things they created.
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 User deletion
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+A user can delete their own account.
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Security
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+Remember me
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Stores the login ID number in a cookie.
+\end_layout
+
+\begin_layout Itemize
+Stores the login ID number in the database.
+\end_layout
+
+\begin_layout Itemize
+Checks the cookie to the database if the session has not been authenticated.
+\end_layout
+
+\end_deeper
+\end_deeper
 \begin_layout Section
 Server Core
 \end_layout

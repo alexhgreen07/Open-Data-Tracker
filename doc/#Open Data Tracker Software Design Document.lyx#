@@ -249,15 +249,7 @@ Overview form
 
 \begin_deeper
 \begin_layout Itemize
-Upcoming task data
-\end_layout
 
-\begin_layout Itemize
-Overall daily summary
-\end_layout
-
-\begin_layout Itemize
-Targets
 \end_layout
 
 \end_deeper
@@ -265,48 +257,10 @@ Targets
 General form
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-Category form
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Add category
-\end_layout
-
-\begin_layout Itemize
-Edit/delete category
-\end_layout
-
-\begin_layout Itemize
-View categories
-\end_layout
-
-\end_deeper
-\end_deeper
 \begin_layout Itemize
 Settings form
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-Update style
-\end_layout
-
-\begin_layout Itemize
-Update login 'forget me' expiry time
-\end_layout
-
-\begin_layout Itemize
-Update name
-\end_layout
-
-\begin_layout Itemize
-Update email
-\end_layout
-
-\end_deeper
 \end_deeper
 \begin_layout Itemize
 Item tab

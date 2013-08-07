@@ -144,6 +144,30 @@ Architecture
 Overview
 \end_layout
 
+\begin_layout Itemize
+Server core interface to SQL server
+\end_layout
+
+\begin_layout Itemize
+JSON RPC PHP
+\end_layout
+
+\begin_layout Itemize
+JSON RPC Javascript
+\end_layout
+
+\begin_layout Itemize
+JSON RPC Queue
+\end_layout
+
+\begin_layout Itemize
+Client Core
+\end_layout
+
+\begin_layout Itemize
+Client UI
+\end_layout
+
 \begin_layout Section
 User Management
 \end_layout
@@ -477,6 +501,14 @@ Database
 Overview
 \end_layout
 
+\begin_layout Itemize
+MYSQL server
+\end_layout
+
+\begin_layout Itemize
+Single database model
+\end_layout
+
 \begin_layout Section
 Tables
 \end_layout
@@ -485,34 +517,254 @@ Tables
 members
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+member_id
+\end_layout
+
+\begin_layout Itemize
+firstname
+\end_layout
+
+\begin_layout Itemize
+lastname
+\end_layout
+
+\begin_layout Itemize
+login
+\end_layout
+
+\begin_layout Itemize
+passwd
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 categories
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+category_id
+\end_layout
+
+\begin_layout Itemize
+name
+\end_layout
+
+\begin_layout Itemize
+description
+\end_layout
+
+\begin_layout Itemize
+parent_category_id
+\end_layout
+
+\begin_layout Itemize
+member_id
+\end_layout
+
+\begin_layout Itemize
+category_path
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 items
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+item_id
+\end_layout
+
+\begin_layout Itemize
+date_created
+\end_layout
+
+\begin_layout Itemize
+name
+\end_layout
+
+\begin_layout Itemize
+unit
+\end_layout
+
+\begin_layout Itemize
+description
+\end_layout
+
+\begin_layout Itemize
+category_id
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 item_log
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+item_log_id
+\end_layout
+
+\begin_layout Itemize
+time
+\end_layout
+
+\begin_layout Itemize
+value
+\end_layout
+
+\begin_layout Itemize
+item_id
+\end_layout
+
+\begin_layout Itemize
+note
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 item_targets
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+item_target_id
+\end_layout
+
+\begin_layout Itemize
+item_id
+\end_layout
+
+\begin_layout Itemize
+scheduled
+\end_layout
+
+\begin_layout Itemize
+scheduled_time
+\end_layout
+
+\begin_layout Itemize
+recurring
+\end_layout
+
+\begin_layout Itemize
+recurrance_type
+\end_layout
+
+\begin_layout Itemize
+recurrance_period
+\end_layout
+
+\begin_layout Itemize
+recurrance_end_time
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 tasks
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+task_id
+\end_layout
+
+\begin_layout Itemize
+name
+\end_layout
+
+\begin_layout Itemize
+description
+\end_layout
+
+\begin_layout Itemize
+date_created
+\end_layout
+
+\begin_layout Itemize
+estimated_time
+\end_layout
+
+\begin_layout Itemize
+note
+\end_layout
+
+\begin_layout Itemize
+category_id
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 task_log
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+task_log_id
+\end_layout
+
+\begin_layout Itemize
+task_id
+\end_layout
+
+\begin_layout Itemize
+start_time
+\end_layout
+
+\begin_layout Itemize
+status
+\end_layout
+
+\begin_layout Itemize
+hours
+\end_layout
+
+\begin_layout Itemize
+note
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 task_targets
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+task_schedule_id
+\end_layout
+
+\begin_layout Itemize
+task_id
+\end_layout
+
+\begin_layout Itemize
+scheduled
+\end_layout
+
+\begin_layout Itemize
+scheduled_time
+\end_layout
+
+\begin_layout Itemize
+recurring
+\end_layout
+
+\begin_layout Itemize
+recurrance_type
+\end_layout
+
+\begin_layout Itemize
+recurrance_period
+\end_layout
+
+\begin_layout Itemize
+recurrance_end_time
+\end_layout
+
+\end_deeper
 \begin_layout Part*
 Appendix
 \end_layout

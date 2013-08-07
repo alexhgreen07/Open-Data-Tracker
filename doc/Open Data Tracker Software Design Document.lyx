@@ -272,15 +272,15 @@ Category form
 
 \begin_deeper
 \begin_layout Itemize
-Add category
+Add category form
 \end_layout
 
 \begin_layout Itemize
-Edit/delete category
+Edit/delete category form
 \end_layout
 
 \begin_layout Itemize
-View categories
+View categories form
 \end_layout
 
 \end_deeper
@@ -312,22 +312,163 @@ Update email
 Item tab
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+Quick item entry form
+\end_layout
+
+\begin_layout Itemize
+New item entry form
+\end_layout
+
+\begin_layout Itemize
+edit item entry form
+\end_layout
+
+\begin_layout Itemize
+view item entries form
+\end_layout
+
+\begin_layout Itemize
+new item form
+\end_layout
+
+\begin_layout Itemize
+edit item form
+\end_layout
+
+\begin_layout Itemize
+view items form
+\end_layout
+
+\begin_layout Itemize
+new target entry form
+\end_layout
+
+\begin_layout Itemize
+edit target entry form
+\end_layout
+
+\begin_layout Itemize
+view target entries form
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Tasks tab
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+Timecard task entry form
+\end_layout
+
+\begin_layout Itemize
+New task entry form
+\end_layout
+
+\begin_layout Itemize
+Edit task entry form
+\end_layout
+
+\begin_layout Itemize
+New task form
+\end_layout
+
+\begin_layout Itemize
+Edit task form
+\end_layout
+
+\begin_layout Itemize
+View task form
+\end_layout
+
+\begin_layout Itemize
+New target entry form
+\end_layout
+
+\begin_layout Itemize
+Edit target entry form
+\end_layout
+
+\begin_layout Itemize
+View target entries form
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Data tab
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+Pivote table form
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Graphs tab
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+Pivote table form
+\end_layout
+
+\end_deeper
 \begin_layout Section
 Remote Procedure Call Core
 \end_layout
 
+\begin_layout Itemize
+JSON RPC Queue
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Dynamically detects all functions in a JSON PHP-Javascript object.
+\end_layout
+
+\begin_layout Itemize
+Adds a queue layer between the caller and the AJAX request so calls are
+ never lost.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+JSON RPC PHP-Javascript Library
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Javascript module
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Queries the PHP server for all functions and builds an index of properties.
+\end_layout
+
+\begin_layout Itemize
+Is able to call functions via AJAX callbacks.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+PHP module
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Builds a list of functions in registered classes and sends them to the client.
+\end_layout
+
+\begin_layout Itemize
+Calls functions and passes them the parameters.
+\end_layout
+
+\end_deeper
+\end_deeper
 \begin_layout Part
 Database
 \end_layout
@@ -338,6 +479,38 @@ Overview
 
 \begin_layout Section
 Tables
+\end_layout
+
+\begin_layout Itemize
+members
+\end_layout
+
+\begin_layout Itemize
+categories
+\end_layout
+
+\begin_layout Itemize
+items
+\end_layout
+
+\begin_layout Itemize
+item_log
+\end_layout
+
+\begin_layout Itemize
+item_targets
+\end_layout
+
+\begin_layout Itemize
+tasks
+\end_layout
+
+\begin_layout Itemize
+task_log
+\end_layout
+
+\begin_layout Itemize
+task_targets
 \end_layout
 
 \begin_layout Part*

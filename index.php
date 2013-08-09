@@ -1,7 +1,19 @@
 <?php
 
 	require_once ('server/config.php');
+	
+	//Connect to mysql server
+	$link = mysql_connect(DB_HOST, DB_USER, DB_PASSWORD);
+	if (!$link) {
+		die('Failed to connect to server: ' . mysql_error());
+	}
 
+	//Select database
+	$db = mysql_select_db(DB_DATABASE);
+	if (!$db) {
+		die("Unable to select database");
+	}
+	
 	$html_output = '
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;"> 
@@ -26,26 +38,28 @@
 			$is_cookie_valid = false;
 			
 			//Create query
-			$qry = "SELECT * FROM members WHERE last_session_id='".$login."'";
+			$qry = "SELECT * FROM members WHERE last_session_id='".$_COOKIE['remember_me_id']."';";
 			$result = mysql_query($qry);
-	
+			
 			//Check whether the query was successful or not
 			if ($result) {
-	
+				
 				if (mysql_num_rows($result) == 1) {
 						
-					//Login Successful
-					session_regenerate_id();
-					
-					$cookieLifetime = 365 * 24 * 60 * 60; // A year in seconds
-					setcookie('remember_me_id',session_id(),time()+$cookieLifetime);	
-					
+					//Start session
+					session_start();
 					
 					$member = mysql_fetch_assoc($result);
 					$_SESSION['SESS_MEMBER_ID'] = $member['member_id'];
 					$_SESSION['SESS_FIRST_NAME'] = $member['firstname'];
 					$_SESSION['SESS_LAST_NAME'] = $member['lastname'];
-					session_write_close();
+					
+					$cookieLifetime = 365 * 24 * 60 * 60; // A year in seconds
+					setcookie('remember_me_id',session_id(),time()+$cookieLifetime);	
+					
+					
+					$qry = "UPDATE members SET last_session_id = '".session_id()."' WHERE member_id = '".$_SESSION['SESS_MEMBER_ID']."';";
+					$result = mysql_query($qry);
 					
 					//go to member index
 					header("location: member-index.php");
@@ -84,18 +98,6 @@
 		//Validation error flag
 		$errflag = false;
 
-		//Connect to mysql server
-		$link = mysql_connect(DB_HOST, DB_USER, DB_PASSWORD);
-		if (!$link) {
-			die('Failed to connect to server: ' . mysql_error());
-		}
-
-		//Select database
-		$db = mysql_select_db(DB_DATABASE);
-		if (!$db) {
-			die("Unable to select database");
-		}
-
 		//Create query
 		$qry = "SELECT * FROM members WHERE login='".$login."' AND passwd='" . md5($password) . "'";
 		$result = mysql_query($qry);
@@ -108,15 +110,17 @@
 				//Login Successful
 				session_regenerate_id();
 				
-				$cookieLifetime = 365 * 24 * 60 * 60; // A year in seconds
-				setcookie('remember_me_id',session_id(),time()+$cookieLifetime);	
-				
-				
 				$member = mysql_fetch_assoc($result);
 				$_SESSION['SESS_MEMBER_ID'] = $member['member_id'];
 				$_SESSION['SESS_FIRST_NAME'] = $member['firstname'];
 				$_SESSION['SESS_LAST_NAME'] = $member['lastname'];
-				session_write_close();
+				
+				$cookieLifetime = 365 * 24 * 60 * 60; // A year in seconds
+				setcookie('remember_me_id',session_id(),time()+$cookieLifetime);	
+				
+				
+				$qry = "UPDATE members SET last_session_id = '".session_id()."' WHERE member_id = '".$_SESSION['SESS_MEMBER_ID']."';";
+				$result = mysql_query($qry);
 
 				header("location: member-index.php");
 				exit();

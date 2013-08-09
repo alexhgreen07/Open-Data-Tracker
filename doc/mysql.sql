@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.4
+-- version 4.0.4.1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 14, 2013 at 09:07 PM
--- Server version: 5.5.31-0ubuntu0.12.10.1
--- PHP Version: 5.4.6-1ubuntu1.2
+-- Generation Time: Aug 09, 2013 at 12:48 AM
+-- Server version: 5.1.44
+-- PHP Version: 5.3.2
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `life_management`
 --
+CREATE DATABASE IF NOT EXISTS `life_management` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `life_management`;
 
 -- --------------------------------------------------------
 
@@ -34,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
   `member_id` int(11) NOT NULL,
   `category_path` text NOT NULL,
   PRIMARY KEY (`category_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -50,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `items` (
   `description` text NOT NULL,
   `category_id` int(11) NOT NULL,
   PRIMARY KEY (`item_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 -- --------------------------------------------------------
 
@@ -65,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `item_log` (
   `item_id` int(11) NOT NULL,
   `note` text NOT NULL,
   PRIMARY KEY (`item_log_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=34 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
 
 -- --------------------------------------------------------
 
@@ -79,8 +81,9 @@ CREATE TABLE IF NOT EXISTS `members` (
   `lastname` varchar(100) DEFAULT NULL,
   `login` varchar(100) NOT NULL DEFAULT '',
   `passwd` varchar(32) NOT NULL DEFAULT '',
+  `last_session_id` text NOT NULL,
   PRIMARY KEY (`member_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -97,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `note` text NOT NULL,
   `category_id` int(11) NOT NULL,
   PRIMARY KEY (`task_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -113,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `task_log` (
   `hours` float NOT NULL,
   `note` text NOT NULL,
   PRIMARY KEY (`task_log_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 -- --------------------------------------------------------
 
@@ -131,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `task_targets` (
   `recurrance_period` float NOT NULL,
   `recurrance_end_time` datetime NOT NULL,
   PRIMARY KEY (`task_schedule_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

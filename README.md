@@ -27,3 +27,6 @@ Documentation Generation
 * If you'd like to generate documentation, excute the commands below in Ubuntu:
  * ```sudo apt-get install jsdoc doxygen```
  * ```./build-doc.py```
+* Other documentation in the 'doc/' folder:
+ * Lyx based Download the GUI editor here: (http://www.lyx.org/).
+ * Libre Office for diagrams (https://www.libreoffice.org/).

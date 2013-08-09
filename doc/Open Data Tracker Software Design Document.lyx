@@ -1,0 +1,906 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Open Data Tracker Software Design Document
+\end_layout
+
+\begin_layout Author
+By: Alexander Hart Green
+\end_layout
+
+\begin_layout Date
+August 4, 2013
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FloatList figure
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FloatList table
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Overview
+\end_layout
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Section
+Purpose
+\end_layout
+
+\begin_layout Part
+Architecture
+\end_layout
+
+\begin_layout Section
+Overview
+\end_layout
+
+\begin_layout Itemize
+Server core interface to SQL server
+\end_layout
+
+\begin_layout Itemize
+JSON RPC PHP
+\end_layout
+
+\begin_layout Itemize
+JSON RPC Javascript
+\end_layout
+
+\begin_layout Itemize
+JSON RPC Queue
+\end_layout
+
+\begin_layout Itemize
+Client Core
+\end_layout
+
+\begin_layout Itemize
+Client UI
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/Software Architecture Overview.png
+	width 12cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Software Architecture Overview
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+User Management
+\end_layout
+
+\begin_layout Itemize
+User registration
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Username
+\end_layout
+
+\begin_layout Itemize
+Password
+\end_layout
+
+\begin_layout Itemize
+Email (optional)
+\end_layout
+
+\begin_layout Itemize
+First Name (optional)
+\end_layout
+
+\begin_layout Itemize
+Last Name (optional)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+User permissions
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+User can only see things they created.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+User deletion
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+A user can delete their own account.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Security
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Remember me
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Stores the login ID number in a cookie.
+\end_layout
+
+\begin_layout Itemize
+Stores the login ID number in the database.
+\end_layout
+
+\begin_layout Itemize
+Checks the cookie to the database if the session has not been authenticated.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Section
+Server Core
+\end_layout
+
+\begin_layout Itemize
+General
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Categories
+\end_layout
+
+\begin_layout Itemize
+Settings
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Items
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Items
+\end_layout
+
+\begin_layout Itemize
+Item Entries
+\end_layout
+
+\begin_layout Itemize
+Item Targets
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Tasks
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Tasks
+\end_layout
+
+\begin_layout Itemize
+Task Entries
+\end_layout
+
+\begin_layout Itemize
+Task Targets
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Client Core
+\end_layout
+
+\begin_layout Itemize
+Data refreshing
+\end_layout
+
+\begin_layout Itemize
+Event callbacks
+\end_layout
+
+\begin_layout Itemize
+Global settings
+\end_layout
+
+\begin_layout Section
+Client UI
+\end_layout
+
+\begin_layout Itemize
+Home tab
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Overview form
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Upcoming task data
+\end_layout
+
+\begin_layout Itemize
+Overall daily summary
+\end_layout
+
+\begin_layout Itemize
+Targets
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+General form
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Category form
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Add category form
+\end_layout
+
+\begin_layout Itemize
+Edit/delete category form
+\end_layout
+
+\begin_layout Itemize
+View categories form
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+Settings form
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Update style
+\end_layout
+
+\begin_layout Itemize
+Update login 'forget me' expiry time
+\end_layout
+
+\begin_layout Itemize
+Update name
+\end_layout
+
+\begin_layout Itemize
+Update email
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+Item tab
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Quick item entry form
+\end_layout
+
+\begin_layout Itemize
+New item entry form
+\end_layout
+
+\begin_layout Itemize
+edit item entry form
+\end_layout
+
+\begin_layout Itemize
+view item entries form
+\end_layout
+
+\begin_layout Itemize
+new item form
+\end_layout
+
+\begin_layout Itemize
+edit item form
+\end_layout
+
+\begin_layout Itemize
+view items form
+\end_layout
+
+\begin_layout Itemize
+new target entry form
+\end_layout
+
+\begin_layout Itemize
+edit target entry form
+\end_layout
+
+\begin_layout Itemize
+view target entries form
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Tasks tab
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Timecard task entry form
+\end_layout
+
+\begin_layout Itemize
+New task entry form
+\end_layout
+
+\begin_layout Itemize
+Edit task entry form
+\end_layout
+
+\begin_layout Itemize
+New task form
+\end_layout
+
+\begin_layout Itemize
+Edit task form
+\end_layout
+
+\begin_layout Itemize
+View task form
+\end_layout
+
+\begin_layout Itemize
+New target entry form
+\end_layout
+
+\begin_layout Itemize
+Edit target entry form
+\end_layout
+
+\begin_layout Itemize
+View target entries form
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Data tab
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Pivote table form
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Graphs tab
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Pivote table form
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Remote Procedure Call Core
+\end_layout
+
+\begin_layout Itemize
+JSON RPC Queue
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Dynamically detects all functions in a JSON PHP-Javascript object.
+\end_layout
+
+\begin_layout Itemize
+Adds a queue layer between the caller and the AJAX request so calls are
+ never lost.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+JSON RPC PHP-Javascript Library
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Javascript module
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Queries the PHP server for all functions and builds an index of properties.
+\end_layout
+
+\begin_layout Itemize
+Is able to call functions via AJAX callbacks.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+PHP module
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Builds a list of functions in registered classes and sends them to the client.
+\end_layout
+
+\begin_layout Itemize
+Calls functions and passes them the parameters.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Part
+Database
+\end_layout
+
+\begin_layout Section
+Overview
+\end_layout
+
+\begin_layout Itemize
+MYSQL server
+\end_layout
+
+\begin_layout Itemize
+Single database model
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/Database Diagram.png
+	width 12cm
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Database Diagram
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Tables
+\end_layout
+
+\begin_layout Itemize
+members
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+member_id
+\end_layout
+
+\begin_layout Itemize
+firstname
+\end_layout
+
+\begin_layout Itemize
+lastname
+\end_layout
+
+\begin_layout Itemize
+login
+\end_layout
+
+\begin_layout Itemize
+passwd
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+categories
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+category_id
+\end_layout
+
+\begin_layout Itemize
+name
+\end_layout
+
+\begin_layout Itemize
+description
+\end_layout
+
+\begin_layout Itemize
+parent_category_id
+\end_layout
+
+\begin_layout Itemize
+member_id
+\end_layout
+
+\begin_layout Itemize
+category_path
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+items
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+item_id
+\end_layout
+
+\begin_layout Itemize
+date_created
+\end_layout
+
+\begin_layout Itemize
+name
+\end_layout
+
+\begin_layout Itemize
+unit
+\end_layout
+
+\begin_layout Itemize
+description
+\end_layout
+
+\begin_layout Itemize
+category_id
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+item_log
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+item_log_id
+\end_layout
+
+\begin_layout Itemize
+time
+\end_layout
+
+\begin_layout Itemize
+value
+\end_layout
+
+\begin_layout Itemize
+item_id
+\end_layout
+
+\begin_layout Itemize
+note
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+item_targets
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+item_target_id
+\end_layout
+
+\begin_layout Itemize
+item_id
+\end_layout
+
+\begin_layout Itemize
+scheduled
+\end_layout
+
+\begin_layout Itemize
+scheduled_time
+\end_layout
+
+\begin_layout Itemize
+recurring
+\end_layout
+
+\begin_layout Itemize
+recurrance_type
+\end_layout
+
+\begin_layout Itemize
+recurrance_period
+\end_layout
+
+\begin_layout Itemize
+recurrance_end_time
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+tasks
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+task_id
+\end_layout
+
+\begin_layout Itemize
+name
+\end_layout
+
+\begin_layout Itemize
+description
+\end_layout
+
+\begin_layout Itemize
+date_created
+\end_layout
+
+\begin_layout Itemize
+estimated_time
+\end_layout
+
+\begin_layout Itemize
+note
+\end_layout
+
+\begin_layout Itemize
+category_id
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+task_log
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+task_log_id
+\end_layout
+
+\begin_layout Itemize
+task_id
+\end_layout
+
+\begin_layout Itemize
+start_time
+\end_layout
+
+\begin_layout Itemize
+status
+\end_layout
+
+\begin_layout Itemize
+hours
+\end_layout
+
+\begin_layout Itemize
+note
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+task_targets
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+task_schedule_id
+\end_layout
+
+\begin_layout Itemize
+task_id
+\end_layout
+
+\begin_layout Itemize
+scheduled
+\end_layout
+
+\begin_layout Itemize
+scheduled_time
+\end_layout
+
+\begin_layout Itemize
+recurring
+\end_layout
+
+\begin_layout Itemize
+recurrance_type
+\end_layout
+
+\begin_layout Itemize
+recurrance_period
+\end_layout
+
+\begin_layout Itemize
+recurrance_end_time
+\end_layout
+
+\end_deeper
+\begin_layout Part*
+Appendix
+\end_layout
+
+\end_body
+\end_document

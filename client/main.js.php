@@ -3,6 +3,9 @@
 
 Header("content-type: application/x-javascript");
 
+//fastclick code
+include_once(dirname(__FILE__).'/../externals/fastclick/lib/fastclick.js');
+
 //jquery code
 include_once(dirname(__FILE__).'/../externals/jquery-ui/jquery-1.10.2.js');
 
@@ -217,6 +220,8 @@ var rpc;
 function main() {
 
 	$(document).ready(function(){
+		
+		FastClick.attach(document.body);
 		
 		app = new Main_Application();
 		

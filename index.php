@@ -19,6 +19,42 @@
 
 	if (!isset($_POST["password"]) && !isset($_POST["login"])) {
 		
+		//check for the 'remember me' cookie.
+		if(isset($_COOKIE['remember_me_id']))
+		{
+			//validate cookie from database
+			$is_cookie_valid = false;
+			
+			//Create query
+			$qry = "SELECT * FROM members WHERE last_session_id='".$login."'";
+			$result = mysql_query($qry);
+	
+			//Check whether the query was successful or not
+			if ($result) {
+	
+				if (mysql_num_rows($result) == 1) {
+						
+					//Login Successful
+					session_regenerate_id();
+					
+					$cookieLifetime = 365 * 24 * 60 * 60; // A year in seconds
+					setcookie('remember_me_id',session_id(),time()+$cookieLifetime);	
+					
+					
+					$member = mysql_fetch_assoc($result);
+					$_SESSION['SESS_MEMBER_ID'] = $member['member_id'];
+					$_SESSION['SESS_FIRST_NAME'] = $member['firstname'];
+					$_SESSION['SESS_LAST_NAME'] = $member['lastname'];
+					session_write_close();
+					
+					//go to member index
+					header("location: member-index.php");
+					exit();
+				}
+			}
+			
+		}
+		
 		$html_output .= '
 	
 
@@ -68,12 +104,12 @@
 		if ($result) {
 
 			if (mysql_num_rows($result) == 1) {
-						
+					
 				//Login Successful
 				session_regenerate_id();
 				
 				$cookieLifetime = 365 * 24 * 60 * 60; // A year in seconds
-				setcookie(session_name(),session_id(),time()+$cookieLifetime);	
+				setcookie('remember_me_id',session_id(),time()+$cookieLifetime);	
 				
 				
 				$member = mysql_fetch_assoc($result);

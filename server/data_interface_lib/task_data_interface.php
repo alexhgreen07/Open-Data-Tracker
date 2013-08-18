@@ -20,7 +20,7 @@ class Task_Data_Interface {
 
 	}
 
-	public function Insert_Task_Entry($start_time, $task_id, $hours, $completed, $status, $note) {
+	public function Insert_Task_Entry($start_time, $task_id, $hours, $completed, $status, $note, $task_target_id) {
 
 		$return_json = array('authenticated' => 'false', 'success' => 'false', );
 
@@ -48,7 +48,15 @@ class Task_Data_Interface {
 				//$status = "Stopped";
 			}
 
-			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`hours`, `status`, `note`) VALUES ('" . $task_id . "','" . $start_time . "','" . $hours . "', '" . $status . "','" . $note . "')";
+			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`hours`, `status`, `note`, `task_target_id`) VALUES ('" . 
+				$task_id . "','" . 
+				$start_time . "','" . 
+				$hours . "', '" . 
+				$status . "','" . 
+				$note . "',".
+				$task_target_id.")";
+			
+			$return_json['debug'] = $sql;
 			
 			//execute insert
 			$success = mysql_query($sql, $this -> database_link);
@@ -66,7 +74,7 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 
-	public function Update_Task_Entry($task_log_id, $task_id, $start_time, $hours, $completed, $status, $note) {
+	public function Update_Task_Entry($task_log_id, $task_id, $start_time, $hours, $completed, $status, $note, $task_target_id) {
 
 		$return_json = array('authenticated' => 'false', 'success' => 'false', );
 
@@ -84,7 +92,8 @@ class Task_Data_Interface {
 			`start_time`='" . $start_time . "',
 			`hours`=" . $hours . ",
 			`status`='" . $status . "',
-			`note`='" . $note . "'
+			`note`='" . $note . "',
+			`task_target_id`=".$task_target_id."
 			WHERE `task_log_id` = " . $task_log_id . "";
 
 		//execute insert

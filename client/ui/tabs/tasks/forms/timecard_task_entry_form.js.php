@@ -31,27 +31,50 @@ function Timecard_Task_Entry_Form(){
 		
 		var self = this;
 		
+		self.Refresh_Task_Name_Select(data);
+		
+		self.Refresh_Task_Targets(data);
+		
+		self.Refresh_Task_Started_Entries(data);
+		
+	};
+	
+	this.Refresh_Task_Name_Select = function(data){
+		
+		var self = this;
+		
 		//ensure the task info array is saved
 		self.task_info_json_array = data.tasks;
 
 		//create a list of options for the select
 		var new_inner_html = '';
 
-		new_inner_html += '<option>-</option>';
-
+		new_inner_html += '<option value="0">-</option>';
+		
+		self.active_tasks = Array();
+		
 		//iterate through all tasks
 		for (var i = 0; i < self.task_info_json_array.length; i++) {
 			
 			if(self.task_info_json_array[i].status == "Active")
 			{
+				self.active_tasks.push(self.task_info_json_array[i]); 
+				
 				//add task option to select
-				new_inner_html += '<option>' + self.task_info_json_array[i].name + '</option>';
+				new_inner_html += '<option value="' + self.task_info_json_array[i].task_id + '">';
+				new_inner_html += self.task_info_json_array[i].name + '</option>';
 			}
 			
 
 		}
 
 		document.getElementById(self.task_name_select.id).innerHTML = new_inner_html;
+		
+	};
+	
+	this.Refresh_Task_Targets = function(data){
+		
+		var self = this;
 		
 		//create a list of options for the select
 		var new_inner_html = '';
@@ -60,17 +83,60 @@ function Timecard_Task_Entry_Form(){
 
 		//iterate through all tasks
 		for (var i = 0; i < data.task_targets.length; i++) {
-			//add task option to select
-			new_inner_html += '<option value="'
-			new_inner_html += data.task_targets[i].task_schedule_id;
-			new_inner_html += '">(';
-			new_inner_html += data.task_targets[i].task_schedule_id + ') ';
-			new_inner_html += data.task_targets[i].name + '</option>';
+			
+			for(var j = 0; j < self.active_tasks.length; j++)
+			{
+				if(self.active_tasks[j].task_id == data.task_targets[i].task_id)
+				{
+					//add task option to select
+					new_inner_html += '<option value="'
+					new_inner_html += data.task_targets[i].task_schedule_id;
+					new_inner_html += '">(';
+					new_inner_html += data.task_targets[i].task_schedule_id + ') ';
+					new_inner_html += data.task_targets[i].name + '</option>';
+					
+					break;
+				}
+			}
+			
+			
 
 		}
 
 		document.getElementById(self.task_target_select.id).innerHTML = new_inner_html;
+	};
+	
+	this.Refresh_Task_Started_Entries = function(data){
 		
+		var self = this;
+		
+		
+		//create a list of options for the select
+		var new_inner_html = '';
+
+		new_inner_html += '<option value="0">-</option>';
+
+		//iterate through all tasks
+		for (var i = 0; i < data.task_entries.length; i++) {
+			
+			for(var j = 0; j < self.active_tasks.length; j++)
+			{
+				if((self.active_tasks[j].task_id == data.task_entries[i].task_id) && 
+					(data.task_entries[i].status == "Started"))
+				{
+			
+					//add task option to select
+					new_inner_html += '<option value="'
+					new_inner_html += data.task_entries[i].task_log_id;
+					new_inner_html += '">(';
+					new_inner_html += data.task_entries[i].task_log_id + ') ';
+					new_inner_html += data.task_entries[i].name + '</option>';
+				}
+			}
+
+		}
+
+		document.getElementById(self.task_entries_started_select.id).innerHTML = new_inner_html;
 	};
 	
 	
@@ -322,6 +388,15 @@ function Timecard_Task_Entry_Form(){
 		
 		this.data_form_timecard_entry.appendChild(this.task_target_select);
 
+		this.data_form_timecard_entry.innerHTML += '<br />Started Entry:<br />';
+
+		//task name select dropdown
+		this.task_entries_started_select = document.createElement("select");
+		this.task_entries_started_select.setAttribute('name', "task_entries_started_names");
+		this.task_entries_started_select.setAttribute('id', "task_entries_started_names");
+		this.task_entries_started_select.innerHTML = '<option>-</option>';
+		
+		this.data_form_timecard_entry.appendChild(this.task_entries_started_select);
 
 		this.task_timecard_note_div = document.createElement("div");
 		this.task_timecard_note_div.setAttribute('id', 'task_timecard_note_div');

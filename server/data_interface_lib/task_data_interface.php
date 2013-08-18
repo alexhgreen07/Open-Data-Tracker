@@ -441,6 +441,7 @@ class Task_Data_Interface {
 		$query = "SELECT 
 			`tasks`.`name` AS `name`, 
 			`task_log`.`task_log_id` AS `task_log_id`,
+			`tasks`.`task_id` AS `task_id`,
 			`task_log`.`start_time` AS `start_time`, 
 			`task_log`.`hours` AS `hours`, 
 			`task_log`.`status` AS `status`, 
@@ -463,6 +464,7 @@ class Task_Data_Interface {
 			$task_entry_hours = mysql_result($result, $i, "hours");
 			$task_entry_note = mysql_result($result, $i, "note");
 			$task_entry_status = mysql_result($result, $i, "status");
+			$task_id = mysql_result($result, $i, "task_id");
 
 			$return_json['data'][$i] = array(
 				'task_log_id' => $task_entry_id,
@@ -470,7 +472,8 @@ class Task_Data_Interface {
 				'start_time' => $task_entry_start_time,
 				'hours' => $task_entry_hours,
 				'note' => $task_entry_note,
-				'status' => $task_entry_status,);
+				'status' => $task_entry_status,
+				'task_id' => $task_id,);
 			
 			
 			$i++;
@@ -484,6 +487,7 @@ class Task_Data_Interface {
 		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '');
 
 		$query = "SELECT 
+			`task_targets`.`task_id` AS `task_id`,
 			`task_targets`.`task_schedule_id` AS `task_schedule_id`, 
 			`task_targets`.`scheduled` AS `scheduled`, 
 			`task_targets`.`scheduled_time` AS `scheduled_time`, 
@@ -511,15 +515,18 @@ class Task_Data_Interface {
 			$task_entry_recurring = mysql_result($result, $i, "recurring");
 			$task_entry_recurrance_type = mysql_result($result, $i, "recurrance_type");
 			$task_entry_recurrance_period = mysql_result($result, $i, "recurrance_period");
+			$task_id = mysql_result($result, $i, "task_id");
 
 			$return_json['data'][$i] = array(
 				'task_schedule_id' => $task_schedule_id,
+				'task_schedule_id' => $task_id,
 				'name' => $task_entry_name,
 				'scheduled_time' => $task_entry_scheduled_time,
 				'scheduled' => $task_entry_scheduled,
 				'recurring' => $task_entry_recurring,
 				'recurrance_type' => $task_entry_recurrance_type,
-				'recurrance_period' => $task_entry_recurrance_period,);
+				'recurrance_period' => $task_entry_recurrance_period,
+				'task_id' => $task_id);
 			
 			
 			$i++;

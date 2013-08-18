@@ -59,10 +59,11 @@
 					$_SESSION['SESS_FIRST_NAME'] = $member['firstname'];
 					$_SESSION['SESS_LAST_NAME'] = $member['lastname'];
 					
-					$cookieLifetime = 365 * 24 * 60 * 60; // A year in seconds
-					setcookie('session_longterm_id',session_id(),time()+$cookieLifetime);	
+					$cookieLifetime = 7 * 24 * 60 * 60; // A week in seconds
+					$cookie_expiry = time()+$cookieLifetime;
+					setcookie('session_longterm_id',session_id(),$cookie_expiry);	
 					
-					$qry = "UPDATE sessions SET session_id = '".session_id()."' WHERE session_entry_id = '".$session['session_entry_id']."';";
+					$qry = "UPDATE sessions SET session_id = '".session_id()."', session_expiry = FROM_UNIXTIME(".$cookie_expiry.") WHERE session_id = '".$session['session_id']."';";
 					$result = mysql_query($qry);
 					
 					//go to member index
@@ -123,26 +124,27 @@
 				$qry = "SELECT * FROM sessions WHERE session_id='".$_COOKIE['session_longterm_id']."';";
 				$result = mysql_query($qry);
 				
-				$cookieLifetime = 365 * 24 * 60 * 60; // A year in seconds
-				setcookie('session_longterm_id',session_id(),time()+$cookieLifetime);	
+				$cookieLifetime = 7 * 24 * 60 * 60; // A week in seconds
+				$cookie_expiry = time()+$cookieLifetime;
+				setcookie('session_longterm_id',session_id(),$cookie_expiry);	
 				
 				//Check whether the query was successful or not
 				if ($result) {
+					
 					
 					if (mysql_num_rows($result) == 1) {
 						
 						$session = mysql_fetch_assoc($result);
 						
-						$qry = "UPDATE sessions SET session_id = '".session_id()."' WHERE member_id = '".$_SESSION['SESS_MEMBER_ID']."';";
+						$qry = "UPDATE sessions SET session_id = '".session_id()."', session_expiry = FORM_UNIXTIME(".$cookie_expiry.") WHERE session_id = '".$session['session_id']."';";
 						$result = mysql_query($qry);
-						
-						$qry = "SELECT * FROM sessions WHERE session_id='".$_COOKIE['session_longterm_id']."';";
 						
 					}
 					else {
 						
-						$qry = "INSERT INTO sessions SET session_id = '".session_id()."' WHERE member_id = '".$_SESSION['SESS_MEMBER_ID']."';";
+						$qry = "INSERT INTO sessions (session_id,member_id,session_expiry) VALUES('".session_id()."','".$_SESSION['SESS_MEMBER_ID']."', FROM_UNIXTIME(".$cookie_expiry."));";
 						$result = mysql_query($qry);
+						
 						
 					}
 				}

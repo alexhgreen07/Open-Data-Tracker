@@ -445,7 +445,8 @@ class Task_Data_Interface {
 			`task_log`.`start_time` AS `start_time`, 
 			`task_log`.`hours` AS `hours`, 
 			`task_log`.`status` AS `status`, 
-			`task_log`.`note` AS `note`
+			`task_log`.`note` AS `note`,
+			`task_log`.`task_target_id` AS `task_target_id`
 			FROM `tasks` , `task_log`
 			WHERE `tasks`.`task_id` = `task_log`.`task_id` 
 			ORDER BY `task_log`.`start_time` DESC";
@@ -465,6 +466,7 @@ class Task_Data_Interface {
 			$task_entry_note = mysql_result($result, $i, "note");
 			$task_entry_status = mysql_result($result, $i, "status");
 			$task_id = mysql_result($result, $i, "task_id");
+			$task_target_id = mysql_result($result, $i, "task_target_id");
 
 			$return_json['data'][$i] = array(
 				'task_log_id' => $task_entry_id,
@@ -473,7 +475,8 @@ class Task_Data_Interface {
 				'hours' => $task_entry_hours,
 				'note' => $task_entry_note,
 				'status' => $task_entry_status,
-				'task_id' => $task_id,);
+				'task_id' => $task_id,
+				'task_target_id' => $task_target_id);
 			
 			
 			$i++;

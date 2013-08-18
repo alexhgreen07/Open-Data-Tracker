@@ -30,6 +30,7 @@ function Timecard_Task_Entry_Form(){
 	this.Refresh = function(data){
 		
 		var self = this;
+		self.data = data;
 		
 		self.Refresh_Task_Name_Select(data);
 		
@@ -45,7 +46,10 @@ function Timecard_Task_Entry_Form(){
 		
 		//ensure the task info array is saved
 		self.task_info_json_array = data.tasks;
-
+		
+		var previous_value = document.getElementById(self.task_name_select.id).value;
+		var is_previous_value_present = false;
+		
 		//create a list of options for the select
 		var new_inner_html = '';
 
@@ -63,18 +67,30 @@ function Timecard_Task_Entry_Form(){
 				//add task option to select
 				new_inner_html += '<option value="' + self.task_info_json_array[i].task_id + '">';
 				new_inner_html += self.task_info_json_array[i].name + '</option>';
+				
+				if(self.task_info_json_array[i].task_id == previous_value)
+				{
+					is_previous_value_present = true;
+				}
 			}
-			
 
 		}
 
 		document.getElementById(self.task_name_select.id).innerHTML = new_inner_html;
-		
+				
+		if(is_previous_value_present)
+		{
+			document.getElementById(self.task_name_select.id).value = previous_value;
+		}
+
 	};
 	
 	this.Refresh_Task_Targets = function(data){
 		
 		var self = this;
+		
+		var previous_value = document.getElementById(self.task_target_select.id).value;
+		var is_previous_value_present = false;
 		
 		//create a list of options for the select
 		var new_inner_html = '';
@@ -88,12 +104,21 @@ function Timecard_Task_Entry_Form(){
 			{
 				if(self.active_tasks[j].task_id == data.task_targets[i].task_id)
 				{
-					//add task option to select
-					new_inner_html += '<option value="'
-					new_inner_html += data.task_targets[i].task_schedule_id;
-					new_inner_html += '">(';
-					new_inner_html += data.task_targets[i].task_schedule_id + ') ';
-					new_inner_html += data.task_targets[i].name + '</option>';
+					if(document.getElementById(self.task_name_select.id).value == 0 ||
+					document.getElementById(self.task_name_select.id).value == data.task_targets[i].task_id)
+					{
+						//add task option to select
+						new_inner_html += '<option value="'
+						new_inner_html += data.task_targets[i].task_schedule_id;
+						new_inner_html += '">(';
+						new_inner_html += data.task_targets[i].task_schedule_id + ') ';
+						new_inner_html += data.task_targets[i].name + '</option>';
+						
+						if(data.task_targets[i].task_schedule_id == previous_value)
+						{
+							is_previous_value_present = true;
+						}
+					}
 					
 					break;
 				}
@@ -104,6 +129,11 @@ function Timecard_Task_Entry_Form(){
 		}
 
 		document.getElementById(self.task_target_select.id).innerHTML = new_inner_html;
+		
+		if(is_previous_value_present)
+		{
+			document.getElementById(self.task_target_select.id).value = previous_value;
+		}
 	};
 	
 	this.Refresh_Task_Started_Entries = function(data){
@@ -124,13 +154,25 @@ function Timecard_Task_Entry_Form(){
 				if((self.active_tasks[j].task_id == data.task_entries[i].task_id) && 
 					(data.task_entries[i].status == "Started"))
 				{
+					if(document.getElementById(self.task_name_select.id).value == 0 ||
+					document.getElementById(self.task_name_select.id).value == data.task_entries[i].task_id)
+					{
+						if(document.getElementById(self.task_target_select.id).value == 0 ||
+						document.getElementById(self.task_target_select.id).value == data.task_entries[i].task_target_id){
+							
+							//add task option to select
+							new_inner_html += '<option value="'
+							new_inner_html += data.task_entries[i].task_log_id;
+							new_inner_html += '">(';
+							new_inner_html += data.task_entries[i].task_log_id + ') ';
+							new_inner_html += data.task_entries[i].name + '</option>';
+							
+						}
+						
+						
+					}
 			
-					//add task option to select
-					new_inner_html += '<option value="'
-					new_inner_html += data.task_entries[i].task_log_id;
-					new_inner_html += '">(';
-					new_inner_html += data.task_entries[i].task_log_id + ') ';
-					new_inner_html += data.task_entries[i].name + '</option>';
+					
 				}
 			}
 
@@ -144,6 +186,64 @@ function Timecard_Task_Entry_Form(){
 	 * @desc This function is the HTML select task start/stop index change event handler.
 	 * */
 	this.On_Task_Name_Select_Change_Event = function() {
+		
+		
+		this.Refresh(this.data);
+		
+		this.On_Task_Change_Event();
+	};
+	
+	
+	this.On_Task_Target_Select_Change_Event = function() {
+		
+		this.Refresh(this.data);
+		
+		this.On_Task_Change_Event();
+	};
+	
+	this.On_Task_Entry_Select_Change_Event = function() {
+		
+		var self = this;
+		
+		if(document.getElementById(self.task_entries_started_select.id).value != 0)
+		{
+			for (var i = 0; i < self.data.task_entries.length; i++) {
+				
+				if(self.data.task_entries[i].task_log_id == document.getElementById(self.task_entries_started_select.id).value)
+				{
+					var sqlDateStr = self.data.task_entries[i].start_time; // as for MySQL DATETIME
+			        sqlDateStr = sqlDateStr.replace(/:| /g,"-");
+			        var YMDhms = sqlDateStr.split("-");
+			        var sqlDate = new Date();
+			        sqlDate.setFullYear(parseInt(YMDhms[0]), parseInt(YMDhms[1])-1,
+			                                                 parseInt(YMDhms[2]));
+			        sqlDate.setHours(parseInt(YMDhms[3]), parseInt(YMDhms[4]), 
+			                                              parseInt(YMDhms[5]), 0/*msValue*/);
+			        
+					self.current_task_start_time = sqlDate;
+					
+				}
+				
+			}
+			
+			$('#' + this.task_timecard_note_div.id).show();
+			
+			self.task_start_stop_button.value = 'Stop';
+		}
+		else
+		{
+			$('#' + this.task_timecard_note_div.id).hide();
+			
+			self.task_start_stop_button.value = 'Start';
+		}
+		
+		self.On_Task_Change_Event();
+		
+	};
+	
+	
+	this.On_Task_Change_Event = function() {
+		
 		//alert('Handler for task name select change called.');
 
 		var selected_index = document.getElementById(this.task_name_select.id).selectedIndex;
@@ -160,17 +260,6 @@ function Timecard_Task_Entry_Form(){
 			new_html += 'Status: ' + new_item.item_status + '<br />';
 			new_html += 'Start Time: ' + new_item.start_time + '<br />';
 
-			if (new_item.item_status == 'Started') {
-				//set the start time and button value
-				this.current_task_start_time = new_item.start_time;
-				$('#' + this.task_timecard_note_div.id).show();
-				this.task_start_stop_button.value = 'Stop';
-			} else {
-				$('#' + this.task_timecard_note_div.id).hide();
-				this.task_start_stop_button.value = 'Start';
-			}
-		} else {
-			this.task_start_stop_button.value = 'Start';
 		}
 
 		new_html += '<br />';
@@ -179,8 +268,9 @@ function Timecard_Task_Entry_Form(){
 
 		//refresh the timer
 		this.Refresh_Timer_Display();
-
+		
 	};
+	
 	
 	/** @method Start_Stop_Task
 	 * @desc This function starts and stops a task with the server.
@@ -444,11 +534,26 @@ function Timecard_Task_Entry_Form(){
 
 		$('#' + self.task_timecard_note_div.id).hide();
 		
+		//hook for the name change select event
 		$('#' + this.task_name_select.id).change(function() {
 
 			//call the change event function
 			self.On_Task_Name_Select_Change_Event();
 
+		});
+		
+		//hook for the target change select event
+		$('#' + this.task_target_select.id).click(function(event) {
+
+			//execute the click event
+			self.On_Task_Target_Select_Change_Event();
+		});
+		
+		//hook for the entry change select event
+		$('#' + this.task_entries_started_select.id).click(function(event) {
+
+			//execute the click event
+			self.On_Task_Entry_Select_Change_Event();
 		});
 		
 				
@@ -472,6 +577,8 @@ function Timecard_Task_Entry_Form(){
 			//execute the click event
 			self.On_Complete_Click_Event();
 		});
+		
+		
 
 		
 		//this is used to update the timer value on running tasks

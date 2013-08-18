@@ -32,13 +32,13 @@
 	if (!isset($_POST["password"]) && !isset($_POST["login"])) {
 		
 		//check for the 'remember me' cookie.
-		if(isset($_COOKIE['remember_me_id']))
+		if(isset($_COOKIE['session_longterm_id']))
 		{
 			//validate cookie from database
 			$is_cookie_valid = false;
 			
 			//Create query
-			$qry = "SELECT * FROM members WHERE last_session_id='".$_COOKIE['remember_me_id']."';";
+			$qry = "SELECT * FROM sessions WHERE session_id='".$_COOKIE['session_longterm_id']."';";
 			$result = mysql_query($qry);
 			
 			//Check whether the query was successful or not
@@ -49,16 +49,21 @@
 					//Start session
 					session_start();
 					
+					$session = mysql_fetch_assoc($result);
+					
+					$qry = "SELECT * FROM members WHERE member_id='".$session['member_id']."';";
+					$result = mysql_query($qry);
+					
 					$member = mysql_fetch_assoc($result);
 					$_SESSION['SESS_MEMBER_ID'] = $member['member_id'];
 					$_SESSION['SESS_FIRST_NAME'] = $member['firstname'];
 					$_SESSION['SESS_LAST_NAME'] = $member['lastname'];
 					
-					$cookieLifetime = 365 * 24 * 60 * 60; // A year in seconds
-					setcookie('remember_me_id',session_id(),time()+$cookieLifetime);	
+					$cookieLifetime = 7 * 24 * 60 * 60; // A week in seconds
+					$cookie_expiry = time()+$cookieLifetime;
+					setcookie('session_longterm_id',session_id(),$cookie_expiry);	
 					
-					
-					$qry = "UPDATE members SET last_session_id = '".session_id()."' WHERE member_id = '".$_SESSION['SESS_MEMBER_ID']."';";
+					$qry = "UPDATE sessions SET session_id = '".session_id()."', session_expiry = FROM_UNIXTIME(".$cookie_expiry.") WHERE session_id = '".$session['session_id']."';";
 					$result = mysql_query($qry);
 					
 					//go to member index
@@ -108,19 +113,42 @@
 			if (mysql_num_rows($result) == 1) {
 					
 				//Login Successful
-				session_regenerate_id();
 				
 				$member = mysql_fetch_assoc($result);
 				$_SESSION['SESS_MEMBER_ID'] = $member['member_id'];
 				$_SESSION['SESS_FIRST_NAME'] = $member['firstname'];
 				$_SESSION['SESS_LAST_NAME'] = $member['lastname'];
 				
-				$cookieLifetime = 365 * 24 * 60 * 60; // A year in seconds
-				setcookie('remember_me_id',session_id(),time()+$cookieLifetime);	
-				
-				
-				$qry = "UPDATE members SET last_session_id = '".session_id()."' WHERE member_id = '".$_SESSION['SESS_MEMBER_ID']."';";
+				//Create query
+				$qry = "SELECT * FROM sessions WHERE session_id='".$_COOKIE['session_longterm_id']."';";
 				$result = mysql_query($qry);
+				
+				$cookieLifetime = 7 * 24 * 60 * 60; // A week in seconds
+				$cookie_expiry = time()+$cookieLifetime;
+				setcookie('session_longterm_id',session_id(),$cookie_expiry);	
+				
+				//Check whether the query was successful or not
+				if ($result) {
+					
+					
+					if (mysql_num_rows($result) == 1) {
+						
+						$session = mysql_fetch_assoc($result);
+						
+						$qry = "UPDATE sessions SET session_id = '".session_id()."', session_expiry = FORM_UNIXTIME(".$cookie_expiry.") WHERE session_id = '".$session['session_id']."';";
+						$result = mysql_query($qry);
+						
+					}
+					else {
+						
+						$qry = "INSERT INTO sessions (session_id,member_id,session_expiry) VALUES('".session_id()."','".$_SESSION['SESS_MEMBER_ID']."', FROM_UNIXTIME(".$cookie_expiry."));";
+						$result = mysql_query($qry);
+						
+						
+					}
+					
+					
+				}
 
 				header("location: member-index.php");
 				exit();

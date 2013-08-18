@@ -256,6 +256,16 @@ function Edit_Task_Entry_Form(){
 		
 		this.data_form_edit_entry.appendChild(this.edit_task_entry_task_name_select);
 		
+		this.data_form_edit_entry.innerHTML += '<br />Target:<br />';
+
+		//task name select dropdown
+		this.task_target_select = document.createElement("select");
+		this.task_target_select.setAttribute('name', "task_target_name");
+		this.task_target_select.setAttribute('id', "task_target_name");
+		this.task_target_select.innerHTML = '<option>-</option>';
+		
+		this.data_form_edit_entry.appendChild(this.task_target_select);
+		
 		this.data_form_edit_entry.innerHTML += '<br />';
 		
 		this.data_form_edit_entry.innerHTML += 'Start Time:<br />';

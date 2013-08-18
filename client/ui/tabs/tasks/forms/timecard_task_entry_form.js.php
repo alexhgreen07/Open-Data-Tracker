@@ -286,7 +286,7 @@ function Timecard_Task_Entry_Form(){
 		this.data_form_timecard_entry.setAttribute('method', "post");
 		this.data_form_timecard_entry.setAttribute('id', "timecard_task_entry_form");
 
-		this.data_form_timecard_entry.innerHTML += 'Tasks:<br />';
+		this.data_form_timecard_entry.innerHTML += 'Task:<br />';
 
 		//task name select dropdown
 		this.task_name_select = document.createElement("select");
@@ -295,6 +295,17 @@ function Timecard_Task_Entry_Form(){
 		this.task_name_select.innerHTML = '<option>-</option>';
 		
 		this.data_form_timecard_entry.appendChild(this.task_name_select);
+
+		this.data_form_timecard_entry.innerHTML += '<br />Target:<br />';
+
+		//task name select dropdown
+		this.task_target_select = document.createElement("select");
+		this.task_target_select.setAttribute('name', "task_target_name");
+		this.task_target_select.setAttribute('id', "task_target_name");
+		this.task_target_select.innerHTML = '<option>-</option>';
+		
+		this.data_form_timecard_entry.appendChild(this.task_target_select);
+
 
 		this.task_timecard_note_div = document.createElement("div");
 		this.task_timecard_note_div.setAttribute('id', 'task_timecard_note_div');

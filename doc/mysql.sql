@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 17, 2013 at 11:11 PM
+-- Generation Time: Aug 17, 2013 at 11:43 PM
 -- Server version: 5.1.44
 -- PHP Version: 5.3.2
 
@@ -91,13 +91,13 @@ CREATE TABLE IF NOT EXISTS `members` (
 --
 
 CREATE TABLE IF NOT EXISTS `sessions` (
-  `session_entry_id` int(11) NOT NULL,
+  `session_entry_id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
   `session_id` text NOT NULL,
   `session_expiry` datetime NOT NULL,
   PRIMARY KEY (`session_entry_id`),
   KEY `session_entry_id` (`session_entry_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 

@@ -298,14 +298,16 @@ class Task_Data_Interface {
 			`date_created`, 
 			`estimated_time`,
 			`note`,
-			`category_id`) VALUES (';
+			`category_id`,
+			`status`) VALUES (';
 
 		$sql .= "'" . $task_name . "',";
 		$sql .= "'" . $task_description . "',";
 		$sql .= "NOW(),";
 		$sql .= "" . $task_estimated_time . ",";
 		$sql .= "'" . $task_note . "',";
-		$sql .= "" . $category_id . ")";
+		$sql .= "" . $category_id . ",";
+		$sql .= "'Active')";
 
 		$success = mysql_query($sql, $this -> database_link);
 
@@ -339,7 +341,7 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 
-	public function Update_Task($task_id, $name, $category_id, $description, $estimated_time, $note) {
+	public function Update_Task($task_id, $name, $category_id, $description, $estimated_time, $note, $status) {
 		$return_json = array('authenticated' => 'false', 'success' => 'false', );
 
 		$task_name = mysql_real_escape_string($name);
@@ -352,7 +354,8 @@ class Task_Data_Interface {
 			`name`='" . $name . "',
 			`description`='" . $description . "',
 			`estimated_time`=" . $estimated_time . ",
-			`note`='" . $note . "' 
+			`note`='" . $note . "',
+			`status`= '".$status."'
 			WHERE `task_id`=" . $task_id . "";
 
 		$success = mysql_query($sql, $this -> database_link);

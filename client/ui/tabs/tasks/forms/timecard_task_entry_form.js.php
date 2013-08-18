@@ -41,8 +41,13 @@ function Timecard_Task_Entry_Form(){
 
 		//iterate through all tasks
 		for (var i = 0; i < self.task_info_json_array.length; i++) {
-			//add task option to select
-			new_inner_html += '<option>' + self.task_info_json_array[i].name + '</option>';
+			
+			if(self.task_info_json_array[i].status == "Active")
+			{
+				//add task option to select
+				new_inner_html += '<option>' + self.task_info_json_array[i].name + '</option>';
+			}
+			
 
 		}
 

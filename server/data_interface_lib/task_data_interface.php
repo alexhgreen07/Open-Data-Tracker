@@ -385,7 +385,8 @@ class Task_Data_Interface {
 				`date_created`,
 				`note`,
 				`estimated_time`,
-				`category_id` FROM `life_management`.`tasks` ORDER BY `name` ASC";
+				`category_id`,
+				`status` FROM `life_management`.`tasks` ORDER BY `name` ASC";
 			$result = mysql_query($sql_query, $this -> database_link);
 
 			if ($result) {
@@ -405,6 +406,7 @@ class Task_Data_Interface {
 					$date_created = mysql_result($result,$i,'date_created');
 					$task_note = mysql_result($result,$i,'note');
 					$category_id = mysql_result($result,$i,'category_id');
+					$status = mysql_result($result,$i,'status');
 					
 					$return_json['data'][$i] = array(
 						'task_id' => $task_id,
@@ -413,7 +415,8 @@ class Task_Data_Interface {
 						'estimated_time' => $task_estimated_time, 
 						'date_created' => $date_created,
 						'note' => $task_note,
-						'category_id' => $category_id);
+						'category_id' => $category_id,
+						'status' => $status);
 					
 					
 					$i++;

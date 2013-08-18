@@ -44,16 +44,27 @@ function Timecard_Task_Entry_Form(){
 			//add task option to select
 			new_inner_html += '<option>' + self.task_info_json_array[i].name + '</option>';
 
-			//format task start datetime
-			if (self.task_info_json_array[i].start_time != '') {
-				//change start date string to javascript date object
-				//var t = self.task_info_json_array[i].start_time.split(/[- :]/);
-				//self.task_info_json_array[i].start_time = new Date(t[0], t[1] - 1, t[2], t[3], t[4], t[5]);
-			}
 		}
 
 		document.getElementById(self.task_name_select.id).innerHTML = new_inner_html;
 		
+		//create a list of options for the select
+		var new_inner_html = '';
+
+		new_inner_html += '<option value="0">-</option>';
+
+		//iterate through all tasks
+		for (var i = 0; i < data.task_targets.length; i++) {
+			//add task option to select
+			new_inner_html += '<option value="'
+			new_inner_html += data.task_targets[i].task_schedule_id;
+			new_inner_html += '">(';
+			new_inner_html += data.task_targets[i].task_schedule_id + ') ';
+			new_inner_html += data.task_targets[i].name + '</option>';
+
+		}
+
+		document.getElementById(self.task_target_select.id).innerHTML = new_inner_html;
 		
 	};
 	

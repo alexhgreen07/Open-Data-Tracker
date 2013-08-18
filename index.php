@@ -113,7 +113,6 @@
 			if (mysql_num_rows($result) == 1) {
 					
 				//Login Successful
-				session_regenerate_id();
 				
 				$member = mysql_fetch_assoc($result);
 				$_SESSION['SESS_MEMBER_ID'] = $member['member_id'];
@@ -147,9 +146,9 @@
 						
 						
 					}
+					
+					
 				}
-				
-				
 
 				header("location: member-index.php");
 				exit();

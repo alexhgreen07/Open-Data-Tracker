@@ -95,7 +95,9 @@ class Task_Data_Interface {
 			`note`='" . $note . "',
 			`task_target_id`=".$task_target_id."
 			WHERE `task_log_id` = " . $task_log_id . "";
-
+		
+		$return_json['debug'] = $sql;
+		
 		//execute insert
 		$success = mysql_query($sql, $this -> database_link);
 

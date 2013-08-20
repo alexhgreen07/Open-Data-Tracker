@@ -81,7 +81,7 @@ function New_Task_Form(){
 		this.task_name.setAttribute('type', 'text');
 		this.data_form_new_task.appendChild(this.task_name);
 
-		this.data_form_new_task.innerHTML += 'Category:<br />';
+		this.data_form_new_task.innerHTML += '<br />Category:<br />';
 
 		//task recurring
 		this.task_category_select = document.createElement("select");
@@ -89,7 +89,7 @@ function New_Task_Form(){
 		this.task_category_select.innerHTML = '<option value="0">-</option>';
 		this.data_form_new_task.appendChild(this.task_category_select);
 
-		this.data_form_new_task.innerHTML += 'Description:<br />';
+		this.data_form_new_task.innerHTML += '<br />Description:<br />';
 
 		//task description creation
 		this.task_description = document.createElement("input");
@@ -98,7 +98,7 @@ function New_Task_Form(){
 		this.task_description.setAttribute('type', 'text');
 		this.data_form_new_task.appendChild(this.task_description);
 
-		this.data_form_new_task.innerHTML += 'Estimated Time (Hours):<br />';
+		this.data_form_new_task.innerHTML += '<br />Estimated Time (Hours):<br />';
 
 		//task estimate creation
 		this.task_estimate = document.createElement("input");
@@ -108,7 +108,7 @@ function New_Task_Form(){
 		this.task_estimate.setAttribute('value', '0');
 		this.data_form_new_task.appendChild(this.task_estimate);
 
-		this.data_form_new_task.innerHTML += 'Note:<br />';
+		this.data_form_new_task.innerHTML += '<br />Note:<br />';
 
 		//task note creation
 		this.task_note = document.createElement("input");

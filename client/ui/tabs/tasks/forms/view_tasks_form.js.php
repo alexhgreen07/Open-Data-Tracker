@@ -46,7 +46,7 @@ function View_Tasks_Form(){
 		self.task_list = data.tasks;
 		
 		new_inner_html += "<b>Database Output</b><br><table border='1' style='width:100%;'>";
-		new_inner_html += "<tr><td>Name</td><td>Description</td><td>Estimated Time (Hours)</td></tr>";
+		new_inner_html += "<tr><td>Name</td><td>Description</td><td>Estimated Time (Hours)</td><td>Status</td></tr>";
 		
 		for (var i = 0; i < self.task_list.length; i++) {
 		    
@@ -55,6 +55,7 @@ function View_Tasks_Form(){
 		    new_inner_html += '<td>' + self.task_list[i].name + '</td>';
 		    new_inner_html += '<td>' + self.task_list[i].description + '</td>';
 		    new_inner_html += '<td>' + self.task_list[i].estimated_time + '</td>';
+		    new_inner_html += '<td>' + self.task_list[i].status + '</td>';
 		    
 		    new_inner_html += '</tr>';
 		    

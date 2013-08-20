@@ -54,6 +54,24 @@ function New_Task_Entry_Form(){
 
 		document.getElementById(self.add_task_entry_task_name_select.id).innerHTML = new_inner_html;
 		
+		//create a list of options for the select
+		var new_inner_html = '';
+
+		new_inner_html += '<option value="0">-</option>';
+
+		//iterate through all tasks
+		for (var i = 0; i < data.task_targets.length; i++) {
+			//add task option to select
+			new_inner_html += '<option value="'
+			new_inner_html += data.task_targets[i].task_schedule_id;
+			new_inner_html += '">(';
+			new_inner_html += data.task_targets[i].task_schedule_id + ') ';
+			new_inner_html += data.task_targets[i].name + '</option>';
+
+		}
+
+		document.getElementById(self.task_target_select.id).innerHTML = new_inner_html;
+		
 	};
 	
 	/** @method Insert_Task_Entry
@@ -74,6 +92,7 @@ function New_Task_Entry_Form(){
 			var duration = $('#' + this.task_entry_duration.id).val();
 			var task_note = $('#' + this.task_entry_note.id).val();
 			var task_status = $('#' + this.add_task_entry_task_status_select.id).val();
+			var target_id = document.getElementById(this.task_target_select.id).value;
 
 			params[0] = task_time;
 			params[1] = selected_task.task_id;
@@ -81,6 +100,7 @@ function New_Task_Entry_Form(){
 			params[3] = 0;
 			params[4] = task_status;
 			params[5] = task_note;
+			params[6] = target_id;
 
 			if (is_completed) {
 
@@ -105,6 +125,7 @@ function New_Task_Entry_Form(){
 					});
 
 				} else {
+					alert(jsonRpcObj.result.debug);
 					alert('Failed to insert task entry.');
 				}
 
@@ -151,6 +172,17 @@ function New_Task_Entry_Form(){
 		this.add_task_entry_task_name_select.setAttribute('id', "add_task_entry_name_to_enter");
 		this.add_task_entry_task_name_select.innerHTML = '<option>-</option>';
 		this.data_form_new_entry.appendChild(this.add_task_entry_task_name_select);
+		
+		this.data_form_new_entry.innerHTML += '<br />Target:<br />';
+
+		//task name select dropdown
+		this.task_target_select = document.createElement("select");
+		this.task_target_select.setAttribute('name', "new_task_target_name");
+		this.task_target_select.setAttribute('id', "new_task_target_name");
+		this.task_target_select.innerHTML = '<option>-</option>';
+		
+		this.data_form_new_entry.appendChild(this.task_target_select);
+
 		
 		this.data_form_new_entry.innerHTML += '<br />';
 		this.data_form_new_entry.innerHTML += 'Start Time:<br />';

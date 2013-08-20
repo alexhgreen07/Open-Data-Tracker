@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 17, 2013 at 11:43 PM
+-- Generation Time: Aug 18, 2013 at 12:36 AM
 -- Server version: 5.1.44
 -- PHP Version: 5.3.2
 
@@ -113,6 +113,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `estimated_time` float NOT NULL,
   `note` text NOT NULL,
   `category_id` int(11) NOT NULL,
+  `status` text NOT NULL,
   PRIMARY KEY (`task_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
@@ -129,8 +130,9 @@ CREATE TABLE IF NOT EXISTS `task_log` (
   `status` text NOT NULL,
   `hours` float NOT NULL,
   `note` text NOT NULL,
+  `task_target_id` int(11) NOT NULL,
   PRIMARY KEY (`task_log_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
 
 -- --------------------------------------------------------
 

@@ -76,6 +76,7 @@ function Edit_Task_Form(){
 			params[3] = document.getElementById(this.task_edit_description.id).value;
 			params[4] = document.getElementById(this.task_edit_estimate.id).value;
 			params[5] = document.getElementById(this.task_edit_note.id).value;
+			params[6] = document.getElementById(this.task_edit_status.id).value;
 			
 			app.api.Task_Data_Interface.Update_Task(params, function(jsonRpcObj) {
 			
@@ -269,6 +270,16 @@ function Edit_Task_Form(){
 		this.task_edit_note.setAttribute('id', 'task_edit_note');
 		this.task_edit_note.setAttribute('type', 'text');
 		this.data_form_edit_task.appendChild(this.task_edit_note);
+		
+		this.data_form_edit_task.innerHTML += '<br />';
+		
+		this.data_form_edit_task.innerHTML += 'Status:<br />';
+
+		//task note creation
+		this.task_edit_status = document.createElement("select");
+		this.task_edit_status.setAttribute('id', 'task_edit_status');
+		this.task_edit_status.innerHTML = '<option>Active</option><option>Archived</option>';
+		this.data_form_edit_task.appendChild(this.task_edit_status);
 
 		this.data_form_edit_task.innerHTML += '<br /><br />';
 

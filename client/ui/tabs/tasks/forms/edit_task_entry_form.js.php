@@ -82,6 +82,24 @@ function Edit_Task_Entry_Form(){
 		
 		document.getElementById(self.edit_task_entry_select.id).innerHTML = task_entry_options;
 		
+		//create a list of options for the select
+		var new_inner_html = '';
+
+		new_inner_html += '<option value="0">-</option>';
+
+		//iterate through all tasks
+		for (var i = 0; i < data.task_targets.length; i++) {
+			//add task option to select
+			new_inner_html += '<option value="'
+			new_inner_html += data.task_targets[i].task_schedule_id;
+			new_inner_html += '">(';
+			new_inner_html += data.task_targets[i].task_schedule_id + ') ';
+			new_inner_html += data.task_targets[i].name + '</option>';
+
+		}
+
+		document.getElementById(self.task_target_select.id).innerHTML = new_inner_html;
+		
 	};
 	
 	/** @method Task_Edit_Entry_Submit_Click
@@ -103,6 +121,7 @@ function Edit_Task_Entry_Form(){
 			var duration = document.getElementById(this.task_entry_edit_duration.id).value;
 			var task_note = document.getElementById(this.task_entry_edit_note.id).value;
 			var task_status = document.getElementById(this.edit_task_entry_task_status_select.id).value;
+			var target_id = document.getElementById(this.task_target_select.id).value;
 		
 			params[0] = selected_task_entry_id;
 			params[1] = selected_task.task_id;
@@ -111,6 +130,7 @@ function Edit_Task_Entry_Form(){
 			params[4] = 0;
 			params[5] = task_status;
 			params[6] = task_note;
+			params[7] = target_id;
 
 			//execute the RPC callback for retrieving the item log
 			app.api.Task_Data_Interface.Update_Task_Entry(params, function(jsonRpcObj) {
@@ -255,6 +275,16 @@ function Edit_Task_Entry_Form(){
 		this.edit_task_entry_task_name_select.innerHTML = '<option>-</option>';
 		
 		this.data_form_edit_entry.appendChild(this.edit_task_entry_task_name_select);
+		
+		this.data_form_edit_entry.innerHTML += '<br />Target:<br />';
+
+		//task name select dropdown
+		this.task_target_select = document.createElement("select");
+		this.task_target_select.setAttribute('name', "edit_task_target_name");
+		this.task_target_select.setAttribute('id', "edit_task_target_name");
+		this.task_target_select.innerHTML = '<option>-</option>';
+		
+		this.data_form_edit_entry.appendChild(this.task_target_select);
 		
 		this.data_form_edit_entry.innerHTML += '<br />';
 		

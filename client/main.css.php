@@ -31,9 +31,6 @@ include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.th
 //jquery timepicker style sheet
 include_once(dirname(__FILE__).'/../externals/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css');
 
-//pivot table style
-include_once(dirname(__FILE__).'/../externals/pivot/lib/css/bootstrap.min.css');
-
 //main file
 include_once(dirname(__FILE__).'/main.css');
 

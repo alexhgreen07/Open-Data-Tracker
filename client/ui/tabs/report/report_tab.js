@@ -10,6 +10,13 @@ function Report_Tab() {
 		
 		var self = this;
 		
+		self.Refresh_Summaries_Form(data);
+		
+	};
+	
+	this.Refresh_Summaries_Form = function(data){
+		
+		
 		self.json_titles = '["last_name","first_name","zip_code","billed_amount","last_billed_date"]';
 		self.json_data = 
 			'["Jackson", "Robert", 34471, 100.00, "Tue, 24 Jan 2012 05:00:00 +0000"]' + 
@@ -30,31 +37,9 @@ function Report_Tab() {
 		$('#' + self.report_summaries_data_display_div.id).pivot_display('setup', input);
 		
 		$('#' + self.report_summaries_data_display_div.id + ' > div > div').css('float','none');
-		
-		//self.Setup_Pivot(input);
-		//$('#' + self.report_summaries_data_display_div.id).pivot_display('setup', {csv:self.csv,fields:self.fields});
-		
-		/*
-		new_inner_html = pivot.data().all;
-		
-		var summary_div = document.getElementById(self.report_summaries_data_display_div.id);
-		summary_div.innerHTML = new_inner_html;
-		*/
-		
-		/*
-		var params = new Array();
 
-		var new_inner_html = '';
 
-		new_inner_html += 'Last refreshed: ' + (new Date()) + '<br />';
-
-		new_inner_html += '';
-
-		var summary_div = document.getElementById(self.report_summaries_data_display_div.id);
-		summary_div.innerHTML = new_inner_html;
 		
-		*/
-
 	};
 
 	this.Render_Summaries_Form = function(form_div_id) {
@@ -73,15 +58,8 @@ function Report_Tab() {
 		this.report_results_data_display_div.setAttribute('id', 'results');
 		this.report_summaries_data_form.appendChild(this.report_results_data_display_div);
 		
-		/*
-		this.report_summaries_data_display_table = document.createElement("table");
-		this.report_summaries_data_display_table.setAttribute('id', 'report_results_data_display_table');
-		this.report_results_data_display_div.appendChild(this.report_summaries_data_display_table);
-		*/
 		var div_tab = document.getElementById(form_div_id);
 		div_tab.appendChild(this.report_summaries_data_form);
-		
-		//$('#' + self.report_summaries_data_display_table.id).dataTable();
 
 	};
 

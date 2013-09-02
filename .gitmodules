@@ -13,3 +13,6 @@
 [submodule "externals/pivot"]
 	path = externals/pivot
 	url = https://github.com/rjackson/pivot.js.git
+[submodule "externals/DataTables"]
+	path = externals/DataTables
+	url = https://github.com/DataTables/DataTables.git

@@ -5,29 +5,34 @@ function Report_Tab() {
 
 	//class variables
 	this.div_id = null;
-
+	
 	this.Refresh = function(data) {
 		
 		var self = this;
 		
-		self.csv = "last_name,first_name,email,date_ordered,date_delivered,sale_price,unit_identifier\n";
-		self.csv += "doo, scooby, scoobydoo12512@gmail.com,2012-02-12,2012-02-17,9.99,big-bang-rpsls\n";
-		self.csv += "flinstone,fred,freddyf12516@gmail.com,2012-02-12,2012-02-17,9.99,dr-who-bad-wolf\n";
-		self.csv += "spiegel,spike,bebop1256@gmail.com,2012-02-12,2012-02-17,9.99,tng-engage\n"; //etc
-			 
-		self.fields =[{name: 'last_name', type: 'string', filterable: true},
-		{name: 'first_name', type: 'string', filterable: true},
-		{name: 'email', type: 'string', filterable: true},
-		{name: 'date_ordered', type: 'date', filterable: true},
-		{name: 'date_delivered', type: 'date', labelable: false},
-		{name: 'sale_price', type: 'float', filterable: true, summarizable: 'count'},
-		{name: 'unit_identifier',type: 'string', filterable: true  }];
-		//pivot.init({csv: self.csv, fields: self.fields});
+		self.json_titles = '["last_name","first_name","zip_code","billed_amount","last_billed_date"]';
+		self.json_data = 
+			'["Jackson", "Robert", 34471, 100.00, "Tue, 24 Jan 2012 05:00:00 +0000"]' + 
+        	',["Smith", "Jon", 34476, 173.20, "Mon, 13 Feb 2012 00:15:00 +0000"]' + 
+        	',["Gerber", "Jake", 34479, 502.57, "Mon, 19 Feb 2012 01:00:00 +0000"]';
+		self.json_string = '[' + self.json_titles + ',' + self.json_data + ']';
 		
-		var summary_div = document.getElementById(self.report_summaries_data_display_div.id);
-		summary_div.innerHTML = '';
+		self.fields =[{name: 'last_name',   type: 'string',   filterable: true},
+	        {name: 'first_name',        type: 'string',   filterable: true},
+	        {name: 'zip_code',          type: 'integer',  filterable: true},
+	        {name: 'pseudo_zip',        type: 'integer',  filterable: true },
+	        {name: 'billed_amount',     type: 'float',    rowLabelable: false},
+	        {name: 'last_billed_date',  type: 'date',     filterable: true}];
 		
-		$('#' + self.report_summaries_data_display_div.id).pivot_display('setup', {csv:self.csv,fields:self.fields});
+		var input = {json:self.json_string, fields: self.fields, rowLabels:["last_name"]};
+		
+		
+		$('#' + self.report_summaries_data_display_div.id).pivot_display('setup', input);
+		
+		$('#' + self.report_summaries_data_display_div.id + ' > div > div').css('float','none');
+		
+		//self.Setup_Pivot(input);
+		//$('#' + self.report_summaries_data_display_div.id).pivot_display('setup', {csv:self.csv,fields:self.fields});
 		
 		/*
 		new_inner_html = pivot.data().all;
@@ -59,14 +64,24 @@ function Report_Tab() {
 		this.report_summaries_data_form = document.createElement("form");
 		this.report_summaries_data_form.setAttribute('method', "post");
 		this.report_summaries_data_form.setAttribute('id', "report_summaries_display_form");
-
-
+		
 		this.report_summaries_data_display_div = document.createElement("div");
 		this.report_summaries_data_display_div.setAttribute('id', 'report_summaries_data_display_div');
 		this.report_summaries_data_form.appendChild(this.report_summaries_data_display_div);
-
+		
+		this.report_results_data_display_div = document.createElement("div");
+		this.report_results_data_display_div.setAttribute('id', 'results');
+		this.report_summaries_data_form.appendChild(this.report_results_data_display_div);
+		
+		/*
+		this.report_summaries_data_display_table = document.createElement("table");
+		this.report_summaries_data_display_table.setAttribute('id', 'report_results_data_display_table');
+		this.report_results_data_display_div.appendChild(this.report_summaries_data_display_table);
+		*/
 		var div_tab = document.getElementById(form_div_id);
 		div_tab.appendChild(this.report_summaries_data_form);
+		
+		//$('#' + self.report_summaries_data_display_table.id).dataTable();
 
 	};
 
@@ -86,7 +101,7 @@ function Report_Tab() {
 		div_tab.appendChild(this.report_time_based_data_form);
 
 	};
-
+	
 	//render function (div must already exist)
 	this.Render = function(data_div_id) {
 		

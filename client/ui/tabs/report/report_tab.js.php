@@ -17,10 +17,18 @@ include_once(dirname(__FILE__).'/../../../../externals/jquery-ui/ui/jquery.ui.co
 //JSON RPC library
 include_once(dirname(__FILE__).'/../../../../externals/json-rpc2php/jsonRPC2php.client.js');
 
+//include_once(dirname(__FILE__).'/../../../../externals/DataTables/media/js/jquery.dataTables.js');
+
 include_once(dirname(__FILE__).'/../../../../externals/pivot/pivot.js');
 
 include_once(dirname(__FILE__).'/../../../../externals/pivot/jquery_pivot.js');
+/*
+include_once(dirname(__FILE__).'/../../../../externals/pivot/lib/javascripts/dataTables.bootstrap.js');
 
+include_once(dirname(__FILE__).'/../../../../externals/pivot/lib/javascripts/accounting.min.js');
+
+include_once(dirname(__FILE__).'/../../../../externals/pivot/lib/javascripts/subnav.js');
+*/
 require_once(dirname(__FILE__).'/../../accordian.js.php');
 
 //main file

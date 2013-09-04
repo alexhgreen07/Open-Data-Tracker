@@ -35,9 +35,6 @@ function Report_Tab() {
 		
 		
 		$('#' + self.report_summaries_data_display_div.id).pivot_display('setup', input);
-		
-		$('#' + self.report_summaries_data_display_div.id + ' > div > div').css('float','none');
-
 
 		
 	};
@@ -53,6 +50,8 @@ function Report_Tab() {
 		this.report_summaries_data_display_div = document.createElement("div");
 		this.report_summaries_data_display_div.setAttribute('id', 'report_summaries_data_display_div');
 		this.report_summaries_data_form.appendChild(this.report_summaries_data_display_div);
+		
+		this.report_summaries_data_form.innerHTML += '<hr>';
 		
 		this.report_results_data_display_div = document.createElement("div");
 		this.report_results_data_display_div.setAttribute('id', 'results');

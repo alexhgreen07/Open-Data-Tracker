@@ -16,7 +16,7 @@ function Report_Tab() {
 	
 	this.Refresh_Summaries_Form = function(data){
 		
-		
+		//this function refreshes the pivot table
 		self.json_titles = '["last_name","first_name","zip_code","billed_amount","last_billed_date"]';
 		self.json_data = 
 			'["Jackson", "Robert", 34471, 100.00, "Tue, 24 Jan 2012 05:00:00 +0000"]' + 
@@ -37,6 +37,20 @@ function Report_Tab() {
 		$('#' + self.report_summaries_data_display_div.id).pivot_display('setup', input);
 
 		
+	};
+	
+	this.Convert_JSON_Format_To_Pivot(json_data_table){
+		
+		//function to convert from the default application JSON format to pivot format
+		var formatted_json_data_table = {
+			json:'', 
+			fields:[], 
+			rowLabels:[]};
+		
+		
+		
+		
+		return formatted_json_data_table;
 	};
 
 	this.Render_Summaries_Form = function(form_div_id) {

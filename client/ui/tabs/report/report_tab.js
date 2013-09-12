@@ -16,6 +16,14 @@ function Report_Tab() {
 	
 	this.Refresh_Summaries_Form = function(data){
 		
+		document.getElementById(this.report_summaries_tables_select.id).innerHTML = '<option>-</option>';
+		
+		//get all table names
+		for (var key in data) {
+			
+			document.getElementById(this.report_summaries_tables_select.id).innerHTML += '<option>' + key + '</option>';
+		}
+
 		//this function refreshes the pivot table
 		self.json_titles = '["last_name","first_name","zip_code","billed_amount","last_billed_date"]';
 		self.json_data = 
@@ -39,7 +47,7 @@ function Report_Tab() {
 		
 	};
 	
-	this.Convert_JSON_Format_To_Pivot(json_data_table){
+	this.Convert_JSON_Format_To_Pivot = function(json_data_table){
 		
 		//function to convert from the default application JSON format to pivot format
 		var formatted_json_data_table = {
@@ -60,6 +68,13 @@ function Report_Tab() {
 		this.report_summaries_data_form = document.createElement("form");
 		this.report_summaries_data_form.setAttribute('method', "post");
 		this.report_summaries_data_form.setAttribute('id', "report_summaries_display_form");
+		
+		this.report_summaries_data_form.innerHTML += 'Tables<br/>';
+		
+		this.report_summaries_tables_select = document.createElement("select");
+		this.report_summaries_tables_select.setAttribute('id', 'report_summaries_tables_select');
+		this.report_summaries_tables_select.innerHTML = '<option>-</option>';
+		this.report_summaries_data_form.appendChild(this.report_summaries_tables_select);
 		
 		this.report_summaries_data_display_div = document.createElement("div");
 		this.report_summaries_data_display_div.setAttribute('id', 'report_summaries_data_display_div');

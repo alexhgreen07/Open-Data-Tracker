@@ -16,6 +16,8 @@ function Report_Tab() {
 	
 	this.Refresh_Summaries_Form = function(data){
 		
+		self = this;
+		
 		document.getElementById(this.report_summaries_tables_select.id).innerHTML = '<option>-</option>';
 		
 		//get all table names
@@ -35,11 +37,10 @@ function Report_Tab() {
 		self.fields =[{name: 'last_name',   type: 'string',   filterable: true},
 	        {name: 'first_name',        type: 'string',   filterable: true},
 	        {name: 'zip_code',          type: 'integer',  filterable: true},
-	        {name: 'pseudo_zip',        type: 'integer',  filterable: true },
 	        {name: 'billed_amount',     type: 'float',    rowLabelable: false},
 	        {name: 'last_billed_date',  type: 'date',     filterable: true}];
 		
-		var input = {json:self.json_string, fields: self.fields, rowLabels:["last_name"]};
+		var input = {json:self.json_string, fields: self.fields, rowLabels:["last_name"], resultsDivID:self.report_results_data_display_div.id};
 		
 		
 		$('#' + self.report_summaries_data_display_div.id).pivot_display('setup', input);
@@ -83,7 +84,7 @@ function Report_Tab() {
 		this.report_summaries_data_form.innerHTML += '<hr>';
 		
 		this.report_results_data_display_div = document.createElement("div");
-		this.report_results_data_display_div.setAttribute('id', 'results');
+		this.report_results_data_display_div.setAttribute('id', 'report_summaries_data_results');
 		this.report_summaries_data_form.appendChild(this.report_results_data_display_div);
 		
 		var div_tab = document.getElementById(form_div_id);

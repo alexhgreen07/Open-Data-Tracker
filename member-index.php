@@ -20,7 +20,7 @@ Authorize_Session();
 
 		<!-- Application javascript -->
 		<script src="client/main.js.php"></script>
-
+		
 		<script>
 		
 			//run the application

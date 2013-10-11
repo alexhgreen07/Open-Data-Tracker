@@ -61,7 +61,7 @@ function Graph_Tab() {
 		}
 		else
 		{
-				
+			document.getElementById(self.summaries_graph_canvas.id).style = '';
 			document.getElementById(self.summaries_graph_canvas.id).width = "0";
 			document.getElementById(self.summaries_graph_canvas.id).height = "0";
 		

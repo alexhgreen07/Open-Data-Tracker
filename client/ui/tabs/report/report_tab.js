@@ -18,6 +18,8 @@ function Report_Tab() {
 		
 		self = this;
 		
+		self.data = data;
+		
 		document.getElementById(this.report_summaries_tables_select.id).innerHTML = '<option>-</option>';
 		
 		//get all table names
@@ -25,26 +27,58 @@ function Report_Tab() {
 			
 			document.getElementById(this.report_summaries_tables_select.id).innerHTML += '<option>' + key + '</option>';
 		}
-
-		//this function refreshes the pivot table
-		self.json_titles = '["last_name","first_name","zip_code","billed_amount","last_billed_date"]';
-		self.json_data = 
-			'["Jackson", "Robert", 34471, 100.00, "Tue, 24 Jan 2012 05:00:00 +0000"]' + 
-        	',["Smith", "Jon", 34476, 173.20, "Mon, 13 Feb 2012 00:15:00 +0000"]' + 
-        	',["Gerber", "Jake", 34479, 502.57, "Mon, 19 Feb 2012 01:00:00 +0000"]';
-		self.json_string = '[' + self.json_titles + ',' + self.json_data + ']';
 		
-		self.fields =[{name: 'last_name',   type: 'string',   filterable: true},
-	        {name: 'first_name',        type: 'string',   filterable: true},
-	        {name: 'zip_code',          type: 'integer',  filterable: true},
-	        {name: 'billed_amount',     type: 'float',    rowLabelable: false},
-	        {name: 'last_billed_date',  type: 'date',     filterable: true}];
+	};
+	
+	this.Tables_Select_Changed = function(){
 		
-		var input = {json:self.json_string, fields: self.fields, rowLabels:["last_name"], resultsDivID:self.report_results_data_display_div.id};
+		document.getElementById(self.report_summaries_data_display_div.id).innerHTML = '';
+		document.getElementById(self.report_results_data_display_div.id).innerHTML = '';
 		
+		if($('#' + self.report_summaries_tables_select.id).val() != '-')
+		{
+			
+			self.json_titles = [];
+			self.fields = [];
+			self.json_data = [];
+			
+			//get all column names
+			for (var i = 0; i <  self.data[$('#' + self.report_summaries_tables_select.id).val()].length; i++) {
+				
+				//this function refreshes the pivot table
+				key = self.data[$('#' + self.report_summaries_tables_select.id).val()][i];
+				key_data_row = [];
+				
+				for(var column in key)
+				{
+					if(i == 0)
+					{
+						self.json_titles.push(column);
+						self.fields.push({name: column,   type: 'string',   filterable: true});
+					}
+					
+					key_data_row.push(key[column]);
+					
+					
+				}
+				
+				self.json_data.push(JSON.stringify(key_data_row));
+				
+			}
+			
+			self.json_titles = JSON.stringify(self.json_titles);
+			self.json_data = self.json_data.join();
+			
+			self.json_string = '[' + self.json_titles + ',' + self.json_data + ']';
+					
+			var input = {json:self.json_string, fields: self.fields, resultsDivID:self.report_results_data_display_div.id};
+			
+			
+			$('#' + self.report_summaries_data_display_div.id).pivot_display('setup', input);
+	
+			
+		}
 		
-		$('#' + self.report_summaries_data_display_div.id).pivot_display('setup', input);
-
 		
 	};
 	
@@ -89,6 +123,12 @@ function Report_Tab() {
 		
 		var div_tab = document.getElementById(form_div_id);
 		div_tab.appendChild(this.report_summaries_data_form);
+		
+		$('#' + self.report_summaries_tables_select.id).change(function() {
+			
+			self.Tables_Select_Changed();
+
+		});
 
 	};
 

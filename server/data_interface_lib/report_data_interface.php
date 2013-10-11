@@ -18,6 +18,21 @@ class Report_Data_Interface {
 		$this -> database_link = $new_database_link;
 
 	}
+	
+	public function Get_Tables_Schema() {
+		
+		$schema_query = "select * from `information_schema`.`tables` where 
+			table_name = 'items' OR 
+			table_name = 'item_log' OR
+			table_name = 'categories' OR
+			table_name = 'tasks' OR
+			table_name = 'task_log' OR
+			table_name = '	task_targets'";
+		
+		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '', );
+		
+		return $return_json;
+	}
 
 	public function Get_Report_Summary_Data() {
 

@@ -54,10 +54,17 @@ function Graph_Tab() {
 			
 			document.getElementById(self.summaries_graph_canvas.id).width = "500";
 			document.getElementById(self.summaries_graph_canvas.id).height = "400";
-		
+	
 			
 			this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Bar(barChartData); 
 			
+		}
+		else
+		{
+				
+			document.getElementById(self.summaries_graph_canvas.id).width = "0";
+			document.getElementById(self.summaries_graph_canvas.id).height = "0";
+		
 		}
 		
 		
@@ -97,6 +104,8 @@ function Graph_Tab() {
 		
 		document.getElementById(self.summaries_graph_select_x_column.id).innerHTML = columns_select_html;
 		document.getElementById(self.summaries_graph_select_y_column.id).innerHTML = columns_select_html;
+		
+		this.Refresh_Chart_Data();
 		
 	};
 	

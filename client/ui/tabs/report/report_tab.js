@@ -159,7 +159,7 @@ function Report_Tab() {
 		var new_tab;
 
 		new_tab = new Array();
-		new_tab.push("Sums and Averages");
+		new_tab.push("Pivot Report");
 		new_tab.push('<div id="reports_summaries_tab"></div>');
 		tabs_array.push(new_tab);
 

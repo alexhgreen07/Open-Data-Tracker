@@ -6,9 +6,12 @@ function Report_Tab() {
 	//class variables
 	this.div_id = null;
 	
-	this.Refresh = function(data) {
+	this.Refresh = function(data, schema) {
 		
 		var self = this;
+		
+		self.data = data;
+		self.schema = schema;
 		
 		self.Refresh_Summaries_Form(data);
 		
@@ -18,7 +21,6 @@ function Report_Tab() {
 		
 		self = this;
 		
-		self.data = data;
 		
 		document.getElementById(this.report_summaries_tables_select.id).innerHTML = '<option>-</option>';
 		

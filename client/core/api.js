@@ -108,6 +108,7 @@ function Server_API() {
 			function(jsonRpcObj){
 				
 				self.data = jsonRpcObj.result.data;
+				self.schema = jsonRpcObj.result.schema;
 				
 				//call the data changed callback since the data was refreshed.
 				self.data_changed_callback();

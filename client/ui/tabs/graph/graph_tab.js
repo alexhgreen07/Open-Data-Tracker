@@ -6,11 +6,12 @@ function Graph_Tab() {
 	//class variables
 	this.div_id = null;
 	
-	this.Refresh = function(data){
+	this.Refresh = function(data, schema){
 		
 		self = this;
 		
 		self.data = data;
+		self.schema = schema;
 		
 		document.getElementById(self.summaries_graph_select_table.id).innerHTML = '<option>-</option>';
 		

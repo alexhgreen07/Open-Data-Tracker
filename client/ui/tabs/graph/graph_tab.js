@@ -37,27 +37,149 @@ function Graph_Tab() {
 			x_column_select.value != '-' && 
 			y_column_select.value != '-'){
 			
-			var barChartData = {
-				labels : ["January","February","March","April","May","June","July"],
-				datasets : [
-					{
-						fillColor : "rgba(220,220,220,0.5)",
-						strokeColor : "rgba(220,220,220,1)",
-						data : [65,59,90,81,56,55,40]
-					},
-					{
-						fillColor : "rgba(151,187,205,0.5)",
-						strokeColor : "rgba(151,187,205,1)",
-						data : [28,48,40,19,96,27,100]
-					}
-				]
-			};
+			x_data_to_graph = [];
+			y_data_to_graph = [];
 			
+			//compile the selected data
+			for (var i = 0; i <  self.data[$('#' + self.summaries_graph_select_table.id).val()].length; i++) {
+				
+				var key = self.data[$('#' + self.summaries_graph_select_table.id).val()][i];
+				key_data_row = [];
+				
+				//column loop (may not be required)
+				for(var column in key)
+				{
+					//NOT IMPLEMENTED
+					
+				}
+				
+			}
+			
+			//set the height and width for proper rendering
 			document.getElementById(self.summaries_graph_canvas.id).width = "500";
 			document.getElementById(self.summaries_graph_canvas.id).height = "400";
-	
 			
-			this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Bar(barChartData); 
+			
+			//graph the data
+			if(document.getElementById(self.summaries_graph_type_select.id).value == "Line")
+			{
+				
+				//format the data properly
+				var data = {
+					labels : ["January","February","March","April","May","June","July"],
+					datasets : [
+						{
+							fillColor : "rgba(220,220,220,0.5)",
+							strokeColor : "rgba(220,220,220,1)",
+							data : [65,59,90,81,56,55,40]
+						}
+					]
+				};
+				
+				
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Line(data); 
+			}
+			else if(document.getElementById(self.summaries_graph_type_select.id).value == "Pie")
+			{	
+					
+				var data = [
+					{
+						value: 30,
+						color:"#F38630"
+					},
+					{
+						value : 50,
+						color : "#E0E4CC"
+					},
+					{
+						value : 100,
+						color : "#69D2E7"
+					}			
+				];
+				
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Pie(data); 
+			}
+			else if(document.getElementById(self.summaries_graph_type_select.id).value == "Radar")
+			{
+					
+				//format the data properly
+				var data = {
+					labels : ["January","February","March","April","May","June","July"],
+					datasets : [
+						{
+							fillColor : "rgba(220,220,220,0.5)",
+							strokeColor : "rgba(220,220,220,1)",
+							data : [65,59,90,81,56,55,40]
+						}
+					]
+				};
+				
+				
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Radar(data); 
+			}
+			else if(document.getElementById(self.summaries_graph_type_select.id).value == "Polar Area")
+			{
+					
+				//format the data properly
+				var data = [
+					{
+						value: 30,
+						color:"#F38630"
+					},
+					{
+						value : 50,
+						color : "#E0E4CC"
+					},
+					{
+						value : 100,
+						color : "#69D2E7"
+					}			
+				];
+				
+				
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).PolarArea(data); 
+			}
+			else if(document.getElementById(self.summaries_graph_type_select.id).value == "Doughnut")
+			{
+					
+				//format the data properly
+				var data = [
+					{
+						value: 30,
+						color:"#F38630"
+					},
+					{
+						value : 50,
+						color : "#E0E4CC"
+					},
+					{
+						value : 100,
+						color : "#69D2E7"
+					}			
+				];
+				
+				
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Doughnut(data); 
+			}
+			else
+			{
+					
+				//format the data properly
+				var barChartData = {
+					labels : ["January","February","March","April","May","June","July"],
+					datasets : [
+						{
+							fillColor : "rgba(220,220,220,0.5)",
+							strokeColor : "rgba(220,220,220,1)",
+							data : [65,59,90,81,56,55,40]
+						}
+					]
+				};
+				
+				
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Bar(barChartData); 
+			
+			}
 			
 		}
 		else
@@ -133,13 +255,25 @@ function Graph_Tab() {
 		
 		graph_html = '';
 		
-		summaries_form.innerHTML += 'Data:<br/><hr>';
+		summaries_form.innerHTML += 'Data:<br/>';
 		
+		summaries_form.innerHTML += 'Type:<br/>';
+		self.summaries_graph_type_select = document.createElement('select');
+		self.summaries_graph_type_select.id = 'summaries_graph_type_select';
+		self.summaries_graph_type_select.innerHTML = '<option>Bar</option>';
+		self.summaries_graph_type_select.innerHTML += '<option>Line</option>';
+		self.summaries_graph_type_select.innerHTML += '<option>Pie</option>';
+		self.summaries_graph_type_select.innerHTML += '<option>Radar</option>';
+		self.summaries_graph_type_select.innerHTML += '<option>Polar Area</option>';
+		self.summaries_graph_type_select.innerHTML += '<option>Doughnut</option>';
+		summaries_form.appendChild(self.summaries_graph_type_select);
+		
+		summaries_form.innerHTML += '<hr/>';
 		self.summaries_graph_canvas = document.createElement('canvas');
 		self.summaries_graph_canvas.id = 'graph_tab_table_select';
 		summaries_form.appendChild(self.summaries_graph_canvas);
+		summaries_form.innerHTML += '<hr/>';
 		
-		summaries_form.innerHTML += '<br/>';
 		summaries_form.innerHTML += 'Table:<br/>';
 		self.summaries_graph_select_table = document.createElement('select');
 		self.summaries_graph_select_table.id = 'summaries_graph_select_table';
@@ -160,6 +294,12 @@ function Graph_Tab() {
 		self.summaries_graph_select_y_column.innerHTML = '<option>-</option>';
 		summaries_form.appendChild(self.summaries_graph_select_y_column);
 		
+		$('#' + self.summaries_graph_type_select.id).change(function(){
+			
+			self.Refresh_Chart_Data();
+			
+		});
+		
 		$('#' + self.summaries_graph_select_table.id).change(function(){
 			
 			self.Table_Select_Change();
@@ -177,6 +317,8 @@ function Graph_Tab() {
 			self.Y_Column_Select_Change();
 			
 		});
+		
+		
 		
 	};
 	

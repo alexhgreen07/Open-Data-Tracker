@@ -35,7 +35,6 @@ function Report_Tab() {
 		var self = this;
 		
 		document.getElementById(self.report_summaries_data_display_div.id).innerHTML = '';
-		document.getElementById(self.report_results_data_display_div.id).innerHTML = '';
 		
 		if($('#' + self.report_summaries_tables_select.id).val() != '-')
 		{
@@ -80,6 +79,8 @@ function Report_Tab() {
 	
 			
 		}
+		
+		document.getElementById(self.report_results_data_display_div.id).innerHTML = '';
 		
 		
 	};

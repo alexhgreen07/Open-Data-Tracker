@@ -372,7 +372,14 @@ class Task_Data_Interface {
 
 		return $return_json;
 	}
-
+	
+	public function Get_Tasks_Schema(){
+		
+		$return_json = array();
+		
+		$return_json['schema'] = array();
+	}
+	
 	public function Get_Tasks() {
 		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '');
 
@@ -436,6 +443,15 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 
+	public function Get_Task_Log_Schema(){
+		
+		$return_json = array();
+		$return_json['schema'] = array();
+		
+		return $return_json;
+		
+	}
+
 	public function Get_Task_Log() {
 
 		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '');
@@ -485,6 +501,15 @@ class Task_Data_Interface {
 		}
 
 		return $return_json;
+	}
+	
+	public function Get_Task_Targets_Schema(){
+		
+		$return_json = array();
+		$return_json['schema'] = array();
+		
+		return $return_json;
+		
 	}
 	
 	public function Get_Task_Targets()

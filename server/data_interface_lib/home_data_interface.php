@@ -48,7 +48,16 @@ class Home_Data_Interface {
 
 		return $return_json;
 	}
-
+	
+	public function Get_Categories_Schema()
+	{
+		$return_json = array();
+		
+		$return_json['schema'] = array();
+		
+		return $return_json;
+	}
+	
 	/** \fn public function Get_Categories()
      * \brief This functions retrieves and compiles the categories into a JSON arrary.
      * \return A JSON array with format: {success:<value>,authenticated:<value>,data:<value>}

@@ -285,6 +285,16 @@ class Item_Data_Interface {
 		
 	}
 	
+	public function Get_Item_Log_Schema(){
+				
+		$return_json = array();
+		
+		$return_json['schema'] = array();	
+			
+		
+		return $return_json;
+	}
+	
 	public function Get_Item_Log() {
 
 		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '', );
@@ -335,7 +345,16 @@ class Item_Data_Interface {
 
 		return $return_json;
 	}
-
+	
+	public function Get_Items_Schema(){
+			
+		$return_json = array();
+		
+		$return_json['schema'] = array();
+		
+		return $return_json;
+	}
+	
 	public function Get_Items() {
 		$return_json = array('authenticated' => 'false', 'success' => 'false', 'items' => array(), );
 

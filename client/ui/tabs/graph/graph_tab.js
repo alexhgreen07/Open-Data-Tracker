@@ -129,7 +129,7 @@ function Graph_Tab() {
 		
 		graph_html = '';
 		
-		summaries_form.innerHTML += 'Data:<br/>';
+		summaries_form.innerHTML += 'Data:<br/><hr>';
 		
 		self.summaries_graph_canvas = document.createElement('canvas');
 		self.summaries_graph_canvas.id = 'graph_tab_table_select';

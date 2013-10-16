@@ -74,7 +74,8 @@ function Graph_Tab() {
 	this.Table_Select_Change = function(){
 		
 		
-		columns_select_html = ''
+		columns_x_select_html = '';
+		columns_y_select_html = '';
 		
 		//get all column names
 		for (var i = 0; i <  self.data[$('#' + self.summaries_graph_select_table.id).val()].length; i++) {
@@ -83,13 +84,15 @@ function Graph_Tab() {
 			key = self.data[$('#' + self.summaries_graph_select_table.id).val()][i];
 			key_data_row = [];
 			
-			columns_select_html += '<option>-</option>';
+			columns_x_select_html += '<option>-</option>';
+			columns_y_select_html += '<option>-</option>';
 			
 			for(var column in key)
 			{
 				if(i == 0)
 				{
-					columns_select_html += '<option>' + column + '</option>';
+					columns_x_select_html += '<option>' + column + '</option>';
+					columns_y_select_html += '<option>' + column + '</option>';
 				}
 				
 				key_data_row.push(key[column]);
@@ -103,8 +106,8 @@ function Graph_Tab() {
 			
 		}
 		
-		document.getElementById(self.summaries_graph_select_x_column.id).innerHTML = columns_select_html;
-		document.getElementById(self.summaries_graph_select_y_column.id).innerHTML = columns_select_html;
+		document.getElementById(self.summaries_graph_select_x_column.id).innerHTML = columns_x_select_html;
+		document.getElementById(self.summaries_graph_select_y_column.id).innerHTML = columns_y_select_html;
 		
 		this.Refresh_Chart_Data();
 		

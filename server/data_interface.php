@@ -53,7 +53,7 @@ class Data_Interface {
 		$task_targets = $this->taskdatainterface->Get_Task_Targets();
 		
 		$return_json['data']['categories'] = $categories['data'];
-		$return_json['data']['items'] = $items['items'];
+		$return_json['data']['items'] = $items['data'];
 		$return_json['data']['item_entries'] = $item_entries['data'];
 		$return_json['data']['tasks'] = $tasks['data'];
 		$return_json['data']['task_entries'] = $task_entries['data'];

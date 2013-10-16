@@ -348,7 +348,7 @@ class Item_Data_Interface {
 
 			if ($result) {
 				$return_json['success'] = 'true';
-				$return_json['items'] = array();
+				$return_json['data'] = array();
 				
 				$num = mysql_numrows($result);
 
@@ -362,7 +362,7 @@ class Item_Data_Interface {
 					$item_id = mysql_result($result, $i, "item_id");
 
 					if ($item_name != "") {
-						$return_json['items'][$i] = 
+						$return_json['data'][$i] = 
 							array(
 							'item_name' => $item_name, 
 							'item_description' => $item_description, 

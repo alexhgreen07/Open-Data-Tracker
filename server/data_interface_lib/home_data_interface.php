@@ -53,7 +53,13 @@ class Home_Data_Interface {
 	{
 		$return_json = array();
 		
-		$return_json['schema'] = array();
+		$return_json['schema'] = array(
+			'category_id' => 'int',
+			'name' => 'string',
+			'description' => 'string',
+			'parent_category_id' => 'int',
+			'category_path' => 'string'
+		);
 		
 		return $return_json;
 	}

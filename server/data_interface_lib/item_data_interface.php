@@ -289,7 +289,15 @@ class Item_Data_Interface {
 				
 		$return_json = array();
 		
-		$return_json['schema'] = array();	
+		$return_json['schema'] = array(
+			'item_log_id' => 'int',
+			'item_id' => 'int',
+			'time' => 'date',
+			'value' => 'float',
+			'name' => 'string',
+			'unit' => 'string',
+			'note' => 'string'
+		);	
 			
 		
 		return $return_json;
@@ -350,7 +358,13 @@ class Item_Data_Interface {
 			
 		$return_json = array();
 		
-		$return_json['schema'] = array();
+		$return_json['schema'] = array(
+			'item_name' => 'string', 
+			'item_description' => 'string', 
+			'item_unit' => 'string', 
+			'date_created' => 'date', 
+			'item_id' => 'int'
+		);
 		
 		return $return_json;
 	}

@@ -32,6 +32,8 @@ function Report_Tab() {
 	
 	this.Tables_Select_Changed = function(){
 		
+		var self = this;
+		
 		document.getElementById(self.report_summaries_data_display_div.id).innerHTML = '';
 		document.getElementById(self.report_results_data_display_div.id).innerHTML = '';
 		

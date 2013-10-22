@@ -57,7 +57,7 @@ function Report_Tab() {
 					if(i == 0)
 					{
 						self.json_titles.push(column);
-						self.fields.push({name: column,   type: 'string',   filterable: true});
+						self.fields.push({name: column,   type: 'string',  rowLabelable: true, filterable: true, summarizable: 'sum'});
 					}
 					
 					key_data_row.push(key[column]);

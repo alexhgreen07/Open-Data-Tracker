@@ -49,7 +49,16 @@ function Graph_Tab() {
 				//column loop (may not be required)
 				for(var column in key)
 				{
-					//NOT IMPLEMENTED
+					
+					if(column == x_column_select.value)
+					{
+						
+						x_data_to_graph.push(key[column]);
+					}
+					else if(column == y_column_select.value)
+					{
+						y_data_to_graph.push(key[column]);
+					}
 					
 				}
 				
@@ -66,12 +75,12 @@ function Graph_Tab() {
 				
 				//format the data properly
 				var data = {
-					labels : ["January","February","March","April","May","June","July"],
+					labels : x_data_to_graph,
 					datasets : [
 						{
 							fillColor : "rgba(220,220,220,0.5)",
 							strokeColor : "rgba(220,220,220,1)",
-							data : [65,59,90,81,56,55,40]
+							data : y_data_to_graph
 						}
 					]
 				};
@@ -104,12 +113,12 @@ function Graph_Tab() {
 					
 				//format the data properly
 				var data = {
-					labels : ["January","February","March","April","May","June","July"],
+					labels : x_data_to_graph,
 					datasets : [
 						{
 							fillColor : "rgba(220,220,220,0.5)",
 							strokeColor : "rgba(220,220,220,1)",
-							data : [65,59,90,81,56,55,40]
+							data : y_data_to_graph
 						}
 					]
 				};
@@ -165,19 +174,19 @@ function Graph_Tab() {
 			{
 					
 				//format the data properly
-				var barChartData = {
-					labels : ["January","February","March","April","May","June","July"],
+				var data = {
+					labels : x_data_to_graph,
 					datasets : [
 						{
 							fillColor : "rgba(220,220,220,0.5)",
 							strokeColor : "rgba(220,220,220,1)",
-							data : [65,59,90,81,56,55,40]
+							data : y_data_to_graph
 						}
 					]
 				};
 				
 				
-				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Bar(barChartData); 
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Bar(data); 
 			
 			}
 			

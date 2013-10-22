@@ -16,3 +16,6 @@
 [submodule "externals/DataTables"]
 	path = externals/DataTables
 	url = https://github.com/DataTables/DataTables.git
+[submodule "externals/Chart"]
+	path = externals/Chart
+	url = https://github.com/nnnick/Chart.js.git

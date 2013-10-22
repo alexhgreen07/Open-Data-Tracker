@@ -7,6 +7,7 @@ function View_Category_Form(){
 	{
 		var new_inner_html = '';
 		var select_html = '';
+		self = this;
 
 		new_inner_html += 'Last refreshed: ' + (new Date()) + '<br />';
 		

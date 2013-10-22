@@ -285,6 +285,24 @@ class Item_Data_Interface {
 		
 	}
 	
+	public function Get_Item_Log_Schema(){
+				
+		$return_json = array();
+		
+		$return_json['schema'] = array(
+			'item_log_id' => 'int',
+			'item_id' => 'int',
+			'time' => 'date',
+			'value' => 'float',
+			'name' => 'string',
+			'unit' => 'string',
+			'note' => 'string'
+		);	
+			
+		
+		return $return_json;
+	}
+	
 	public function Get_Item_Log() {
 
 		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '', );
@@ -335,7 +353,22 @@ class Item_Data_Interface {
 
 		return $return_json;
 	}
-
+	
+	public function Get_Items_Schema(){
+			
+		$return_json = array();
+		
+		$return_json['schema'] = array(
+			'item_name' => 'string', 
+			'item_description' => 'string', 
+			'item_unit' => 'string', 
+			'date_created' => 'date', 
+			'item_id' => 'int'
+		);
+		
+		return $return_json;
+	}
+	
 	public function Get_Items() {
 		$return_json = array('authenticated' => 'false', 'success' => 'false', 'items' => array(), );
 
@@ -348,7 +381,7 @@ class Item_Data_Interface {
 
 			if ($result) {
 				$return_json['success'] = 'true';
-				$return_json['items'] = array();
+				$return_json['data'] = array();
 				
 				$num = mysql_numrows($result);
 
@@ -362,7 +395,7 @@ class Item_Data_Interface {
 					$item_id = mysql_result($result, $i, "item_id");
 
 					if ($item_name != "") {
-						$return_json['items'][$i] = 
+						$return_json['data'][$i] = 
 							array(
 							'item_name' => $item_name, 
 							'item_description' => $item_description, 

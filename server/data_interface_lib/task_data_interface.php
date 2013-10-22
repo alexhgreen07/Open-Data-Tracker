@@ -372,7 +372,25 @@ class Task_Data_Interface {
 
 		return $return_json;
 	}
-
+	
+	public function Get_Tasks_Schema(){
+		
+		$return_json = array();
+		
+		$return_json['schema'] = array(
+			'task_id' => 'int',
+			'name' => 'string',
+			'description' => 'string',
+			'estimated_time' => 'float', 
+			'date_created' => 'date',
+			'note' => 'string',
+			'category_id' => 'int',
+			'status' => 'string'
+		);
+		
+		return $return_json;
+	}
+	
 	public function Get_Tasks() {
 		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '');
 
@@ -436,6 +454,24 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 
+	public function Get_Task_Log_Schema(){
+		
+		$return_json = array();
+		$return_json['schema'] = array(
+			'task_log_id' => 'int',
+			'name' => 'string',
+			'start_time' => 'date',
+			'hours' => 'int',
+			'note' => 'note',
+			'status' => 'string',
+			'task_id' => 'int',
+			'task_target_id' => 'int'
+		);
+		
+		return $return_json;
+		
+	}
+
 	public function Get_Task_Log() {
 
 		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '');
@@ -485,6 +521,25 @@ class Task_Data_Interface {
 		}
 
 		return $return_json;
+	}
+	
+	public function Get_Task_Targets_Schema(){
+		
+		$return_json = array();
+		$return_json['schema'] = array(
+			'task_schedule_id' => 'int',
+			'task_schedule_id' => 'int',
+			'name' => 'string',
+			'scheduled_time' => 'date',
+			'scheduled' => 'bool',
+			'recurring' => 'bool',
+			'recurrance_type' => 'string',
+			'recurrance_period' => 'int',
+			'task_id' => 'int'
+		);
+		
+		return $return_json;
+		
 	}
 	
 	public function Get_Task_Targets()

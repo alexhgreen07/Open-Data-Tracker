@@ -17,6 +17,9 @@ include_once(dirname(__FILE__).'/../../../../externals/jquery-ui/ui/jquery.ui.co
 //JSON RPC library
 include_once(dirname(__FILE__).'/../../../../externals/json-rpc2php/jsonRPC2php.client.js');
 
+//JSON RPC library
+include_once(dirname(__FILE__).'/../../../../externals/Chart/Chart.js');
+
 require_once(dirname(__FILE__).'/../../accordian.js.php');
 
 //main file

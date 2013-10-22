@@ -6,9 +6,12 @@ function Report_Tab() {
 	//class variables
 	this.div_id = null;
 	
-	this.Refresh = function(data) {
+	this.Refresh = function(data, schema) {
 		
 		var self = this;
+		
+		self.data = data;
+		self.schema = schema;
 		
 		self.Refresh_Summaries_Form(data);
 		
@@ -18,7 +21,6 @@ function Report_Tab() {
 		
 		self = this;
 		
-		self.data = data;
 		
 		document.getElementById(this.report_summaries_tables_select.id).innerHTML = '<option>-</option>';
 		
@@ -32,8 +34,9 @@ function Report_Tab() {
 	
 	this.Tables_Select_Changed = function(){
 		
+		var self = this;
+		
 		document.getElementById(self.report_summaries_data_display_div.id).innerHTML = '';
-		document.getElementById(self.report_results_data_display_div.id).innerHTML = '';
 		
 		if($('#' + self.report_summaries_tables_select.id).val() != '-')
 		{
@@ -54,7 +57,7 @@ function Report_Tab() {
 					if(i == 0)
 					{
 						self.json_titles.push(column);
-						self.fields.push({name: column,   type: 'string',   filterable: true});
+						self.fields.push({name: column,   type: 'string',  rowLabelable: true, filterable: true, summarizable: 'sum'});
 					}
 					
 					key_data_row.push(key[column]);
@@ -78,6 +81,8 @@ function Report_Tab() {
 	
 			
 		}
+		
+		document.getElementById(self.report_results_data_display_div.id).innerHTML = '';
 		
 		
 	};
@@ -159,7 +164,7 @@ function Report_Tab() {
 		var new_tab;
 
 		new_tab = new Array();
-		new_tab.push("Sums and Averages");
+		new_tab.push("Pivot Report");
 		new_tab.push('<div id="reports_summaries_tab"></div>');
 		tabs_array.push(new_tab);
 

@@ -207,81 +207,64 @@ Software Architecture Overview
 \end_layout
 
 \begin_layout Section
-User Management
+Remote Procedure Call (RPC) Layers
 \end_layout
 
 \begin_layout Itemize
-User registration
+JSON RPC Queue
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-Username
+Dynamically detects all functions in a JSON PHP-Javascript object.
 \end_layout
 
 \begin_layout Itemize
-Password
-\end_layout
-
-\begin_layout Itemize
-Email (optional)
-\end_layout
-
-\begin_layout Itemize
-First Name (optional)
-\end_layout
-
-\begin_layout Itemize
-Last Name (optional)
+Adds a queue layer between the caller and the AJAX request so calls are
+ never lost.
 \end_layout
 
 \end_deeper
 \begin_layout Itemize
-User permissions
+JSON RPC PHP-Javascript Library
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-User can only see things they created.
+Javascript module
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Queries the PHP server for all functions and builds an index of properties.
+\end_layout
+
+\begin_layout Itemize
+Is able to call functions via AJAX callbacks.
 \end_layout
 
 \end_deeper
 \begin_layout Itemize
-User deletion
+PHP module
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-A user can delete their own account.
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-Security
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Remember me
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Stores the login ID number in a cookie.
+Builds a list of functions in registered classes and sends them to the client.
 \end_layout
 
 \begin_layout Itemize
-Stores the login ID number in the database.
-\end_layout
-
-\begin_layout Itemize
-Checks the cookie to the database if the session has not been authenticated.
+Calls functions and passes them the parameters.
 \end_layout
 
 \end_deeper
 \end_deeper
 \begin_layout Section
-Server Core
+Server 
+\end_layout
+
+\begin_layout Subsection
+Core
 \end_layout
 
 \begin_layout Itemize
@@ -293,6 +276,16 @@ General
 Categories
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+data
+\end_layout
+
+\begin_layout Itemize
+schema
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Settings
 \end_layout
@@ -307,14 +300,44 @@ Items
 Items
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+data
+\end_layout
+
+\begin_layout Itemize
+schema
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Item Entries
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+data
+\end_layout
+
+\begin_layout Itemize
+schema
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Item Targets
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+data
+\end_layout
+
+\begin_layout Itemize
+schema
+\end_layout
+
+\end_deeper
 \end_deeper
 \begin_layout Itemize
 Tasks
@@ -325,17 +348,51 @@ Tasks
 Tasks
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+data
+\end_layout
+
+\begin_layout Itemize
+schema
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Task Entries
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+data
+\end_layout
+
+\begin_layout Itemize
+schema
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 Task Targets
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+data
+\end_layout
+
+\begin_layout Itemize
+schema
+\end_layout
+
+\end_deeper
 \end_deeper
 \begin_layout Section
-Client Core
+Client 
+\end_layout
+
+\begin_layout Subsection
+Core
 \end_layout
 
 \begin_layout Itemize
@@ -350,7 +407,7 @@ Event callbacks
 Global settings
 \end_layout
 
-\begin_layout Section
+\begin_layout Subsection
 Client UI
 \end_layout
 
@@ -532,59 +589,6 @@ Pivote table form
 \end_layout
 
 \end_deeper
-\begin_layout Section
-Remote Procedure Call Core
-\end_layout
-
-\begin_layout Itemize
-JSON RPC Queue
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Dynamically detects all functions in a JSON PHP-Javascript object.
-\end_layout
-
-\begin_layout Itemize
-Adds a queue layer between the caller and the AJAX request so calls are
- never lost.
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-JSON RPC PHP-Javascript Library
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Javascript module
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Queries the PHP server for all functions and builds an index of properties.
-\end_layout
-
-\begin_layout Itemize
-Is able to call functions via AJAX callbacks.
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-PHP module
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-Builds a list of functions in registered classes and sends them to the client.
-\end_layout
-
-\begin_layout Itemize
-Calls functions and passes them the parameters.
-\end_layout
-
-\end_deeper
-\end_deeper
 \begin_layout Part
 Database
 \end_layout
@@ -642,6 +646,80 @@ Database Diagram
 
 \end_layout
 
+\begin_layout Section
+User Management
+\end_layout
+
+\begin_layout Itemize
+User registration
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Username
+\end_layout
+
+\begin_layout Itemize
+Password
+\end_layout
+
+\begin_layout Itemize
+Email (optional)
+\end_layout
+
+\begin_layout Itemize
+First Name (optional)
+\end_layout
+
+\begin_layout Itemize
+Last Name (optional)
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+User permissions
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+User can only see things they created.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+User deletion
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+A user can delete their own account.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Security
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Remember me
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Stores the login ID number in a cookie.
+\end_layout
+
+\begin_layout Itemize
+Stores the login ID number in the database.
+\end_layout
+
+\begin_layout Itemize
+Checks the cookie to the database if the session has not been authenticated.
+\end_layout
+
+\end_deeper
+\end_deeper
 \begin_layout Section
 Tables
 \end_layout

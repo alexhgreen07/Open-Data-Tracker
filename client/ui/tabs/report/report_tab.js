@@ -32,6 +32,12 @@ function Report_Tab() {
 		
 	};
 	
+	this.Results_Update_Callback = function(){
+		
+		alert('hello world!');
+		
+	};
+	
 	this.Tables_Select_Changed = function(){
 		
 		var self = this;
@@ -74,7 +80,7 @@ function Report_Tab() {
 			
 			self.json_string = '[' + self.json_titles + ',' + self.json_data + ']';
 					
-			var input = {json:self.json_string, fields: self.fields, resultsDivID:self.report_results_data_display_div.id};
+			var input = {json:self.json_string, fields: self.fields, resultsDivID:self.report_results_data_display_div.id, callbacks:{afterUpdateResults:this.Results_Update_Callback}};
 			
 			
 			$('#' + self.report_summaries_data_display_div.id).pivot_display('setup', input);

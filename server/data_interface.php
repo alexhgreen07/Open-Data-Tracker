@@ -6,7 +6,6 @@
 require_once ('data_interface_lib/home_data_interface.php');
 require_once ('data_interface_lib/item_data_interface.php');
 require_once ('data_interface_lib/task_data_interface.php');
-require_once ('data_interface_lib/report_data_interface.php');
 
 
 /** \class Data_Interface
@@ -19,8 +18,7 @@ class Data_Interface {
 	private $homedatainteface;
 	private $itemdatainterface;
 	private $taskdatainterface;
-	private $reportdatainterface;
-    
+	
 	/** \fn public function Data_Interface($new_database_link)
 	 * \brief This is the constructor for the class.
 	 * \param new_database_link This is the link to the database which the class will be interacting with.
@@ -34,7 +32,6 @@ class Data_Interface {
 		$this -> homedatainteface = new Home_Data_Interface($new_database_link);
 		$this -> itemdatainterface = new Item_Data_Interface($new_database_link);
 		$this -> taskdatainterface = new Task_Data_Interface($new_database_link);
-		$this -> reportdatainterface = new Report_Data_Interface($new_database_link);
 
 	}
 	

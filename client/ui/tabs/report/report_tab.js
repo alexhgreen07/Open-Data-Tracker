@@ -115,18 +115,40 @@ function Report_Tab() {
 		this.report_summaries_data_form.setAttribute('method', "post");
 		this.report_summaries_data_form.setAttribute('id', "report_summaries_display_form");
 		
-		this.report_summaries_data_form.innerHTML += 'Tables<br/>';
+		this.report_summaries_data_form.innerHTML += 'Tables:<br/>';
 		
 		this.report_summaries_tables_select = document.createElement("select");
 		this.report_summaries_tables_select.setAttribute('id', 'report_summaries_tables_select');
 		this.report_summaries_tables_select.innerHTML = '<option>-</option>';
 		this.report_summaries_data_form.appendChild(this.report_summaries_tables_select);
 		
+		this.report_summaries_data_form.innerHTML += '<br/>Summary Type:<br/>';
+		
+		this.report_summaries_type_select = document.createElement("select");
+		this.report_summaries_type_select.setAttribute('id', 'report_summaries_type_select');
+		this.report_summaries_type_select.innerHTML = '<option>-</option>';
+		this.report_summaries_data_form.appendChild(this.report_summaries_type_select);
+		
 		this.report_summaries_data_display_div = document.createElement("div");
 		this.report_summaries_data_display_div.setAttribute('id', 'report_summaries_data_display_div');
 		this.report_summaries_data_form.appendChild(this.report_summaries_data_display_div);
 		
-		this.report_summaries_data_form.innerHTML += '<hr>';
+		this.report_summaries_data_form.innerHTML += 'Graph Type:<br/>';
+		this.summaries_graph_type_select = document.createElement('select');
+		this.summaries_graph_type_select.id = 'summaries_graph_type_select';
+		this.summaries_graph_type_select.innerHTML = '<option>Bar</option>';
+		this.summaries_graph_type_select.innerHTML += '<option>Line</option>';
+		this.summaries_graph_type_select.innerHTML += '<option>Pie</option>';
+		this.summaries_graph_type_select.innerHTML += '<option>Radar</option>';
+		this.summaries_graph_type_select.innerHTML += '<option>Polar Area</option>';
+		this.summaries_graph_type_select.innerHTML += '<option>Doughnut</option>';
+		this.report_summaries_data_form.appendChild(self.summaries_graph_type_select);
+		
+		this.report_summaries_data_form.innerHTML += '<hr/>';
+		this.summaries_graph_canvas = document.createElement('canvas');
+		this.summaries_graph_canvas.id = 'graph_tab_table_select';
+		this.report_summaries_data_form.appendChild(self.summaries_graph_canvas);
+		this.report_summaries_data_form.innerHTML += '<hr/>';
 		
 		this.report_results_data_display_div = document.createElement("div");
 		this.report_results_data_display_div.setAttribute('id', 'report_summaries_data_results');

@@ -31,139 +31,174 @@ function Report_Tab() {
 	this.Refresh_Chart_Data = function(){
 		
 		
-		//set the height and width for proper rendering
-		document.getElementById(self.summaries_graph_canvas.id).width = "500";
-		document.getElementById(self.summaries_graph_canvas.id).height = "400";
+		x_column_select = document.getElementById(self.summaries_graph_select_x_column.id);
+		y_column_select = document.getElementById(self.summaries_graph_select_y_column.id);
 		
-		
-		x_data_to_graph = ['1','2','3'];
-		y_data_to_graph = [1,2,3];
-		
-		//graph the data
-		if(document.getElementById(self.summaries_graph_type_select.id).value == "Line")
-		{
+		if(x_column_select.value != '-' && 
+			y_column_select.value != '-'){
 			
-			//format the data properly
-			var data = {
-				labels : x_data_to_graph,
-				datasets : [
+			//set the height and width for proper rendering
+			document.getElementById(self.summaries_graph_canvas.id).width = window.innerWidth * 0.5;
+			document.getElementById(self.summaries_graph_canvas.id).height = window.innerHeight * 0.4;
+			
+			results_columns = pivot.results().columns();
+			results_rows = pivot.results().all();
+			
+			x_data_to_graph = [];
+			y_data_to_graph = [];
+			
+			$.each(results_rows,function(index, row){
+				
+				x_data_to_graph.push(row[x_column_select.value]);
+				y_data_to_graph.push(row[y_column_select.value]);
+				
+			});
+			
+			//graph the data
+			if(document.getElementById(self.summaries_graph_type_select.id).value == "Line")
+			{
+				
+				//format the data properly
+				var data = {
+					labels : x_data_to_graph,
+					datasets : [
+						{
+							fillColor : "rgba(220,220,220,0.5)",
+							strokeColor : "rgba(220,220,220,1)",
+							data : y_data_to_graph
+						}
+					]
+				};
+				
+				
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Line(data); 
+			}
+			else if(document.getElementById(self.summaries_graph_type_select.id).value == "Pie")
+			{	
+					
+				var data = [
 					{
-						fillColor : "rgba(220,220,220,0.5)",
-						strokeColor : "rgba(220,220,220,1)",
-						data : y_data_to_graph
-					}
-				]
-			};
-			
-			
-			this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Line(data); 
-		}
-		else if(document.getElementById(self.summaries_graph_type_select.id).value == "Pie")
-		{	
-				
-			var data = [
-				{
-					value: 30,
-					color:"#F38630"
-				},
-				{
-					value : 50,
-					color : "#E0E4CC"
-				},
-				{
-					value : 100,
-					color : "#69D2E7"
-				}			
-			];
-			
-			this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Pie(data); 
-		}
-		else if(document.getElementById(self.summaries_graph_type_select.id).value == "Radar")
-		{
-				
-			//format the data properly
-			var data = {
-				labels : x_data_to_graph,
-				datasets : [
+						value: 30,
+						color:"#F38630"
+					},
 					{
-						fillColor : "rgba(220,220,220,0.5)",
-						strokeColor : "rgba(220,220,220,1)",
-						data : y_data_to_graph
-					}
-				]
-			};
-			
-			
-			this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Radar(data); 
-		}
-		else if(document.getElementById(self.summaries_graph_type_select.id).value == "Polar Area")
-		{
+						value : 50,
+						color : "#E0E4CC"
+					},
+					{
+						value : 100,
+						color : "#69D2E7"
+					}			
+				];
 				
-			//format the data properly
-			var data = [
-				{
-					value: 30,
-					color:"#F38630"
-				},
-				{
-					value : 50,
-					color : "#E0E4CC"
-				},
-				{
-					value : 100,
-					color : "#69D2E7"
-				}			
-			];
-			
-			
-			this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).PolarArea(data); 
-		}
-		else if(document.getElementById(self.summaries_graph_type_select.id).value == "Doughnut")
-		{
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Pie(data); 
+			}
+			else if(document.getElementById(self.summaries_graph_type_select.id).value == "Radar")
+			{
+					
+				//format the data properly
+				var data = {
+					labels : x_data_to_graph,
+					datasets : [
+						{
+							fillColor : "rgba(220,220,220,0.5)",
+							strokeColor : "rgba(220,220,220,1)",
+							data : y_data_to_graph
+						}
+					]
+				};
 				
-			//format the data properly
-			var data = [
-				{
-					value: 30,
-					color:"#F38630"
-				},
-				{
-					value : 50,
-					color : "#E0E4CC"
-				},
-				{
-					value : 100,
-					color : "#69D2E7"
-				}			
-			];
+				
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Radar(data); 
+			}
+			else if(document.getElementById(self.summaries_graph_type_select.id).value == "Polar Area")
+			{
+					
+				//format the data properly
+				var data = [
+					{
+						value: 30,
+						color:"#F38630"
+					},
+					{
+						value : 50,
+						color : "#E0E4CC"
+					},
+					{
+						value : 100,
+						color : "#69D2E7"
+					}			
+				];
+				
+				
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).PolarArea(data); 
+			}
+			else if(document.getElementById(self.summaries_graph_type_select.id).value == "Doughnut")
+			{
+					
+				//format the data properly
+				var data = [
+					{
+						value: 30,
+						color:"#F38630"
+					},
+					{
+						value : 50,
+						color : "#E0E4CC"
+					},
+					{
+						value : 100,
+						color : "#69D2E7"
+					}			
+				];
+				
+				
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Doughnut(data); 
+			}
+			else
+			{
+					
+				//format the data properly
+				var data = {
+					labels : x_data_to_graph,
+					datasets : [
+						{
+							fillColor : "rgba(220,220,220,0.5)",
+							strokeColor : "rgba(220,220,220,1)",
+							data : y_data_to_graph
+						}
+					]
+				};
+				
+				
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Bar(data); 
 			
-			
-			this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Doughnut(data); 
+			}
+		
 		}
 		else
 		{
-				
-			//format the data properly
-			var data = {
-				labels : x_data_to_graph,
-				datasets : [
-					{
-						fillColor : "rgba(220,220,220,0.5)",
-						strokeColor : "rgba(220,220,220,1)",
-						data : y_data_to_graph
-					}
-				]
-			};
-			
-			
-			this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Bar(data); 
+			document.getElementById(self.summaries_graph_canvas.id).style = '';
+			document.getElementById(self.summaries_graph_canvas.id).width = "0";
+			document.getElementById(self.summaries_graph_canvas.id).height = "0";
 		
 		}
-	
-		
 	};
 	
 	this.Results_Update_Callback = function(){
+		
+		
+		chart_line_options = '';
+		
+		chart_line_options += '<option>-</options>';
+		
+		$.each(pivot.results().columns(), function(index,column) {
+	      chart_line_options += '<option>' + column.fieldName + "</options>";
+	    });
+		
+		document.getElementById(self.summaries_graph_select_x_column.id).innerHTML = chart_line_options;
+		document.getElementById(self.summaries_graph_select_y_column.id).innerHTML = chart_line_options;
+		
 		
 		self.Refresh_Chart_Data();
 		
@@ -333,9 +368,23 @@ function Report_Tab() {
 		this.summaries_graph_type_select.innerHTML += '<option>Doughnut</option>';
 		this.report_summaries_data_form.appendChild(self.summaries_graph_type_select);
 		
+		this.report_summaries_data_form.innerHTML += '<br/>';
+		this.report_summaries_data_form.innerHTML += 'X Column:<br/>';
+		this.summaries_graph_select_x_column = document.createElement('select');
+		this.summaries_graph_select_x_column.id = 'graph_tab_x_col_select';
+		this.summaries_graph_select_x_column.innerHTML = '<option>-</option>';
+		this.report_summaries_data_form.appendChild(self.summaries_graph_select_x_column);
+		
+		this.report_summaries_data_form.innerHTML += '<br/>';
+		this.report_summaries_data_form.innerHTML += 'Y Column:<br/>';
+		this.summaries_graph_select_y_column = document.createElement('select');
+		this.summaries_graph_select_y_column.id = 'graph_tab_y_col_select';
+		this.summaries_graph_select_y_column.innerHTML = '<option>-</option>';
+		this.report_summaries_data_form.appendChild(self.summaries_graph_select_y_column);
+		
 		this.report_summaries_data_form.innerHTML += '<hr/>';
 		this.summaries_graph_canvas = document.createElement('canvas');
-		this.summaries_graph_canvas.id = 'graph_tab_table_select';
+		this.summaries_graph_canvas.id = 'graph_tab_canvas';
 		this.report_summaries_data_form.appendChild(self.summaries_graph_canvas);
 		this.report_summaries_data_form.innerHTML += '<hr/>';
 		
@@ -355,6 +404,24 @@ function Report_Tab() {
 		$('#' + self.report_summaries_type_select.id).change(function() {
 			
 			self.Type_Select_Change();
+
+		});
+		
+		$('#' + self.summaries_graph_type_select.id).change(function() {
+			
+			self.Refresh_Chart_Data();
+
+		});
+
+		$('#' + self.summaries_graph_select_x_column.id).change(function() {
+			
+			self.Refresh_Chart_Data();
+
+		});
+		
+		$('#' + self.summaries_graph_select_y_column.id).change(function() {
+			
+			self.Refresh_Chart_Data();
 
 		});
 

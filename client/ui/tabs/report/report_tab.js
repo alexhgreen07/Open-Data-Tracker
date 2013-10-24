@@ -54,124 +54,63 @@ function Report_Tab() {
 				
 			});
 			
+			//format xy data
+			var data_xy = {
+				labels : x_data_to_graph,
+				datasets : [
+					{
+						fillColor : "rgba(220,220,220,0.5)",
+						strokeColor : "rgba(220,220,220,1)",
+						data : y_data_to_graph
+					}
+				]
+			};
+			
+			var data_radial = [];
+			
+			for(i = 0; i < y_data_to_graph.length; i++){
+				
+				data_radial.push({
+						value: y_data_to_graph[i],
+						color:"#" + (Math.floor((Math.random()*0xFFFFFF))).toString(16)
+					});
+				
+			}
+
 			//graph the data
 			if(document.getElementById(self.summaries_graph_type_select.id).value == "Line")
 			{
 				
-				//format the data properly
-				var data = {
-					labels : x_data_to_graph,
-					datasets : [
-						{
-							fillColor : "rgba(220,220,220,0.5)",
-							strokeColor : "rgba(220,220,220,1)",
-							data : y_data_to_graph
-						}
-					]
-				};
-				
-				
-				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Line(data); 
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Line(data_xy); 
 			}
 			else if(document.getElementById(self.summaries_graph_type_select.id).value == "Pie")
 			{	
 					
-				var data = [
-					{
-						value: 30,
-						color:"#F38630"
-					},
-					{
-						value : 50,
-						color : "#E0E4CC"
-					},
-					{
-						value : 100,
-						color : "#69D2E7"
-					}			
-				];
 				
-				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Pie(data); 
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Pie(data_radial); 
 			}
 			else if(document.getElementById(self.summaries_graph_type_select.id).value == "Radar")
 			{
 					
-				//format the data properly
-				var data = {
-					labels : x_data_to_graph,
-					datasets : [
-						{
-							fillColor : "rgba(220,220,220,0.5)",
-							strokeColor : "rgba(220,220,220,1)",
-							data : y_data_to_graph
-						}
-					]
-				};
 				
-				
-				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Radar(data); 
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Radar(data_xy); 
 			}
 			else if(document.getElementById(self.summaries_graph_type_select.id).value == "Polar Area")
 			{
 					
-				//format the data properly
-				var data = [
-					{
-						value: 30,
-						color:"#F38630"
-					},
-					{
-						value : 50,
-						color : "#E0E4CC"
-					},
-					{
-						value : 100,
-						color : "#69D2E7"
-					}			
-				];
 				
-				
-				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).PolarArea(data); 
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).PolarArea(data_radial); 
 			}
 			else if(document.getElementById(self.summaries_graph_type_select.id).value == "Doughnut")
 			{
-					
-				//format the data properly
-				var data = [
-					{
-						value: 30,
-						color:"#F38630"
-					},
-					{
-						value : 50,
-						color : "#E0E4CC"
-					},
-					{
-						value : 100,
-						color : "#69D2E7"
-					}			
-				];
 				
-				
-				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Doughnut(data); 
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Doughnut(data_radial); 
 			}
 			else
 			{
 					
-				//format the data properly
-				var data = {
-					labels : x_data_to_graph,
-					datasets : [
-						{
-							fillColor : "rgba(220,220,220,0.5)",
-							strokeColor : "rgba(220,220,220,1)",
-							data : y_data_to_graph
-						}
-					]
-				};
 				
-				
-				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Bar(data); 
+				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Bar(data_xy); 
 			
 			}
 		
@@ -255,9 +194,9 @@ function Report_Tab() {
 						{
 							data_type = 'float';
 						}
-						else if(key_schema[column] == 'date')
+						else if(key_schema[column] == 'string')
 						{
-							data_type = 'date';
+							data_type = 'string';
 						}
 						else
 						{

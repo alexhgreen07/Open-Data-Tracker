@@ -23,6 +23,8 @@ include_once(dirname(__FILE__).'/../../../../externals/pivot/pivot.js');
 
 include_once(dirname(__FILE__).'/../../../../externals/pivot/jquery_pivot.js');
 
+include_once(dirname(__FILE__).'/../../../../externals/Chart/Chart.js');
+
 require_once(dirname(__FILE__).'/../../accordian.js.php');
 
 //main file

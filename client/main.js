@@ -35,10 +35,6 @@ function Main_Application() {
 	 * @type Report_Tab
 	 * */
 	this.report_tab_object = new Report_Tab();
-	/** This is the graph tab navigation object.
-	 * @type Graph_Tab
-	 * */
-	this.graph_tab_object = new Graph_Tab();
 	
 	/** @method Refresh_Data
 	 * @desc This should be called to refresh data in all forms.
@@ -50,7 +46,6 @@ function Main_Application() {
 		self.item_tab_object.Refresh(self.api.data);
 		self.task_tab_object.Refresh(self.api.data);
 		self.report_tab_object.Refresh(self.api.data, self.api.schema);
-		self.graph_tab_object.Refresh(self.api.data, self.api.schema);
 
 	};
 	
@@ -99,10 +94,6 @@ function Main_Application() {
 		this.tabs_array[3][0] = "Reports";
 		this.tabs_array[3][1] = "<div id='report_tab_div'></div>";
 
-		this.tabs_array[4] = new Array();
-		this.tabs_array[4][0] = "Graphs";
-		this.tabs_array[4][1] = "<div id='graph_tab_div'></div>";
-
 		//render the tabs
 		this.main_tab_nav = new Tabs(main_tabs_div, this.tabs_array);
 		this.main_tab_nav.Render();
@@ -115,8 +106,6 @@ function Main_Application() {
 		this.task_tab_object.Render('task_tab_div');
 
 		this.report_tab_object.Render('report_tab_div');
-
-		this.graph_tab_object.Render('graph_tab_div');
 
 	};
 	

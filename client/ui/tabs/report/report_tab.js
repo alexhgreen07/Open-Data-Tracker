@@ -185,6 +185,7 @@ function Report_Tab() {
 				
 				//this function refreshes the pivot table
 				key = self.data[$('#' + self.report_summaries_tables_select.id).val()][i];
+				key_schema = self.schema[$('#' + self.report_summaries_tables_select.id).val()];
 				key_data_row = [];
 				
 				for(var column in key)
@@ -211,10 +212,44 @@ function Report_Tab() {
 							summary_type = 'sum';
 						}
 						
-						self.fields.push({name: column,   type: 'string',  rowLabelable: true, filterable: true, summarizable: summary_type});
+						if(key_schema[column] == 'int')
+						{
+							data_type = 'integer';
+						}
+						else if(key_schema[column] == 'float')
+						{
+							data_type = 'float';
+						}
+						else if(key_schema[column] == 'date')
+						{
+							data_type = 'date';
+						}
+						else
+						{
+							data_type = 'string';
+						}
+						
+						self.fields.push({name: column,   type: data_type,  rowLabelable: true, filterable: true, summarizable: summary_type});
 					}
 					
-					key_data_row.push(key[column]);
+					if(key_schema[column] === 'int')
+					{
+						new_value = parseInt(key[column]);
+					}
+					else if(key_schema[column] === 'float')
+					{
+						new_value = parseFloat(key[column]);
+					}
+					else if(key_schema[column] === 'date')
+					{
+						new_value = key[column];
+					}
+					else
+					{
+						new_value = key[column];
+					}
+					
+					key_data_row.push(new_value);
 					
 					
 				}

@@ -5,10 +5,9 @@ function Report_Tab() {
 
 	//class variables
 	this.div_id = null;
+	var self = this;
 	
 	this.Refresh = function(data, schema) {
-		
-		var self = this;
 		
 		self.data = data;
 		self.schema = schema;
@@ -18,9 +17,6 @@ function Report_Tab() {
 	};
 	
 	this.Refresh_Summaries_Form = function(data){
-		
-		self = this;
-		
 		
 		document.getElementById(this.report_summaries_tables_select.id).innerHTML = '<option>-</option>';
 		
@@ -35,18 +31,145 @@ function Report_Tab() {
 	this.Refresh_Chart_Data = function(){
 		
 		
+		//set the height and width for proper rendering
+		document.getElementById(self.summaries_graph_canvas.id).width = "500";
+		document.getElementById(self.summaries_graph_canvas.id).height = "400";
+		
+		
+		x_data_to_graph = ['1','2','3'];
+		y_data_to_graph = [1,2,3];
+		
+		//graph the data
+		if(document.getElementById(self.summaries_graph_type_select.id).value == "Line")
+		{
+			
+			//format the data properly
+			var data = {
+				labels : x_data_to_graph,
+				datasets : [
+					{
+						fillColor : "rgba(220,220,220,0.5)",
+						strokeColor : "rgba(220,220,220,1)",
+						data : y_data_to_graph
+					}
+				]
+			};
+			
+			
+			this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Line(data); 
+		}
+		else if(document.getElementById(self.summaries_graph_type_select.id).value == "Pie")
+		{	
+				
+			var data = [
+				{
+					value: 30,
+					color:"#F38630"
+				},
+				{
+					value : 50,
+					color : "#E0E4CC"
+				},
+				{
+					value : 100,
+					color : "#69D2E7"
+				}			
+			];
+			
+			this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Pie(data); 
+		}
+		else if(document.getElementById(self.summaries_graph_type_select.id).value == "Radar")
+		{
+				
+			//format the data properly
+			var data = {
+				labels : x_data_to_graph,
+				datasets : [
+					{
+						fillColor : "rgba(220,220,220,0.5)",
+						strokeColor : "rgba(220,220,220,1)",
+						data : y_data_to_graph
+					}
+				]
+			};
+			
+			
+			this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Radar(data); 
+		}
+		else if(document.getElementById(self.summaries_graph_type_select.id).value == "Polar Area")
+		{
+				
+			//format the data properly
+			var data = [
+				{
+					value: 30,
+					color:"#F38630"
+				},
+				{
+					value : 50,
+					color : "#E0E4CC"
+				},
+				{
+					value : 100,
+					color : "#69D2E7"
+				}			
+			];
+			
+			
+			this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).PolarArea(data); 
+		}
+		else if(document.getElementById(self.summaries_graph_type_select.id).value == "Doughnut")
+		{
+				
+			//format the data properly
+			var data = [
+				{
+					value: 30,
+					color:"#F38630"
+				},
+				{
+					value : 50,
+					color : "#E0E4CC"
+				},
+				{
+					value : 100,
+					color : "#69D2E7"
+				}			
+			];
+			
+			
+			this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Doughnut(data); 
+		}
+		else
+		{
+				
+			//format the data properly
+			var data = {
+				labels : x_data_to_graph,
+				datasets : [
+					{
+						fillColor : "rgba(220,220,220,0.5)",
+						strokeColor : "rgba(220,220,220,1)",
+						data : y_data_to_graph
+					}
+				]
+			};
+			
+			
+			this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Bar(data); 
+		
+		}
+	
 		
 	};
 	
 	this.Results_Update_Callback = function(){
 		
-		alert('hello world!');
+		self.Refresh_Chart_Data();
 		
 	};
 	
 	this.Tables_Select_Changed = function(){
-		
-		var self = this;
 		
 		document.getElementById(self.report_summaries_data_display_div.id).innerHTML = '';
 		
@@ -140,8 +263,6 @@ function Report_Tab() {
 
 	this.Render_Summaries_Form = function(form_div_id) {
 
-		var self = this;
-
 		this.report_summaries_data_form = document.createElement("form");
 		this.report_summaries_data_form.setAttribute('method', "post");
 		this.report_summaries_data_form.setAttribute('id', "report_summaries_display_form");
@@ -205,8 +326,6 @@ function Report_Tab() {
 	};
 
 	this.Render_Time_Based_Form = function(form_div_id) {
-
-		var self = this;
 
 		this.report_time_based_data_form = document.createElement("form");
 		this.report_time_based_data_form.setAttribute('method', "post");

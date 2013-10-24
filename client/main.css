@@ -18,6 +18,12 @@ input {
 	width:100%;
 	font-size:inherit;
 }
+.row-labelable{
+	width:auto;
+}
+.summary{
+	width:auto;
+}
 .text {
 	width:95%;
 }

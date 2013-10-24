@@ -461,7 +461,7 @@ class Task_Data_Interface {
 			'task_log_id' => 'int',
 			'name' => 'string',
 			'start_time' => 'date',
-			'hours' => 'int',
+			'hours' => 'float',
 			'note' => 'note',
 			'status' => 'string',
 			'task_id' => 'int',

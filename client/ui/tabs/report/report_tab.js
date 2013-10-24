@@ -32,6 +32,12 @@ function Report_Tab() {
 		
 	};
 	
+	this.Refresh_Chart_Data = function(){
+		
+		
+		
+	};
+	
 	this.Results_Update_Callback = function(){
 		
 		alert('hello world!');
@@ -63,7 +69,26 @@ function Report_Tab() {
 					if(i == 0)
 					{
 						self.json_titles.push(column);
-						self.fields.push({name: column,   type: 'string',  rowLabelable: true, filterable: true, summarizable: 'sum'});
+						
+						//select the summary type
+						if(document.getElementById(self.report_summaries_type_select.id).value == 'Sum')
+						{
+							summary_type = 'sum';
+						}
+						else if(document.getElementById(self.report_summaries_type_select.id).value == 'Average')
+						{
+							summary_type = 'avg';
+						}
+						else if(document.getElementById(self.report_summaries_type_select.id).value == 'Count')
+						{
+							summary_type = 'cnt';
+						}
+						else
+						{
+							summary_type = 'sum';
+						}
+						
+						self.fields.push({name: column,   type: 'string',  rowLabelable: true, filterable: true, summarizable: summary_type});
 					}
 					
 					key_data_row.push(key[column]);
@@ -90,6 +115,12 @@ function Report_Tab() {
 		
 		document.getElementById(self.report_results_data_display_div.id).innerHTML = '';
 		
+		
+	};
+	
+	this.Type_Select_Change = function(){
+		
+		this.Tables_Select_Changed();
 		
 	};
 	
@@ -126,7 +157,9 @@ function Report_Tab() {
 		
 		this.report_summaries_type_select = document.createElement("select");
 		this.report_summaries_type_select.setAttribute('id', 'report_summaries_type_select');
-		this.report_summaries_type_select.innerHTML = '<option>-</option>';
+		this.report_summaries_type_select.innerHTML = '<option>Sum</option>';
+		this.report_summaries_type_select.innerHTML += '<option>Average</option>';
+		this.report_summaries_type_select.innerHTML += '<option>Count</option>';
 		this.report_summaries_data_form.appendChild(this.report_summaries_type_select);
 		
 		this.report_summaries_data_display_div = document.createElement("div");
@@ -160,6 +193,12 @@ function Report_Tab() {
 		$('#' + self.report_summaries_tables_select.id).change(function() {
 			
 			self.Tables_Select_Changed();
+
+		});
+		
+		$('#' + self.report_summaries_type_select.id).change(function() {
+			
+			self.Type_Select_Change();
 
 		});
 

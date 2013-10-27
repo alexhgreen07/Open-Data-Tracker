@@ -18,6 +18,7 @@ function Home_Form(home_div_id) {
 		upcoming_tasks = [];
 		recent_items = [];
 		
+		//load the running tasks array
 		for (var i = 0; i < data.task_entries.length; i++) {
 			
 			if(data.task_entries[i].status == "Started")
@@ -27,6 +28,7 @@ function Home_Form(home_div_id) {
 			
 		}
 		
+		//load the recent items array
 		for (var i = 0; i < data.item_entries.length; i++) {
 			
 			recent_items.push(data.item_entries[i]);
@@ -34,6 +36,7 @@ function Home_Form(home_div_id) {
 		}
 		
 		
+		//load the task targets array
 		for (var i = 0; i < data.task_targets.length; i++) {
 			
 			
@@ -41,7 +44,7 @@ function Home_Form(home_div_id) {
 			
 		}
 		
-		
+		//execute sort according to 'scheduled_time'
 		upcoming_tasks.sort(function(a,b){
 			
 			return_value = a.scheduled_time.localeCompare(b.scheduled_time);
@@ -50,6 +53,7 @@ function Home_Form(home_div_id) {
 			
 		});
 		
+		//execute sort according to 'time'
 		recent_items.sort(function(a,b){
 			
 			return_value = a.time.localeCompare(b.time);
@@ -57,6 +61,18 @@ function Home_Form(home_div_id) {
 			return return_value;
 			
 		});
+		
+		while(upcoming_tasks.length > 3){
+			
+			upcoming_tasks.shift();
+			
+		}
+		
+		while(recent_items.length > 3){
+			
+			recent_items.shift();
+			
+		}
 		
 		running_tasks_div.innerHTML += JSON.stringify(running_tasks);
 		upcoming_tasks_div.innerHTML += JSON.stringify(upcoming_tasks);

@@ -60,6 +60,7 @@ function Home_Tab() {
 	 * */
 	this.Refresh = function(data) {
 		
+		this.home_form.Refresh(data);
 		this.category_form.Refresh(data);
 		
 	};

@@ -4,6 +4,12 @@
 function Edit_Category_Form(){
 
 	
+	this.Refresh = function(data){
+		
+		this.categories_list = data.categories;
+		
+	};
+	
 	/** @method Category_Edit_Submit_Click_Event
 	 * @desc This is the edit category submit button click event handler.
 	 * @param {function} refresh_callback The callback to call after the data operation has completed.
@@ -55,12 +61,6 @@ function Edit_Category_Form(){
 		{
 			alert('Select a valid category.');
 		}
-	};
-	
-	this.Refresh = function(data){
-		
-		
-		
 	};
 	
 	/** @method Category_Delete_Click_Event

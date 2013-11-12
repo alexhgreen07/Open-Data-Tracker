@@ -44,6 +44,7 @@ function Category_Form(){
 		document.getElementById(self.edit_category_form.edit_category_parent_select.id).innerHTML = select_html;
 		
 		this.view_categories_forms.Refresh(data);
+		this.edit_category_form.Refresh(data);
 	};
 	
 	/** @method Render

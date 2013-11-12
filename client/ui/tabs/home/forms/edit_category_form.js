@@ -4,6 +4,12 @@
 function Edit_Category_Form(){
 
 	
+	this.Refresh = function(data){
+		
+		this.categories_list = data.categories;
+		
+	};
+	
 	/** @method Category_Edit_Submit_Click_Event
 	 * @desc This is the edit category submit button click event handler.
 	 * @param {function} refresh_callback The callback to call after the data operation has completed.
@@ -27,7 +33,7 @@ function Edit_Category_Form(){
 	
 			var self = this;
 	
-			/*
+			
 			//execute the RPC callback for retrieving the item log
 			rpc.Home_Data_Interface.Update_Category(params, function(jsonRpcObj) {
 	
@@ -37,11 +43,8 @@ function Edit_Category_Form(){
 					alert('Category successfully updated.');
 						
 					
-					self.Refresh_Data(function(){
-						
-						self.refresh_categories_callback();
-						
-						refresh_callback();
+					app.api.Refresh_Data(function() {
+						//self.refresh_item_log_callback();
 					});
 					
 	
@@ -51,19 +54,13 @@ function Edit_Category_Form(){
 				}
 	
 			});
-			*/
+			
 			
 		}
 		else
 		{
 			alert('Select a valid category.');
 		}
-	};
-	
-	this.Refresh = function(data){
-		
-		
-		
 	};
 	
 	/** @method Category_Delete_Click_Event
@@ -87,7 +84,7 @@ function Edit_Category_Form(){
 		
 				var self = this;
 		
-				/*
+				
 				//execute the RPC callback for retrieving the item log
 				rpc.Home_Data_Interface.Delete_Category(params, function(jsonRpcObj) {
 		
@@ -97,11 +94,8 @@ function Edit_Category_Form(){
 						alert('Category deleted.');
 							
 						
-						self.Refresh_Data(function(){
-							
-							self.refresh_categories_callback();
-							
-							refresh_callback();
+						app.api.Refresh_Data(function() {
+							//self.refresh_item_log_callback();
 						});
 						
 		
@@ -111,7 +105,7 @@ function Edit_Category_Form(){
 					}
 		
 				});
-				*/
+				
 			
 			}
 		}

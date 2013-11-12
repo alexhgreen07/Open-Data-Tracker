@@ -84,7 +84,7 @@ function Edit_Category_Form(){
 		
 				var self = this;
 		
-				/*
+				
 				//execute the RPC callback for retrieving the item log
 				rpc.Home_Data_Interface.Delete_Category(params, function(jsonRpcObj) {
 		
@@ -94,11 +94,8 @@ function Edit_Category_Form(){
 						alert('Category deleted.');
 							
 						
-						self.Refresh_Data(function(){
-							
-							self.refresh_categories_callback();
-							
-							refresh_callback();
+						app.api.Refresh_Data(function() {
+							//self.refresh_item_log_callback();
 						});
 						
 		
@@ -108,7 +105,7 @@ function Edit_Category_Form(){
 					}
 		
 				});
-				*/
+				
 			
 			}
 		}

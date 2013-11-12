@@ -17,7 +17,7 @@ function New_Category_Form(){
 
 		var self = this;
 
-		/*
+		
 		//execute the RPC callback for retrieving the item log
 		rpc.Home_Data_Interface.Insert_Category(params, function(jsonRpcObj) {
 
@@ -27,11 +27,8 @@ function New_Category_Form(){
 				alert('New category added.');
 					
 				
-				self.Refresh_Data(function(){
-					
-					self.refresh_categories_callback();
-					
-					refresh_callback();
+				app.api.Refresh_Data(function() {
+					//self.refresh_item_log_callback();
 				});
 				
 
@@ -41,7 +38,7 @@ function New_Category_Form(){
 			}
 
 		});
-		*/
+		
 		
 	};
 	

@@ -12,7 +12,7 @@ function Home_Form(home_div_id) {
 		
 		running_tasks_div.innerHTML = '';
 		upcoming_tasks_div.innerHTML = '';
-		recent_items_div.innerHTML = 'item1';
+		recent_items_div.innerHTML = '';
 		
 		running_tasks = [];
 		upcoming_tasks = [];
@@ -74,9 +74,57 @@ function Home_Form(home_div_id) {
 			
 		}
 		
-		running_tasks_div.innerHTML += JSON.stringify(running_tasks);
-		upcoming_tasks_div.innerHTML += JSON.stringify(upcoming_tasks);
-		recent_items_div.innerHTML += JSON.stringify(recent_items);
+		//create the running tasks table
+		running_tasks_table = '';
+		
+		running_tasks_table += '<table><tr><th>Name</th><th>Start Time</th></tr>';
+		
+		for(var i = 0; i < running_tasks.length; i++)
+		{
+			running_tasks_table += '<tr>' + 
+				'<td>' + running_tasks[i].name + '</td>' + 
+				'<td>' + running_tasks[i].start_time + '</td>' + 
+				'</tr>';
+		}
+		
+		running_tasks_table += '</table><hr>';
+		
+		running_tasks_div.innerHTML += running_tasks_table;
+		
+		//create the upcoming task targets table
+		upcoming_tasks_table = '';
+		
+		upcoming_tasks_table += '<table><tr><th>Name</th><th>Start Time</th></tr>';
+		
+		for(var i = 0; i < upcoming_tasks.length; i++)
+		{
+			upcoming_tasks_table += '<tr>' + 
+				'<td>' + upcoming_tasks[i].name + '</td>' + 
+				'<td>' + upcoming_tasks[i].scheduled_time + '</td>' + 
+				'</tr>';
+		}
+		
+		upcoming_tasks_table += '</table><hr>';
+		
+		upcoming_tasks_div.innerHTML += upcoming_tasks_table;
+		
+		//create the recent items table
+		recent_items_table = '';
+		
+		recent_items_table += '<table><tr><th>Name</th><th>Entry Time</th><th>Value</th></tr>';
+		
+		for(var i = 0; i < recent_items.length; i++)
+		{
+			recent_items_table += '<tr>' + 
+				'<td>' + recent_items[i].name + '</td>' + 
+				'<td>' + recent_items[i].time + '</td>' + 
+				'<td>' + recent_items[i].value + '</td>' + 
+				'</tr>';
+		}
+		
+		recent_items_table += '</table><hr>';
+		
+		recent_items_div.innerHTML += recent_items_table;
 		
 	};
 	

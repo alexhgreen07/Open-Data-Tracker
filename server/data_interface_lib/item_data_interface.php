@@ -293,6 +293,34 @@ class Item_Data_Interface {
 			
 			$return_json['authenticated'] = 'true';
 
+			$sql_insert = "INSERT INTO `item_targets`(
+				`start_time`, 
+				`type`, 
+				`value`, 
+				`item_id`, 
+				`period_type`, 
+				`period`, 
+				`recurring`) VALUES (
+				'".$start_time."',
+				'".$type."',
+				".$value.",
+				".$item_id.",
+				'".$period_type."',
+				".$period.",
+				".$recurring.")";
+
+			$success = mysql_query($sql_insert, $this -> database_link);
+
+			if ($success) {
+				
+				$return_json['success'] = 'true';
+				
+			} else {
+				
+				$return_json['success'] = 'false';
+			}
+
+
 		} else {
 			
 			$return_json['authenticated'] = 'false';

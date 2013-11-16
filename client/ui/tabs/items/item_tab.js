@@ -88,6 +88,8 @@ function Item_Tab() {
 		document.getElementById(self.quick_item_entry_form.quick_item_name_select.id).innerHTML = new_inner_html;
 		document.getElementById(self.new_item_entry_form.new_item_name_select.id).innerHTML = new_inner_html;
 		document.getElementById(self.edit_item_entry_form.edit_item_name_select.id).innerHTML = new_inner_html;
+		document.getElementById(self.new_item_target_form.new_item_target_name_select.id).innerHTML = new_inner_html;
+		document.getElementById(self.edit_item_target_form.edit_item_target_name_select.id).innerHTML = new_inner_html;
 		
 		this.edit_item_entry_form.Refresh(data);
 		this.edit_item_form.Refresh(data);

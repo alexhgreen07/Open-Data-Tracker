@@ -543,7 +543,16 @@ class Item_Data_Interface {
 		
 		$return_json = array();
 		
-		$return_json['schema'] = array();
+		$return_json['schema'] = array(
+				'item_target_id' => 'int', 
+				'start_time' => 'date', 
+				'type' => 'string', 
+				'value' => 'float', 
+				'item_id' => 'int', 
+				'period_type' => 'string', 
+				'period' => 'float', 
+				'recurring' => 'bool', 
+			);
 		
 		return $return_json;
 		
@@ -555,7 +564,46 @@ class Item_Data_Interface {
 
 		if (Is_Session_Authorized()) {
 			
-			
+			$return_json['authenticated'] = 'true';
+
+			$sql_query = "SELECT `item_target_id`, `start_time`, `type`, `value`, `item_id`, `period_type`, `period`, `recurring` FROM `item_targets`";
+			$result = mysql_query($sql_query, $this -> database_link);
+
+			if ($result) {
+				$return_json['success'] = 'true';
+				$return_json['data'] = array();
+				
+				$num = mysql_numrows($result);
+
+				$i = 0;
+				while ($i < $num) {
+
+					$item_target_id = mysql_result($result, $i, "item_target_id");
+					$start_time = mysql_result($result, $i, 'start_time');
+					$type = mysql_result($result, $i, "type");
+					$value = mysql_result($result, $i, 'value');
+					$item_id = mysql_result($result, $i, "item_id");
+					$period_type = mysql_result($result, $i, "period_type");
+					$period = mysql_result($result, $i, "period");
+					$recurring = mysql_result($result, $i, "recurring");
+
+					$return_json['data'][$i] = 
+						array(
+							'item_target_id' => $item_target_id, 
+							'start_time' => $start_time, 
+							'type' => $type, 
+							'value' => $value, 
+							'item_id' => $item_id, 
+							'period_type' => $period_type, 
+							'period' => $period, 
+							'recurring' => $recurring, 
+						);
+
+					$i++;
+				}
+			} else {
+				$return_json['success'] = 'false';
+			}
 			
 		}
 		

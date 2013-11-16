@@ -327,6 +327,24 @@ class Item_Data_Interface {
 		if (Is_Session_Authorized()) {
 			
 			$return_json['authenticated'] = 'true';
+			
+			if ($item_target_id != "") {
+
+				$sql_insert = "DELETE FROM `item_targets` WHERE `item_target_id`=" . $item_target_id;
+
+				$success = mysql_query($sql_insert, $this -> database_link);
+
+				if ($success) {
+					
+					$return_json['success'] = 'true';
+					
+				} else {
+					
+					$return_json['success'] = 'false';
+				}
+
+
+			}
 
 		} else {
 			

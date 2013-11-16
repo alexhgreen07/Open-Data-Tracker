@@ -16,6 +16,12 @@ function Edit_Item_Target_Form(){
 		
 	};
 	
+	this.Edit_Item_Target_Delete_Click = function(){
+		
+		alert('Edit item target delete button click.');
+		
+	};
+	
 	this.Render = function(form_div_id) {
 		
 		this.edit_item_target_form = document.createElement("form");
@@ -126,6 +132,17 @@ function Edit_Item_Target_Form(){
 		this.item_edit_target_button.value = 'Submit';
 		this.edit_item_target_form.appendChild(this.item_edit_target_button);
 
+		this.edit_item_target_form.innerHTML += '<br />';
+
+		this.edit_item_target_form.innerHTML += '<br />';
+		
+		//button creation
+		this.item_edit_target_delete_button = document.createElement("input");
+		this.item_edit_target_delete_button.setAttribute('id', 'item_edit_target_delete_button');
+		this.item_edit_target_delete_button.setAttribute('type', 'submit');
+		this.item_edit_target_delete_button.value = 'Submit';
+		this.edit_item_target_form.appendChild(this.item_edit_target_delete_button);
+
 		var div_tab = document.getElementById(form_div_id);
 		div_tab.appendChild(this.edit_item_target_form);
 		
@@ -137,6 +154,16 @@ function Edit_Item_Target_Form(){
 
 			//execute the click event
 			self.Edit_Item_Target_Click();
+		});
+		
+		$('#' + this.item_edit_target_delete_button.id).button();
+		$('#' + this.item_edit_target_delete_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+			//execute the click event
+			self.Edit_Item_Target_Delete_Click();
 		});
 
 		//initialize the datetime picker

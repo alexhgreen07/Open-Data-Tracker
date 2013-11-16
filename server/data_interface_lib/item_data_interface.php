@@ -285,6 +285,59 @@ class Item_Data_Interface {
 		
 	}
 	
+	public function Insert_Item_Target(){
+				
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+
+		if (Is_Session_Authorized()) {
+			
+			$return_json['authenticated'] = 'true';
+
+		} else {
+			
+			$return_json['authenticated'] = 'false';
+			
+		}
+		
+		return $return_json;
+	}
+
+	public function Update_Item_Target(){
+		
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+
+		if (Is_Session_Authorized()) {
+			
+			$return_json['authenticated'] = 'true';
+
+		} else {
+			
+			$return_json['authenticated'] = 'false';
+			
+		}
+		
+		return $return_json;
+		
+	}
+	
+	public function Delete_Item_Target(){
+		
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+
+		if (Is_Session_Authorized()) {
+			
+			$return_json['authenticated'] = 'true';
+
+		} else {
+			
+			$return_json['authenticated'] = 'false';
+			
+		}
+		
+		return $return_json;
+		
+	}
+	
 	public function Get_Item_Log_Schema(){
 				
 		$return_json = array();
@@ -370,7 +423,7 @@ class Item_Data_Interface {
 	}
 	
 	public function Get_Items() {
-		$return_json = array('authenticated' => 'false', 'success' => 'false', 'items' => array(), );
+		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => array(), );
 
 		if (Is_Session_Authorized()) {
 
@@ -403,7 +456,6 @@ class Item_Data_Interface {
 							'date_created' => $item_date_created, 
 							'item_id' => $item_id, );
 
-						//$return_json['items'][$i] = $row_result;
 
 					}
 
@@ -419,6 +471,31 @@ class Item_Data_Interface {
 
 		return $return_json;
 	}
+
+	public function Get_Item_Targets_Schema(){
+		
+		$return_json = array();
+		
+		$return_json['schema'] = array();
+		
+		return $return_json;
+		
+	}
+	
+	public function Get_Item_Targets(){
+		
+		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => array(), );
+
+		if (Is_Session_Authorized()) {
+			
+			
+			
+		}
+		
+		return $return_json;
+		
+	}
+	
 
 }
 ?>

@@ -48,6 +48,11 @@ function Item_Tab() {
 	 * */
 	this.view_items_form = new View_Items_Form();
 	
+	/** This is the new item targets form object.
+	 * @type New_Item_Target_Form
+	 * */
+	this.new_item_target_form = new New_Item_Target_Form();
+	
 	
 	/** @method Refresh_Items
 	 * @desc This function retrieves the item list from the database.
@@ -142,7 +147,7 @@ function Item_Tab() {
 		
 		new_tab = new Array();
 		new_tab.push("New Target Entry");
-		new_tab.push('Under construction...');
+		new_tab.push('<div id="new_item_target_div"></div>');
 		tabs_array.push(new_tab);
 
 		new_tab = new Array();
@@ -181,6 +186,8 @@ function Item_Tab() {
 		this.edit_item_form.Render('edit_item_div');
 
 		this.view_items_form.Render('view_item_div');
+		
+		this.new_item_target_form.Render('new_item_target_div');
 
 	};
 }

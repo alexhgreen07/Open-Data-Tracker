@@ -2,7 +2,19 @@
  * @constructor New_Item_Target_Form
  */
 function New_Item_Target_Form(){
-
+	
+	var self = this;
+	
+	this.Refresh = function(data){
+		
+		
+	};
+	
+	this.Add_Item_Target_Click = function(){
+		
+		alert('Add item target button click.');
+		
+	};
 	
 	this.Render = function(form_div_id) {
 		
@@ -10,10 +22,109 @@ function New_Item_Target_Form(){
 		this.new_item_target_form.setAttribute('method', "post");
 		this.new_item_target_form.setAttribute('id', "new_item_target_form");
 		
-		this.new_item_target_form.innerHTML = 'Under construction...';
+		this.new_item_target_form.innerHTML += 'Start Time:<br />';
+
+		//item value
+		this.item_target_time = document.createElement("input");
+		this.item_target_time.setAttribute('name', "new_time");
+		this.item_target_time.setAttribute('id', "item_target_time");
+		this.item_target_time.setAttribute('type', 'text');
+		this.new_item_target_form.appendChild(this.item_target_time);
 		
+		this.new_item_target_form.innerHTML += '<br />';
+		
+		this.new_item_target_form.innerHTML += 'Type:<br />';
+
+		//item unit
+		this.new_item_target_type_select = document.createElement("select");
+		this.new_item_target_type_select.setAttribute('id', "new_item_target_type_select");
+		this.new_item_target_type_select.innerHTML = '<option>-</option>';
+		this.new_item_target_form.appendChild(this.new_item_target_type_select);
+
+		this.new_item_target_form.innerHTML += '<br />';
+		
+		this.new_item_target_form.innerHTML += 'Value:<br />';
+
+		//item value
+		this.item_target_value = document.createElement("input");
+		this.item_target_value.setAttribute('name', "item_target_value");
+		this.item_target_value.setAttribute('id', "item_target_value");
+		this.item_target_value.setAttribute('type', 'text');
+		this.new_item_target_form.appendChild(this.item_target_value);
+		
+		this.new_item_target_form.innerHTML += '<br />';
+		
+		this.new_item_target_form.innerHTML += 'Item:<br />';
+
+		//item unit
+		this.new_item_target_name_select = document.createElement("select");
+		this.new_item_target_name_select.setAttribute('name', "new_item_target_name_select");
+		this.new_item_target_name_select.setAttribute('id', "new_item_target_name_select");
+		this.new_item_target_name_select.innerHTML = '<option>-</option>';
+		this.new_item_target_form.appendChild(this.new_item_target_name_select);
+
+		this.new_item_target_form.innerHTML += '<br />';
+
+		this.new_item_target_form.innerHTML += '<br />';
+
+		this.new_item_target_form.innerHTML += 'Recurring:<br />';
+
+		//item unit
+		this.new_item_target_recurring_select = document.createElement("select");
+		this.new_item_target_recurring_select.setAttribute('id', "new_item_target_recurring_select");
+		this.new_item_target_recurring_select.innerHTML = '<option>-</option>';
+		this.new_item_target_form.appendChild(this.new_item_target_recurring_select);
+
+		this.new_item_target_form.innerHTML += '<br />';
+		
+		this.new_item_target_form.innerHTML += 'Recurrance Type:<br />';
+
+		//item unit
+		this.new_item_target_recurrance_type_select = document.createElement("select");
+		this.new_item_target_recurrance_type_select.setAttribute('id', "new_item_target_recurrance_type_select");
+		this.new_item_target_recurrance_type_select.innerHTML = '<option>-</option>';
+		this.new_item_target_form.appendChild(this.new_item_target_recurrance_type_select);
+
+		this.new_item_target_form.innerHTML += '<br />';
+		
+		this.new_item_target_form.innerHTML += 'Recurrance Period:<br />';
+
+		//item value
+		this.item_target_recurrance_period = document.createElement("input");
+		this.item_target_recurrance_period.setAttribute('id', "item_target_recurrance_period");
+		this.item_target_recurrance_period.setAttribute('type', 'text');
+		this.new_item_target_form.appendChild(this.item_target_recurrance_period);
+		
+		this.new_item_target_form.innerHTML += '<br />';
+		
+		this.new_item_target_form.innerHTML += '<br />';
+		
+		//button creation
+		this.item_new_target_button = document.createElement("input");
+		this.item_new_target_button.setAttribute('id', 'item_new_target_button');
+		this.item_new_target_button.setAttribute('type', 'submit');
+		this.item_new_target_button.value = 'Submit';
+		this.new_item_target_form.appendChild(this.item_new_target_button);
+
 		var div_tab = document.getElementById(form_div_id);
 		div_tab.appendChild(this.new_item_target_form);
-	
+		
+		$('#' + this.item_new_target_button.id).button();
+		$('#' + this.item_new_target_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+			//execute the click event
+			self.Add_Item_Target_Click();
+		});
+
+		//initialize the datetime picker
+		$('#' + this.item_target_time.id).datetimepicker({
+			timeFormat : "HH:mm",
+			dateFormat : 'yy-mm-dd'
+		});
+		$('#' + this.item_target_time.id).datetimepicker("setDate", new Date());
+
 	};
 }

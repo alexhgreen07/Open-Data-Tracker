@@ -47,6 +47,9 @@ require_once(dirname(__FILE__).'/forms/view_items_form.js.php');
 //get view items form
 require_once(dirname(__FILE__).'/forms/new_item_target_form.js.php');
 
+//get view items form
+require_once(dirname(__FILE__).'/forms/edit_item_target_form.js.php');
+
 //main file
 include_once(dirname(__FILE__).'/item_tab.js');
 

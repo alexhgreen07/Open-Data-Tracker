@@ -50,7 +50,8 @@ function Edit_Item_Target_Form(){
 		//item unit
 		this.edit_item_target_type_select = document.createElement("select");
 		this.edit_item_target_type_select.setAttribute('id', "edit_item_target_type_select");
-		this.edit_item_target_type_select.innerHTML = '<option>-</option>';
+		this.edit_item_target_type_select.innerHTML = '<option>Sum</option>';
+		this.edit_item_target_type_select.innerHTML += '<option>Average</option>';
 		this.edit_item_target_form.appendChild(this.edit_item_target_type_select);
 
 		this.edit_item_target_form.innerHTML += '<br />';
@@ -78,28 +79,24 @@ function Edit_Item_Target_Form(){
 		this.edit_item_target_form.innerHTML += '<br />';
 
 		this.edit_item_target_form.innerHTML += '<br />';
-
-		this.edit_item_target_form.innerHTML += 'Recurring:<br />';
-
-		//item unit
-		this.edit_item_target_recurring_select = document.createElement("select");
-		this.edit_item_target_recurring_select.setAttribute('id', "edit_item_target_recurring_select");
-		this.edit_item_target_recurring_select.innerHTML = '<option>-</option>';
-		this.edit_item_target_form.appendChild(this.edit_item_target_recurring_select);
-
-		this.edit_item_target_form.innerHTML += '<br />';
 		
-		this.edit_item_target_form.innerHTML += 'Recurrance Type:<br />';
+		this.edit_item_target_form.innerHTML += 'Period Type:<br />';
 
 		//item unit
 		this.edit_item_target_recurrance_type_select = document.createElement("select");
 		this.edit_item_target_recurrance_type_select.setAttribute('id', "edit_item_target_recurrance_type_select");
-		this.edit_item_target_recurrance_type_select.innerHTML = '<option>-</option>';
+		this.edit_item_target_recurrance_type_select.innerHTML = '<option>Minutes</option>';
+		this.edit_item_target_recurrance_type_select.innerHTML += '<option>Hours</option>';
+		this.edit_item_target_recurrance_type_select.innerHTML += '<option>Days</option>';
+		this.edit_item_target_recurrance_type_select.innerHTML += '<option>Weeks</option>';
+		this.edit_item_target_recurrance_type_select.innerHTML += '<option>Weekly</option>';
+		this.edit_item_target_recurrance_type_select.innerHTML += '<option>Months</option>';
+		this.edit_item_target_recurrance_type_select.innerHTML += '<option>Years</option>';
 		this.edit_item_target_form.appendChild(this.edit_item_target_recurrance_type_select);
 
 		this.edit_item_target_form.innerHTML += '<br />';
 		
-		this.edit_item_target_form.innerHTML += 'Recurrance Period:<br />';
+		this.edit_item_target_form.innerHTML += 'Period:<br />';
 
 		//item value
 		this.edit_item_target_recurrance_period = document.createElement("input");
@@ -109,6 +106,17 @@ function Edit_Item_Target_Form(){
 		
 		this.edit_item_target_form.innerHTML += '<br />';
 		
+		this.edit_item_target_form.innerHTML += 'Recurring:<br />';
+
+		//item unit
+		this.edit_item_target_recurring_select = document.createElement("select");
+		this.edit_item_target_recurring_select.setAttribute('id', "edit_item_target_recurring_select");
+		this.edit_item_target_recurring_select.innerHTML = '<option>False</option>';
+		this.edit_item_target_recurring_select.innerHTML += '<option>True</option>';
+		this.edit_item_target_form.appendChild(this.edit_item_target_recurring_select);
+
+		this.edit_item_target_form.innerHTML += '<br />';
+
 		this.edit_item_target_form.innerHTML += '<br />';
 		
 		//button creation

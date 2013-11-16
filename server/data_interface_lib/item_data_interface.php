@@ -285,7 +285,7 @@ class Item_Data_Interface {
 		
 	}
 	
-	public function Insert_Item_Target(){
+	public function Insert_Item_Target($start_time, $type, $value, $item_id, $period_type, $period, $recurring){
 				
 		$return_json = array('authenticated' => 'false', 'success' => 'false', );
 
@@ -302,7 +302,7 @@ class Item_Data_Interface {
 		return $return_json;
 	}
 
-	public function Update_Item_Target(){
+	public function Update_Item_Target($item_target_id, $start_time, $type, $value, $item_id, $period_type, $period, $recurring){
 		
 		$return_json = array('authenticated' => 'false', 'success' => 'false', );
 
@@ -320,7 +320,7 @@ class Item_Data_Interface {
 		
 	}
 	
-	public function Delete_Item_Target(){
+	public function Delete_Item_Target($item_target_id){
 		
 		$return_json = array('authenticated' => 'false', 'success' => 'false', );
 

@@ -605,7 +605,7 @@ function Timecard_Task_Entry_Form(){
 		});
 		
 		//hook for the entry change select event
-		$('#' + this.task_entries_started_select.id).click(function(event) {
+		$('#' + this.task_entries_started_select.id).change(function(event) {
 
 			//execute the click event
 			self.On_Task_Entry_Select_Change_Event();

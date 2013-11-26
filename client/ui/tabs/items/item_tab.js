@@ -79,10 +79,10 @@ function Item_Tab() {
 		this.items_list = data.items;
 		
 		
-		new_inner_html += '<option>-</option>';
+		new_inner_html += '<option value="0">-</option>';
 
 		for (var i = 0; i < self.items_list.length; i++) {
-			new_inner_html += '<option>' + self.items_list[i].item_name + '</option>';
+			new_inner_html += '<option value="' + self.items_list[i].item_id + '">' + self.items_list[i].item_name + '</option>';
 		}
 
 		document.getElementById(self.quick_item_entry_form.quick_item_name_select.id).innerHTML = new_inner_html;

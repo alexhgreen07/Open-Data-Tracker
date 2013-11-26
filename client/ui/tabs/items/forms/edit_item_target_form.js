@@ -140,7 +140,7 @@ function Edit_Item_Target_Form(){
 		this.item_edit_target_delete_button = document.createElement("input");
 		this.item_edit_target_delete_button.setAttribute('id', 'item_edit_target_delete_button');
 		this.item_edit_target_delete_button.setAttribute('type', 'submit');
-		this.item_edit_target_delete_button.value = 'Submit';
+		this.item_edit_target_delete_button.value = 'Delete';
 		this.edit_item_target_form.appendChild(this.item_edit_target_delete_button);
 
 		var div_tab = document.getElementById(form_div_id);

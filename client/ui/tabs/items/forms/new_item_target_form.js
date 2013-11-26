@@ -12,7 +12,65 @@ function New_Item_Target_Form(){
 	
 	this.Add_Item_Target_Click = function(){
 		
-		alert('Add item target button click.');
+		var start_time = $("#" + self.item_target_time.id).val();
+		var type = $("#" + self.new_item_target_type_select.id).val();
+		var value = $("#" + self.item_target_value.id).val();
+		var item = $("#" + self.new_item_target_name_select.id).val();
+		var period_type = $("#" + self.new_item_target_recurrance_type_select.id).val();
+		var period = $("#" + self.item_target_recurrance_period.id).val();
+		var recurring = $("#" + self.new_item_target_recurring_select.id).val();
+		
+		if(value == '')
+		{
+			alert('Enter a value.');
+		}
+		else if(item == 0)
+		{
+			alert('Select an item.');
+		}
+		else if(period == '')
+		{
+			alert('Enter a period.');
+		}
+		else
+		{
+			
+			var params = new Array();
+			params[0] = start_time;
+			params[1] = type;
+			params[2] = value;
+			params[3] = item;
+			params[4] = period_type;
+			params[5] = period;
+			params[6] = recurring;
+
+			//execute the RPC callback for retrieving the item log
+			app.api.Item_Data_Interface.Insert_Item_Target(params, function(jsonRpcObj) {
+
+				if (jsonRpcObj.result.authenticated == 'true') {
+					
+					if (jsonRpcObj.result.success == 'true') {
+						
+						alert('New item target added!');
+						
+					} else {
+						
+						alert('Item target failed to add.');
+						
+					}
+
+				} else {
+					alert('You are not logged in. Please refresh the page and login again.');
+				}
+
+				//refresh the items
+				app.api.Refresh_Data(function() {
+					//self.refresh_item_log_callback();
+				});
+			});
+			
+		}
+		
 		
 	};
 	

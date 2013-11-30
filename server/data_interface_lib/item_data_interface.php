@@ -549,6 +549,7 @@ class Item_Data_Interface {
 				'type' => 'string', 
 				'value' => 'float', 
 				'item_id' => 'int', 
+				'name' => 'string',
 				'period_type' => 'string', 
 				'period' => 'float', 
 				'recurring' => 'bool', 
@@ -566,7 +567,17 @@ class Item_Data_Interface {
 			
 			$return_json['authenticated'] = 'true';
 
-			$sql_query = "SELECT `item_target_id`, `start_time`, `type`, `value`, `item_id`, `period_type`, `period`, `recurring` FROM `item_targets`";
+			$sql_query = "SELECT 
+				`item_targets`.`item_target_id` AS `item_target_id`, 
+				`item_targets`.`start_time` AS `start_time`, 
+				`item_targets`.`type` AS `type`, 
+				`item_targets`.`value` AS `value`, 
+				`item_targets`.`item_id` AS `item_id`, 
+				`item_targets`.`period_type` AS `period_type`, 
+				`item_targets`.`period` AS `period`, 
+				`item_targets`.`recurring` AS `recurring`,
+				`items`.`name` AS `name`
+				FROM `item_targets`, `items` WHERE `items`.`item_id` = `item_targets`.`item_id`";
 			$result = mysql_query($sql_query, $this -> database_link);
 
 			if ($result) {
@@ -583,6 +594,7 @@ class Item_Data_Interface {
 					$type = mysql_result($result, $i, "type");
 					$value = mysql_result($result, $i, 'value');
 					$item_id = mysql_result($result, $i, "item_id");
+					$name = mysql_result($result, $i, "name");
 					$period_type = mysql_result($result, $i, "period_type");
 					$period = mysql_result($result, $i, "period");
 					$recurring = mysql_result($result, $i, "recurring");
@@ -594,6 +606,7 @@ class Item_Data_Interface {
 							'type' => $type, 
 							'value' => $value, 
 							'item_id' => $item_id, 
+							'name' => $name,
 							'period_type' => $period_type, 
 							'period' => $period, 
 							'recurring' => $recurring, 

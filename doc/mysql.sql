@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.4.1
+-- version 4.1.0-beta2
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 18, 2013 at 12:36 AM
+-- Generation Time: Nov 16, 2013 at 06:06 PM
 -- Server version: 5.1.44
 -- PHP Version: 5.3.2
 
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
   `member_id` int(11) NOT NULL,
   `category_path` text NOT NULL,
   PRIMARY KEY (`category_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `items` (
   `description` text NOT NULL,
   `category_id` int(11) NOT NULL,
   PRIMARY KEY (`item_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -67,7 +67,25 @@ CREATE TABLE IF NOT EXISTS `item_log` (
   `item_id` int(11) NOT NULL,
   `note` text NOT NULL,
   PRIMARY KEY (`item_log_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `item_targets`
+--
+
+CREATE TABLE IF NOT EXISTS `item_targets` (
+  `item_target_id` int(11) NOT NULL AUTO_INCREMENT,
+  `start_time` datetime NOT NULL,
+  `type` text NOT NULL,
+  `value` double NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `period_type` text NOT NULL,
+  `period` double NOT NULL,
+  `recurring` tinyint(1) NOT NULL,
+  PRIMARY KEY (`item_target_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -82,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `members` (
   `login` varchar(100) NOT NULL DEFAULT '',
   `passwd` varchar(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`member_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -97,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   `session_expiry` datetime NOT NULL,
   PRIMARY KEY (`session_entry_id`),
   KEY `session_entry_id` (`session_entry_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -115,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `category_id` int(11) NOT NULL,
   `status` text NOT NULL,
   PRIMARY KEY (`task_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -132,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `task_log` (
   `note` text NOT NULL,
   `task_target_id` int(11) NOT NULL,
   PRIMARY KEY (`task_log_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -150,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `task_targets` (
   `recurrance_period` float NOT NULL,
   `recurrance_end_time` datetime NOT NULL,
   PRIMARY KEY (`task_schedule_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

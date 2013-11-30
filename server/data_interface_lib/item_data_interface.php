@@ -285,6 +285,126 @@ class Item_Data_Interface {
 		
 	}
 	
+	public function Insert_Item_Target($start_time, $type, $value, $item_id, $period_type, $period, $recurring){
+				
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+
+		if (Is_Session_Authorized()) {
+			
+			$return_json['authenticated'] = 'true';
+
+			$sql_insert = "INSERT INTO `item_targets`(
+				`start_time`, 
+				`type`, 
+				`value`, 
+				`item_id`, 
+				`period_type`, 
+				`period`, 
+				`recurring`) VALUES (
+				'".$start_time."',
+				'".$type."',
+				".$value.",
+				".$item_id.",
+				'".$period_type."',
+				".$period.",
+				".$recurring.")";
+
+			$success = mysql_query($sql_insert, $this -> database_link);
+
+			if ($success) {
+				
+				$return_json['success'] = 'true';
+				
+			} else {
+				
+				$return_json['success'] = 'false';
+			}
+
+
+		} else {
+			
+			$return_json['authenticated'] = 'false';
+			
+		}
+		
+		return $return_json;
+	}
+
+	public function Update_Item_Target($item_target_id, $start_time, $type, $value, $item_id, $period_type, $period, $recurring){
+		
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+
+		if (Is_Session_Authorized()) {
+			
+			$return_json['authenticated'] = 'true';
+
+			$sql_insert = "UPDATE `item_targets` SET
+				`start_time` = '".$start_time."', 
+				`type` = '".$type."',
+				`value` = ".$value.", 
+				`item_id` = ".$item_id.",
+				`period_type` = '".$period_type."',
+				`period` = ".$period.",
+				`recurring` = ".$recurring." 
+				WHERE `item_target_id` = " . $item_target_id;
+
+			$success = mysql_query($sql_insert, $this -> database_link);
+
+			if ($success) {
+				
+				$return_json['success'] = 'true';
+				
+			} else {
+				
+				$return_json['success'] = 'false';
+			}
+
+		} else {
+			
+			$return_json['authenticated'] = 'false';
+			
+		}
+		
+		return $return_json;
+		
+	}
+	
+	public function Delete_Item_Target($item_target_id){
+		
+		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+
+		if (Is_Session_Authorized()) {
+			
+			$return_json['authenticated'] = 'true';
+			
+			if ($item_target_id != "") {
+
+				$sql_insert = "DELETE FROM `item_targets` WHERE `item_target_id`=" . $item_target_id;
+
+				$success = mysql_query($sql_insert, $this -> database_link);
+
+				if ($success) {
+					
+					$return_json['success'] = 'true';
+					
+				} else {
+					
+					$return_json['success'] = 'false';
+				}
+
+
+			}
+
+		} else {
+			
+			$return_json['authenticated'] = 'false';
+			
+		}
+		
+		return $return_json;
+		
+	}
+	
 	public function Get_Item_Log_Schema(){
 				
 		$return_json = array();
@@ -370,7 +490,7 @@ class Item_Data_Interface {
 	}
 	
 	public function Get_Items() {
-		$return_json = array('authenticated' => 'false', 'success' => 'false', 'items' => array(), );
+		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => array(), );
 
 		if (Is_Session_Authorized()) {
 
@@ -403,7 +523,6 @@ class Item_Data_Interface {
 							'date_created' => $item_date_created, 
 							'item_id' => $item_id, );
 
-						//$return_json['items'][$i] = $row_result;
 
 					}
 
@@ -419,6 +538,92 @@ class Item_Data_Interface {
 
 		return $return_json;
 	}
+
+	public function Get_Item_Targets_Schema(){
+		
+		$return_json = array();
+		
+		$return_json['schema'] = array(
+				'item_target_id' => 'int', 
+				'start_time' => 'date', 
+				'type' => 'string', 
+				'value' => 'float', 
+				'item_id' => 'int', 
+				'name' => 'string',
+				'period_type' => 'string', 
+				'period' => 'float', 
+				'recurring' => 'bool', 
+			);
+		
+		return $return_json;
+		
+	}
+	
+	public function Get_Item_Targets(){
+		
+		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => array(), );
+
+		if (Is_Session_Authorized()) {
+			
+			$return_json['authenticated'] = 'true';
+
+			$sql_query = "SELECT 
+				`item_targets`.`item_target_id` AS `item_target_id`, 
+				`item_targets`.`start_time` AS `start_time`, 
+				`item_targets`.`type` AS `type`, 
+				`item_targets`.`value` AS `value`, 
+				`item_targets`.`item_id` AS `item_id`, 
+				`item_targets`.`period_type` AS `period_type`, 
+				`item_targets`.`period` AS `period`, 
+				`item_targets`.`recurring` AS `recurring`,
+				`items`.`name` AS `name`
+				FROM `item_targets`, `items` WHERE `items`.`item_id` = `item_targets`.`item_id`";
+			$result = mysql_query($sql_query, $this -> database_link);
+
+			if ($result) {
+				$return_json['success'] = 'true';
+				$return_json['data'] = array();
+				
+				$num = mysql_numrows($result);
+
+				$i = 0;
+				while ($i < $num) {
+
+					$item_target_id = mysql_result($result, $i, "item_target_id");
+					$start_time = mysql_result($result, $i, 'start_time');
+					$type = mysql_result($result, $i, "type");
+					$value = mysql_result($result, $i, 'value');
+					$item_id = mysql_result($result, $i, "item_id");
+					$name = mysql_result($result, $i, "name");
+					$period_type = mysql_result($result, $i, "period_type");
+					$period = mysql_result($result, $i, "period");
+					$recurring = mysql_result($result, $i, "recurring");
+
+					$return_json['data'][$i] = 
+						array(
+							'item_target_id' => $item_target_id, 
+							'start_time' => $start_time, 
+							'type' => $type, 
+							'value' => $value, 
+							'item_id' => $item_id, 
+							'name' => $name,
+							'period_type' => $period_type, 
+							'period' => $period, 
+							'recurring' => $recurring, 
+						);
+
+					$i++;
+				}
+			} else {
+				$return_json['success'] = 'false';
+			}
+			
+		}
+		
+		return $return_json;
+		
+	}
+	
 
 }
 ?>

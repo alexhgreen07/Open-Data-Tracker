@@ -48,6 +48,15 @@ function Item_Tab() {
 	 * */
 	this.view_items_form = new View_Items_Form();
 	
+	/** This is the new item targets form object.
+	 * @type New_Item_Target_Form
+	 * */
+	this.new_item_target_form = new New_Item_Target_Form();
+	
+	/** This is the edit item targets form object.
+	 * @type Edit_Item_Target_Form
+	 * */
+	this.edit_item_target_form = new Edit_Item_Target_Form();
 	
 	/** @method Refresh_Items
 	 * @desc This function retrieves the item list from the database.
@@ -57,6 +66,7 @@ function Item_Tab() {
 		
 		this.Refresh_Items(data);
 		this.Refresh_Item_Entries(data);
+		this.Refresh_Item_Targets(data);
 
 	};
 	
@@ -70,15 +80,17 @@ function Item_Tab() {
 		this.items_list = data.items;
 		
 		
-		new_inner_html += '<option>-</option>';
+		new_inner_html += '<option value="0">-</option>';
 
 		for (var i = 0; i < self.items_list.length; i++) {
-			new_inner_html += '<option>' + self.items_list[i].item_name + '</option>';
+			new_inner_html += '<option value="' + self.items_list[i].item_id + '">' + self.items_list[i].item_name + '</option>';
 		}
 
 		document.getElementById(self.quick_item_entry_form.quick_item_name_select.id).innerHTML = new_inner_html;
 		document.getElementById(self.new_item_entry_form.new_item_name_select.id).innerHTML = new_inner_html;
 		document.getElementById(self.edit_item_entry_form.edit_item_name_select.id).innerHTML = new_inner_html;
+		document.getElementById(self.new_item_target_form.new_item_target_name_select.id).innerHTML = new_inner_html;
+		document.getElementById(self.edit_item_target_form.edit_item_target_name_select.id).innerHTML = new_inner_html;
 		
 		this.edit_item_entry_form.Refresh(data);
 		this.edit_item_form.Refresh(data);
@@ -91,6 +103,28 @@ function Item_Tab() {
 		
 		this.edit_item_entry_form.Refresh(data);
 		this.view_item_entries_form.Refresh(data);
+		
+	};
+	
+	this.Refresh_Item_Targets = function(data){
+		
+		var self = this;
+		var new_inner_html = '';
+		
+		
+		new_inner_html += '<option value="0">-</option>';
+
+		for (var i = 0; i < data.item_targets.length; i++) {
+			new_inner_html += '<option value="'
+				 + data.item_targets[i].item_target_id + 
+				 '"> (' + 
+				 data.item_targets[i].item_target_id + ') ' + 
+				 data.item_targets[i].name + '</option>';
+		}
+		
+		document.getElementById(this.edit_item_target_form.edit_item_target_id_select.id).innerHTML = new_inner_html;
+		
+		this.edit_item_target_form.Refresh(data);
 		
 	};
 
@@ -142,12 +176,12 @@ function Item_Tab() {
 		
 		new_tab = new Array();
 		new_tab.push("New Target Entry");
-		new_tab.push('Under construction...');
+		new_tab.push('<div id="new_item_target_div"></div>');
 		tabs_array.push(new_tab);
 
 		new_tab = new Array();
 		new_tab.push("Edit Target Entry");
-		new_tab.push('Under construction...');
+		new_tab.push('<div id="edit_item_target_div"></div>');
 		tabs_array.push(new_tab);
 
 		new_tab = new Array();
@@ -181,7 +215,10 @@ function Item_Tab() {
 		this.edit_item_form.Render('edit_item_div');
 
 		this.view_items_form.Render('view_item_div');
-
+		
+		this.new_item_target_form.Render('new_item_target_div');
+		
+		this.edit_item_target_form.Render('edit_item_target_div');
 	};
 }
 

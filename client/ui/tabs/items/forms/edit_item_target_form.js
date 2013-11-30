@@ -136,11 +136,11 @@ function Edit_Item_Target_Form(){
 						
 						if (jsonRpcObj.result.success == 'true') {
 							
-							alert('Item target updated!');
+							alert('Item target deleted!');
 							
 						} else {
 							
-							alert('Item target failed to update.');
+							alert('Item target failed to delete.');
 							
 						}
 	

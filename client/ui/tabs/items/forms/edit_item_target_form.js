@@ -10,6 +10,12 @@ function Edit_Item_Target_Form(){
 		
 	};
 	
+	this.Selected_Item_Target_Change = function(){
+		
+		alert('Selected item change. Not implemeneted.');
+		
+	};
+	
 	this.Edit_Item_Target_Click = function(){
 		
 		var item_target_id = $("#" + self.edit_item_target_id_select.id).val();
@@ -250,6 +256,12 @@ function Edit_Item_Target_Form(){
 
 		var div_tab = document.getElementById(form_div_id);
 		div_tab.appendChild(this.edit_item_target_form);
+		
+		$('#' + this.edit_item_target_id_select.id).change(function(event) {
+
+			//execute the click event
+			self.Selected_Item_Target_Change();
+		});
 		
 		$('#' + this.item_edit_target_button.id).button();
 		$('#' + this.item_edit_target_button.id).click(function(event) {

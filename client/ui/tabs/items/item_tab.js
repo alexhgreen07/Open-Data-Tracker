@@ -119,7 +119,7 @@ function Item_Tab() {
 				 + data.item_targets[i].item_target_id + 
 				 '"> (' + 
 				 data.item_targets[i].item_target_id + ') ' + 
-				 data.item_targets[i].name+ '</option>';
+				 data.item_targets[i].name + '</option>';
 		}
 		
 		document.getElementById(this.edit_item_target_form.edit_item_target_id_select.id).innerHTML = new_inner_html;

@@ -66,6 +66,7 @@ function Item_Tab() {
 		
 		this.Refresh_Items(data);
 		this.Refresh_Item_Entries(data);
+		this.Refresh_Item_Targets(data);
 
 	};
 	
@@ -102,6 +103,22 @@ function Item_Tab() {
 		
 		this.edit_item_entry_form.Refresh(data);
 		this.view_item_entries_form.Refresh(data);
+		
+	};
+	
+	this.Refresh_Item_Targets = function(data){
+		
+		var self = this;
+		var new_inner_html = '';
+		
+		
+		new_inner_html += '<option value="0">-</option>';
+
+		for (var i = 0; i < data.item_targets.length; i++) {
+			new_inner_html += '<option value="' + data.item_targets[i].item_target_id + '">' + data.item_targets[i].item_target_id + '</option>';
+		}
+		
+		document.getElementById(this.edit_item_target_form.edit_item_target_id_select.id).innerHTML = new_inner_html;
 		
 	};
 

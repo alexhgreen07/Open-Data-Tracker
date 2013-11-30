@@ -12,13 +12,118 @@ function Edit_Item_Target_Form(){
 	
 	this.Edit_Item_Target_Click = function(){
 		
-		alert('Edit item target button click.');
+		var item_target_id = $("#" + self.edit_item_target_id_select.id).val();
+		var start_time = $("#" + self.item_edit_target_time.id).val();
+		var type = $("#" + self.edit_item_target_type_select.id).val();
+		var value = $("#" + self.item_edit_target_value.id).val();
+		var item = $("#" + self.edit_item_target_name_select.id).val();
+		var period_type = $("#" + self.edit_item_target_recurrance_type_select.id).val();
+		var period = $("#" + self.edit_item_target_recurrance_period.id).val();
+		var recurring = $("#" + self.edit_item_target_recurring_select.id).val();
+		
+		if(item_target_id == 0)
+		{
+			alert('Select an item target.');
+		}
+		else if(value == '')
+		{
+			alert('Enter a value.');
+		}
+		else if(item == 0)
+		{
+			alert('Select an item.');
+		}
+		else if(period == '')
+		{
+			alert('Enter a period.');
+		}
+		else
+		{
+			
+			var params = new Array();
+			params[0] = item_target_id;
+			params[1] = start_time;
+			params[2] = type;
+			params[3] = value;
+			params[4] = item;
+			params[5] = period_type;
+			params[6] = period;
+			params[7] = recurring;
+
+			//execute the RPC callback for retrieving the item log
+			app.api.Item_Data_Interface.Update_Item_Target(params, function(jsonRpcObj) {
+
+				if (jsonRpcObj.result.authenticated == 'true') {
+					
+					if (jsonRpcObj.result.success == 'true') {
+						
+						alert('Item target updated!');
+						
+					} else {
+						
+						alert('Item target failed to update.');
+						
+					}
+
+				} else {
+					alert('You are not logged in. Please refresh the page and login again.');
+				}
+
+				//refresh the items
+				app.api.Refresh_Data(function() {
+					//self.refresh_item_log_callback();
+				});
+			});
+			
+		}
 		
 	};
 	
 	this.Edit_Item_Target_Delete_Click = function(){
 		
-		alert('Edit item target delete button click.');
+		var item_target_id = $("#" + self.edit_item_target_id_select.id).val();
+		
+		if(item_target_id == 0)
+		{
+			alert('Select an item target.');
+		}
+		else
+		{
+			
+			var params = new Array();
+			params[0] = item_target_id;
+			
+			var r=confirm("Are you sure you want to delete this item target?");
+			
+			if (r==true)
+			{
+			
+				//execute the RPC callback for retrieving the item log
+				app.api.Item_Data_Interface.Delete_Item_Target(params, function(jsonRpcObj) {
+	
+					if (jsonRpcObj.result.authenticated == 'true') {
+						
+						if (jsonRpcObj.result.success == 'true') {
+							
+							alert('Item target updated!');
+							
+						} else {
+							
+							alert('Item target failed to update.');
+							
+						}
+	
+					} else {
+						alert('You are not logged in. Please refresh the page and login again.');
+					}
+	
+					//refresh the items
+					app.api.Refresh_Data(function() {
+						//self.refresh_item_log_callback();
+					});
+				});
+			}
+		}
 		
 	};
 	
@@ -33,7 +138,7 @@ function Edit_Item_Target_Form(){
 		//item unit
 		this.edit_item_target_id_select = document.createElement("select");
 		this.edit_item_target_id_select.setAttribute('id', "edit_item_target_id_select");
-		this.edit_item_target_id_select.innerHTML = '<option>-</option>';
+		this.edit_item_target_id_select.innerHTML = '<option value="0">-</option>';
 		this.edit_item_target_form.appendChild(this.edit_item_target_id_select);
 
 		this.edit_item_target_form.innerHTML += '<br />';

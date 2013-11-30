@@ -7,12 +7,37 @@ function Edit_Item_Target_Form(){
 	
 	this.Refresh = function(data){
 		
-		
+		self.data = data;
 	};
 	
 	this.Selected_Item_Target_Change = function(){
 		
-		alert('Selected item change. Not implemeneted.');
+		selected_index = document.getElementById(self.edit_item_target_id_select.id).selectedIndex;
+		
+		if(selected_index != 0)
+		{
+			selected_target = self.data.item_targets[selected_index - 1];
+		
+			$("#" + self.item_edit_target_time.id).val(selected_target.start_time);
+			$("#" + self.edit_item_target_type_select.id).val(selected_target.type);
+			$("#" + self.item_edit_target_value.id).val(selected_target.value);
+			$("#" + self.edit_item_target_name_select.id).val(selected_target.item_id);
+			$("#" + self.edit_item_target_recurrance_type_select.id).val(selected_target.period_type);
+			$("#" + self.edit_item_target_recurrance_period.id).val(selected_target.period);
+			$("#" + self.edit_item_target_recurring_select.id).val(selected_target.recurring);
+		}
+		else
+		{
+			$("#" + self.item_edit_target_time.id).val();
+			$("#" + self.edit_item_target_type_select.id).val('sum');
+			$("#" + self.item_edit_target_value.id).val('');
+			$("#" + self.edit_item_target_name_select.id).val(0);
+			$("#" + self.edit_item_target_recurrance_type_select.id).val('Minutes');
+			$("#" + self.edit_item_target_recurrance_period.id).val('');
+			$("#" + self.edit_item_target_recurring_select.id).val(0);
+		}
+		
+		
 		
 	};
 	
@@ -228,8 +253,8 @@ function Edit_Item_Target_Form(){
 		//item unit
 		this.edit_item_target_recurring_select = document.createElement("select");
 		this.edit_item_target_recurring_select.setAttribute('id', "edit_item_target_recurring_select");
-		this.edit_item_target_recurring_select.innerHTML = '<option>False</option>';
-		this.edit_item_target_recurring_select.innerHTML += '<option>True</option>';
+		this.edit_item_target_recurring_select.innerHTML = '<option value="0">False</option>';
+		this.edit_item_target_recurring_select.innerHTML += '<option value="1">True</option>';
 		this.edit_item_target_form.appendChild(this.edit_item_target_recurring_select);
 
 		this.edit_item_target_form.innerHTML += '<br />';

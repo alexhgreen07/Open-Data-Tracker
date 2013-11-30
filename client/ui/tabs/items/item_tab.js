@@ -124,6 +124,8 @@ function Item_Tab() {
 		
 		document.getElementById(this.edit_item_target_form.edit_item_target_id_select.id).innerHTML = new_inner_html;
 		
+		this.edit_item_target_form.Refresh(data);
+		
 	};
 
 	/** @method Render

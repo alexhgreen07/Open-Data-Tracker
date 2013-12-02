@@ -32,7 +32,7 @@ function Cast_Server_Datetime_to_Date(server_datetime_string)
 	seconds = time_array[5];
 	milliseconds = 0;
 	
-	return_value = Date(year, month, day, hours, minutes, seconds, milliseconds);
+	return_value = new Date(year, month, day, hours, minutes, seconds, milliseconds);
 	
 	return return_value;
 }

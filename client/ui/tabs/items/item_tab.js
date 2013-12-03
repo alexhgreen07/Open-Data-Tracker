@@ -125,20 +125,12 @@ function Item_Tab() {
 	this.Refresh_Item_Targets = function(data){
 		
 		var self = this;
-		var new_inner_html = '';
 		
-		
-		new_inner_html += '<option value="0">-</option>';
-
-		for (var i = 0; i < data.item_targets.length; i++) {
-			new_inner_html += '<option value="'
-				 + data.item_targets[i].item_target_id + 
-				 '"> (' + 
-				 data.item_targets[i].item_target_id + ') ' + 
-				 data.item_targets[i].name + '</option>';
-		}
-		
-		document.getElementById(this.edit_item_target_form.edit_item_target_id_select.id).innerHTML = new_inner_html;
+		Refresh_Select_HTML_From_Table(
+			this.edit_item_target_form.edit_item_target_id_select.id,
+			data.item_targets,
+			"item_target_id",
+			"name");
 		
 		this.edit_item_target_form.Refresh(data);
 		

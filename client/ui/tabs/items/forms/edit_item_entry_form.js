@@ -7,23 +7,15 @@ function Edit_Item_Entry_Form(){
 	this.Refresh = function(data){
 		
 		var self = this;
-		var new_inner_html = '';
 		
 		this.item_log_data = data.item_entries;
 		this.items_list = data.items;
 		
-		new_inner_html += '<option>-</option>';
-
-		for (var i = 0; i < self.item_log_data.length; i++) {
-			
-			new_inner_html += '<option value="' + self.item_log_data[i].item_log_id + '">';
-			
-			new_inner_html += '(' + self.item_log_data[i].item_log_id + ') ';
-			new_inner_html += self.item_log_data[i].time + '</option>';
-			
-		}
-
-		document.getElementById(self.edit_item_entry_select.id).innerHTML = new_inner_html;
+		Refresh_Select_HTML_From_Table(
+			self.edit_item_entry_select.id,
+			data.item_entries,
+			"item_log_id",
+			"time");
 		
 	};
 	

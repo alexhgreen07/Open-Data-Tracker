@@ -40,7 +40,7 @@ function Edit_Item_Entry_Form(){
 			params.push(item_entry_id);
 			params.push(document.getElementById(self.item_edit_time.id).value);
 			params.push(document.getElementById(self.item_edit_value.id).value);
-			params.push(self.items_list[item_select_index - 1].item_id);
+			params.push(document.getElementById(self.edit_item_name_select.id).value);
 			params.push(document.getElementById(self.item_edit_note.id).value);
 			
 			//execute the RPC callback for retrieving the item log
@@ -143,14 +143,14 @@ function Edit_Item_Entry_Form(){
 			
 			document.getElementById(self.item_edit_time.id).value = selected_item_entry.time;
 			document.getElementById(self.item_edit_value.id).value = selected_item_entry.value;
-			document.getElementById(self.edit_item_name_select.id).value = selected_item_entry.name;
+			document.getElementById(self.edit_item_name_select.id).value = selected_item_entry.item_id;
 			document.getElementById(self.item_edit_note.id).value = selected_item_entry.note;
 		}
 		else
 		{
 			document.getElementById(self.item_edit_time.id).value = '';
 			document.getElementById(self.item_edit_value.id).value = '0';
-			document.getElementById(self.edit_item_name_select.id).value = '-';
+			document.getElementById(self.edit_item_name_select.id).value = 0;
 			document.getElementById(self.item_edit_note.id).value = '';
 		}
 		

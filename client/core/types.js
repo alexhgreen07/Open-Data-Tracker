@@ -36,3 +36,39 @@ function Cast_Server_Datetime_to_Date(server_datetime_string)
 	
 	return return_value;
 }
+
+function Refresh_Select_HTML_From_Table(select_id, table, value_column_name, text_column_name)
+{
+	var select_html = '';
+	
+	select_to_refresh = document.getElementById(select_id);
+	selected_value = select_to_refresh.value;
+	is_selected_value_present = false;
+	
+	select_html += '<option value="0">-</option>';
+	
+	for (var i=0; i < table.length; i++) {
+		
+
+		var current_row = table[i];
+
+		select_html += '<option value="' + 
+			current_row[value_column_name] + '">' + 
+			current_row[text_column_name] + 
+			'</option>';
+		
+		if(selected_value == current_row[value_column_name])
+		{
+			is_selected_value_present = true;
+		}
+		
+	}
+	
+	select_to_refresh.innerHTML = select_html;
+	
+	if(is_selected_value_present)
+	{
+		select_to_refresh.value = selected_value;
+	}
+	
+}

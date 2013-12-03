@@ -67,6 +67,7 @@ function Item_Tab() {
 		this.Refresh_Items(data);
 		this.Refresh_Item_Entries(data);
 		this.Refresh_Item_Targets(data);
+		this.Refresh_Item_Categories(data);
 
 	};
 	
@@ -134,6 +135,21 @@ function Item_Tab() {
 		
 		this.edit_item_target_form.Refresh(data);
 		
+	};
+	
+	this.Refresh_Item_Categories = function(data){
+		
+		Refresh_Select_HTML_From_Table(
+			this.new_item_form.item_category_select.id,
+			data.categories,
+			"category_id",
+			"category_path");
+		
+		Refresh_Select_HTML_From_Table(
+			this.edit_item_form.item_edit_category_select.id,
+			data.categories,
+			"category_id",
+			"category_path");
 	};
 
 	/** @method Render

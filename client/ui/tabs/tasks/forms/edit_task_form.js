@@ -15,6 +15,12 @@ function Edit_Task_Form(){
 			data.tasks,
 			"name",
 			"name");
+			
+		Refresh_Select_HTML_From_Table(
+			this.task_edit_category_select.id,
+			data.categories,
+			"category_id",
+			"category_path");
 		
 	};
 	

@@ -54,6 +54,7 @@ function Refresh_Select_HTML_From_Table(select_id, table, value_column_name, tex
 
 		select_html += '<option value="' + 
 			current_row[value_column_name] + '">' + 
+			"(" + current_row[value_column_name] + ") " + 
 			current_row[text_column_name] + 
 			'</option>';
 		

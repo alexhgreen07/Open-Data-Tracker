@@ -147,7 +147,7 @@ function Edit_Task_Form(){
 			document.getElementById(this.task_edit_description.id).value = selected_task.description;
 			document.getElementById(this.task_edit_estimate.id).value = selected_task.estimated_time;
 			document.getElementById(this.task_edit_note.id).value = selected_task.note;
-			document.getElementById(self.task_edit_category_select.id).value = selected_task.category_id;
+			document.getElementById(this.task_edit_category_select.id).value = selected_task.category_id;
 			
 		}
 		else
@@ -156,7 +156,7 @@ function Edit_Task_Form(){
 			document.getElementById(this.task_edit_description.id).value = '';
 			document.getElementById(this.task_edit_estimate.id).value = '0';
 			document.getElementById(this.task_edit_note.id).value = '';
-			document.getElementById(self.task_edit_category_select.id).selectedIndex = 0;
+			document.getElementById(this.task_edit_category_select.id).selectedIndex = 0;
 		}
 			
 	};

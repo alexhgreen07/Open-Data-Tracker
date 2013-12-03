@@ -4,6 +4,16 @@
 function New_Task_Form(){
 	
 	
+	this.Refresh = function(data){
+		
+		Refresh_Select_HTML_From_Table(
+			this.task_category_select.id,
+			data.categories,
+			"category_id",
+			"category_path");
+		
+	};
+	
 	/** @method Task_New_Submit_Click
 	 * @desc This function is the new task submit button click event handler.
 	 * */

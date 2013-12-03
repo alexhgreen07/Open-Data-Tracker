@@ -108,6 +108,7 @@ function Task_Tab() {
 		this.new_task_entry_form.Refresh(data);
 		this.edit_task_entry_form.Refresh(data);
 		this.view_task_entries_form.Refresh(data);
+		this.new_task_form.Refresh(data);
 		this.edit_task_form.Refresh(data);
 		this.view_tasks_form.Refresh(data);
 		this.new_task_target_form.Refresh(data);

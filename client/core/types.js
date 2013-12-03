@@ -53,8 +53,16 @@ function Refresh_Select_HTML_From_Table(select_id, table, value_column_name, tex
 		var current_row = table[i];
 
 		select_html += '<option value="' + 
-			current_row[value_column_name] + '">' + 
-			"(" + current_row[value_column_name] + ") " + 
+			current_row[value_column_name] + '">';
+		
+		if(value_column_name != text_column_name)
+		{
+			select_html += 
+				"(" + current_row[value_column_name] + ") ";
+		}
+		
+			
+		select_html +=
 			current_row[text_column_name] + 
 			'</option>';
 		

@@ -17,26 +17,11 @@ function Edit_Task_Entry_Form(){
 		//ensure the task info array is saved
 		self.task_info_json_array = data.tasks;
 
-		//create a list of options for the select
-		var new_inner_html = '';
-
-		new_inner_html += '<option>-</option>';
-
-		//iterate through all tasks
-		for (var i = 0; i < self.task_info_json_array.length; i++) {
-			//add task option to select
-			new_inner_html += '<option>' + self.task_info_json_array[i].name + '</option>';
-
-			//format task start datetime
-			if (self.task_info_json_array[i].start_time != '') {
-				//change start date string to javascript date object
-				//var t = self.task_info_json_array[i].start_time.split(/[- :]/);
-				//self.task_info_json_array[i].start_time = new Date(t[0], t[1] - 1, t[2], t[3], t[4], t[5]);
-			}
-		}
-		
-		document.getElementById(self.edit_task_entry_task_name_select.id).innerHTML = new_inner_html;
-		
+		Refresh_Select_HTML_From_Table(
+			self.edit_task_entry_task_name_select.id,
+			data.tasks,
+			"name",
+			"name");
 		
 	};
 	
@@ -46,35 +31,17 @@ function Edit_Task_Entry_Form(){
 		
 		self.task_log = data.task_entries;
 		
-		var task_entry_options = '<option value="0">-</option>';
-		
-		for (var i = 0; i < self.task_log.length; i++) {
-		    
-		    task_entry_options += '<option value="' + 
-		    	self.task_log[i].task_log_id + '">' +
-		    	self.task_log[i].start_time + '</option>';
-		    
-		}
-		
-		document.getElementById(self.edit_task_entry_select.id).innerHTML = task_entry_options;
-		
-		//create a list of options for the select
-		var new_inner_html = '';
+		Refresh_Select_HTML_From_Table(
+			self.edit_task_entry_select.id,
+			data.task_entries,
+			"task_log_id",
+			"start_time");
 
-		new_inner_html += '<option value="0">-</option>';
-
-		//iterate through all tasks
-		for (var i = 0; i < data.task_targets.length; i++) {
-			//add task option to select
-			new_inner_html += '<option value="'
-			new_inner_html += data.task_targets[i].task_schedule_id;
-			new_inner_html += '">(';
-			new_inner_html += data.task_targets[i].task_schedule_id + ') ';
-			new_inner_html += data.task_targets[i].name + '</option>';
-
-		}
-
-		document.getElementById(self.task_target_select.id).innerHTML = new_inner_html;
+		Refresh_Select_HTML_From_Table(
+			self.task_target_select.id,
+			data.task_targets,
+			"task_schedule_id",
+			"name");
 		
 	};
 	

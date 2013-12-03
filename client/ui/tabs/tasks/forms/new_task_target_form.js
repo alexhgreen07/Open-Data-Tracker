@@ -10,19 +10,11 @@ function New_Task_Target_Form(){
 		//ensure the task info array is saved
 		self.task_info_json_array = data.tasks;
 
-		//create a list of options for the select
-		var new_inner_html = '';
-
-		new_inner_html += '<option>-</option>';
-
-		//iterate through all tasks
-		for (var i = 0; i < self.task_info_json_array.length; i++) {
-			//add task option to select
-			new_inner_html += '<option>' + self.task_info_json_array[i].name + '</option>';
-
-		}
-
-		document.getElementById(self.task_target_new_name_select.id).innerHTML = new_inner_html;
+		Refresh_Select_HTML_From_Table(
+			self.task_target_new_name_select.id,
+			data.tasks,
+			"name",
+			"name");
 		
 	};
 	

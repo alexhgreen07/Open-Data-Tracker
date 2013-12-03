@@ -21,27 +21,24 @@ function Category_Form(){
 	this.view_categories_forms = new View_Category_Form();
 	
 	this.Refresh = function(data){
-		
-		var select_html = '';
-		
 
-		select_html += '<option value="0">-</option>';
+		Refresh_Select_HTML_From_Table(
+			self.new_category_form.add_new_category_parent_select.id,
+			data.categories,
+			"category_id",
+			"category_path");
 		
-		self.categories_list = data.categories;
+		Refresh_Select_HTML_From_Table(
+			self.edit_category_form.edit_category_select.id,
+			data.categories,
+			"category_id",
+			"category_path");
 		
-		for (var i=0; i < self.categories_list.length; i++) {
-			
-
-			var current_row = self.categories_list[i];
-
-			select_html += '<option value="' + current_row.category_id + '">' + current_row.category_path + '</option>';
-	
-		  
-		};
-		
-		document.getElementById(self.new_category_form.add_new_category_parent_select.id).innerHTML = select_html;
-		document.getElementById(self.edit_category_form.edit_category_select.id).innerHTML = select_html;
-		document.getElementById(self.edit_category_form.edit_category_parent_select.id).innerHTML = select_html;
+		Refresh_Select_HTML_From_Table(
+			self.edit_category_form.edit_category_parent_select.id,
+			data.categories,
+			"category_id",
+			"category_path");
 		
 		this.view_categories_forms.Refresh(data);
 		this.edit_category_form.Refresh(data);

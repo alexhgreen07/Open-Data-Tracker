@@ -18,13 +18,38 @@ function Report_Tab() {
 	
 	this.Refresh_Summaries_Form = function(data){
 		
-		document.getElementById(this.report_summaries_tables_select.id).innerHTML = '<option>-</option>';
+		var inner_html = '';
+		
+		var previous_value = document.getElementById(this.report_summaries_tables_select.id).value;
+		var is_previous_value_present = false;
+		
+		inner_html = '<option>-</option>';
 		
 		//get all table names
 		for (var key in data) {
 			
-			document.getElementById(this.report_summaries_tables_select.id).innerHTML += '<option>' + key + '</option>';
+			inner_html += '<option>' + key + '</option>';
+			
+			if(key == previous_value)
+			{
+				is_previous_value_present = true;
+			}
 		}
+		
+		document.getElementById(this.report_summaries_tables_select.id).innerHTML = inner_html;
+		
+		if(is_previous_value_present)
+		{
+			document.getElementById(this.report_summaries_tables_select.id).value = previous_value;
+			
+			
+			self.Tables_Select_Changed(true);
+		}
+		else
+		{
+			self.Tables_Select_Changed(false);
+		}
+		
 		
 	};
 	
@@ -126,7 +151,6 @@ function Report_Tab() {
 	
 	this.Results_Update_Callback = function(){
 		
-		
 		chart_line_options = '';
 		
 		chart_line_options += '<option>-</options>';
@@ -143,7 +167,7 @@ function Report_Tab() {
 		
 	};
 	
-	this.Tables_Select_Changed = function(){
+	this.Tables_Select_Changed = function(is_same_table){
 		
 		document.getElementById(self.report_summaries_data_display_div.id).innerHTML = '';
 		
@@ -301,35 +325,42 @@ function Report_Tab() {
 					
 			var input = {json:self.json_string, fields: self.fields, resultsDivID:self.report_results_data_display_div.id, callbacks:{afterUpdateResults:this.Results_Update_Callback}};
 			
+			//if it is the same table, re-load the rows, summaries, and filters
+			if(is_same_table)
+			{
+				//retreive all current filter fields
+				pivot_config_data = pivot.config(true);
+				
+				input.filters = pivot_config_data.filters;
+				input.rowLabels = pivot_config_data.rowLabels;
+				input.summaries = pivot_config_data.summaries;
+				
+			}
+			else
+			{
+				document.getElementById(self.report_results_data_display_div.id).innerHTML = '';
+			}
+			
 			
 			$('#' + self.report_summaries_data_display_div.id).pivot_display('setup', input);
-	
+			
+			
 			
 		}
+		else
+		{
+			document.getElementById(self.report_results_data_display_div.id).innerHTML = '';
 		
-		document.getElementById(self.report_results_data_display_div.id).innerHTML = '';
+		}
+		
 		
 		
 	};
 	
 	this.Type_Select_Change = function(){
 		
-		this.Tables_Select_Changed();
+		this.Tables_Select_Changed(false);
 		
-	};
-	
-	this.Convert_JSON_Format_To_Pivot = function(json_data_table){
-		
-		//function to convert from the default application JSON format to pivot format
-		var formatted_json_data_table = {
-			json:'', 
-			fields:[], 
-			rowLabels:[]};
-		
-		
-		
-		
-		return formatted_json_data_table;
 	};
 
 	this.Render_Summaries_Form = function(form_div_id) {
@@ -398,7 +429,7 @@ function Report_Tab() {
 		
 		$('#' + self.report_summaries_tables_select.id).change(function() {
 			
-			self.Tables_Select_Changed();
+			self.Tables_Select_Changed(false);
 
 		});
 		

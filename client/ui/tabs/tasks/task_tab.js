@@ -84,26 +84,6 @@ function Task_Tab() {
 		//ensure the task info array is saved
 		self.task_info_json_array = data.tasks;
 
-		//create a list of options for the select
-		var new_inner_html = '';
-
-		new_inner_html += '<option>-</option>';
-
-		//iterate through all tasks
-		for (var i = 0; i < self.task_info_json_array.length; i++) {
-			//add task option to select
-			new_inner_html += '<option>' + self.task_info_json_array[i].name + '</option>';
-
-			//format task start datetime
-			if (self.task_info_json_array[i].start_time != '') {
-				//change start date string to javascript date object
-				//var t = self.task_info_json_array[i].start_time.split(/[- :]/);
-				//self.task_info_json_array[i].start_time = new Date(t[0], t[1] - 1, t[2], t[3], t[4], t[5]);
-			}
-		}
-
-		document.getElementById(self.timecard_task_entry_form.task_name_select.id).innerHTML = new_inner_html;
-		
 		this.timecard_task_entry_form.Refresh(data);
 		this.new_task_entry_form.Refresh(data);
 		this.edit_task_entry_form.Refresh(data);

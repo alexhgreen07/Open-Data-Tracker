@@ -519,7 +519,7 @@ function Timecard_Task_Entry_Form(){
 		this.task_name_select = document.createElement("select");
 		this.task_name_select.setAttribute('name', "task_name_to_enter");
 		this.task_name_select.setAttribute('id', "task_name_to_enter");
-		this.task_name_select.innerHTML = '<option>-</option>';
+		this.task_name_select.innerHTML = '<option value="0">-</option>';
 		
 		this.data_form_timecard_entry.appendChild(this.task_name_select);
 
@@ -529,7 +529,7 @@ function Timecard_Task_Entry_Form(){
 		this.task_target_select = document.createElement("select");
 		this.task_target_select.setAttribute('name', "task_target_name");
 		this.task_target_select.setAttribute('id', "task_target_name");
-		this.task_target_select.innerHTML = '<option>-</option>';
+		this.task_target_select.innerHTML = '<option value="0">-</option>';
 		
 		this.data_form_timecard_entry.appendChild(this.task_target_select);
 
@@ -539,7 +539,7 @@ function Timecard_Task_Entry_Form(){
 		this.task_entries_started_select = document.createElement("select");
 		this.task_entries_started_select.setAttribute('name', "task_entries_started_names");
 		this.task_entries_started_select.setAttribute('id', "task_entries_started_names");
-		this.task_entries_started_select.innerHTML = '<option>-</option>';
+		this.task_entries_started_select.innerHTML = '<option value="0">-</option>';
 		
 		this.data_form_timecard_entry.appendChild(this.task_entries_started_select);
 

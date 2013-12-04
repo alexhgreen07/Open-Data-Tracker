@@ -58,7 +58,7 @@ function Server_API() {
         
 	    }
 	    
-	}
+	};
 	
 	this.Connect = function(url, callback){
 		

@@ -6,18 +6,14 @@ function Edit_Item_Form(){
 	this.Refresh = function(data){
 		
 		var self = this;
-		var new_inner_html = '';
 		
 		this.items_list = data.items;
 		
-		
-		new_inner_html += '<option>-</option>';
-
-		for (var i = 0; i < self.items_list.length; i++) {
-			new_inner_html += '<option>' + self.items_list[i].item_name + '</option>';
-		}
-
-		document.getElementById(self.item_edit_select.id).innerHTML = new_inner_html;
+		Refresh_Select_HTML_From_Table(
+			self.item_edit_select.id,
+			data.items,
+			"item_name",
+			"item_name");
 		
 	};
 	

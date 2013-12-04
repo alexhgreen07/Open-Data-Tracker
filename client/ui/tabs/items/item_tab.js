@@ -67,6 +67,7 @@ function Item_Tab() {
 		this.Refresh_Items(data);
 		this.Refresh_Item_Entries(data);
 		this.Refresh_Item_Targets(data);
+		this.Refresh_Item_Categories(data);
 
 	};
 	
@@ -75,22 +76,38 @@ function Item_Tab() {
 	 * */
 	this.Refresh_Items = function(data) {
 		var self = this;
-		var new_inner_html = '';
 		
 		this.items_list = data.items;
-		
-		
-		new_inner_html += '<option value="0">-</option>';
 
-		for (var i = 0; i < self.items_list.length; i++) {
-			new_inner_html += '<option value="' + self.items_list[i].item_id + '">' + self.items_list[i].item_name + '</option>';
-		}
-
-		document.getElementById(self.quick_item_entry_form.quick_item_name_select.id).innerHTML = new_inner_html;
-		document.getElementById(self.new_item_entry_form.new_item_name_select.id).innerHTML = new_inner_html;
-		document.getElementById(self.edit_item_entry_form.edit_item_name_select.id).innerHTML = new_inner_html;
-		document.getElementById(self.new_item_target_form.new_item_target_name_select.id).innerHTML = new_inner_html;
-		document.getElementById(self.edit_item_target_form.edit_item_target_name_select.id).innerHTML = new_inner_html;
+		Refresh_Select_HTML_From_Table(
+			self.quick_item_entry_form.quick_item_name_select.id,
+			data.items,
+			"item_id",
+			"item_name");
+		
+		Refresh_Select_HTML_From_Table(
+			self.new_item_entry_form.new_item_name_select.id,
+			data.items,
+			"item_id",
+			"item_name");
+			
+		Refresh_Select_HTML_From_Table(
+			self.edit_item_entry_form.edit_item_name_select.id,
+			data.items,
+			"item_id",
+			"item_name");
+		
+		Refresh_Select_HTML_From_Table(
+			self.new_item_target_form.new_item_target_name_select.id,
+			data.items,
+			"item_id",
+			"item_name");
+		
+		Refresh_Select_HTML_From_Table(
+			self.edit_item_target_form.edit_item_target_name_select.id,
+			data.items,
+			"item_id",
+			"item_name");
 		
 		this.edit_item_entry_form.Refresh(data);
 		this.edit_item_form.Refresh(data);
@@ -109,23 +126,30 @@ function Item_Tab() {
 	this.Refresh_Item_Targets = function(data){
 		
 		var self = this;
-		var new_inner_html = '';
 		
-		
-		new_inner_html += '<option value="0">-</option>';
-
-		for (var i = 0; i < data.item_targets.length; i++) {
-			new_inner_html += '<option value="'
-				 + data.item_targets[i].item_target_id + 
-				 '"> (' + 
-				 data.item_targets[i].item_target_id + ') ' + 
-				 data.item_targets[i].name + '</option>';
-		}
-		
-		document.getElementById(this.edit_item_target_form.edit_item_target_id_select.id).innerHTML = new_inner_html;
+		Refresh_Select_HTML_From_Table(
+			this.edit_item_target_form.edit_item_target_id_select.id,
+			data.item_targets,
+			"item_target_id",
+			"name");
 		
 		this.edit_item_target_form.Refresh(data);
 		
+	};
+	
+	this.Refresh_Item_Categories = function(data){
+		
+		Refresh_Select_HTML_From_Table(
+			this.new_item_form.item_category_select.id,
+			data.categories,
+			"category_id",
+			"category_path");
+		
+		Refresh_Select_HTML_From_Table(
+			this.edit_item_form.item_edit_category_select.id,
+			data.categories,
+			"category_id",
+			"category_path");
 	};
 
 	/** @method Render

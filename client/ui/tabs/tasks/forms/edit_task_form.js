@@ -10,25 +10,17 @@ function Edit_Task_Form(){
 		//ensure the task info array is saved
 		self.task_info_json_array = data.tasks;
 
-		//create a list of options for the select
-		var new_inner_html = '';
-
-		new_inner_html += '<option>-</option>';
-
-		//iterate through all tasks
-		for (var i = 0; i < self.task_info_json_array.length; i++) {
-			//add task option to select
-			new_inner_html += '<option>' + self.task_info_json_array[i].name + '</option>';
-
-			//format task start datetime
-			if (self.task_info_json_array[i].start_time != '') {
-				//change start date string to javascript date object
-				//var t = self.task_info_json_array[i].start_time.split(/[- :]/);
-				//self.task_info_json_array[i].start_time = new Date(t[0], t[1] - 1, t[2], t[3], t[4], t[5]);
-			}
-		}
-
-		document.getElementById(self.task_entry_task_edit_name_select.id).innerHTML = new_inner_html;
+		Refresh_Select_HTML_From_Table(
+			self.task_entry_task_edit_name_select.id,
+			data.tasks,
+			"name",
+			"name");
+			
+		Refresh_Select_HTML_From_Table(
+			this.task_edit_category_select.id,
+			data.categories,
+			"category_id",
+			"category_path");
 		
 	};
 	
@@ -155,7 +147,7 @@ function Edit_Task_Form(){
 			document.getElementById(this.task_edit_description.id).value = selected_task.description;
 			document.getElementById(this.task_edit_estimate.id).value = selected_task.estimated_time;
 			document.getElementById(this.task_edit_note.id).value = selected_task.note;
-			document.getElementById(self.task_edit_category_select.id).value = selected_task.category_id;
+			document.getElementById(this.task_edit_category_select.id).value = selected_task.category_id;
 			
 		}
 		else
@@ -164,7 +156,7 @@ function Edit_Task_Form(){
 			document.getElementById(this.task_edit_description.id).value = '';
 			document.getElementById(this.task_edit_estimate.id).value = '0';
 			document.getElementById(this.task_edit_note.id).value = '';
-			document.getElementById(self.task_edit_category_select.id).selectedIndex = 0;
+			document.getElementById(this.task_edit_category_select.id).selectedIndex = 0;
 		}
 			
 	};

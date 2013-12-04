@@ -7,23 +7,15 @@ function Edit_Item_Entry_Form(){
 	this.Refresh = function(data){
 		
 		var self = this;
-		var new_inner_html = '';
 		
 		this.item_log_data = data.item_entries;
 		this.items_list = data.items;
 		
-		new_inner_html += '<option>-</option>';
-
-		for (var i = 0; i < self.item_log_data.length; i++) {
-			
-			new_inner_html += '<option value="' + self.item_log_data[i].item_log_id + '">';
-			
-			new_inner_html += '(' + self.item_log_data[i].item_log_id + ') ';
-			new_inner_html += self.item_log_data[i].time + '</option>';
-			
-		}
-
-		document.getElementById(self.edit_item_entry_select.id).innerHTML = new_inner_html;
+		Refresh_Select_HTML_From_Table(
+			self.edit_item_entry_select.id,
+			data.item_entries,
+			"item_log_id",
+			"time");
 		
 	};
 	
@@ -48,7 +40,7 @@ function Edit_Item_Entry_Form(){
 			params.push(item_entry_id);
 			params.push(document.getElementById(self.item_edit_time.id).value);
 			params.push(document.getElementById(self.item_edit_value.id).value);
-			params.push(self.items_list[item_select_index - 1].item_id);
+			params.push(document.getElementById(self.edit_item_name_select.id).value);
 			params.push(document.getElementById(self.item_edit_note.id).value);
 			
 			//execute the RPC callback for retrieving the item log
@@ -151,14 +143,14 @@ function Edit_Item_Entry_Form(){
 			
 			document.getElementById(self.item_edit_time.id).value = selected_item_entry.time;
 			document.getElementById(self.item_edit_value.id).value = selected_item_entry.value;
-			document.getElementById(self.edit_item_name_select.id).value = selected_item_entry.name;
+			document.getElementById(self.edit_item_name_select.id).value = selected_item_entry.item_id;
 			document.getElementById(self.item_edit_note.id).value = selected_item_entry.note;
 		}
 		else
 		{
 			document.getElementById(self.item_edit_time.id).value = '';
 			document.getElementById(self.item_edit_value.id).value = '0';
-			document.getElementById(self.edit_item_name_select.id).value = '-';
+			document.getElementById(self.edit_item_name_select.id).value = 0;
 			document.getElementById(self.item_edit_note.id).value = '';
 		}
 		

@@ -53,7 +53,7 @@ function Report_Tab() {
 		
 	};
 	
-	this.Refresh_Chart_Data = function(){
+	this.Refresh_Chart_Data = function(force_refresh){
 		
 		
 		x_column_select = document.getElementById(self.summaries_graph_select_x_column.id);
@@ -62,82 +62,119 @@ function Report_Tab() {
 		if(x_column_select.value != '-' && 
 			y_column_select.value != '-'){
 			
-			//set the height and width for proper rendering
-			document.getElementById(self.summaries_graph_canvas.id).width = window.innerWidth * 0.5;
-			document.getElementById(self.summaries_graph_canvas.id).height = window.innerHeight * 0.4;
-			
 			results_columns = pivot.results().columns();
 			results_rows = pivot.results().all();
 			
-			x_data_to_graph = [];
-			y_data_to_graph = [];
+			last_x_data_to_graph = self.x_data_to_graph;
+			last_y_data_to_graph = self.y_data_to_graph;
+			
+			if(last_x_data_to_graph == null)
+			{
+				last_x_data_to_graph = [];
+			}
+			if(last_y_data_to_graph == null)
+			{
+				last_y_data_to_graph = [];
+			}
+			
+			self.x_data_to_graph = [];
+			self.y_data_to_graph = [];
 			
 			$.each(results_rows,function(index, row){
 				
-				x_data_to_graph.push(row[x_column_select.value]);
-				y_data_to_graph.push(row[y_column_select.value]);
+				self.x_data_to_graph.push(row[x_column_select.value]);
+				self.y_data_to_graph.push(row[y_column_select.value]);
 				
 			});
 			
-			//format xy data
-			var data_xy = {
-				labels : x_data_to_graph,
-				datasets : [
+			var data_has_changed = false;
+			
+			if(!force_refresh)
+			{
+				//check if the data has changed
+				for(i = 0; i < self.x_data_to_graph.length; i++)
+				{
+					if(self.x_data_to_graph[i] != last_x_data_to_graph[i] || 
+						self.y_data_to_graph[i] != last_y_data_to_graph[i])
 					{
-						fillColor : "rgba(220,220,220,0.5)",
-						strokeColor : "rgba(220,220,220,1)",
-						data : y_data_to_graph
+						data_has_changed = true;
+						break;
 					}
-				]
-			};
-			
-			var data_radial = [];
-			
-			for(i = 0; i < y_data_to_graph.length; i++){
-				
-				data_radial.push({
-						value: y_data_to_graph[i],
-						color:"#" + (Math.floor((Math.random()*0xFFFFFF))).toString(16)
-					});
-				
-			}
-
-			//graph the data
-			if(document.getElementById(self.summaries_graph_type_select.id).value == "Line")
-			{
-				
-				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Line(data_xy); 
-			}
-			else if(document.getElementById(self.summaries_graph_type_select.id).value == "Pie")
-			{	
-					
-				
-				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Pie(data_radial); 
-			}
-			else if(document.getElementById(self.summaries_graph_type_select.id).value == "Radar")
-			{
-					
-				
-				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Radar(data_xy); 
-			}
-			else if(document.getElementById(self.summaries_graph_type_select.id).value == "Polar Area")
-			{
-					
-				
-				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).PolarArea(data_radial); 
-			}
-			else if(document.getElementById(self.summaries_graph_type_select.id).value == "Doughnut")
-			{
-				
-				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Doughnut(data_radial); 
+				}
 			}
 			else
 			{
-					
-				
-				this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Bar(data_xy); 
-			
+				data_has_changed = true;
 			}
+			
+			if(data_has_changed)
+			{
+				//set the height and width for proper rendering
+				document.getElementById(self.summaries_graph_canvas.id).width = window.innerWidth * 0.5;
+				document.getElementById(self.summaries_graph_canvas.id).height = window.innerHeight * 0.4;
+				
+				
+				//format xy data
+				var data_xy = {
+					labels : self.x_data_to_graph,
+					datasets : [
+						{
+							fillColor : "rgba(220,220,220,0.5)",
+							strokeColor : "rgba(220,220,220,1)",
+							data : self.y_data_to_graph
+						}
+					]
+				};
+				
+				var data_radial = [];
+				
+				for(i = 0; i < self.y_data_to_graph.length; i++){
+					
+					data_radial.push({
+							value: self.y_data_to_graph[i],
+							color:"#" + (Math.floor((Math.random()*0xFFFFFF))).toString(16)
+						});
+					
+				}
+	
+				//graph the data
+				if(document.getElementById(self.summaries_graph_type_select.id).value == "Line")
+				{
+					
+					this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Line(data_xy); 
+				}
+				else if(document.getElementById(self.summaries_graph_type_select.id).value == "Pie")
+				{	
+						
+					
+					this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Pie(data_radial); 
+				}
+				else if(document.getElementById(self.summaries_graph_type_select.id).value == "Radar")
+				{
+						
+					
+					this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Radar(data_xy); 
+				}
+				else if(document.getElementById(self.summaries_graph_type_select.id).value == "Polar Area")
+				{
+						
+					
+					this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).PolarArea(data_radial); 
+				}
+				else if(document.getElementById(self.summaries_graph_type_select.id).value == "Doughnut")
+				{
+					
+					this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Doughnut(data_radial); 
+				}
+				else
+				{
+						
+					
+					this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Bar(data_xy); 
+				
+				}
+			}
+			
 		
 		}
 		else
@@ -151,19 +188,43 @@ function Report_Tab() {
 	
 	this.Results_Update_Callback = function(){
 		
+		var previous_x_value = document.getElementById(self.summaries_graph_select_x_column.id).value;
+		var is_previous_x_value_present = false;
+		var previous_y_value = document.getElementById(self.summaries_graph_select_y_column.id).value;
+		var is_previous_y_value_present = false;
+		
 		chart_line_options = '';
 		
 		chart_line_options += '<option>-</options>';
 		
 		$.each(pivot.results().columns(), function(index,column) {
+			
 	      chart_line_options += '<option>' + column.fieldName + "</options>";
+	      
+	      if(previous_x_value == column.fieldName)
+	      {
+	      	is_previous_x_value_present = true;
+	      }
+	      if(previous_y_value == column.fieldName)
+	      {
+	      	is_previous_y_value_present = true;
+	      }
+	      
 	    });
 		
 		document.getElementById(self.summaries_graph_select_x_column.id).innerHTML = chart_line_options;
 		document.getElementById(self.summaries_graph_select_y_column.id).innerHTML = chart_line_options;
 		
+		if(is_previous_x_value_present)
+		{
+			document.getElementById(self.summaries_graph_select_x_column.id).value = previous_x_value;
+		}
+		if(is_previous_y_value_present)
+		{
+			document.getElementById(self.summaries_graph_select_y_column.id).value = previous_y_value;
+		}
 		
-		self.Refresh_Chart_Data();
+		self.Refresh_Chart_Data(false);
 		
 	};
 	
@@ -441,19 +502,19 @@ function Report_Tab() {
 		
 		$('#' + self.summaries_graph_type_select.id).change(function() {
 			
-			self.Refresh_Chart_Data();
+			self.Refresh_Chart_Data(true);
 
 		});
 
 		$('#' + self.summaries_graph_select_x_column.id).change(function() {
 			
-			self.Refresh_Chart_Data();
+			self.Refresh_Chart_Data(true);
 
 		});
 		
 		$('#' + self.summaries_graph_select_y_column.id).change(function() {
 			
-			self.Refresh_Chart_Data();
+			self.Refresh_Chart_Data(true);
 
 		});
 

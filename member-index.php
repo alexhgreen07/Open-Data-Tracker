@@ -5,14 +5,11 @@ require_once ('server/database.php');
 Connect_To_DB();
 
 //this is a protected area. Ensure the session is authorized.
-if (!Is_Session_Authorized()) {
+if (!Is_Authorized()) {
 	
-	if(!Is_Cookie_Authorized())
-	{
-		header('location: index.php');
+	header('location: index.php');
 
-		exit();
-	}
+	exit();
 	
 }
 

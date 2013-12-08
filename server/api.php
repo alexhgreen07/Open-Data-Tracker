@@ -17,15 +17,14 @@ require_once ('../externals/json-rpc2php/jsonRPC2Server.php');
 $link = Connect_To_DB();
 
 //this is a protected area. Ensure the session is authorized.
-if (!Is_Session_Authorized()) {
+if (!Is_Authorized()) {
+	
+	header('location: index.php');
 
-	if(!Is_Cookie_Authorized())
-	{
-		header('location: index.php');
-
-		exit();
-	}
+	exit();
+	
 }
+
 
 //initialize the API classes and the RPC interface
 $generaldatainterface = new Data_Interface($link);

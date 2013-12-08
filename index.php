@@ -7,6 +7,15 @@
 	//Connect to mysql server
 	Connect_To_DB();
 	
+	if (Is_Authorized()) {
+		
+		header('location: member-index.php');
+	
+		exit();
+		
+	}
+		
+	
 	$html_output = '
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;"> 
@@ -23,14 +32,6 @@
 			<a href="new_member.php">Sign Up</a>';
 
 	if (!isset($_POST["password"]) && !isset($_POST["login"])) {
-		
-		//check for the 'remember me' cookie.
-		if(Is_Cookie_Authorized())
-		{
-			//go to member index
-			header("location: member-index.php");
-			exit();
-		}
 		
 		$html_output .= '
 	
@@ -54,9 +55,11 @@
 		//Sanitize the POST values
 		$login = mysql_real_escape_string($_POST['login']);
 		$password = mysql_real_escape_string($_POST['password']);
-
+		
+		$is_authorized = Authorize_User_Password($login, $password);
+		
 		//ADD PASSWORD AUTHORIZATION
-		if(Authorize_User_Password($login, $password))
+		if($is_authorized)
 		{
 			header("location: member-index.php");
 			exit();

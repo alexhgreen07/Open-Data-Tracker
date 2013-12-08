@@ -61,6 +61,23 @@ function Is_Session_Authorized() {
 	return $return_value;
 }
 
+function Is_Authorized() {
+	
+	$return_value = false;
+	
+	//this is a protected area. Ensure the session is authorized.
+	if (Is_Session_Authorized()) {
+		
+		$return_value = true;
+	}
+	else if(Is_Cookie_Authorized())
+	{
+		$return_value = true;
+	}
+	
+	return $return_value;
+}
+
 function Authorize_User_Password($login, $password)
 {
 	

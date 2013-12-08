@@ -316,65 +316,58 @@ class Task_Data_Interface {
 	}
 	
 	public function Get_Tasks() {
-		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '');
+		
+		$return_json = array('success' => 'false', 'data' => '');
 
-		if (Is_Session_Authorized()) {
+		$sql_query = "SELECT DISTINCT 
+			`task_id`,
+			`name`,
+			`description`,
+			`date_created`,
+			`note`,
+			`estimated_time`,
+			`category_id`,
+			`status` FROM `life_management`.`tasks` ORDER BY `name` ASC";
+		$result = mysql_query($sql_query, $this -> database_link);
 
-			$return_json['authenticated'] = 'true';
+		if ($result) {
+			$return_json['success'] = 'true';
 
-			$sql_query = "SELECT DISTINCT 
-				`task_id`,
-				`name`,
-				`description`,
-				`date_created`,
-				`note`,
-				`estimated_time`,
-				`category_id`,
-				`status` FROM `life_management`.`tasks` ORDER BY `name` ASC";
-			$result = mysql_query($sql_query, $this -> database_link);
+			$num = mysql_numrows($result);
 
-			if ($result) {
-				$return_json['success'] = 'true';
-
-				$num = mysql_numrows($result);
-
-				$return_json['data'] = array();
+			$return_json['data'] = array();
+			
+			$i = 0;
+			while ($i < $num) {
 				
-				$i = 0;
-				while ($i < $num) {
-					
-					$task_id= mysql_result($result,$i,"task_id");
-					$task_name = mysql_result($result, $i, "name");
-					$task_description = mysql_result($result, $i, "description");
-					$task_estimated_time = mysql_result($result, $i, "estimated_time");
-					$date_created = mysql_result($result,$i,'date_created');
-					$task_note = mysql_result($result,$i,'note');
-					$category_id = mysql_result($result,$i,'category_id');
-					$status = mysql_result($result,$i,'status');
-					
-					$return_json['data'][$i] = array(
-						'task_id' => $task_id,
-						'name' => $task_name,
-						'description' => $task_description,
-						'estimated_time' => $task_estimated_time, 
-						'date_created' => $date_created,
-						'note' => $task_note,
-						'category_id' => $category_id,
-						'status' => $status);
-					
-					
-					$i++;
-				}
-
+				$task_id= mysql_result($result,$i,"task_id");
+				$task_name = mysql_result($result, $i, "name");
+				$task_description = mysql_result($result, $i, "description");
+				$task_estimated_time = mysql_result($result, $i, "estimated_time");
+				$date_created = mysql_result($result,$i,'date_created');
+				$task_note = mysql_result($result,$i,'note');
+				$category_id = mysql_result($result,$i,'category_id');
+				$status = mysql_result($result,$i,'status');
 				
-			} else {
-				$return_json['success'] = 'false';
+				$return_json['data'][$i] = array(
+					'task_id' => $task_id,
+					'name' => $task_name,
+					'description' => $task_description,
+					'estimated_time' => $task_estimated_time, 
+					'date_created' => $date_created,
+					'note' => $task_note,
+					'category_id' => $category_id,
+					'status' => $status);
+				
+				
+				$i++;
 			}
 
+			
 		} else {
-			$return_json['authenticated'] = 'false';
+			$return_json['success'] = 'false';
 		}
-
+		
 		return $return_json;
 	}
 

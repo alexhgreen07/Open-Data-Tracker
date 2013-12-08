@@ -169,13 +169,13 @@ function main() {
 			
 			rpc = app.api.rpc;
 			
-			//setup timer based refresh for 10s
+			//setup timer based refresh for 60s
 			var myVar=setInterval(function(){
 				
 					//refresh the data form the server, then refresh UI data
 					app.api.Refresh_Data(app.Refresh_Data);
 					
-				},10000);
+				},60000);
 			
 			
 		});

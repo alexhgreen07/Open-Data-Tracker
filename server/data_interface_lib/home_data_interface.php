@@ -70,53 +70,48 @@ class Home_Data_Interface {
      * */
 	public function Get_Categories()
 	{
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
 		
-		if (Is_Session_Authorized()) {
+		
+		$return_json['authenticated'] = 'true';
 
-			$return_json['authenticated'] = 'true';
+		$sql_query = "SELECT 
+			`category_id`, 
+			`name`, 
+			`description`, 
+			`parent_category_id`,
+			`category_path` 
+			FROM `categories` ORDER BY `category_path`";
+		$result = mysql_query($sql_query, $this -> database_link);
 
-			$sql_query = "SELECT 
-				`category_id`, 
-				`name`, 
-				`description`, 
-				`parent_category_id`,
-				`category_path` 
-				FROM `categories` ORDER BY `category_path`";
-			$result = mysql_query($sql_query, $this -> database_link);
+		if ($result) {
+			$return_json['success'] = 'true';
+			
+			$return_json['data'] = array();
+			
+			$num = mysql_numrows($result);
 
-			if ($result) {
-				$return_json['success'] = 'true';
+			$i = 0;
+			while ($i < $num) {
+
+				$category_id = mysql_result($result, $i, "category_id");
+				$name = mysql_result($result, $i, "name");
+				$description = mysql_result($result, $i, 'description');
+				$parent_category_id = mysql_result($result, $i, 'parent_category_id');
+				$category_path = mysql_result($result, $i, 'category_path');
 				
-				$return_json['data'] = array();
-				
-				$num = mysql_numrows($result);
+				$return_json['data'][$i] = 
+					array(
+					'category_id' => $category_id, 
+					'name' => $name, 
+					'description' => $description, 
+					'parent_category_id' => $parent_category_id,
+					'category_path' => $category_path);
 
-				$i = 0;
-				while ($i < $num) {
-
-					$category_id = mysql_result($result, $i, "category_id");
-					$name = mysql_result($result, $i, "name");
-					$description = mysql_result($result, $i, 'description');
-					$parent_category_id = mysql_result($result, $i, 'parent_category_id');
-					$category_path = mysql_result($result, $i, 'category_path');
-					
-					$return_json['data'][$i] = 
-						array(
-						'category_id' => $category_id, 
-						'name' => $name, 
-						'description' => $description, 
-						'parent_category_id' => $parent_category_id,
-						'category_path' => $category_path);
-
-					$i++;
-				}
-			} else {
-				$return_json['success'] = 'false';
+				$i++;
 			}
-
 		} else {
-			$return_json['authenticated'] = 'false';
+			$return_json['success'] = 'false';
 		}
 		
 		return $return_json;
@@ -132,52 +127,44 @@ class Home_Data_Interface {
      * */
 	public function Insert_Category($name, $description, $parent_category_id){
 		
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
 		
+		$return_json['authenticated'] = 'true';
 		
-		if (Is_Session_Authorized()) {
-
-			$return_json['authenticated'] = 'true';
+		$sql_query = "SELECT `category_path` FROM `categories` WHERE `category_id` = '".$parent_category_id."'";
+		
+		$result = mysql_query($sql_query, $this -> database_link);
+		
+		if ($result) {
 			
-			$sql_query = "SELECT `category_path` FROM `categories` WHERE `category_id` = '".$parent_category_id."'";
+			$num = mysql_numrows($result);
+
+			$i = 0;
+			while ($i < $num) {
+
+				$category_path = mysql_result($result, $i, "category_path");
+				$i++;
+			}
+			
+			$category_path = $category_path . '/' . $name;
+			
+			$sql_query = "INSERT INTO `categories`
+				(`member_id`, 
+				`name`, 
+				`description`, 
+				`parent_category_id`,
+				`category_path`) 
+				VALUES 
+				('".$_SESSION['SESS_MEMBER_ID']."',
+				'".$name."',
+				'".$description."',
+				".$parent_category_id.",
+				'".$category_path."')";
 			
 			$result = mysql_query($sql_query, $this -> database_link);
-			
+
 			if ($result) {
-				
-				$num = mysql_numrows($result);
-
-				$i = 0;
-				while ($i < $num) {
-
-					$category_path = mysql_result($result, $i, "category_path");
-					$i++;
-				}
-				
-				$category_path = $category_path . '/' . $name;
-				
-				$sql_query = "INSERT INTO `categories`
-					(`member_id`, 
-					`name`, 
-					`description`, 
-					`parent_category_id`,
-					`category_path`) 
-					VALUES 
-					('".$_SESSION['SESS_MEMBER_ID']."',
-					'".$name."',
-					'".$description."',
-					".$parent_category_id.",
-					'".$category_path."')";
-				
-				$result = mysql_query($sql_query, $this -> database_link);
-	
-				if ($result) {
-					$return_json['success'] = 'true';
-	
-				} else {
-					$return_json['success'] = 'false';
-				}
-				
+				$return_json['success'] = 'true';
 
 			} else {
 				$return_json['success'] = 'false';
@@ -185,7 +172,7 @@ class Home_Data_Interface {
 			
 
 		} else {
-			$return_json['authenticated'] = 'false';
+			$return_json['success'] = 'false';
 		}
 		
 		return $return_json;
@@ -201,32 +188,26 @@ class Home_Data_Interface {
      * */
 	public function Update_Category($category_id, $name, $description, $parent_category_id){
 		
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
 		
 		
-		if (Is_Session_Authorized()) {
+		$return_json['authenticated'] = 'true';
 
-			$return_json['authenticated'] = 'true';
+		$sql_query = "UPDATE `categories` 
+			SET `name`='".$name."',
+			`description`='".$description."',
+			`parent_category_id`=".$parent_category_id." 
+			WHERE `category_id` = ".$category_id;
+			
+		$result = mysql_query($sql_query, $this -> database_link);
 
-			$sql_query = "UPDATE `categories` 
-				SET `name`='".$name."',
-				`description`='".$description."',
-				`parent_category_id`=".$parent_category_id." 
-				WHERE `category_id` = ".$category_id;
-				
-			$result = mysql_query($sql_query, $this -> database_link);
-
-			if ($result) {
-				$return_json['success'] = 'true';
-
-			} else {
-				$return_json['success'] = 'false';
-			}
+		if ($result) {
+			$return_json['success'] = 'true';
 
 		} else {
-			$return_json['authenticated'] = 'false';
+			$return_json['success'] = 'false';
 		}
-		
+	
 		return $return_json;
 	}
 	
@@ -240,28 +221,19 @@ class Home_Data_Interface {
      * */
 	public function Delete_Category($category_id){
 		
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
-		
-		
-		if (Is_Session_Authorized()) {
+		$return_json = array('success' => 'false', );
 
-			$return_json['authenticated'] = 'true';
+		$sql_query = "DELETE FROM `categories` WHERE `category_id` = ".$category_id;
+			
+		$result = mysql_query($sql_query, $this -> database_link);
 
-			$sql_query = "DELETE FROM `categories` WHERE `category_id` = ".$category_id;
-				
-			$result = mysql_query($sql_query, $this -> database_link);
-
-			if ($result) {
-				$return_json['success'] = 'true';
-
-			} else {
-				$return_json['success'] = 'false';
-			}
+		if ($result) {
+			$return_json['success'] = 'true';
 
 		} else {
-			$return_json['authenticated'] = 'false';
+			$return_json['success'] = 'false';
 		}
-		
+	
 		return $return_json;
 	}
 	

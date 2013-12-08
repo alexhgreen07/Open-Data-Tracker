@@ -39,42 +39,53 @@ class Data_Interface {
 		
 		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '', );
 		
+		if(Is_Session_Authorized())
+		{
+			$return_json['authenticated'] = 'true';
+			
+			$return_json['data'] = array();
 		
-		$return_json['data'] = array();
+			$categories = $this->homedatainteface->Get_Categories();
+			$items = $this->itemdatainterface->Get_Items();
+			$item_entries = $this->itemdatainterface->Get_Item_Log();
+			$item_targets = $this->itemdatainterface->Get_Item_Targets();
+			$tasks = $this->taskdatainterface->Get_Tasks();
+			$task_entries = $this->taskdatainterface->Get_Task_Log();
+			$task_targets = $this->taskdatainterface->Get_Task_Targets();
+			
+			$categories_schema = $this->homedatainteface->Get_Categories_Schema();
+			$items_schema = $this->itemdatainterface->Get_Items_Schema();
+			$item_entries_schema = $this->itemdatainterface->Get_Item_Log_Schema();
+			$item_targets_schema = $this->itemdatainterface->Get_Item_Targets_Schema();
+			$tasks_schema = $this->taskdatainterface->Get_Tasks_Schema();
+			$task_entries_schema = $this->taskdatainterface->Get_Task_Log_Schema();
+			$task_targets_schema = $this->taskdatainterface->Get_Task_Targets_Schema();
+			
+			//load all data in the return json arrays
+			$return_json['data']['categories'] = $categories['data'];
+			$return_json['data']['items'] = $items['data'];
+			$return_json['data']['item_entries'] = $item_entries['data'];
+			$return_json['data']['item_targets'] = $item_targets['data'];
+			$return_json['data']['tasks'] = $tasks['data'];
+			$return_json['data']['task_entries'] = $task_entries['data'];
+			$return_json['data']['task_targets'] = $task_targets['data'];
+			
+			//load all data schemas in the return json arrays
+			$return_json['schema']['categories'] = $categories_schema['schema'];
+			$return_json['schema']['items'] = $items_schema['schema'];
+			$return_json['schema']['item_entries'] = $item_entries_schema['schema'];
+			$return_json['schema']['item_targets'] = $item_targets_schema['schema'];
+			$return_json['schema']['tasks'] = $tasks_schema['schema'];
+			$return_json['schema']['task_entries'] = $task_entries_schema['schema'];
+			$return_json['schema']['task_targets'] = $task_targets_schema['schema'];
+		}
+		else {
+			
+			$return_json['authenticated'] = 'false';
+			
+		}
 		
-		$categories = $this->homedatainteface->Get_Categories();
-		$items = $this->itemdatainterface->Get_Items();
-		$item_entries = $this->itemdatainterface->Get_Item_Log();
-		$item_targets = $this->itemdatainterface->Get_Item_Targets();
-		$tasks = $this->taskdatainterface->Get_Tasks();
-		$task_entries = $this->taskdatainterface->Get_Task_Log();
-		$task_targets = $this->taskdatainterface->Get_Task_Targets();
 		
-		$categories_schema = $this->homedatainteface->Get_Categories_Schema();
-		$items_schema = $this->itemdatainterface->Get_Items_Schema();
-		$item_entries_schema = $this->itemdatainterface->Get_Item_Log_Schema();
-		$item_targets_schema = $this->itemdatainterface->Get_Item_Targets_Schema();
-		$tasks_schema = $this->taskdatainterface->Get_Tasks_Schema();
-		$task_entries_schema = $this->taskdatainterface->Get_Task_Log_Schema();
-		$task_targets_schema = $this->taskdatainterface->Get_Task_Targets_Schema();
-		
-		//load all data in the return json arrays
-		$return_json['data']['categories'] = $categories['data'];
-		$return_json['data']['items'] = $items['data'];
-		$return_json['data']['item_entries'] = $item_entries['data'];
-		$return_json['data']['item_targets'] = $item_targets['data'];
-		$return_json['data']['tasks'] = $tasks['data'];
-		$return_json['data']['task_entries'] = $task_entries['data'];
-		$return_json['data']['task_targets'] = $task_targets['data'];
-		
-		//load all data schemas in the return json arrays
-		$return_json['schema']['categories'] = $categories_schema['schema'];
-		$return_json['schema']['items'] = $items_schema['schema'];
-		$return_json['schema']['item_entries'] = $item_entries_schema['schema'];
-		$return_json['schema']['item_targets'] = $item_targets_schema['schema'];
-		$return_json['schema']['tasks'] = $tasks_schema['schema'];
-		$return_json['schema']['task_entries'] = $task_entries_schema['schema'];
-		$return_json['schema']['task_targets'] = $task_targets_schema['schema'];
 		
 		return $return_json;
 		

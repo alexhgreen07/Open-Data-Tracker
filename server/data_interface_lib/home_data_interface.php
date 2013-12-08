@@ -31,7 +31,7 @@ class Home_Data_Interface {
      * \return Returns a JSON array with HTML tables for the data summary.
      * */
 	public function Get_Home_Data_Summary() {
-		$return_json = array('authenticated' => 'false', 'success' => 'false', 'html' => '', );
+		$return_json = array('success' => 'false', 'html' => '', );
 		
 		$scheduled_task_summary = $this -> Get_Scheduled_Task_Summary();
 		$recurring_task_summary = $this -> Get_Floating_Task_Summary();
@@ -71,9 +71,6 @@ class Home_Data_Interface {
 	public function Get_Categories()
 	{
 		$return_json = array('success' => 'false', );
-		
-		
-		$return_json['authenticated'] = 'true';
 
 		$sql_query = "SELECT 
 			`category_id`, 
@@ -128,8 +125,6 @@ class Home_Data_Interface {
 	public function Insert_Category($name, $description, $parent_category_id){
 		
 		$return_json = array('success' => 'false', );
-		
-		$return_json['authenticated'] = 'true';
 		
 		$sql_query = "SELECT `category_path` FROM `categories` WHERE `category_id` = '".$parent_category_id."'";
 		
@@ -189,9 +184,6 @@ class Home_Data_Interface {
 	public function Update_Category($category_id, $name, $description, $parent_category_id){
 		
 		$return_json = array('success' => 'false', );
-		
-		
-		$return_json['authenticated'] = 'true';
 
 		$sql_query = "UPDATE `categories` 
 			SET `name`='".$name."',

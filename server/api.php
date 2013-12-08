@@ -13,7 +13,12 @@ require_once ('data_interface_lib/task_data_interface.php');
 require_once ('../externals/json-rpc2php/jsonRPC2Server.php');
 
 //this is a protected area. Ensure the session is authorized.
-Authorize_Session();
+if (!Is_Session_Authorized()) {
+
+	header('location: index.php');
+
+	exit();
+}
 
 //Connect to mysql server
 $link = mysql_connect(DB_HOST, DB_USER, DB_PASSWORD);

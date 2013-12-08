@@ -2,7 +2,13 @@
 require_once ('server/auth.php');
 
 //this is a protected area. Ensure the session is authorized.
-Authorize_Session();
+if (!Is_Session_Authorized()) {
+
+	header('location: index.php');
+
+	exit();
+}
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

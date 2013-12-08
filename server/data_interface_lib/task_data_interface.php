@@ -22,7 +22,7 @@ class Task_Data_Interface {
 
 	public function Insert_Task_Entry($start_time, $task_id, $hours, $completed, $status, $note, $task_target_id) {
 
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
 
 		$start_time = mysql_real_escape_string($start_time);
 		$task_id = mysql_real_escape_string($task_id);
@@ -76,7 +76,7 @@ class Task_Data_Interface {
 
 	public function Update_Task_Entry($task_log_id, $task_id, $start_time, $hours, $completed, $status, $note, $task_target_id) {
 
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
 
 		$task_log_id = mysql_real_escape_string($task_log_id);
 		$start_time = mysql_real_escape_string($start_time);
@@ -114,7 +114,7 @@ class Task_Data_Interface {
 
 	public function Delete_Task_Entry($task_log_id) {
 	
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
 
 		$task_log_id = mysql_real_escape_string($task_log_id);
 
@@ -135,7 +135,7 @@ class Task_Data_Interface {
 	}
 
 	public function Task_Start_Stop($task_name_to_enter, $task_start_stop, $note) {
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
 
 		$task_name_to_enter = mysql_real_escape_string($task_name_to_enter);
 		$task_start_stop = mysql_real_escape_string($task_start_stop);
@@ -172,7 +172,7 @@ class Task_Data_Interface {
 	}
 
 	public function Task_Mark_Complete($task_name_to_enter) {
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
 
 		try {
 			$task_name_to_enter = mysql_real_escape_string($task_name_to_enter);
@@ -211,7 +211,7 @@ class Task_Data_Interface {
 	}
 
 	public function Insert_Task($name, $description = "", $estimated_time = 0, $note = "", $category_id = 0) {
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
 
 		$task_name = mysql_real_escape_string($name);
 		$task_description = mysql_real_escape_string($description);
@@ -250,7 +250,7 @@ class Task_Data_Interface {
 
 	public function Delete_Task($task_id) {
 			
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
 
 		$sql = "DELETE FROM `tasks` WHERE `task_id` = " . $task_id;
 
@@ -268,7 +268,7 @@ class Task_Data_Interface {
 	}
 
 	public function Update_Task($task_id, $name, $category_id, $description, $estimated_time, $note, $status) {
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
 
 		$task_name = mysql_real_escape_string($name);
 		$task_description = mysql_real_escape_string($description);
@@ -391,7 +391,7 @@ class Task_Data_Interface {
 
 	public function Get_Task_Log() {
 
-		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '');
+		$return_json = array('success' => 'false', 'data' => '');
 
 		$query = "SELECT 
 			`tasks`.`name` AS `name`, 
@@ -461,7 +461,7 @@ class Task_Data_Interface {
 	
 	public function Get_Task_Targets()
 	{
-		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '');
+		$return_json = array('success' => 'false', 'data' => '');
 
 		$query = "SELECT 
 			`task_targets`.`task_id` AS `task_id`,
@@ -514,7 +514,7 @@ class Task_Data_Interface {
 
 	public function Insert_Task_Target($task_id, $scheduled, $scheduled_time, $recurring, $recurrance_type, $recurrance_period)
 	{
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
 
 		$scheduled = mysql_real_escape_string($scheduled);
 		$scheduled_time = mysql_real_escape_string($scheduled_time);
@@ -552,7 +552,7 @@ class Task_Data_Interface {
 	
 	public function Update_Task_Target($task_target_id, $task_id, $scheduled, $scheduled_time, $recurring, $recurrance_type, $recurrance_period)
 	{
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
 
 		$scheduled = mysql_real_escape_string($scheduled);
 		$scheduled_time = mysql_real_escape_string($scheduled_time);
@@ -584,7 +584,7 @@ class Task_Data_Interface {
 
 	public function Delete_Task_Target($task_target_id)
 	{
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
 
 		$sql = "DELETE FROM `task_targets` WHERE `task_schedule_id` = " . $task_target_id;
 

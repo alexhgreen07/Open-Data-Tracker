@@ -64,6 +64,16 @@
 			header("location: member-index.php");
 			exit();
 		}
+		else {
+			$html_output .= '
+						<p align="center">&nbsp;</p>
+						<h4 align="center" class="err">Login Failed!<br />
+						  Please check your username and password
+						<br />
+						<a href="index.php">Login Page</a>
+						</h4>
+						';
+		}
 
 		
 	}

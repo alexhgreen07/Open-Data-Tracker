@@ -47,20 +47,14 @@ function New_Item_Target_Form(){
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Insert_Item_Target(params, function(jsonRpcObj) {
 
-				if (jsonRpcObj.result.authenticated == 'true') {
+				if (jsonRpcObj.result.success == 'true') {
 					
-					if (jsonRpcObj.result.success == 'true') {
-						
-						alert('New item target added!');
-						
-					} else {
-						
-						alert('Item target failed to add.');
-						
-					}
-
+					alert('New item target added!');
+					
 				} else {
-					alert('You are not logged in. Please refresh the page and login again.');
+					
+					alert('Item target failed to add.');
+					
 				}
 
 				//refresh the items

@@ -45,25 +45,21 @@ function Edit_Item_Entry_Form(){
 			
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Update_Item_Entry(params, function(jsonRpcObj) {
+				
+				if (jsonRpcObj.result.success == 'true') {
+					
+					
+					alert('Item entry updated!');
 
-				if (jsonRpcObj.result.authenticated == 'true') {
-					if (jsonRpcObj.result.success == 'true') {
-						
-						
-						alert('Item entry updated!');
-
-						app.api.Refresh_Data(function() {
-							//self.refresh_item_log_callback();
-						});
-						
-					} else {
-						alert('Item entry failed to update.');
-						//alert(jsonRpcObj.result.debug);
-					}
-
+					app.api.Refresh_Data(function() {
+						//self.refresh_item_log_callback();
+					});
+					
 				} else {
-					alert('You are not logged in. Please refresh the page and login again.');
+					alert('Item entry failed to update.');
+					//alert(jsonRpcObj.result.debug);
 				}
+				
 
 			});
 		

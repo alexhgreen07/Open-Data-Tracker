@@ -26,15 +26,10 @@ function New_Item_Form(){
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Insert_New_Item(params, function(jsonRpcObj) {
 
-				if (jsonRpcObj.result.authenticated == 'true') {
-					if (jsonRpcObj.result.success == 'true') {
-						alert('New item added!');
-					} else {
-						alert('Item failed to add.');
-					}
-
+				if (jsonRpcObj.result.success == 'true') {
+					alert('New item added!');
 				} else {
-					alert('You are not logged in. Please refresh the page and login again.');
+					alert('Item failed to add.');
 				}
 
 				//reset all the fields to default

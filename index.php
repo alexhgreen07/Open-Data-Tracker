@@ -53,10 +53,10 @@
 		$login = mysql_real_escape_string($_POST['login']);
 		$password = mysql_real_escape_string($_POST['password']);
 		
-		$is_authorized = Authorize_User_Password($login, $password);
+		Authorize_User_Password($login, $password);
 		
-		//ADD PASSWORD AUTHORIZATION
-		if($is_authorized)
+		//check authentication
+		if(Is_Authorized())
 		{
 			header("location: member-index.php");
 			exit();

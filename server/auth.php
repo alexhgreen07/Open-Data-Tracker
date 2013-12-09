@@ -133,9 +133,11 @@ function Authorize_User_Password($login, $password)
 					
 				}
 				
-				//session authorized
-				$return_value = true;
+				
 			}
+			
+			//session authorized
+			$return_value = true;
 
 
 		} else {

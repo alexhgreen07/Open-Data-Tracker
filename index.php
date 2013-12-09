@@ -7,6 +7,9 @@
 	//Connect to mysql server
 	Connect_To_DB();
 	
+	//ensure the session is started.
+	session_start();
+	
 	if (Is_Authorized()) {
 		
 		header('location: member-index.php');

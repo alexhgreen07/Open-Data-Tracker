@@ -4,6 +4,9 @@ require_once ('server/database.php');
 
 Connect_To_DB();
 
+//ensure the session is started.
+session_start();
+
 //this is a protected area. Ensure the session is authorized.
 if (!Is_Authorized()) {
 	

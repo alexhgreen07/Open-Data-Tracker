@@ -16,6 +16,9 @@ require_once ('../externals/json-rpc2php/jsonRPC2Server.php');
 //Connect to mysql server
 $link = Connect_To_DB();
 
+//ensure the session is started.
+session_start();
+
 //this is a protected area. Ensure the session is authorized.
 if (!Is_Authorized()) {
 	

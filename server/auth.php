@@ -22,25 +22,17 @@ function Is_Cookie_Authorized(){
 			
 			if (mysql_num_rows($result) == 1) {
 					
-				//Start session
-				session_start();
+				if(!Is_Session_Authorized())
+				{
+					$qry = "SELECT * FROM members WHERE login='".$login."' AND passwd='" . md5($password) . "'";
+					$result = mysql_query($qry);
+					$member_id = mysql_result($result,0,'member_id');
+					
+					Start_Authorized_Session($member_id);
+					
+				}
 				
-				$session = mysql_fetch_assoc($result);
-				
-				$qry = "SELECT * FROM members WHERE member_id='".$session['member_id']."';";
-				$result = mysql_query($qry);
-				
-				$member = mysql_fetch_assoc($result);
-				$_SESSION['SESS_MEMBER_ID'] = $member['member_id'];
-				$_SESSION['SESS_FIRST_NAME'] = $member['firstname'];
-				$_SESSION['SESS_LAST_NAME'] = $member['lastname'];
-				
-				$cookieLifetime = 7 * 24 * 60 * 60; // A week in seconds
-				$cookie_expiry = time()+$cookieLifetime;
-				setcookie('session_longterm_id',session_id(),$cookie_expiry);	
-				
-				$qry = "UPDATE sessions SET session_id = '".session_id()."', session_expiry = FROM_UNIXTIME(".$cookie_expiry.") WHERE session_id = '".$session['session_id']."';";
-				$result = mysql_query($qry);
+				Update_Authorization_Cookie();
 				
 				$return_value = true;
 			}
@@ -56,8 +48,9 @@ function Is_Cookie_Authorized(){
  * \return Returns a boolean true if the member is authorized, otherwise it returns false.
  * */
 function Is_Session_Authorized() {
+	
 	$return_value = !(!isset($_SESSION['SESS_MEMBER_ID']) || (trim($_SESSION['SESS_MEMBER_ID']) == ''));
-
+	
 	return $return_value;
 }
 
@@ -72,6 +65,7 @@ function Is_Authorized() {
 	}
 	else if(Is_Cookie_Authorized())
 	{
+		
 		$return_value = true;
 	}
 	
@@ -101,45 +95,12 @@ function Authorize_User_Password($login, $password)
 			//Login Successful
 			$return_value = true;
 			
+			$member_id = mysql_result($result,0,'member_id');
+			
 			//Start session
-			session_start();
-		
+			Start_Authorized_Session($member_id);
 			
-			$member = mysql_fetch_assoc($result);
-			$_SESSION['SESS_MEMBER_ID'] = $member['member_id'];
-			$_SESSION['SESS_FIRST_NAME'] = $member['firstname'];
-			$_SESSION['SESS_LAST_NAME'] = $member['lastname'];
-			
-			//Create query
-			$qry = "SELECT * FROM sessions WHERE session_id='".$_COOKIE['session_longterm_id']."';";
-			$result = mysql_query($qry);
-			
-			$cookieLifetime = 7 * 24 * 60 * 60; // A week in seconds
-			$cookie_expiry = time()+$cookieLifetime;
-			setcookie('session_longterm_id',session_id(),$cookie_expiry);	
-			
-			//Check whether the query was successful or not
-			if ($result) {
-				
-				
-				if (mysql_num_rows($result) == 1) {
-					
-					$session = mysql_fetch_assoc($result);
-					
-					$qry = "UPDATE sessions SET session_id = '".session_id()."', session_expiry = FORM_UNIXTIME(".$cookie_expiry.") WHERE session_id = '".$session['session_id']."';";
-					$result = mysql_query($qry);
-					
-				}
-				else {
-					
-					$qry = "INSERT INTO sessions (session_id,member_id,session_expiry) VALUES('".session_id()."','".$_SESSION['SESS_MEMBER_ID']."', FROM_UNIXTIME(".$cookie_expiry."));";
-					$result = mysql_query($qry);
-					
-					
-				}
-				
-				
-			}
+			Update_Authorization_Cookie();
 
 		}
 		
@@ -152,5 +113,60 @@ function Authorize_User_Password($login, $password)
 	return $return_value;
 }
 
+function Start_Authorized_Session($member_id)
+{
+	//set session authorization variable
+	$_SESSION['SESS_MEMBER_ID'] = $member_id;
+}
+
+function Logout_Authorized_Session()
+{
+	//Unset the variables stored in session
+	unset($_SESSION['SESS_MEMBER_ID']);
+	
+	$qry = "DELETE FROM sessions WHERE session_id = '".$_COOKIE['session_longterm_id']."';";
+	$result = mysql_query($qry);
+	
+	//set the cookie to expire one hour ago (delete immediately)
+	setcookie("session_longterm_id", "", time()-3600);
+	
+}
+
+function Update_Authorization_Cookie()
+{
+	//Create query
+	$qry = "SELECT * FROM sessions WHERE session_id='".$_COOKIE['session_longterm_id']."';";
+	$result = mysql_query($qry);
+	
+	$cookieLifetime = 7 * 24 * 60 * 60; // A week in seconds
+	$cookie_expiry = time()+$cookieLifetime;
+	setcookie('session_longterm_id',session_id(),$cookie_expiry);	
+	
+	//Check whether the query was successful or not
+	if ($result) {
+		
+		
+		if (mysql_num_rows($result) == 1) {
+			
+			$session = mysql_fetch_assoc($result);
+			
+			$qry = "UPDATE sessions SET session_id = '".session_id()."', session_expiry = FROM_UNIXTIME(".$cookie_expiry.") WHERE session_id = '".$session['session_id']."';";
+			$result = mysql_query($qry);
+			
+			
+		}
+		else {
+			
+			$qry = "INSERT INTO sessions (session_id,member_id,session_expiry) VALUES('".session_id()."','".$_SESSION['SESS_MEMBER_ID']."', FROM_UNIXTIME(".$cookie_expiry."));";
+			$result = mysql_query($qry);
+			
+			
+			
+		}
+		
+	}
+	
+	
+}
 
 ?>

@@ -20,7 +20,7 @@ function Is_Cookie_Authorized(){
 		//Check whether the query was successful or not
 		if ($result) {
 			
-			if (mysql_num_rows($result) == 1) {
+			if (mysql_num_rows($result) > 0) {
 					
 				if(!Is_Session_Authorized())
 				{
@@ -50,6 +50,11 @@ function Is_Cookie_Authorized(){
 function Is_Session_Authorized() {
 	
 	$return_value = !(!isset($_SESSION['SESS_MEMBER_ID']) || (trim($_SESSION['SESS_MEMBER_ID']) == ''));
+	
+	if($return_value)
+	{
+		Update_Authorization_Cookie();
+	}
 	
 	return $return_value;
 }
@@ -145,14 +150,12 @@ function Update_Authorization_Cookie()
 	//Check whether the query was successful or not
 	if ($result) {
 		
-		
-		if (mysql_num_rows($result) == 1) {
+		if (mysql_num_rows($result) > 0) {
 			
 			$session = mysql_fetch_assoc($result);
 			
 			$qry = "UPDATE sessions SET session_id = '".session_id()."', session_expiry = FROM_UNIXTIME(".$cookie_expiry.") WHERE session_id = '".$session['session_id']."';";
 			$result = mysql_query($qry);
-			
 			
 		}
 		else {
@@ -160,13 +163,13 @@ function Update_Authorization_Cookie()
 			$qry = "INSERT INTO sessions (session_id,member_id,session_expiry) VALUES('".session_id()."','".$_SESSION['SESS_MEMBER_ID']."', FROM_UNIXTIME(".$cookie_expiry."));";
 			$result = mysql_query($qry);
 			
-			
-			
 		}
 		
 	}
 	
-	
+	//delete old expired cookies
+	$qry = "DELETE FROM sessions WHERE session_expiry < FROM_UNIXTIME(".time().");";
+	$result = mysql_query($qry);
 }
 
 ?>

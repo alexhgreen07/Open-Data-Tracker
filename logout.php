@@ -1,11 +1,17 @@
 <?php
+
+require_once ('server/config.php');
+require_once ('server/database.php');
+require_once ('server/auth.php');
+
+Connect_To_DB();
+
 //Start session
 session_start();
 
-//Unset the variables stored in session
-unset($_SESSION['SESS_MEMBER_ID']);
-unset($_SESSION['SESS_FIRST_NAME']);
-unset($_SESSION['SESS_LAST_NAME']);
+Logout_Authorized_Session();
+
+session_destroy();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

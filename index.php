@@ -49,9 +49,6 @@
 	} 
 	else if (isset($_POST["password"]) && isset($_POST["login"])) {
 		
-		//Start session
-		session_start();
-		
 		//Sanitize the POST values
 		$login = mysql_real_escape_string($_POST['login']);
 		$password = mysql_real_escape_string($_POST['password']);

@@ -99,6 +99,11 @@ function Authorize_User_Password($login, $password)
 		if (mysql_num_rows($result) == 1) {
 				
 			//Login Successful
+			$return_value = true;
+			
+			//Start session
+			session_start();
+		
 			
 			$member = mysql_fetch_assoc($result);
 			$_SESSION['SESS_MEMBER_ID'] = $member['member_id'];
@@ -135,10 +140,6 @@ function Authorize_User_Password($login, $password)
 				
 				
 			}
-			
-			//session authorized
-			$return_value = true;
-
 
 		}
 		

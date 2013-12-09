@@ -22,150 +22,67 @@ class Item_Data_Interface {
 
 	public function Insert_Quick_Item_Entry($value, $item_id, $note) {
 
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
+		
+		$value = mysql_real_escape_string($value);
 
-		if (Is_Session_Authorized()) {
-
-			$return_json['authenticated'] = 'true';
-
-			$value = mysql_real_escape_string($value);
-
-			if ($item_id != "-") {
-				$item_id = mysql_real_escape_string($item_id);
-			} else {
-				$item_id = "";
-			}
-
-			$note = mysql_real_escape_string($note);
-
-			if ($value != "") {
-
-				$sql_insert = "INSERT INTO `life_management`.`item_log` (
-					`time` ,
-					`value` ,
-					`item_id` ,
-					`note`
-					)
-					VALUES (
-					NOW(), '" . $value . "', '" . $item_id . "', '" . $note . "')";
-
-				$success = mysql_query($sql_insert, $this -> database_link);
-
-				if ($success) {
-					$return_json['success'] = 'true';
-				} else {
-					$return_json['success'] = 'false';
-				}
-
-			}
-
+		if ($item_id != "-") {
+			$item_id = mysql_real_escape_string($item_id);
 		} else {
-			$return_json['authenticated'] = 'false';
-
+			$item_id = "";
 		}
 
+		$note = mysql_real_escape_string($note);
+
+		if ($value != "") {
+
+			$sql_insert = "INSERT INTO `life_management`.`item_log` (
+				`time` ,
+				`value` ,
+				`item_id` ,
+				`note`
+				)
+				VALUES (
+				NOW(), '" . $value . "', '" . $item_id . "', '" . $note . "')";
+
+			$success = mysql_query($sql_insert, $this -> database_link);
+
+			if ($success) {
+				$return_json['success'] = 'true';
+			} else {
+				$return_json['success'] = 'false';
+			}
+
+		}
+		
 		return $return_json;
 
 	}
 
 	public function Insert_Item_Entry($time, $value, $item_id, $note) {
 
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
+		
+		$value = mysql_real_escape_string($value);
 
-		if (Is_Session_Authorized()) {
-
-			$return_json['authenticated'] = 'true';
-
-			$value = mysql_real_escape_string($value);
-
-			if ($item_id != "-") {
-				$item_id = mysql_real_escape_string($item_id);
-			} else {
-				$item_id = "";
-			}
-
-			$note = mysql_real_escape_string($note);
-
-			if ($value != "") {
-
-				$sql_insert = "INSERT INTO `life_management`.`item_log` (
-					`time` ,
-					`value` ,
-					`item_id` ,
-					`note`
-					)
-					VALUES (
-					'" . $time . "', '" . $value . "', '" . $item_id . "', '" . $note . "')";
-
-				//$return_json['debug'] = $sql_insert;
-
-				$success = mysql_query($sql_insert, $this -> database_link);
-
-				if ($success) {
-					$return_json['success'] = 'true';
-				} else {
-					$return_json['success'] = 'false';
-				}
-
-			}
-
+		if ($item_id != "-") {
+			$item_id = mysql_real_escape_string($item_id);
 		} else {
-			$return_json['authenticated'] = 'false';
-
+			$item_id = "";
 		}
 
-		return $return_json;
+		$note = mysql_real_escape_string($note);
 
-	}
-	
-	public function Update_Item_Entry($item_entry_id, $time, $value, $item_id, $note){
-		
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		if ($value != "") {
 
-		if (Is_Session_Authorized()) {
-
-			$return_json['authenticated'] = 'true';
-			
-			$time = mysql_real_escape_string($time);
-			$value = mysql_real_escape_string($value);
-			$note = mysql_real_escape_string($note);
-
-
-			if ($value != "") {
-
-				$sql_insert = "UPDATE `item_log` SET `item_id` = " . $item_id . ",`time` = '".$time."',`value`=".$value.",`note`='".$note."' WHERE `item_log_id` = " . $item_entry_id;
-
-				//$return_json['debug'] = $sql_insert;
-
-				$success = mysql_query($sql_insert, $this -> database_link);
-
-				if ($success) {
-					$return_json['success'] = 'true';
-				} else {
-					$return_json['success'] = 'false';
-				}
-
-			}
-
-		} else {
-			$return_json['authenticated'] = 'false';
-
-		}
-
-		return $return_json;
-		
-	}
-	
-	public function Delete_Item_Entry($item_entry_id){
-		
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
-
-		if (Is_Session_Authorized()) {
-
-			$return_json['authenticated'] = 'true';
-
-
-			$sql_insert = "DELETE FROM `item_log` WHERE `item_log_id` = " . $item_entry_id;
+			$sql_insert = "INSERT INTO `life_management`.`item_log` (
+				`time` ,
+				`value` ,
+				`item_id` ,
+				`note`
+				)
+				VALUES (
+				'" . $time . "', '" . $value . "', '" . $item_id . "', '" . $note . "')";
 
 			//$return_json['debug'] = $sql_insert;
 
@@ -177,192 +94,195 @@ class Item_Data_Interface {
 				$return_json['success'] = 'false';
 			}
 
+		}
 		
+		return $return_json;
 
-		} else {
-			$return_json['authenticated'] = 'false';
+	}
+	
+	public function Update_Item_Entry($item_entry_id, $time, $value, $item_id, $note){
+		
+		$return_json = array('success' => 'false', );
+		
+		$time = mysql_real_escape_string($time);
+		$value = mysql_real_escape_string($value);
+		$note = mysql_real_escape_string($note);
+
+		if ($value != "") {
+
+			$sql_insert = "UPDATE `item_log` SET `item_id` = " . $item_id . ",`time` = '".$time."',`value`=".$value.",`note`='".$note."' WHERE `item_log_id` = " . $item_entry_id;
+
+			//$return_json['debug'] = $sql_insert;
+
+			$success = mysql_query($sql_insert, $this -> database_link);
+
+			if ($success) {
+				$return_json['success'] = 'true';
+			} else {
+				$return_json['success'] = 'false';
+			}
 
 		}
+		
+		return $return_json;
+		
+	}
+	
+	public function Delete_Item_Entry($item_entry_id){
+		
+		$return_json = array('success' => 'false', );
+		
+		$sql_insert = "DELETE FROM `item_log` WHERE `item_log_id` = " . $item_entry_id;
 
+		//$return_json['debug'] = $sql_insert;
+
+		$success = mysql_query($sql_insert, $this -> database_link);
+
+		if ($success) {
+			$return_json['success'] = 'true';
+		} else {
+			$return_json['success'] = 'false';
+		}
+		
 		return $return_json;
 		
 	}
 
 	public function Insert_New_Item($name, $unit, $description) {
 
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
 
 		$name = mysql_real_escape_string($name);
 		$unit = mysql_real_escape_string($unit);
 		$description = mysql_real_escape_string($description);
-
-		if (Is_Session_Authorized()) {
-			$return_json['authenticated'] = 'true';
-
-			if ($name != "") {
-
-				$sql_insert = "INSERT INTO `items`(`date_created`,`name`, `unit`, `description`) VALUES (
-					NOW(), '" . $name . "', '" . $unit . "', '" . $description . "')";
-
-				$success = mysql_query($sql_insert, $this -> database_link);
-
-				if ($success) {
-					$return_json['success'] = 'true';
-				} else {
-					$return_json['success'] = 'false';
-				}
-
+		
+		if ($name != "") {
+	
+			$sql_insert = "INSERT INTO `items`(`date_created`,`name`, `unit`, `description`) VALUES (
+				NOW(), '" . $name . "', '" . $unit . "', '" . $description . "')";
+	
+			$success = mysql_query($sql_insert, $this -> database_link);
+	
+			if ($success) {
+				$return_json['success'] = 'true';
+			} else {
+				$return_json['success'] = 'false';
 			}
-		} else {
-			$return_json['authenticated'] = 'false';
+	
 		}
-
+		
 		return $return_json;
 	}
 
 	public function Edit_Item($item_id, $name, $unit, $description) {
 		
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
 
 		$name = mysql_real_escape_string($name);
 		$unit = mysql_real_escape_string($unit);
 		$description = mysql_real_escape_string($description);
+		
+		if ($name != "") {
 
-		if (Is_Session_Authorized()) {
-			$return_json['authenticated'] = 'true';
+			$sql_insert = "UPDATE `items` SET `name`='".$name."',`description`='".$description."',`unit`='".$unit."' WHERE `item_id`=" . $item_id;
 
-			if ($name != "") {
+			$success = mysql_query($sql_insert, $this -> database_link);
 
-				$sql_insert = "UPDATE `items` SET `name`='".$name."',`description`='".$description."',`unit`='".$unit."' WHERE `item_id`=" . $item_id;
-
-				$success = mysql_query($sql_insert, $this -> database_link);
-
-				if ($success) {
-					$return_json['success'] = 'true';
-				} else {
-					$return_json['success'] = 'false';
-				}
-
+			if ($success) {
+				$return_json['success'] = 'true';
+			} else {
+				$return_json['success'] = 'false';
 			}
-		} else {
-			$return_json['authenticated'] = 'false';
-		}
 
+		}
+		
 		return $return_json;
 		
 	}
 	
 	public function Delete_Item($item_id) {
 		
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
+		
+		if ($item_id != "") {
 
-		if (Is_Session_Authorized()) {
-			
-			$return_json['authenticated'] = 'true';
+			$sql_insert = "DELETE FROM `items` WHERE `item_id`=" . $item_id;
 
-			if ($item_id != "") {
+			$success = mysql_query($sql_insert, $this -> database_link);
 
-				$sql_insert = "DELETE FROM `items` WHERE `item_id`=" . $item_id;
-
-				$success = mysql_query($sql_insert, $this -> database_link);
-
-				if ($success) {
-					
-					$return_json['success'] = 'true';
-					
-				} else {
-					
-					$return_json['success'] = 'false';
-				}
-
-
+			if ($success) {
+				
+				$return_json['success'] = 'true';
+				
+			} else {
+				
+				$return_json['success'] = 'false';
 			}
-		} else {
-			$return_json['authenticated'] = 'false';
-		}
 
+
+		}
+		
 		return $return_json;
 		
 	}
 	
 	public function Insert_Item_Target($start_time, $type, $value, $item_id, $period_type, $period, $recurring){
 				
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
+		
+		$sql_insert = "INSERT INTO `item_targets`(
+			`start_time`, 
+			`type`, 
+			`value`, 
+			`item_id`, 
+			`period_type`, 
+			`period`, 
+			`recurring`) VALUES (
+			'".$start_time."',
+			'".$type."',
+			".$value.",
+			".$item_id.",
+			'".$period_type."',
+			".$period.",
+			".$recurring.")";
 
-		if (Is_Session_Authorized()) {
+		$success = mysql_query($sql_insert, $this -> database_link);
+
+		if ($success) {
 			
-			$return_json['authenticated'] = 'true';
-
-			$sql_insert = "INSERT INTO `item_targets`(
-				`start_time`, 
-				`type`, 
-				`value`, 
-				`item_id`, 
-				`period_type`, 
-				`period`, 
-				`recurring`) VALUES (
-				'".$start_time."',
-				'".$type."',
-				".$value.",
-				".$item_id.",
-				'".$period_type."',
-				".$period.",
-				".$recurring.")";
-
-			$success = mysql_query($sql_insert, $this -> database_link);
-
-			if ($success) {
-				
-				$return_json['success'] = 'true';
-				
-			} else {
-				
-				$return_json['success'] = 'false';
-			}
-
-
+			$return_json['success'] = 'true';
+			
 		} else {
 			
-			$return_json['authenticated'] = 'false';
-			
+			$return_json['success'] = 'false';
 		}
-		
+
 		return $return_json;
 	}
 
 	public function Update_Item_Target($item_target_id, $start_time, $type, $value, $item_id, $period_type, $period, $recurring){
 		
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
+		
+		$sql_insert = "UPDATE `item_targets` SET
+			`start_time` = '".$start_time."', 
+			`type` = '".$type."',
+			`value` = ".$value.", 
+			`item_id` = ".$item_id.",
+			`period_type` = '".$period_type."',
+			`period` = ".$period.",
+			`recurring` = ".$recurring." 
+			WHERE `item_target_id` = " . $item_target_id;
 
-		if (Is_Session_Authorized()) {
+		$success = mysql_query($sql_insert, $this -> database_link);
+
+		if ($success) {
 			
-			$return_json['authenticated'] = 'true';
-
-			$sql_insert = "UPDATE `item_targets` SET
-				`start_time` = '".$start_time."', 
-				`type` = '".$type."',
-				`value` = ".$value.", 
-				`item_id` = ".$item_id.",
-				`period_type` = '".$period_type."',
-				`period` = ".$period.",
-				`recurring` = ".$recurring." 
-				WHERE `item_target_id` = " . $item_target_id;
-
-			$success = mysql_query($sql_insert, $this -> database_link);
-
-			if ($success) {
-				
-				$return_json['success'] = 'true';
-				
-			} else {
-				
-				$return_json['success'] = 'false';
-			}
-
+			$return_json['success'] = 'true';
+			
 		} else {
 			
-			$return_json['authenticated'] = 'false';
-			
+			$return_json['success'] = 'false';
 		}
 		
 		return $return_json;
@@ -371,34 +291,24 @@ class Item_Data_Interface {
 	
 	public function Delete_Item_Target($item_target_id){
 		
-		$return_json = array('authenticated' => 'false', 'success' => 'false', );
+		$return_json = array('success' => 'false', );
+		
+		if ($item_target_id != "") {
 
-		if (Is_Session_Authorized()) {
-			
-			$return_json['authenticated'] = 'true';
-			
-			if ($item_target_id != "") {
+			$sql_insert = "DELETE FROM `item_targets` WHERE `item_target_id`=" . $item_target_id;
 
-				$sql_insert = "DELETE FROM `item_targets` WHERE `item_target_id`=" . $item_target_id;
+			$success = mysql_query($sql_insert, $this -> database_link);
 
-				$success = mysql_query($sql_insert, $this -> database_link);
-
-				if ($success) {
-					
-					$return_json['success'] = 'true';
-					
-				} else {
-					
-					$return_json['success'] = 'false';
-				}
-
-
+			if ($success) {
+				
+				$return_json['success'] = 'true';
+				
+			} else {
+				
+				$return_json['success'] = 'false';
 			}
 
-		} else {
-			
-			$return_json['authenticated'] = 'false';
-			
+
 		}
 		
 		return $return_json;
@@ -425,8 +335,7 @@ class Item_Data_Interface {
 	
 	public function Get_Item_Log() {
 
-		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '', );
-
+		$return_json = array('success' => 'false', 'data' => '', );
 
 		$query = "SELECT 
 			`item_log`.`item_log_id` AS `item_log_id`,
@@ -444,7 +353,6 @@ class Item_Data_Interface {
 
 		$num = mysql_numrows($result);
 
-		
 		$return_json['data'] = array();
 		
 		$i = 0;
@@ -490,52 +398,44 @@ class Item_Data_Interface {
 	}
 	
 	public function Get_Items() {
-		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => array(), );
+		$return_json = array('success' => 'false', 'data' => array(), );
+		
+		$sql_query = "SELECT `item_id`, `name`, `description`, `unit`, `date_created` FROM `life_management`.`items` ORDER BY `name` asc";
+		$result = mysql_query($sql_query, $this -> database_link);
 
-		if (Is_Session_Authorized()) {
+		if ($result) {
+			$return_json['success'] = 'true';
+			$return_json['data'] = array();
+			
+			$num = mysql_numrows($result);
 
-			$return_json['authenticated'] = 'true';
+			$i = 0;
+			while ($i < $num) {
 
-			$sql_query = "SELECT `item_id`, `name`, `description`, `unit`, `date_created` FROM `life_management`.`items` ORDER BY `name` asc";
-			$result = mysql_query($sql_query, $this -> database_link);
+				$item_name = mysql_result($result, $i, "name");
+				$item_description = mysql_result($result, $i, 'description');
+				$item_unit = mysql_result($result, $i, "unit");
+				$item_date_created = mysql_result($result, $i, 'date_created');
+				$item_id = mysql_result($result, $i, "item_id");
 
-			if ($result) {
-				$return_json['success'] = 'true';
-				$return_json['data'] = array();
-				
-				$num = mysql_numrows($result);
-
-				$i = 0;
-				while ($i < $num) {
-
-					$item_name = mysql_result($result, $i, "name");
-					$item_description = mysql_result($result, $i, 'description');
-					$item_unit = mysql_result($result, $i, "unit");
-					$item_date_created = mysql_result($result, $i, 'date_created');
-					$item_id = mysql_result($result, $i, "item_id");
-
-					if ($item_name != "") {
-						$return_json['data'][$i] = 
-							array(
-							'item_name' => $item_name, 
-							'item_description' => $item_description, 
-							'item_unit' => $item_unit, 
-							'date_created' => $item_date_created, 
-							'item_id' => $item_id, );
+				if ($item_name != "") {
+					$return_json['data'][$i] = 
+						array(
+						'item_name' => $item_name, 
+						'item_description' => $item_description, 
+						'item_unit' => $item_unit, 
+						'date_created' => $item_date_created, 
+						'item_id' => $item_id, );
 
 
-					}
-
-					$i++;
 				}
-			} else {
-				$return_json['success'] = 'false';
+
+				$i++;
 			}
-
 		} else {
-			$return_json['authenticated'] = 'false';
+			$return_json['success'] = 'false';
 		}
-
+		
 		return $return_json;
 	}
 
@@ -561,63 +461,57 @@ class Item_Data_Interface {
 	
 	public function Get_Item_Targets(){
 		
-		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => array(), );
+		$return_json = array('success' => 'false', 'data' => array(), );
+		
+		$sql_query = "SELECT 
+			`item_targets`.`item_target_id` AS `item_target_id`, 
+			`item_targets`.`start_time` AS `start_time`, 
+			`item_targets`.`type` AS `type`, 
+			`item_targets`.`value` AS `value`, 
+			`item_targets`.`item_id` AS `item_id`, 
+			`item_targets`.`period_type` AS `period_type`, 
+			`item_targets`.`period` AS `period`, 
+			`item_targets`.`recurring` AS `recurring`,
+			`items`.`name` AS `name`
+			FROM `item_targets`, `items` WHERE `items`.`item_id` = `item_targets`.`item_id`";
+		$result = mysql_query($sql_query, $this -> database_link);
 
-		if (Is_Session_Authorized()) {
+		if ($result) {
+			$return_json['success'] = 'true';
+			$return_json['data'] = array();
 			
-			$return_json['authenticated'] = 'true';
+			$num = mysql_numrows($result);
 
-			$sql_query = "SELECT 
-				`item_targets`.`item_target_id` AS `item_target_id`, 
-				`item_targets`.`start_time` AS `start_time`, 
-				`item_targets`.`type` AS `type`, 
-				`item_targets`.`value` AS `value`, 
-				`item_targets`.`item_id` AS `item_id`, 
-				`item_targets`.`period_type` AS `period_type`, 
-				`item_targets`.`period` AS `period`, 
-				`item_targets`.`recurring` AS `recurring`,
-				`items`.`name` AS `name`
-				FROM `item_targets`, `items` WHERE `items`.`item_id` = `item_targets`.`item_id`";
-			$result = mysql_query($sql_query, $this -> database_link);
+			$i = 0;
+			while ($i < $num) {
 
-			if ($result) {
-				$return_json['success'] = 'true';
-				$return_json['data'] = array();
-				
-				$num = mysql_numrows($result);
+				$item_target_id = mysql_result($result, $i, "item_target_id");
+				$start_time = mysql_result($result, $i, 'start_time');
+				$type = mysql_result($result, $i, "type");
+				$value = mysql_result($result, $i, 'value');
+				$item_id = mysql_result($result, $i, "item_id");
+				$name = mysql_result($result, $i, "name");
+				$period_type = mysql_result($result, $i, "period_type");
+				$period = mysql_result($result, $i, "period");
+				$recurring = mysql_result($result, $i, "recurring");
 
-				$i = 0;
-				while ($i < $num) {
+				$return_json['data'][$i] = 
+					array(
+						'item_target_id' => $item_target_id, 
+						'start_time' => $start_time, 
+						'type' => $type, 
+						'value' => $value, 
+						'item_id' => $item_id, 
+						'name' => $name,
+						'period_type' => $period_type, 
+						'period' => $period, 
+						'recurring' => $recurring, 
+					);
 
-					$item_target_id = mysql_result($result, $i, "item_target_id");
-					$start_time = mysql_result($result, $i, 'start_time');
-					$type = mysql_result($result, $i, "type");
-					$value = mysql_result($result, $i, 'value');
-					$item_id = mysql_result($result, $i, "item_id");
-					$name = mysql_result($result, $i, "name");
-					$period_type = mysql_result($result, $i, "period_type");
-					$period = mysql_result($result, $i, "period");
-					$recurring = mysql_result($result, $i, "recurring");
-
-					$return_json['data'][$i] = 
-						array(
-							'item_target_id' => $item_target_id, 
-							'start_time' => $start_time, 
-							'type' => $type, 
-							'value' => $value, 
-							'item_id' => $item_id, 
-							'name' => $name,
-							'period_type' => $period_type, 
-							'period' => $period, 
-							'recurring' => $recurring, 
-						);
-
-					$i++;
-				}
-			} else {
-				$return_json['success'] = 'false';
+				$i++;
 			}
-			
+		} else {
+			$return_json['success'] = 'false';
 		}
 		
 		return $return_json;

@@ -84,20 +84,14 @@ function Edit_Item_Target_Form(){
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Update_Item_Target(params, function(jsonRpcObj) {
 
-				if (jsonRpcObj.result.authenticated == 'true') {
+				if (jsonRpcObj.result.success == 'true') {
 					
-					if (jsonRpcObj.result.success == 'true') {
-						
-						alert('Item target updated!');
-						
-					} else {
-						
-						alert('Item target failed to update.');
-						
-					}
-
+					alert('Item target updated!');
+					
 				} else {
-					alert('You are not logged in. Please refresh the page and login again.');
+					
+					alert('Item target failed to update.');
+					
 				}
 
 				//refresh the items
@@ -132,20 +126,14 @@ function Edit_Item_Target_Form(){
 				//execute the RPC callback for retrieving the item log
 				app.api.Item_Data_Interface.Delete_Item_Target(params, function(jsonRpcObj) {
 	
-					if (jsonRpcObj.result.authenticated == 'true') {
+					if (jsonRpcObj.result.success == 'true') {
 						
-						if (jsonRpcObj.result.success == 'true') {
-							
-							alert('Item target deleted!');
-							
-						} else {
-							
-							alert('Item target failed to delete.');
-							
-						}
-	
+						alert('Item target deleted!');
+						
 					} else {
-						alert('You are not logged in. Please refresh the page and login again.');
+						
+						alert('Item target failed to delete.');
+						
 					}
 	
 					//refresh the items

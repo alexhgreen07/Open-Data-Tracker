@@ -37,11 +37,10 @@ class Data_Interface {
 	
 	public function Refresh_All_Data(){
 		
-		$return_json = array('authenticated' => 'false', 'success' => 'false', 'data' => '', );
-		
+		$return_json = array('success' => 'false', 'data' => '', );
 		
 		$return_json['data'] = array();
-		
+	
 		$categories = $this->homedatainteface->Get_Categories();
 		$items = $this->itemdatainterface->Get_Items();
 		$item_entries = $this->itemdatainterface->Get_Item_Log();

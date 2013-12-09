@@ -1,8 +1,21 @@
 <?php //require authorization and configuration files
 require_once ('server/auth.php');
+require_once ('server/database.php');
+
+Connect_To_DB();
+
+//ensure the session is started.
+session_start();
 
 //this is a protected area. Ensure the session is authorized.
-Authorize_Session();
+if (!Is_Authorized()) {
+	
+	header('location: index.php');
+
+	exit();
+	
+}
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -32,7 +45,7 @@ Authorize_Session();
 
 	<body>
 		
-		<div><h1>Open Data Tracker: Member Index</h1></div>
+		<div><h1>Open Data Tracker: Member Index</h1><a href="logout.php">Logout</a></div>
 
 	</body>
 </html>

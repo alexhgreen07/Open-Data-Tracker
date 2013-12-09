@@ -34,23 +34,17 @@ function Quick_Item_Entry_Form(){
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Insert_Quick_Item_Entry(params, function(jsonRpcObj) {
 
-				if (jsonRpcObj.result.authenticated == 'true') {
-					if (jsonRpcObj.result.success == 'true') {
-						
-						alert('New item entry added!');
+				if (jsonRpcObj.result.success == 'true') {
+					
+					alert('New item entry added!');
 
-						app.api.Refresh_Data(function() {
-							//self.refresh_item_log_callback();
-						});
-						
-					} else {
-						alert('Item entry failed to add.');
-					}
-
+					app.api.Refresh_Data(function() {
+						//self.refresh_item_log_callback();
+					});
+					
 				} else {
-					alert('You are not logged in. Please refresh the page and login again.');
+					alert('Item entry failed to add.');
 				}
-
 
 				//reset all the fields to default
 				$("#" + self.item_value.id).val('');

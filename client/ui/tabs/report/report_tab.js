@@ -239,169 +239,176 @@ function Report_Tab() {
 			self.fields = [];
 			self.json_data = [];
 			
-			//get all column names
-			for (var i = 0; i <  self.data[$('#' + self.report_summaries_tables_select.id).val()].length; i++) {
-				
-				//this function refreshes the pivot table
-				key = self.data[$('#' + self.report_summaries_tables_select.id).val()][i];
-				key_schema = self.schema[$('#' + self.report_summaries_tables_select.id).val()];
-				key_data_row = [];
-				
-				for(var column in key)
-				{
-					if(i == 0)
+			var table_name = $('#' + self.report_summaries_tables_select.id).val();
+			
+			if(self.data[table_name].length > 0)
+			{
+				//get all column names
+				for (var i = 0; i <  self.data[table_name].length; i++) {
+					
+					//this function refreshes the pivot table
+					key = self.data[$('#' + self.report_summaries_tables_select.id).val()][i];
+					key_schema = self.schema[$('#' + self.report_summaries_tables_select.id).val()];
+					key_data_row = [];
+					
+					for(var column in key)
 					{
-						self.json_titles.push(column);
+						if(i == 0)
+						{
+							self.json_titles.push(column);
+							
+							//select the summary type
+							if(document.getElementById(self.report_summaries_type_select.id).value == 'Sum')
+							{
+								summary_type = 'sum';
+							}
+							else if(document.getElementById(self.report_summaries_type_select.id).value == 'Average')
+							{
+								summary_type = 'avg';
+							}
+							else if(document.getElementById(self.report_summaries_type_select.id).value == 'Count')
+							{
+								summary_type = 'cnt';
+							}
+							else
+							{
+								summary_type = 'sum';
+							}
+							
+							if(key_schema[column] == 'int')
+							{
+								data_type = 'integer';
+							}
+							else if(key_schema[column] == 'float')
+							{
+								data_type = 'float';
+							}
+							else if(key_schema[column] == 'date')
+							{
+								data_type = 'string';
+								
+								date_column = column;
+								
+								self.fields.push({name: column + '_yyyy', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
+	      							pseudoFunction: function(row){
+	      								
+	      								server_date = Cast_Server_Datetime_to_Date(row[date_column]);
+	      								
+	      								return server_date.getFullYear(); 
+	      								 
+	      							}
+	      						});
+	      						
+	      						self.fields.push({name: column + '_mm', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
+	      							pseudoFunction: function(row){
+	      								
+	      								server_date = Cast_Server_Datetime_to_Date(row[date_column]);
+	      								
+	      								return_string = pivot.utils().padLeft(server_date.getMonth() + 1,2,'0');
+	      								
+	      								return return_string; 
+	      								 
+	      							}
+	      						});
+	      						
+	      						self.fields.push({name: column + '_ww', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
+	      							pseudoFunction: function(row){
+	      								
+	      								server_date = Cast_Server_Datetime_to_Date(row[date_column]);
+	      								
+	      								var onejan = new Date(server_date.getFullYear(),0,1);
+	      								week_number = Math.ceil((((server_date - onejan) / 86400000) + onejan.getDay()+1)/7);
+	      								
+	      								return_string = pivot.utils().padLeft(week_number,2,'0');
+	      								
+	      								return return_string; 
+	      								 
+	      							}
+	      						});
+	      						
+	      						self.fields.push({name: column + '_dd', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
+	      							pseudoFunction: function(row){
+	      								
+	      								server_date = Cast_Server_Datetime_to_Date(row[date_column]);
+	      								
+	      								var onejan = new Date(server_date.getFullYear(),0,1);
+	      								week_number = Math.ceil((((server_date - onejan) / 86400000) + onejan.getDay()+1)/7);
+	      								
+	      								return_string = pivot.utils().padLeft(server_date.getDate(),2,'0');
+	      								
+	      								return return_string; 
+	      								 
+	      							}
+	      						});
+							}
+							else if(key_schema[column] == 'string')
+							{
+								data_type = 'string';
+							}
+							else
+							{
+								data_type = 'string';
+							}
+							
+							self.fields.push({name: column,   type: data_type,  rowLabelable: true, filterable: true, summarizable: summary_type});
+						}
 						
-						//select the summary type
-						if(document.getElementById(self.report_summaries_type_select.id).value == 'Sum')
+						if(key_schema[column] === 'int')
 						{
-							summary_type = 'sum';
+							new_value = parseInt(key[column]);
 						}
-						else if(document.getElementById(self.report_summaries_type_select.id).value == 'Average')
+						else if(key_schema[column] === 'float')
 						{
-							summary_type = 'avg';
+							new_value = parseFloat(key[column]);
 						}
-						else if(document.getElementById(self.report_summaries_type_select.id).value == 'Count')
+						else if(key_schema[column] === 'date')
 						{
-							summary_type = 'cnt';
+							new_value = key[column];
 						}
 						else
 						{
-							summary_type = 'sum';
+							new_value = key[column];
 						}
 						
-						if(key_schema[column] == 'int')
-						{
-							data_type = 'integer';
-						}
-						else if(key_schema[column] == 'float')
-						{
-							data_type = 'float';
-						}
-						else if(key_schema[column] == 'date')
-						{
-							data_type = 'string';
-							
-							date_column = column;
-							
-							self.fields.push({name: column + '_yyyy', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
-      							pseudoFunction: function(row){
-      								
-      								server_date = Cast_Server_Datetime_to_Date(row[date_column]);
-      								
-      								return server_date.getFullYear(); 
-      								 
-      							}
-      						});
-      						
-      						self.fields.push({name: column + '_mm', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
-      							pseudoFunction: function(row){
-      								
-      								server_date = Cast_Server_Datetime_to_Date(row[date_column]);
-      								
-      								return_string = pivot.utils().padLeft(server_date.getMonth() + 1,2,'0');
-      								
-      								return return_string; 
-      								 
-      							}
-      						});
-      						
-      						self.fields.push({name: column + '_ww', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
-      							pseudoFunction: function(row){
-      								
-      								server_date = Cast_Server_Datetime_to_Date(row[date_column]);
-      								
-      								var onejan = new Date(server_date.getFullYear(),0,1);
-      								week_number = Math.ceil((((server_date - onejan) / 86400000) + onejan.getDay()+1)/7);
-      								
-      								return_string = pivot.utils().padLeft(week_number,2,'0');
-      								
-      								return return_string; 
-      								 
-      							}
-      						});
-      						
-      						self.fields.push({name: column + '_dd', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
-      							pseudoFunction: function(row){
-      								
-      								server_date = Cast_Server_Datetime_to_Date(row[date_column]);
-      								
-      								var onejan = new Date(server_date.getFullYear(),0,1);
-      								week_number = Math.ceil((((server_date - onejan) / 86400000) + onejan.getDay()+1)/7);
-      								
-      								return_string = pivot.utils().padLeft(server_date.getDate(),2,'0');
-      								
-      								return return_string; 
-      								 
-      							}
-      						});
-						}
-						else if(key_schema[column] == 'string')
-						{
-							data_type = 'string';
-						}
-						else
-						{
-							data_type = 'string';
-						}
+						key_data_row.push(new_value);
 						
-						self.fields.push({name: column,   type: data_type,  rowLabelable: true, filterable: true, summarizable: summary_type});
+						
 					}
 					
-					if(key_schema[column] === 'int')
-					{
-						new_value = parseInt(key[column]);
-					}
-					else if(key_schema[column] === 'float')
-					{
-						new_value = parseFloat(key[column]);
-					}
-					else if(key_schema[column] === 'date')
-					{
-						new_value = key[column];
-					}
-					else
-					{
-						new_value = key[column];
-					}
-					
-					key_data_row.push(new_value);
-					
+					self.json_data.push(JSON.stringify(key_data_row));
 					
 				}
 				
-				self.json_data.push(JSON.stringify(key_data_row));
+				self.json_titles = JSON.stringify(self.json_titles);
+				self.json_data = self.json_data.join();
 				
-			}
-			
-			self.json_titles = JSON.stringify(self.json_titles);
-			self.json_data = self.json_data.join();
-			
-			self.json_string = '[' + self.json_titles + ',' + self.json_data + ']';
+				self.json_string = '[' + self.json_titles + ',' + self.json_data + ']';
+						
+				var input = {json:self.json_string, fields: self.fields, resultsDivID:self.report_results_data_display_div.id, callbacks:{afterUpdateResults:this.Results_Update_Callback}};
+				
+				//if it is the same table, re-load the rows, summaries, and filters
+				if(is_same_table)
+				{
+					//retreive all current filter fields
+					pivot_config_data = pivot.config(true);
 					
-			var input = {json:self.json_string, fields: self.fields, resultsDivID:self.report_results_data_display_div.id, callbacks:{afterUpdateResults:this.Results_Update_Callback}};
-			
-			//if it is the same table, re-load the rows, summaries, and filters
-			if(is_same_table)
-			{
-				//retreive all current filter fields
-				pivot_config_data = pivot.config(true);
+					input.filters = pivot_config_data.filters;
+					input.rowLabels = pivot_config_data.rowLabels;
+					input.summaries = pivot_config_data.summaries;
+					
+				}
+				else
+				{
+					document.getElementById(self.report_results_data_display_div.id).innerHTML = '';
+				}
 				
-				input.filters = pivot_config_data.filters;
-				input.rowLabels = pivot_config_data.rowLabels;
-				input.summaries = pivot_config_data.summaries;
 				
+				$('#' + self.report_summaries_data_display_div.id).pivot_display('setup', input);
 			}
 			else
 			{
-				document.getElementById(self.report_results_data_display_div.id).innerHTML = '';
+				document.getElementById(self.report_results_data_display_div.id).innerHTML = "No data";
 			}
-			
-			
-			$('#' + self.report_summaries_data_display_div.id).pivot_display('setup', input);
-			
-			
 			
 		}
 		else

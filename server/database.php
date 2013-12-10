@@ -20,6 +20,14 @@ function Connect_To_DB()
 	return $link;
 }
 
+function Insert_Current_Version()
+{
+	$sql = "INSERT INTO `life_management`.`version` (`version_id`, `version_string`) VALUES ('0', '0.0.1');";
+	
+	//execute query
+	$result = mysql_query($sql);
+}
+
 function Create_Database_Tables()
 {
 	$sql = "";
@@ -145,8 +153,19 @@ function Create_Database_Tables()
 		) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 		";
 	
+	//versioning table
+	$sql .= "
+		CREATE TABLE IF NOT EXISTS `version` (
+		  `version_id` int(11) NOT NULL,
+		  `version_string` varchar(50) NOT NULL
+		) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+		";
+	
 	//execute query
 	$result = mysql_query($sql);
+	
+	//insert the current version
+	Insert_Current_Version();
 }
 
 ?>

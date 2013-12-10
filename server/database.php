@@ -3,6 +3,10 @@
 require_once ('config.php');
 require_once ('auth.php');
 
+//the current version of the database
+$current_version_id = 0;
+$current_version_string = "0.0.1";
+
 function Connect_To_DB()
 {
 	//Connect to mysql server
@@ -22,7 +26,11 @@ function Connect_To_DB()
 
 function Insert_Current_Version()
 {
-	$sql = "INSERT INTO `life_management`.`version` (`version_id`, `version_string`) VALUES ('0', '0.0.1');";
+	$sql = "INSERT INTO `life_management`.`version` (`version_id`, `version_string`) VALUES (";
+	$sql .= "'" . $current_version_id . "'";
+	$sql .= ",";
+	$sql .= "'" . $current_version_string . "'";
+	$sql .= ");";
 	
 	//execute query
 	$result = mysql_query($sql);

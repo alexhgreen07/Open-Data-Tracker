@@ -295,19 +295,19 @@ function Report_Tab() {
       							}
       						});
       						
-      						self.fields.push({name: column + '_yyyy_mm', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
+      						self.fields.push({name: column + '_mm', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
       							pseudoFunction: function(row){
       								
       								server_date = Cast_Server_Datetime_to_Date(row[date_column]);
       								
-      								return_string = server_date.getFullYear() + '-' + pivot.utils().padLeft(server_date.getMonth() + 1,2,'0');
+      								return_string = pivot.utils().padLeft(server_date.getMonth() + 1,2,'0');
       								
       								return return_string; 
       								 
       							}
       						});
       						
-      						self.fields.push({name: column + '_yyyy_mm_ww', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
+      						self.fields.push({name: column + '_ww', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
       							pseudoFunction: function(row){
       								
       								server_date = Cast_Server_Datetime_to_Date(row[date_column]);
@@ -315,16 +315,14 @@ function Report_Tab() {
       								var onejan = new Date(server_date.getFullYear(),0,1);
       								week_number = Math.ceil((((server_date - onejan) / 86400000) + onejan.getDay()+1)/7);
       								
-      								return_string = server_date.getFullYear() + '-' 
-      									+ pivot.utils().padLeft(server_date.getMonth() + 1,2,'0') + '-'
-      									+ pivot.utils().padLeft(week_number,2,'0');
+      								return_string = pivot.utils().padLeft(week_number,2,'0');
       								
       								return return_string; 
       								 
       							}
       						});
       						
-      						self.fields.push({name: column + '_yyyy_mm_dd', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
+      						self.fields.push({name: column + '_dd', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
       							pseudoFunction: function(row){
       								
       								server_date = Cast_Server_Datetime_to_Date(row[date_column]);
@@ -332,9 +330,7 @@ function Report_Tab() {
       								var onejan = new Date(server_date.getFullYear(),0,1);
       								week_number = Math.ceil((((server_date - onejan) / 86400000) + onejan.getDay()+1)/7);
       								
-      								return_string = server_date.getFullYear() + '-' 
-      									+ pivot.utils().padLeft(server_date.getMonth() + 1,2,'0') + '-'
-      									+ pivot.utils().padLeft(server_date.getDate(),2,'0');
+      								return_string = pivot.utils().padLeft(server_date.getDate(),2,'0');
       								
       								return return_string; 
       								 

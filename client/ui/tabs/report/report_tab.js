@@ -127,50 +127,71 @@ function Report_Tab() {
 				};
 				
 				var data_radial = [];
+				var legend_html = "Legend:<br><br>";
 				
 				for(i = 0; i < self.y_data_to_graph.length; i++){
 					
+					color_html = "#" + (Math.floor((Math.random()*0xFFFFFF))).toString(16);
+					
 					data_radial.push({
 							value: self.y_data_to_graph[i],
-							color:"#" + (Math.floor((Math.random()*0xFFFFFF))).toString(16)
+							color:color_html
 						});
 					
+					style_text = "padding-left:1em;padding-right:1em;";
+					style_text += "display: inline-block;";
+					
+					box_style_text = "background-color:" + color_html + ";";
+					box_style_text += "width:1em;height:1em;";
+					box_style_text += "display: inline-block;";
+					box_style_text += "border: 1px solid;";
+					
+					legend_html += '<div style="' + style_text + '"><div style="' + box_style_text + '"></div> ' + self.x_data_to_graph[i] + '</div>';
+					
 				}
-	
+				
+				legend_html += "<hr>";
+				
 				//graph the data
 				if(document.getElementById(self.summaries_graph_type_select.id).value == "Line")
 				{
 					
 					this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Line(data_xy); 
+					document.getElementById(self.report_summaries_data_legend_div.id).innerHTML = "";
 				}
 				else if(document.getElementById(self.summaries_graph_type_select.id).value == "Pie")
 				{	
 						
 					
 					this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Pie(data_radial); 
+					document.getElementById(self.report_summaries_data_legend_div.id).innerHTML = legend_html;
 				}
 				else if(document.getElementById(self.summaries_graph_type_select.id).value == "Radar")
 				{
 						
 					
 					this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Radar(data_xy); 
+					document.getElementById(self.report_summaries_data_legend_div.id).innerHTML = "";
 				}
 				else if(document.getElementById(self.summaries_graph_type_select.id).value == "Polar Area")
 				{
 						
 					
-					this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).PolarArea(data_radial); 
+					this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).PolarArea(data_radial);
+					document.getElementById(self.report_summaries_data_legend_div.id).innerHTML = legend_html; 
 				}
 				else if(document.getElementById(self.summaries_graph_type_select.id).value == "Doughnut")
 				{
 					
 					this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Doughnut(data_radial); 
+					document.getElementById(self.report_summaries_data_legend_div.id).innerHTML = legend_html;
 				}
 				else
 				{
 						
 					
 					this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Bar(data_xy); 
+					document.getElementById(self.report_summaries_data_legend_div.id).innerHTML = "";
 				
 				}
 			}
@@ -182,7 +203,8 @@ function Report_Tab() {
 			document.getElementById(self.summaries_graph_canvas.id).style = '';
 			document.getElementById(self.summaries_graph_canvas.id).width = "0";
 			document.getElementById(self.summaries_graph_canvas.id).height = "0";
-		
+			
+			document.getElementById(self.report_summaries_data_legend_div.id).innerHTML = "";
 		}
 	};
 	
@@ -483,6 +505,10 @@ function Report_Tab() {
 		this.summaries_graph_canvas.id = 'graph_tab_canvas';
 		this.report_summaries_data_form.appendChild(self.summaries_graph_canvas);
 		this.report_summaries_data_form.innerHTML += '<hr/>';
+		
+		this.report_summaries_data_legend_div = document.createElement("div");
+		this.report_summaries_data_legend_div.setAttribute('id', 'report_summaries_data_legend_div');
+		this.report_summaries_data_form.appendChild(this.report_summaries_data_legend_div);
 		
 		this.report_results_data_display_div = document.createElement("div");
 		this.report_results_data_display_div.setAttribute('id', 'report_summaries_data_results');

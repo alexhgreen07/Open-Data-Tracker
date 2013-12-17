@@ -47,18 +47,9 @@ function New_Task_Entry_Form(){
 			params[0] = task_time;
 			params[1] = selected_task.task_id;
 			params[2] = duration;
-			params[3] = 0;
-			params[4] = task_status;
-			params[5] = task_note;
-			params[6] = target_id;
-
-			if (is_completed) {
-
-				params[3] = 1;
-
-			} else {
-				params[3] = 0;
-			}
+			params[3] = task_status;
+			params[4] = task_note;
+			params[5] = target_id;
 
 			//execute the RPC callback for retrieving the item log
 			app.api.Task_Data_Interface.Insert_Task_Entry(params, function(jsonRpcObj) {
@@ -149,7 +140,7 @@ function New_Task_Entry_Form(){
 		this.add_task_entry_task_status_select = document.createElement("select");
 		this.add_task_entry_task_status_select.setAttribute('name', "add_task_entry_status_to_enter");
 		this.add_task_entry_task_status_select.setAttribute('id', "add_task_entry_status_to_enter");
-		this.add_task_entry_task_status_select.innerHTML = '<option>Stopped</option><option>Started</option>';
+		this.add_task_entry_task_status_select.innerHTML = '<option>Stopped</option><option>Started</option><option>Completed</option>';
 		this.data_form_new_entry.appendChild(this.add_task_entry_task_status_select);
 
 		this.data_form_new_entry.innerHTML += '<br />';
@@ -182,13 +173,6 @@ function New_Task_Entry_Form(){
 
 		this.data_form_new_entry.innerHTML += '<br /><br />';
 
-		//task mark complete button creation
-		this.add_task_entry_task_complete_button = document.createElement("input");
-		this.add_task_entry_task_complete_button.setAttribute('id', 'new_task_entry_complete');
-		this.add_task_entry_task_complete_button.setAttribute('type', 'submit');
-		this.add_task_entry_task_complete_button.value = 'Mark Complete';
-		this.data_form_new_entry.appendChild(this.add_task_entry_task_complete_button);
-
 		var div_tab = document.getElementById(form_div_id);
 
 		div_tab.appendChild(this.data_form_new_entry);
@@ -201,16 +185,6 @@ function New_Task_Entry_Form(){
 
 			//execute the click event
 			self.On_Submit_Task_Entry_Click_Event();
-		});
-
-		$('#' + this.add_task_entry_task_complete_button.id).button();
-		$('#' + this.add_task_entry_task_complete_button.id).click(function(event) {
-
-			//ensure a normal postback does not occur
-			event.preventDefault();
-
-			self.On_Complete_Task_Entry_Click_Event();
-
 		});
 		
 		$('#' + this.add_task_entry_task_name_select.id).change(function() {

@@ -175,11 +175,13 @@ function Timecard_Task_Entry_Form(){
 			document.getElementById(self.task_entries_started_select.id).value = previous_value;
 			
 			$('#' + this.task_timecard_note_div.id).show();
+			$('#' + this.task_start_complete_button.id).show();
 			self.task_start_stop_button.value = 'Stop';
 		}
 		else
 		{
 			$('#' + this.task_timecard_note_div.id).hide();
+			$('#' + this.task_start_complete_button.id).hide();
 			self.task_start_stop_button.value = 'Start';
 		}
 	};
@@ -236,12 +238,14 @@ function Timecard_Task_Entry_Form(){
 			}
 			
 			$('#' + this.task_timecard_note_div.id).show();
+			$('#' + this.task_start_complete_button.id).show();
 			
 			self.task_start_stop_button.value = 'Stop';
 		}
 		else
 		{
 			$('#' + this.task_timecard_note_div.id).hide();
+			$('#' + this.task_start_complete_button.id).hide();
 			
 			self.task_start_stop_button.value = 'Start';
 		}
@@ -291,7 +295,7 @@ function Timecard_Task_Entry_Form(){
 	 * @desc This function starts and stops a task with the server.
 	 * @param {function} refresh_callback The callback to call after the data operation has completed.
 	 * */
-	this.Start_Stop_Task = function(refresh_callback) {
+	this.Start_Stop_Task = function(is_complete) {
 		
 		var self = this;
 		
@@ -308,6 +312,11 @@ function Timecard_Task_Entry_Form(){
 			var task_note = self.selected_task_entry.note;
 			var task_status = 'Stopped';
 			var target_id = self.selected_task_entry.task_target_id;
+			
+			if(is_complete)
+			{
+				task_status = 'Completed';
+			}
 			
 			var params = Array();
 			
@@ -332,7 +341,7 @@ function Timecard_Task_Entry_Form(){
 					});
 	
 				} else {
-					alert(jsonRpcObj.result.debug);
+					
 					alert('Failed to update task entry.');
 				}
 	
@@ -360,10 +369,9 @@ function Timecard_Task_Entry_Form(){
 			params[0] = task_time;
 			params[1] = selected_task_id;
 			params[2] = duration;
-			params[3] = 0;
-			params[4] = task_status;
-			params[5] = task_note;
-			params[6] = target_id;
+			params[3] = task_status;
+			params[4] = task_note;
+			params[5] = target_id;
 
 			//execute the RPC callback for retrieving the item log
 			app.api.Task_Data_Interface.Insert_Task_Entry(params, function(jsonRpcObj) {
@@ -377,7 +385,7 @@ function Timecard_Task_Entry_Form(){
 					});
 
 				} else {
-					alert(jsonRpcObj.result.debug);
+					
 					alert('Failed to insert task entry.');
 				}
 
@@ -389,65 +397,13 @@ function Timecard_Task_Entry_Form(){
 		
 	};
 	
-	
-	/** @method Mark_Task_Complete
-	 * @desc This function marks a task complete based on the information in the form.
-	 * @param {function} refresh_callback The callback to call after the data operation has completed.
-	 * */
-	this.Mark_Task_Complete = function(refresh_callback) {
-		
-		var currentTime = new Date();
-		var time_diff_seconds = (currentTime - self.current_task_start_time) / 1000;
-		var hours = time_diff_seconds / 60 / 60;
-		
-		var selected_task_entry_id = self.selected_task_entry.task_log_id;
-		var selected_task_id = self.selected_task_entry.task_id;
-		var task_time = self.selected_task_entry.start_time;
-		var duration = hours;
-		var task_note = self.selected_task_entry.note;
-		var task_status = 'Stopped';
-		var target_id = self.selected_task_entry.task_target_id;
-		
-		var params = Array();
-		
-		params[0] = selected_task_entry_id;
-		params[1] = selected_task_id;
-		params[2] = task_time;
-		params[3] = duration;
-		params[4] = 1;
-		params[5] = task_status;
-		params[6] = task_note;
-		params[7] = target_id;
-
-		//execute the RPC callback for retrieving the item log
-		app.api.Task_Data_Interface.Update_Task_Entry(params, function(jsonRpcObj) {
-
-			if (jsonRpcObj.result.success == 'true') {
-
-				alert('Task entry submitted.');
-
-				app.api.Refresh_Data(function() {
-					//self.refresh_item_log_callback();
-				});
-
-			} else {
-				alert(jsonRpcObj.result.debug);
-				alert('Failed to update task entry.');
-			}
-
-
-		});
-	};
-	
 	/** @method On_Start_Stop_Click_Event
 	 * @desc This function is the start/stop button click event handler.
 	 * */
 	this.On_Start_Stop_Click_Event = function() {
 		var self = this;
 
-		this.Start_Stop_Task(function() {
-			self.refresh_task_log_callback();
-		});
+		this.Start_Stop_Task(false);
 	};
 	
 	
@@ -461,15 +417,7 @@ function Timecard_Task_Entry_Form(){
 
 		//stop the task before marking it complete
 		if (task_start_stop == 'Stop') {
-			this.Start_Stop_Task(function() {
-				self.Mark_Task_Complete(function() {
-					self.refresh_task_log_callback();
-				});
-			});
-		} else {
-			this.Mark_Task_Complete(function() {
-				self.refresh_task_log_callback();
-			});
+			this.Start_Stop_Task(true);
 		}
 	};
 	
@@ -633,7 +581,8 @@ function Timecard_Task_Entry_Form(){
 			self.On_Complete_Click_Event();
 		});
 		
-		
+		//hide the task complete button
+		$('#' + this.task_start_complete_button.id).hide();
 
 		
 		//this is used to update the timer value on running tasks

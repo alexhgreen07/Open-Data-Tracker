@@ -20,7 +20,7 @@ class Task_Data_Interface {
 
 	}
 
-	public function Insert_Task_Entry($start_time, $task_id, $hours, $completed, $status, $note, $task_target_id) {
+	public function Insert_Task_Entry($start_time, $task_id, $hours, $status, $note, $task_target_id) {
 
 		$return_json = array('success' => 'false', );
 
@@ -31,22 +31,6 @@ class Task_Data_Interface {
 		$note = mysql_real_escape_string($note);
 
 		try {
-
-			if ($completed) {
-				$status = "Completed";
-				
-				/*
-				$sql = "UPDATE `tasks` SET `status`='Completed' WHERE `task_id` = " . $task_id . " AND `recurring` != 1";
-
-				$success = mysql_query($sql, $this -> database_link);
-
-				if (!$success) {
-					throw new Exception('SQL error.');
-				}*/
-
-			} else {
-				//$status = "Stopped";
-			}
 
 			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`hours`, `status`, `note`, `task_target_id`) VALUES ('" . 
 				$task_id . "','" . 

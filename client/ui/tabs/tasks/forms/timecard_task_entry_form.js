@@ -369,10 +369,9 @@ function Timecard_Task_Entry_Form(){
 			params[0] = task_time;
 			params[1] = selected_task_id;
 			params[2] = duration;
-			params[3] = 0;
-			params[4] = task_status;
-			params[5] = task_note;
-			params[6] = target_id;
+			params[3] = task_status;
+			params[4] = task_note;
+			params[5] = target_id;
 
 			//execute the RPC callback for retrieving the item log
 			app.api.Task_Data_Interface.Insert_Task_Entry(params, function(jsonRpcObj) {

@@ -157,6 +157,7 @@ function Report_Tab() {
 				{
 					
 					this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Line(data_xy); 
+					document.getElementById(self.report_summaries_data_legend_div.id).innerHTML = "";
 				}
 				else if(document.getElementById(self.summaries_graph_type_select.id).value == "Pie")
 				{	
@@ -170,6 +171,7 @@ function Report_Tab() {
 						
 					
 					this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Radar(data_xy); 
+					document.getElementById(self.report_summaries_data_legend_div.id).innerHTML = "";
 				}
 				else if(document.getElementById(self.summaries_graph_type_select.id).value == "Polar Area")
 				{
@@ -189,6 +191,7 @@ function Report_Tab() {
 						
 					
 					this.myLine = new Chart(document.getElementById(self.summaries_graph_canvas.id).getContext("2d")).Bar(data_xy); 
+					document.getElementById(self.report_summaries_data_legend_div.id).innerHTML = "";
 				
 				}
 			}
@@ -200,7 +203,8 @@ function Report_Tab() {
 			document.getElementById(self.summaries_graph_canvas.id).style = '';
 			document.getElementById(self.summaries_graph_canvas.id).width = "0";
 			document.getElementById(self.summaries_graph_canvas.id).height = "0";
-		
+			
+			document.getElementById(self.report_summaries_data_legend_div.id).innerHTML = "";
 		}
 	};
 	

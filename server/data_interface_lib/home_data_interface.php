@@ -150,7 +150,7 @@ class Home_Data_Interface {
 				`parent_category_id`,
 				`category_path`) 
 				VALUES 
-				('".$_SESSION['SESS_MEMBER_ID']."',
+				('".$_SESSION['session_member_id']."',
 				'".$name."',
 				'".$description."',
 				".$parent_category_id.",

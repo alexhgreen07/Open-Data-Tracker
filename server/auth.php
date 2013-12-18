@@ -49,7 +49,7 @@ function Is_Cookie_Authorized(){
  * */
 function Is_Session_Authorized() {
 	
-	$return_value = !(!isset($_SESSION['SESS_MEMBER_ID']) || (trim($_SESSION['SESS_MEMBER_ID']) == ''));
+	$return_value = !(!isset($_SESSION['session_member_id']) || (trim($_SESSION['session_member_id']) == ''));
 	
 	if($return_value)
 	{
@@ -121,13 +121,13 @@ function Authorize_User_Password($login, $password)
 function Start_Authorized_Session($member_id)
 {
 	//set session authorization variable
-	$_SESSION['SESS_MEMBER_ID'] = $member_id;
+	$_SESSION['session_member_id'] = $member_id;
 }
 
 function Logout_Authorized_Session()
 {
 	//Unset the variables stored in session
-	unset($_SESSION['SESS_MEMBER_ID']);
+	unset($_SESSION['session_member_id']);
 	
 	$qry = "DELETE FROM sessions WHERE session_id = '".$_COOKIE['session_longterm_id']."';";
 	$result = mysql_query($qry);
@@ -160,7 +160,7 @@ function Update_Authorization_Cookie()
 		}
 		else {
 			
-			$qry = "INSERT INTO sessions (session_id,member_id,session_expiry) VALUES('".session_id()."','".$_SESSION['SESS_MEMBER_ID']."', FROM_UNIXTIME(".$cookie_expiry."));";
+			$qry = "INSERT INTO sessions (session_id,member_id,session_expiry) VALUES('".session_id()."','".$_SESSION['session_member_id']."', FROM_UNIXTIME(".$cookie_expiry."));";
 			$result = mysql_query($qry);
 			
 		}

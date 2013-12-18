@@ -131,7 +131,7 @@ function Report_Tab() {
 				
 				for(i = 0; i < self.y_data_to_graph.length; i++){
 					
-					color_html = "#" + (Math.floor((Math.random()*0xFFFFFF))).toString(16);
+					color_html = Rainbow(self.y_data_to_graph.length,i);
 					
 					data_radial.push({
 							value: self.y_data_to_graph[i],

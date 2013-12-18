@@ -4,8 +4,8 @@ require_once ('config.php');
 require_once ('auth.php');
 
 //the current version of the database
-$current_version_id = 0;
-$current_version_string = "0.0.1";
+define('current_version_id', '1');
+define('current_version_string', '0.0.2');
 
 function Connect_To_DB()
 {
@@ -24,12 +24,13 @@ function Connect_To_DB()
 	return $link;
 }
 
-function Insert_Current_Version()
+function Insert_Version($version_id, $version_string)
 {
+	
 	$sql = "INSERT INTO `life_management`.`version` (`version_id`, `version_string`) VALUES (";
-	$sql .= "'" . $current_version_id . "'";
+	$sql .= "'" . $version_id . "'";
 	$sql .= ",";
-	$sql .= "'" . $current_version_string . "'";
+	$sql .= "'" . $version_string . "'";
 	$sql .= ");";
 	
 	//execute query
@@ -161,7 +162,6 @@ function Create_Database_Tables()
 		) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 		";
 	
-	//versioning table
 	$sql .= "
 		CREATE TABLE IF NOT EXISTS `version` (
 		  `version_id` int(11) NOT NULL,
@@ -173,7 +173,70 @@ function Create_Database_Tables()
 	$result = mysql_query($sql);
 	
 	//insert the current version
-	Insert_Current_Version();
+	Insert_Version(current_version_id,current_version_string);
+}
+
+
+function Update_Database()
+{
+	$updates_lookup_table = array(
+			0 => 'Update_From_0_To_1'
+		);
+	
+	$sql = "SELECT * FROM `life_management`.`version` WHERE `version_id` >= " . current_version_id . " ORDER BY `version_id` ASC";
+	$result = mysql_query($sql);
+	$num = mysql_numrows($result);
+
+	if($num == 0)
+	{
+		//update to next versions
+		$sql = "SELECT * FROM `life_management`.`version` WHERE `version_id` < " . current_version_id . " ORDER BY `version_id` ASC";
+		$result = mysql_query($sql);
+		$num = mysql_numrows($result);
+		
+		$i = 0;
+		while ($i < $num) {
+			
+			$version_id_to_update = mysql_result($result, $i, "version_id");
+			
+			$update_function = $updates_lookup_table[$version_id_to_update];
+			
+			//execute update
+			$update_function();
+			
+			$i++;
+		}
+
+	}
+}
+
+//-----------------------------------------------------------------
+
+function Update_From_0_To_1()
+{
+	$version_id = 1;
+	$version_string = "0.0.2";
+	
+	//execute updates from previous version
+	$sql = "ALTER TABLE `items` ADD `member_id` int(11);";
+	$result = mysql_query($sql);
+	
+	$sql = "ALTER TABLE `item_log` ADD `member_id` int(11);";
+	$result = mysql_query($sql);
+	
+	$sql = "ALTER TABLE `item_targets` ADD `member_id` int(11);";
+	$result = mysql_query($sql);
+	
+	$sql = "ALTER TABLE `tasks` ADD `member_id` int(11);";
+	$result = mysql_query($sql);
+	
+	$sql = "ALTER TABLE `task_log` ADD `member_id` int(11);";
+	$result = mysql_query($sql);
+	
+	$sql = "ALTER TABLE `task_targets` ADD `member_id` int(11);";
+	$result = mysql_query($sql);
+	
+	Insert_Version($version_id,$version_string);
 }
 
 ?>

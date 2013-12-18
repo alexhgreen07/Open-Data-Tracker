@@ -32,13 +32,14 @@ class Task_Data_Interface {
 
 		try {
 
-			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`hours`, `status`, `note`, `task_target_id`) VALUES ('" . 
+			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`hours`, `status`, `note`, `task_target_id`,`member_id`) VALUES ('" . 
 				$task_id . "','" . 
 				$start_time . "','" . 
 				$hours . "', '" . 
 				$status . "','" . 
 				$note . "',".
-				$task_target_id.")";
+				$task_target_id.",
+				'" . $_SESSION['session_member_id'] ."')";
 			
 			$return_json['debug'] = $sql;
 			
@@ -78,7 +79,7 @@ class Task_Data_Interface {
 			`status`='" . $status . "',
 			`note`='" . $note . "',
 			`task_target_id`=".$task_target_id."
-			WHERE `task_log_id` = " . $task_log_id . "";
+			WHERE `task_log_id` = " . $task_log_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 		
 		$return_json['debug'] = $sql;
 		
@@ -102,7 +103,7 @@ class Task_Data_Interface {
 
 		$task_log_id = mysql_real_escape_string($task_log_id);
 
-		$sql = "DELETE FROM `task_log` WHERE `task_log_id` = " . $task_log_id;
+		$sql = "DELETE FROM `task_log` WHERE `task_log_id` = " . $task_log_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 		//execute insert
 		$success = mysql_query($sql, $this -> database_link);
@@ -125,7 +126,7 @@ class Task_Data_Interface {
 		$task_start_stop = mysql_real_escape_string($task_start_stop);
 		$note = mysql_real_escape_string($note);
 
-		$sql_query = "SELECT DISTINCT `task_id` FROM `life_management`.`tasks` WHERE `name` = '" . $task_name_to_enter . "'";
+		$sql_query = "SELECT DISTINCT `task_id` FROM `life_management`.`tasks` WHERE `name` = '" . $task_name_to_enter . "' AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 		$result = mysql_query($sql_query, $this -> database_link);
 
 		$task_id = mysql_result($result, 0, "task_id");
@@ -140,7 +141,8 @@ class Task_Data_Interface {
 				`note`='" . $note . "'
 				WHERE `task_id` = '" . $task_id . "' AND 
 				`hours` = 0 AND
-				`status` = 'Started'";
+				`status` = 'Started' AND
+				`member_id`='" . $_SESSION['session_member_id'] ."'";
 		}
 
 		//execute insert
@@ -163,7 +165,7 @@ class Task_Data_Interface {
 			$task_start_stop = mysql_real_escape_string($task_start_stop);
 
 			//find the task by its name
-			$sql_query = "SELECT DISTINCT `task_id` FROM `life_management`.`tasks` WHERE `name` = '" . $task_name_to_enter . "'";
+			$sql_query = "SELECT DISTINCT `task_id` FROM `life_management`.`tasks` WHERE `name` = '" . $task_name_to_enter . "' AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 			$result = mysql_query($sql_query, $this -> database_link);
 
 			if (!$result) {
@@ -173,7 +175,7 @@ class Task_Data_Interface {
 			$task_id = mysql_result($result, 0, "task_id");
 
 			//insert an entry into the log indicating the task is complete
-			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`status`) VALUES ('" . $task_id . "',NOW(),'Completed')";
+			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`status`,`member_id`) VALUES ('" . $task_id . "',NOW(),'Completed','" . $_SESSION['session_member_id'] ."')";
 
 			//execute insert
 			$success = mysql_query($sql, $this -> database_link);
@@ -209,7 +211,8 @@ class Task_Data_Interface {
 			`estimated_time`,
 			`note`,
 			`category_id`,
-			`status`) VALUES (';
+			`status`,
+			`member_id`) VALUES (';
 
 		$sql .= "'" . $task_name . "',";
 		$sql .= "'" . $task_description . "',";
@@ -217,7 +220,8 @@ class Task_Data_Interface {
 		$sql .= "" . $task_estimated_time . ",";
 		$sql .= "'" . $task_note . "',";
 		$sql .= "" . $category_id . ",";
-		$sql .= "'Active')";
+		$sql .= "'Active',";
+		$sql .= "'" . $_SESSION['session_member_id'] ."')";
 
 		$success = mysql_query($sql, $this -> database_link);
 
@@ -236,7 +240,7 @@ class Task_Data_Interface {
 			
 		$return_json = array('success' => 'false', );
 
-		$sql = "DELETE FROM `tasks` WHERE `task_id` = " . $task_id;
+		$sql = "DELETE FROM `tasks` WHERE `task_id` = " . $task_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 		$success = mysql_query($sql, $this -> database_link);
 
@@ -266,7 +270,7 @@ class Task_Data_Interface {
 			`estimated_time`=" . $estimated_time . ",
 			`note`='" . $note . "',
 			`status`= '".$status."'
-			WHERE `task_id`=" . $task_id . "";
+			WHERE `task_id`=" . $task_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 		$success = mysql_query($sql, $this -> database_link);
 
@@ -311,7 +315,7 @@ class Task_Data_Interface {
 			`note`,
 			`estimated_time`,
 			`category_id`,
-			`status` FROM `life_management`.`tasks` ORDER BY `name` ASC";
+			`status` FROM `life_management`.`tasks` WHERE `member_id`='" . $_SESSION['session_member_id'] ."' ORDER BY `name` ASC";
 		$result = mysql_query($sql_query, $this -> database_link);
 
 		if ($result) {
@@ -387,7 +391,7 @@ class Task_Data_Interface {
 			`task_log`.`note` AS `note`,
 			`task_log`.`task_target_id` AS `task_target_id`
 			FROM `tasks` , `task_log`
-			WHERE `tasks`.`task_id` = `task_log`.`task_id` 
+			WHERE `tasks`.`task_id` = `task_log`.`task_id` AND `tasks`.`member_id`='" . $_SESSION['session_member_id'] ."'
 			ORDER BY `task_log`.`start_time` DESC";
 		$result = mysql_query($query, $this -> database_link);
 
@@ -457,7 +461,7 @@ class Task_Data_Interface {
 			`task_targets`.`recurrance_period` AS `recurrance_period`, 
 			`tasks`.`name` AS `name` 
 			FROM `task_targets`, `tasks`
-			WHERE `tasks`.`task_id` = `task_targets`.`task_id` 
+			WHERE `tasks`.`task_id` = `task_targets`.`task_id` AND `tasks`.`member_id`='" . $_SESSION['session_member_id'] ."'
 			ORDER BY `task_targets`.`scheduled_time` DESC";
 			
 		$result = mysql_query($query, $this -> database_link);
@@ -512,14 +516,16 @@ class Task_Data_Interface {
 			`scheduled_time`, 
 			`recurring`, 
 			`recurrance_type`, 
-			`recurrance_period`) VALUES (';
+			`recurrance_period`,
+			`member_id`) VALUES (';
 
 		$sql .= "'" . $task_id . "',";
 		$sql .= "" . $scheduled . ",";
 		$sql .= "'" . $scheduled_time . "',";
 		$sql .= "" . $recurring . ",";
 		$sql .= "'" . $recurrance_type . "',";
-		$sql .= "" . $recurrance_period . ")";
+		$sql .= "" . $recurrance_period . ",";
+		$sql .= "'" . $_SESSION['session_member_id'] ."')";
 
 		$success = mysql_query($sql, $this -> database_link);
 
@@ -551,7 +557,7 @@ class Task_Data_Interface {
 			`recurring`=".$recurring.",
 			`recurrance_type`='".$recurrance_type."',
 			`recurrance_period`=".$recurrance_period." 
-			WHERE `task_schedule_id`=" . $task_target_id;
+			WHERE `task_schedule_id`=" . $task_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 		$success = mysql_query($sql, $this -> database_link);
 
@@ -570,7 +576,7 @@ class Task_Data_Interface {
 	{
 		$return_json = array('success' => 'false', );
 
-		$sql = "DELETE FROM `task_targets` WHERE `task_schedule_id` = " . $task_target_id;
+		$sql = "DELETE FROM `task_targets` WHERE `task_schedule_id` = " . $task_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 		$success = mysql_query($sql, $this -> database_link);
 

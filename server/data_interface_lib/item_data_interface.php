@@ -40,10 +40,11 @@ class Item_Data_Interface {
 				`time` ,
 				`value` ,
 				`item_id` ,
-				`note`
+				`note`,
+				`member_id`
 				)
 				VALUES (
-				NOW(), '" . $value . "', '" . $item_id . "', '" . $note . "')";
+				NOW(), '" . $value . "', '" . $item_id . "', '" . $note . "', '" . $_SESSION['session_member_id'] ."')";
 
 			$success = mysql_query($sql_insert, $this -> database_link);
 
@@ -79,10 +80,11 @@ class Item_Data_Interface {
 				`time` ,
 				`value` ,
 				`item_id` ,
-				`note`
+				`note`,
+				`member_id`
 				)
 				VALUES (
-				'" . $time . "', '" . $value . "', '" . $item_id . "', '" . $note . "')";
+				'" . $time . "', '" . $value . "', '" . $item_id . "', '" . $note . "','" . $_SESSION['session_member_id'] ."')";
 
 			//$return_json['debug'] = $sql_insert;
 
@@ -110,7 +112,7 @@ class Item_Data_Interface {
 
 		if ($value != "") {
 
-			$sql_insert = "UPDATE `item_log` SET `item_id` = " . $item_id . ",`time` = '".$time."',`value`=".$value.",`note`='".$note."' WHERE `item_log_id` = " . $item_entry_id;
+			$sql_insert = "UPDATE `item_log` SET `item_id` = " . $item_id . ",`time` = '".$time."',`value`=".$value.",`note`='".$note."' WHERE `item_log_id` = " . $item_entry_id . "AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 			//$return_json['debug'] = $sql_insert;
 
@@ -132,7 +134,7 @@ class Item_Data_Interface {
 		
 		$return_json = array('success' => 'false', );
 		
-		$sql_insert = "DELETE FROM `item_log` WHERE `item_log_id` = " . $item_entry_id;
+		$sql_insert = "DELETE FROM `item_log` WHERE `item_log_id` = " . $item_entry_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 		//$return_json['debug'] = $sql_insert;
 
@@ -158,8 +160,8 @@ class Item_Data_Interface {
 		
 		if ($name != "") {
 	
-			$sql_insert = "INSERT INTO `items`(`date_created`,`name`, `unit`, `description`) VALUES (
-				NOW(), '" . $name . "', '" . $unit . "', '" . $description . "')";
+			$sql_insert = "INSERT INTO `items`(`date_created`,`name`, `unit`, `description`, `member_id`) VALUES (
+				NOW(), '" . $name . "', '" . $unit . "', '" . $description . "','" . $_SESSION['session_member_id'] ."')";
 	
 			$success = mysql_query($sql_insert, $this -> database_link);
 	
@@ -184,7 +186,7 @@ class Item_Data_Interface {
 		
 		if ($name != "") {
 
-			$sql_insert = "UPDATE `items` SET `name`='".$name."',`description`='".$description."',`unit`='".$unit."' WHERE `item_id`=" . $item_id;
+			$sql_insert = "UPDATE `items` SET `name`='".$name."',`description`='".$description."',`unit`='".$unit."' WHERE `item_id`=" . $item_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 			$success = mysql_query($sql_insert, $this -> database_link);
 
@@ -206,7 +208,7 @@ class Item_Data_Interface {
 		
 		if ($item_id != "") {
 
-			$sql_insert = "DELETE FROM `items` WHERE `item_id`=" . $item_id;
+			$sql_insert = "DELETE FROM `items` WHERE `item_id`=" . $item_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 			$success = mysql_query($sql_insert, $this -> database_link);
 
@@ -237,14 +239,16 @@ class Item_Data_Interface {
 			`item_id`, 
 			`period_type`, 
 			`period`, 
-			`recurring`) VALUES (
+			`recurring`,
+			`member_id`) VALUES (
 			'".$start_time."',
 			'".$type."',
 			".$value.",
 			".$item_id.",
 			'".$period_type."',
 			".$period.",
-			".$recurring.")";
+			".$recurring.",
+			'" . $_SESSION['session_member_id'] ."')";
 
 		$success = mysql_query($sql_insert, $this -> database_link);
 
@@ -271,8 +275,8 @@ class Item_Data_Interface {
 			`item_id` = ".$item_id.",
 			`period_type` = '".$period_type."',
 			`period` = ".$period.",
-			`recurring` = ".$recurring." 
-			WHERE `item_target_id` = " . $item_target_id;
+			`recurring` = ".$recurring."
+			WHERE `item_target_id` = " . $item_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 		$success = mysql_query($sql_insert, $this -> database_link);
 
@@ -295,7 +299,7 @@ class Item_Data_Interface {
 		
 		if ($item_target_id != "") {
 
-			$sql_insert = "DELETE FROM `item_targets` WHERE `item_target_id`=" . $item_target_id;
+			$sql_insert = "DELETE FROM `item_targets` WHERE `item_target_id`=" . $item_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 			$success = mysql_query($sql_insert, $this -> database_link);
 
@@ -346,7 +350,7 @@ class Item_Data_Interface {
 			`items`.`unit` AS `unit`, 
 			`item_log`.`note` AS `note` 
 			FROM `life_management`.`item_log`, `life_management`.`items` 
-			WHERE `items`.`item_id` = `item_log`.`item_id` 
+			WHERE `items`.`item_id` = `item_log`.`item_id` AND `items`.`member_id` = '" . $_SESSION['session_member_id'] ."'
 			ORDER BY `time` DESC";
 			
 		$result = mysql_query($query, $this -> database_link);
@@ -400,7 +404,7 @@ class Item_Data_Interface {
 	public function Get_Items() {
 		$return_json = array('success' => 'false', 'data' => array(), );
 		
-		$sql_query = "SELECT `item_id`, `name`, `description`, `unit`, `date_created` FROM `life_management`.`items` ORDER BY `name` asc";
+		$sql_query = "SELECT `item_id`, `name`, `description`, `unit`, `date_created` FROM `life_management`.`items` WHERE `member_id`='" . $_SESSION['session_member_id'] ."' ORDER BY `name` asc";
 		$result = mysql_query($sql_query, $this -> database_link);
 
 		if ($result) {
@@ -473,7 +477,7 @@ class Item_Data_Interface {
 			`item_targets`.`period` AS `period`, 
 			`item_targets`.`recurring` AS `recurring`,
 			`items`.`name` AS `name`
-			FROM `item_targets`, `items` WHERE `items`.`item_id` = `item_targets`.`item_id`";
+			FROM `item_targets`, `items` WHERE `items`.`item_id` = `item_targets`.`item_id` AND `items`.`member_id`='" . $_SESSION['session_member_id'] ."'";
 		$result = mysql_query($sql_query, $this -> database_link);
 
 		if ($result) {

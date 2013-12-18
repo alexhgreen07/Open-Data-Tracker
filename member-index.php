@@ -4,6 +4,8 @@ require_once ('server/database.php');
 
 Connect_To_DB();
 
+Update_Database();
+
 //ensure the session is started.
 session_start();
 

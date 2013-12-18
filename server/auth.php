@@ -21,17 +21,11 @@ function Is_Cookie_Authorized(){
 		if ($result) {
 			
 			if (mysql_num_rows($result) > 0) {
-					
-				if(!Is_Session_Authorized())
-				{
-					$qry = "SELECT * FROM members WHERE login='".$login."' AND passwd='" . md5($password) . "'";
-					$result = mysql_query($qry);
-					$member_id = mysql_result($result,0,'member_id');
-					
-					Start_Authorized_Session($member_id);
-					
-				}
 				
+				$member_id = mysql_result($result,0,'member_id');
+					
+				Start_Authorized_Session($member_id);
+
 				Update_Authorization_Cookie();
 				
 				$return_value = true;

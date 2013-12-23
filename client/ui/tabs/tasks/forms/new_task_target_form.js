@@ -46,7 +46,7 @@ function New_Task_Target_Form(){
 			}else{
 				params[1] = 0;
 			}
-			params[2] = scheduled_time;
+			params[2] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(scheduled_time);
 			if(recurring == 'True')
 			{
 				params[3] = 1;
@@ -192,7 +192,7 @@ function New_Task_Target_Form(){
 		});
 		
 		$('#' + this.task_scheduled_target_date.id).datetimepicker({
-			timeFormat : "HH:mm",
+			timeFormat : "HH:mm:ss",
 			dateFormat : 'yy-mm-dd'
 		});
 		$('#' + this.task_scheduled_target_date.id).datetimepicker("setDate", new Date());

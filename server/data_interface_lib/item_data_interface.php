@@ -121,7 +121,7 @@ class Item_Data_Interface {
 		if ($name != "") {
 	
 			$sql_insert = "INSERT INTO `items`(`date_created`,`name`, `unit`, `description`, `member_id`) VALUES (
-				NOW(), '" . $name . "', '" . $unit . "', '" . $description . "','" . $_SESSION['session_member_id'] ."')";
+				UTC_TIMESTAMP(), '" . $name . "', '" . $unit . "', '" . $description . "','" . $_SESSION['session_member_id'] ."')";
 	
 			$success = mysql_query($sql_insert, $this -> database_link);
 	

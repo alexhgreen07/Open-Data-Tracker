@@ -216,7 +216,7 @@ class Task_Data_Interface {
 
 		$sql .= "'" . $task_name . "',";
 		$sql .= "'" . $task_description . "',";
-		$sql .= "NOW(),";
+		$sql .= "UTC_TIMESTAMP(),";
 		$sql .= "" . $task_estimated_time . ",";
 		$sql .= "'" . $task_note . "',";
 		$sql .= "" . $category_id . ",";

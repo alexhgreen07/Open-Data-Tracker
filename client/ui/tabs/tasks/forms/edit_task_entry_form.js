@@ -68,7 +68,7 @@ function Edit_Task_Entry_Form(){
 		
 			params[0] = selected_task_entry_id;
 			params[1] = selected_task.task_id;
-			params[2] = task_time;
+			params[2] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(task_time);
 			params[3] = duration;
 			params[4] = 0;
 			params[5] = task_status;
@@ -323,7 +323,7 @@ function Edit_Task_Entry_Form(){
 		});
 
 		$('#' + this.task_entry_edit_start_time.id).datetimepicker({
-			timeFormat : "HH:mm",
+			timeFormat : "HH:mm:ss",
 			dateFormat : 'yy-mm-dd'
 		});
 		$('#' + this.task_entry_edit_start_time.id).datetimepicker("setDate", new Date());

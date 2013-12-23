@@ -79,7 +79,7 @@ function Edit_Task_Target_Form(){
 			params.push(self.task_targets_log[index_to_edit - 1].task_schedule_id);
 			params.push(new_task_id);
 			params.push(new_scheduled);
-			params.push(new_scheduled_time);
+			params.push(Cast_Local_Server_Datetime_To_UTC_Server_Datetime(new_scheduled_time));
 			params.push(new_recurring);
 			params.push(new_recurrance_type);
 			params.push(new_recurrance_period);
@@ -353,7 +353,7 @@ function Edit_Task_Target_Form(){
 		});
 		
 		$('#' + this.task_edit_scheduled_target_date.id).datetimepicker({
-			timeFormat : "HH:mm",
+			timeFormat : "HH:mm:ss",
 			dateFormat : 'yy-mm-dd'
 		});
 		$('#' + this.task_edit_scheduled_target_date.id).datetimepicker("setDate", new Date());

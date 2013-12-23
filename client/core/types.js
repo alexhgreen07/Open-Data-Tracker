@@ -74,11 +74,7 @@ function Cast_Local_Server_Datetime_To_UTC_Server_Datetime(local_datetime_string
 	var local_date = Cast_Server_Datetime_to_Date(local_datetime_string);
 	var utc_date = Convert_Local_Date_To_UTC_Timezone(local_date);
 	
-	alert(local_datetime_string);
-	
 	utc_datetime_string = Cast_Date_to_Server_Datetime(utc_date);
-	
-	alert(utc_datetime_string);
 	
 	return utc_datetime_string;
 }

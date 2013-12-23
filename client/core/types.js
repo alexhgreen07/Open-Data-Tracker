@@ -41,9 +41,20 @@ function Cast_Date_to_Server_Datetime(date_object)
 {
 	var time_string = "";
 	
-	time_string = date_object.toISOString().slice(0, 19).replace('T', ' ');
+	time_string = 
+		date_object.getFullYear() + '-' + 
+		padDigits(date_object.getMonth() + 1,2) + '-' + 
+		padDigits(date_object.getDate(),2) + 
+		' ' + 
+		padDigits(date_object.getHours(),2) + ':' + 
+		padDigits(date_object.getMinutes(),2) + ':' + 
+		padDigits(date_object.getSeconds(),2);
 	
 	return time_string;
+}
+
+function padDigits(number, digits) {
+    return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
 }
 
 function Refresh_Select_HTML_From_Table(select_id, table, value_column_name, text_column_name)

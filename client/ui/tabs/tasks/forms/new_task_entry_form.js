@@ -44,7 +44,7 @@ function New_Task_Entry_Form(){
 			var task_status = $('#' + this.add_task_entry_task_status_select.id).val();
 			var target_id = document.getElementById(this.task_target_select.id).value;
 
-			params[0] = task_time;
+			params[0] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(task_time);
 			params[1] = selected_task.task_id;
 			params[2] = duration;
 			params[3] = task_status;
@@ -195,7 +195,7 @@ function New_Task_Entry_Form(){
 		});
 		
 		$('#' + this.task_entry_start_time.id).datetimepicker({
-			timeFormat : "HH:mm",
+			timeFormat : "HH:mm:ss",
 			dateFormat : 'yy-mm-dd'
 		});
 		$('#' + this.task_entry_start_time.id).datetimepicker("setDate", new Date());

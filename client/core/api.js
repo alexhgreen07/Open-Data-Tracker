@@ -117,8 +117,7 @@ function Server_API() {
 					{
 						//convert UTC datetime to local timezone
 						var utc_date = Cast_Server_Datetime_to_Date(self.data[key][i][column]);
-						var current_date = new Date();
-						var local_date = new Date(utc_date.getTime() - 60000*current_date.getTimezoneOffset());
+						var local_date = Convert_UTC_Date_To_Local_Timezone(utc_date);
 						
 						//reset the date string in the column
 						self.data[key][i][column] = Cast_Date_to_Server_Datetime(local_date);

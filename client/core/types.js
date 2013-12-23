@@ -53,6 +53,36 @@ function Cast_Date_to_Server_Datetime(date_object)
 	return time_string;
 }
 
+function Convert_UTC_Date_To_Local_Timezone(utc_date_object)
+{
+	var current_date = new Date();
+	var local_date = new Date(utc_date_object.getTime() - 60000*current_date.getTimezoneOffset());
+	
+	return local_date;
+}
+
+function Convert_Local_Date_To_UTC_Timezone(local_date_object)
+{
+	var current_date = new Date();
+	var utc_date = new Date(local_date_object.getTime() + 60000*current_date.getTimezoneOffset());
+	
+	return utc_date;
+}
+
+function Cast_Local_Server_Datetime_To_UTC_Server_Datetime(local_datetime_string)
+{
+	var local_date = Cast_Server_Datetime_to_Date(local_datetime_string);
+	var utc_date = Convert_Local_Date_To_UTC_Timezone(local_date);
+	
+	alert(local_datetime_string);
+	
+	utc_datetime_string = Cast_Date_to_Server_Datetime(utc_date);
+	
+	alert(utc_datetime_string);
+	
+	return utc_datetime_string;
+}
+
 function padDigits(number, digits) {
     return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
 }

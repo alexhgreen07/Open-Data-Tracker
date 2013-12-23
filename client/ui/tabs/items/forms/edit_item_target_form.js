@@ -73,7 +73,7 @@ function Edit_Item_Target_Form(){
 			
 			var params = new Array();
 			params[0] = item_target_id;
-			params[1] = start_time;
+			params[1] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(start_time);
 			params[2] = type;
 			params[3] = value;
 			params[4] = item;
@@ -298,7 +298,7 @@ function Edit_Item_Target_Form(){
 
 		//initialize the datetime picker
 		$('#' + this.item_edit_target_time.id).datetimepicker({
-			timeFormat : "HH:mm",
+			timeFormat : "HH:mm:ss",
 			dateFormat : 'yy-mm-dd'
 		});
 		$('#' + this.item_edit_target_time.id).datetimepicker("setDate", new Date());

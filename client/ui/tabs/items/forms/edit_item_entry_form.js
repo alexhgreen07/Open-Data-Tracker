@@ -36,9 +36,12 @@ function Edit_Item_Entry_Form(){
 			
 			var selected_item_entry = self.item_log_data[selected_index - 1];
 			
+			var time_string = 
+				Cast_Local_Server_Datetime_To_UTC_Server_Datetime(document.getElementById(self.item_edit_time.id).value);
+			
 			var params = new Array();
 			params.push(item_entry_id);
-			params.push(document.getElementById(self.item_edit_time.id).value);
+			params.push(time_string);
 			params.push(document.getElementById(self.item_edit_value.id).value);
 			params.push(document.getElementById(self.edit_item_name_select.id).value);
 			params.push(document.getElementById(self.item_edit_note.id).value);
@@ -281,7 +284,7 @@ function Edit_Item_Entry_Form(){
 		
 		//initialize the datetime picker
 		$('#' + this.item_edit_time.id).datetimepicker({
-			timeFormat : "HH:mm",
+			timeFormat : "HH:mm:ss",
 			dateFormat : 'yy-mm-dd'
 		});
 		$('#' + this.item_edit_time.id).datetimepicker("setDate", new Date());

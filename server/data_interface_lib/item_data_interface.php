@@ -72,7 +72,7 @@ class Item_Data_Interface {
 
 		if ($value != "") {
 
-			$sql_insert = "UPDATE `item_log` SET `item_id` = " . $item_id . ",`time` = '".$time."',`value`=".$value.",`note`='".$note."' WHERE `item_log_id` = " . $item_entry_id . "AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+			$sql_insert = "UPDATE `item_log` SET `item_id` = " . $item_id . ",`time` = '".$time."',`value`=".$value.",`note`='".$note."' WHERE `item_log_id` = " . $item_entry_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 			//$return_json['debug'] = $sql_insert;
 

@@ -24,15 +24,17 @@ function Quick_Item_Entry_Form(){
 
 		//check that the string is numeric
 		if (!isNaN(Number(value_string)) && value_string != '') {
-
+			
+			var current_utc_date = Convert_Local_Date_To_UTC_Timezone(new Date());
 
 			var params = new Array();
-			params[0] = value_string;
-			params[1] = app.api.data.items[item_select_index - 1].item_id;
-			params[2] = note_string;
+			params[0] = Cast_Date_to_Server_Datetime(current_utc_date);
+			params[1] = value_string;
+			params[2] = app.api.data.items[item_select_index - 1].item_id;
+			params[3] = note_string;
 
 			//execute the RPC callback for retrieving the item log
-			app.api.Item_Data_Interface.Insert_Quick_Item_Entry(params, function(jsonRpcObj) {
+			app.api.Item_Data_Interface.Insert_Item_Entry(params, function(jsonRpcObj) {
 
 				if (jsonRpcObj.result.success == 'true') {
 					

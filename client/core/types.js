@@ -37,6 +37,15 @@ function Cast_Server_Datetime_to_Date(server_datetime_string)
 	return return_value;
 }
 
+function Cast_Date_to_Server_Datetime(date_object)
+{
+	var time_string = "";
+	
+	time_string = date_object.toISOString().slice(0, 19).replace('T', ' ');
+	
+	return time_string;
+}
+
 function Refresh_Select_HTML_From_Table(select_id, table, value_column_name, text_column_name)
 {
 	var select_html = '';

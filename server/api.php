@@ -11,6 +11,7 @@ require_once ('data_interface.php');
 require_once ('data_interface_lib/home_data_interface.php');
 require_once ('data_interface_lib/item_data_interface.php');
 require_once ('data_interface_lib/task_data_interface.php');
+require_once ('data_interface_lib/report_data_interface.php');
 require_once ('../externals/json-rpc2php/jsonRPC2Server.php');
 
 //Connect to mysql server
@@ -34,6 +35,7 @@ $generaldatainterface = new Data_Interface($link);
 $homedatainteface = new Home_Data_Interface($link);
 $itemdatainterface = new Item_Data_Interface($link);
 $taskdatainterface = new Task_Data_Interface($link);
+$reportdatainterface = new Report_Data_Interface($link);
 
 //initialize the jsonRPC server object
 $jsonRpc = new jsonRPCServer();

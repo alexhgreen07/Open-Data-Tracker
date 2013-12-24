@@ -322,7 +322,7 @@ function Timecard_Task_Entry_Form(){
 			
 			params[0] = selected_task_entry_id;
 			params[1] = selected_task_id;
-			params[2] = task_time;
+			params[2] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(task_time);
 			params[3] = duration;
 			params[4] = 0;
 			params[5] = task_status;
@@ -354,11 +354,7 @@ function Timecard_Task_Entry_Form(){
 			var current_time = new Date();
 			
 			var selected_task_id = self.selected_task.task_id;
-			var task_time = 
-				current_time.getFullYear() + '-' + 
-				(current_time.getMonth() + 1) + '-' + 
-				current_time.getDate() + ' ' + 
-				current_time.getHours() + ':' + current_time.getMinutes() + ':' + current_time.getSeconds();
+			var task_time = Cast_Date_to_Server_Datetime(current_time);
 			var duration = 0;
 			var task_note = '';
 			var task_status = 'Started';
@@ -366,7 +362,7 @@ function Timecard_Task_Entry_Form(){
 			
 			var params = new Array();
 
-			params[0] = task_time;
+			params[0] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(task_time);
 			params[1] = selected_task_id;
 			params[2] = duration;
 			params[3] = task_status;

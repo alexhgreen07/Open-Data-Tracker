@@ -31,7 +31,7 @@
 				<link href="client/main.css.php" rel="stylesheet" type="text/css" />
 			</head>
 			<body>
-			<h1>Open Data Tracker Login</h1>
+			<h1>Open Data Tracker</h1>
 			<a href="new_member.php">Sign Up</a>';
 
 	if (!isset($_POST["password"]) && !isset($_POST["login"])) {

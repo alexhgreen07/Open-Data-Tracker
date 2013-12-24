@@ -47,7 +47,7 @@ if (!Is_Authorized()) {
 
 	<body>
 		
-		<div><h1>Open Data Tracker: Member Index</h1><a href="logout.php">Logout</a></div>
+		<div><h1>Open Data Tracker</h1><a href="logout.php">Logout</a></div>
 
 	</body>
 </html>

@@ -27,7 +27,7 @@ function New_Item_Entry_Form(){
 		if (!isNaN(Number(value_string)) && value_string != '') {
 
 			var params = new Array();
-			params[0] = time_string;
+			params[0] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(time_string);
 			params[1] = value_string;
 			params[2] = app.api.data.items[item_select_index - 1].item_id;
 			params[3] = note_string;
@@ -137,7 +137,7 @@ function New_Item_Entry_Form(){
 
 		//initialize the datetime picker
 		$('#' + this.item_new_time.id).datetimepicker({
-			timeFormat : "HH:mm",
+			timeFormat : "HH:mm:ss",
 			dateFormat : 'yy-mm-dd'
 		});
 		$('#' + this.item_new_time.id).datetimepicker("setDate", new Date());

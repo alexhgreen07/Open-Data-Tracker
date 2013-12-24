@@ -20,46 +20,6 @@ class Item_Data_Interface {
 
 	}
 
-	public function Insert_Quick_Item_Entry($value, $item_id, $note) {
-
-		$return_json = array('success' => 'false', );
-		
-		$value = mysql_real_escape_string($value);
-
-		if ($item_id != "-") {
-			$item_id = mysql_real_escape_string($item_id);
-		} else {
-			$item_id = "";
-		}
-
-		$note = mysql_real_escape_string($note);
-
-		if ($value != "") {
-
-			$sql_insert = "INSERT INTO `life_management`.`item_log` (
-				`time` ,
-				`value` ,
-				`item_id` ,
-				`note`,
-				`member_id`
-				)
-				VALUES (
-				NOW(), '" . $value . "', '" . $item_id . "', '" . $note . "', '" . $_SESSION['session_member_id'] ."')";
-
-			$success = mysql_query($sql_insert, $this -> database_link);
-
-			if ($success) {
-				$return_json['success'] = 'true';
-			} else {
-				$return_json['success'] = 'false';
-			}
-
-		}
-		
-		return $return_json;
-
-	}
-
 	public function Insert_Item_Entry($time, $value, $item_id, $note) {
 
 		$return_json = array('success' => 'false', );
@@ -112,7 +72,7 @@ class Item_Data_Interface {
 
 		if ($value != "") {
 
-			$sql_insert = "UPDATE `item_log` SET `item_id` = " . $item_id . ",`time` = '".$time."',`value`=".$value.",`note`='".$note."' WHERE `item_log_id` = " . $item_entry_id . "AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+			$sql_insert = "UPDATE `item_log` SET `item_id` = " . $item_id . ",`time` = '".$time."',`value`=".$value.",`note`='".$note."' WHERE `item_log_id` = " . $item_entry_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 			//$return_json['debug'] = $sql_insert;
 
@@ -161,7 +121,7 @@ class Item_Data_Interface {
 		if ($name != "") {
 	
 			$sql_insert = "INSERT INTO `items`(`date_created`,`name`, `unit`, `description`, `member_id`) VALUES (
-				NOW(), '" . $name . "', '" . $unit . "', '" . $description . "','" . $_SESSION['session_member_id'] ."')";
+				UTC_TIMESTAMP(), '" . $name . "', '" . $unit . "', '" . $description . "','" . $_SESSION['session_member_id'] ."')";
 	
 			$success = mysql_query($sql_insert, $this -> database_link);
 	

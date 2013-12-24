@@ -37,6 +37,52 @@ function Cast_Server_Datetime_to_Date(server_datetime_string)
 	return return_value;
 }
 
+function Cast_Date_to_Server_Datetime(date_object)
+{
+	var time_string = "";
+	
+	time_string = 
+		date_object.getFullYear() + '-' + 
+		padDigits(date_object.getMonth() + 1,2) + '-' + 
+		padDigits(date_object.getDate(),2) + 
+		' ' + 
+		padDigits(date_object.getHours(),2) + ':' + 
+		padDigits(date_object.getMinutes(),2) + ':' + 
+		padDigits(date_object.getSeconds(),2);
+	
+	return time_string;
+}
+
+function Convert_UTC_Date_To_Local_Timezone(utc_date_object)
+{
+	var current_date = new Date();
+	var local_date = new Date(utc_date_object.getTime() - 60000*current_date.getTimezoneOffset());
+	
+	return local_date;
+}
+
+function Convert_Local_Date_To_UTC_Timezone(local_date_object)
+{
+	var current_date = new Date();
+	var utc_date = new Date(local_date_object.getTime() + 60000*current_date.getTimezoneOffset());
+	
+	return utc_date;
+}
+
+function Cast_Local_Server_Datetime_To_UTC_Server_Datetime(local_datetime_string)
+{
+	var local_date = Cast_Server_Datetime_to_Date(local_datetime_string);
+	var utc_date = Convert_Local_Date_To_UTC_Timezone(local_date);
+	
+	utc_datetime_string = Cast_Date_to_Server_Datetime(utc_date);
+	
+	return utc_datetime_string;
+}
+
+function padDigits(number, digits) {
+    return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
+}
+
 function Refresh_Select_HTML_From_Table(select_id, table, value_column_name, text_column_name)
 {
 	var select_html = '';

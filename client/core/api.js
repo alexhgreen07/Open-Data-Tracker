@@ -90,6 +90,9 @@ function Server_API() {
 				self.data = jsonRpcObj.result.data;
 				self.schema = jsonRpcObj.result.schema;
 				
+				//convert all data to the local timezone
+				self.Convert_Data_To_Local_Timezone();
+				
 				//call the data changed callback since the data was refreshed.
 				self.data_changed_callback();
 				
@@ -98,6 +101,33 @@ function Server_API() {
 			});
 		
 	};
-
+	
+	this.Convert_Data_To_Local_Timezone = function(){
+		
+		var self = this;
+		
+		for(var key in self.data)
+		{
+			for(i = 0; i < self.data[key].length; i++)
+			{
+				//iterate through the columns
+				for(var column in self.data[key][i])
+				{
+					if(self.schema[key][column] == "date")
+					{
+						//convert UTC datetime to local timezone
+						var utc_date = Cast_Server_Datetime_to_Date(self.data[key][i][column]);
+						var local_date = Convert_UTC_Date_To_Local_Timezone(utc_date);
+						
+						//reset the date string in the column
+						self.data[key][i][column] = Cast_Date_to_Server_Datetime(local_date);
+					}
+				}
+				
+			}
+			
+		}
+		
+	};
 	
 }

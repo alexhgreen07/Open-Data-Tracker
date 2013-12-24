@@ -110,7 +110,7 @@ function Report_Tab() {
 			if(data_has_changed)
 			{
 				//set the height and width for proper rendering
-				document.getElementById(self.summaries_graph_canvas.id).width = window.innerWidth * 0.5;
+				document.getElementById(self.summaries_graph_canvas.id).width = document.getElementById(self.report_summaries_data_form.id).offsetWidth;
 				document.getElementById(self.summaries_graph_canvas.id).height = window.innerHeight * 0.4;
 				
 				
@@ -546,6 +546,10 @@ function Report_Tab() {
 			self.Refresh_Chart_Data(true);
 
 		});
+		
+		window.onresize = function(event) {
+			self.Refresh_Chart_Data(true);
+		};
 
 	};
 

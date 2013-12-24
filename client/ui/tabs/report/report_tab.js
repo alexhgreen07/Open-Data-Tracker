@@ -250,6 +250,14 @@ function Report_Tab() {
 		
 	};
 	
+	this.Save_Report_Button_Click = function(){
+		
+		report_name = prompt("Please enter the name for the saved report.","Report Name");
+		
+		
+		alert('Report saving.');
+	};
+	
 	this.Tables_Select_Changed = function(is_same_table){
 		
 		document.getElementById(self.report_summaries_data_display_div.id).innerHTML = '';
@@ -455,7 +463,14 @@ function Report_Tab() {
 		this.report_summaries_data_form.setAttribute('method', "post");
 		this.report_summaries_data_form.setAttribute('id', "report_summaries_display_form");
 		
-		this.report_summaries_data_form.innerHTML += 'Tables:<br/>';
+		this.report_summaries_data_form.innerHTML += 'Saved Reports:<br/>';
+		
+		this.report_saved_select = document.createElement("select");
+		this.report_saved_select.setAttribute('id', 'report_saved_select');
+		this.report_saved_select.innerHTML = '<option>-</option>';
+		this.report_summaries_data_form.appendChild(this.report_saved_select);
+		
+		this.report_summaries_data_form.innerHTML += '<br/>Tables:<br/>';
 		
 		this.report_summaries_tables_select = document.createElement("select");
 		this.report_summaries_tables_select.setAttribute('id', 'report_summaries_tables_select');
@@ -503,6 +518,7 @@ function Report_Tab() {
 		this.report_summaries_data_form.innerHTML += '<hr/>';
 		this.summaries_graph_canvas = document.createElement('canvas');
 		this.summaries_graph_canvas.id = 'graph_tab_canvas';
+		this.summaries_graph_canvas.height = 0;
 		this.report_summaries_data_form.appendChild(self.summaries_graph_canvas);
 		this.report_summaries_data_form.innerHTML += '<hr/>';
 		
@@ -514,8 +530,24 @@ function Report_Tab() {
 		this.report_results_data_display_div.setAttribute('id', 'report_summaries_data_results');
 		this.report_summaries_data_form.appendChild(this.report_results_data_display_div);
 		
+		this.report_save_button = document.createElement("input");
+		this.report_save_button.setAttribute('id', 'report_save_button');
+		this.report_save_button.setAttribute('type', 'submit');
+		this.report_save_button.value = 'Save';
+		this.report_summaries_data_form.appendChild(this.report_save_button);
+		
 		var div_tab = document.getElementById(form_div_id);
 		div_tab.appendChild(this.report_summaries_data_form);
+		
+		$('#' + this.report_save_button.id).button();
+		$('#' + this.report_save_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+			//execute the click event
+			self.Save_Report_Button_Click();			
+		});
 		
 		$('#' + self.report_summaries_tables_select.id).change(function() {
 			

@@ -31,7 +31,7 @@ class Report_Data_Interface
 	
 	public function Get_Saved_Reports()
 	{
-		$return_json = array('success' => 'false', );
+		$return_json = array('reports' => '', );
 		
 		
 		

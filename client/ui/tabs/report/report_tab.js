@@ -7,13 +7,19 @@ function Report_Tab() {
 	this.div_id = null;
 	var self = this;
 	
-	this.Refresh = function(data, schema) {
+	this.Refresh = function(data, schema, reports) {
 		
 		self.data = data;
 		self.schema = schema;
+		self.reports = reports;
 		
 		self.Refresh_Summaries_Form(data);
 		
+		Refresh_Select_HTML_From_Table(
+			self.report_saved_select.id,
+			reports,
+			"report_id",
+			"report_name");
 	};
 	
 	this.Refresh_Summaries_Form = function(data){
@@ -110,7 +116,7 @@ function Report_Tab() {
 			if(data_has_changed)
 			{
 				//set the height and width for proper rendering
-				document.getElementById(self.summaries_graph_canvas.id).width = window.innerWidth * 0.5;
+				document.getElementById(self.summaries_graph_canvas.id).width = document.getElementById(self.report_summaries_data_form.id).offsetWidth;
 				document.getElementById(self.summaries_graph_canvas.id).height = window.innerHeight * 0.4;
 				
 				
@@ -247,6 +253,156 @@ function Report_Tab() {
 		}
 		
 		self.Refresh_Chart_Data(false);
+		
+	};
+	
+	this.Save_Report_Button_Click = function(){
+		
+		var params = new Array();
+		
+		var pivot_config_data = pivot.config(true);	
+		
+		report_id = document.getElementById(this.report_saved_select.id).value;
+		table_name = document.getElementById(this.report_summaries_tables_select.id).value;
+		summary_type = document.getElementById(this.report_summaries_type_select.id).value;
+		filter_fields = JSON.stringify(pivot_config_data.filters);
+		row_fields = JSON.stringify(pivot_config_data.rowLabels);
+		summary_fields = JSON.stringify(pivot_config_data.summaries);
+		graph_type = document.getElementById(this.summaries_graph_type_select.id).value;
+		graph_x = document.getElementById(this.summaries_graph_select_x_column.id).value;
+		graph_y = document.getElementById(this.summaries_graph_select_y_column.id).value;
+		
+		//default first argument to report ID
+		params[0] = report_id;
+		params[1] = table_name;
+		params[2] = summary_type;
+		params[3] = filter_fields;
+		params[4] = row_fields;
+		params[5] = summary_fields;
+		params[6] = graph_type;
+		params[7] = graph_x;
+		params[8] = graph_y;
+		
+		if(report_id == 0)
+		{
+			report_name = prompt("Please enter the name for the saved report.","Report Name");
+			
+			//overwrite report ID with report name (new report)
+			params[0] = report_name;
+			
+			app.api.Report_Data_Interface.Save_Report(params, function(jsonRpcObj) {
+				
+				if (jsonRpcObj.result.success == 'true') {
+					
+					
+					alert('Report saved.');
+	
+					app.api.Refresh_Data(function() {
+						//self.refresh_item_log_callback();
+					});
+					
+				} else {
+					alert('Report failed to save.');
+					//alert(jsonRpcObj.result.debug);
+				}
+				
+	
+			});
+		}
+		else
+		{
+			
+			app.api.Report_Data_Interface.Update_Saved_Report(params, function(jsonRpcObj) {
+				
+				if (jsonRpcObj.result.success == 'true') {
+					
+					
+					alert('Report updated.');
+	
+					app.api.Refresh_Data(function() {
+						//self.refresh_item_log_callback();
+					});
+					
+				} else {
+					alert('Report failed to update.');
+					//alert(jsonRpcObj.result.debug);
+				}
+				
+	
+			});
+		}
+		
+		
+		
+	};
+	
+	this.Delete_Report_Button_Click = function(){
+		
+		var params = new Array();
+		report_id = document.getElementById(this.report_saved_select.id).value;
+		
+		if(report_id != 0)
+		{
+			params[0] = report_id;
+			
+			var r=confirm("Are you sure you want to delete this report?");
+			
+			if (r==true)
+			{
+				
+				app.api.Report_Data_Interface.Delete_Saved_Report(params, function(jsonRpcObj) {
+					
+					if (jsonRpcObj.result.success == 'true') {
+						
+						
+						alert('Report deleted.');
+		
+						app.api.Refresh_Data(function() {
+							//self.refresh_item_log_callback();
+						});
+						
+					} else {
+						alert('Report failed to delete.');
+						//alert(jsonRpcObj.result.debug);
+					}
+					
+		
+				});
+				
+			}
+		}
+		
+	};
+	
+	this.Saved_Reports_Select_Changed = function(){
+		
+		report_id = document.getElementById(this.report_saved_select.id).value;
+		
+		if(report_id != 0)
+		{
+			var selected_index = document.getElementById(self.report_saved_select.id).selectedIndex;
+			
+			saved_report = self.reports[selected_index - 1];
+			
+			document.getElementById(this.report_summaries_tables_select.id).value = saved_report.table_name;
+			
+			//refresh the data
+			self.Tables_Select_Changed(false);
+			
+			//load the saved columns
+			$('#' + self.report_summaries_data_display_div.id).pivot_display(
+				'reprocess_display', {
+					filters:JSON.parse(saved_report.filter_fields), 
+					rowLabels:JSON.parse(saved_report.row_fields), 
+					summaries:JSON.parse(saved_report.summary_fields)
+				});
+			
+			$('#' + this.report_delete_button.id).show();
+		}
+		else
+		{
+			$('#' + this.report_delete_button.id).hide();
+		}
 		
 	};
 	
@@ -455,7 +611,14 @@ function Report_Tab() {
 		this.report_summaries_data_form.setAttribute('method', "post");
 		this.report_summaries_data_form.setAttribute('id', "report_summaries_display_form");
 		
-		this.report_summaries_data_form.innerHTML += 'Tables:<br/>';
+		this.report_summaries_data_form.innerHTML += 'Saved Reports:<br/>';
+		
+		this.report_saved_select = document.createElement("select");
+		this.report_saved_select.setAttribute('id', 'report_saved_select');
+		this.report_saved_select.innerHTML = '<option value="0">-</option>';
+		this.report_summaries_data_form.appendChild(this.report_saved_select);
+		
+		this.report_summaries_data_form.innerHTML += '<br/>Tables:<br/>';
 		
 		this.report_summaries_tables_select = document.createElement("select");
 		this.report_summaries_tables_select.setAttribute('id', 'report_summaries_tables_select');
@@ -503,6 +666,7 @@ function Report_Tab() {
 		this.report_summaries_data_form.innerHTML += '<hr/>';
 		this.summaries_graph_canvas = document.createElement('canvas');
 		this.summaries_graph_canvas.id = 'graph_tab_canvas';
+		this.summaries_graph_canvas.height = 0;
 		this.report_summaries_data_form.appendChild(self.summaries_graph_canvas);
 		this.report_summaries_data_form.innerHTML += '<hr/>';
 		
@@ -514,8 +678,50 @@ function Report_Tab() {
 		this.report_results_data_display_div.setAttribute('id', 'report_summaries_data_results');
 		this.report_summaries_data_form.appendChild(this.report_results_data_display_div);
 		
+		this.report_save_button = document.createElement("input");
+		this.report_save_button.setAttribute('id', 'report_save_button');
+		this.report_save_button.setAttribute('type', 'submit');
+		this.report_save_button.value = 'Save';
+		this.report_summaries_data_form.appendChild(this.report_save_button);
+		
+		this.report_summaries_data_form.innerHTML += '<br/><br/>';
+		
+		this.report_delete_button = document.createElement("input");
+		this.report_delete_button.setAttribute('id', 'report_delete_button');
+		this.report_delete_button.setAttribute('type', 'submit');
+		this.report_delete_button.value = 'Delete';
+		this.report_summaries_data_form.appendChild(this.report_delete_button);
+		
 		var div_tab = document.getElementById(form_div_id);
 		div_tab.appendChild(this.report_summaries_data_form);
+		
+		$('#' + this.report_save_button.id).button();
+		$('#' + this.report_save_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+			//execute the click event
+			self.Save_Report_Button_Click();			
+		});
+		
+		$('#' + this.report_delete_button.id).button();
+		$('#' + this.report_delete_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+			//execute the click event
+			self.Delete_Report_Button_Click();	
+		});
+		
+		$('#' + this.report_delete_button.id).hide();
+		
+		$('#' + self.report_saved_select.id).change(function() {
+			
+			self.Saved_Reports_Select_Changed();
+
+		});
 		
 		$('#' + self.report_summaries_tables_select.id).change(function() {
 			
@@ -546,6 +752,10 @@ function Report_Tab() {
 			self.Refresh_Chart_Data(true);
 
 		});
+		
+		window.onresize = function(event) {
+			self.Refresh_Chart_Data(true);
+		};
 
 	};
 

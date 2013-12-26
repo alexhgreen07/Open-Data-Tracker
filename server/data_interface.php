@@ -18,6 +18,7 @@ class Data_Interface {
 	private $homedatainteface;
 	private $itemdatainterface;
 	private $taskdatainterface;
+	private $reportdatainterface;
 	
 	/** \fn public function Data_Interface($new_database_link)
 	 * \brief This is the constructor for the class.
@@ -32,7 +33,7 @@ class Data_Interface {
 		$this -> homedatainteface = new Home_Data_Interface($new_database_link);
 		$this -> itemdatainterface = new Item_Data_Interface($new_database_link);
 		$this -> taskdatainterface = new Task_Data_Interface($new_database_link);
-
+		$this -> reportdatainterface = new Report_Data_Interface($new_database_link);
 	}
 	
 	public function Refresh_All_Data(){
@@ -57,6 +58,8 @@ class Data_Interface {
 		$task_entries_schema = $this->taskdatainterface->Get_Task_Log_Schema();
 		$task_targets_schema = $this->taskdatainterface->Get_Task_Targets_Schema();
 		
+		$reports = $this->reportdatainterface->Get_Saved_Reports();
+		
 		//load all data in the return json arrays
 		$return_json['data']['categories'] = $categories['data'];
 		$return_json['data']['items'] = $items['data'];
@@ -74,6 +77,8 @@ class Data_Interface {
 		$return_json['schema']['tasks'] = $tasks_schema['schema'];
 		$return_json['schema']['task_entries'] = $task_entries_schema['schema'];
 		$return_json['schema']['task_targets'] = $task_targets_schema['schema'];
+		
+		$return_json['reports'] = $reports['reports'];
 		
 		return $return_json;
 		

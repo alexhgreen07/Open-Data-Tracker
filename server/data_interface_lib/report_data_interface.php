@@ -11,7 +11,16 @@ class Report_Data_Interface
 
 	}
 	
-	public function Save_Report($table, $summary_type, $filter_fields, $row_fields, $summary_fields, $graph_type, $graph_x, $graph_y)
+	public function Save_Report($report_name, $table, $summary_type, $filter_fields, $row_fields, $summary_fields, $graph_type, $graph_x, $graph_y)
+	{
+		$return_json = array('success' => 'false', );
+		
+		
+		
+		return $return_json;
+	}
+	
+	public function Update_Saved_Report($saved_report_id, $table, $summary_type, $filter_fields, $row_fields, $summary_fields, $graph_type, $graph_x, $graph_y)
 	{
 		$return_json = array('success' => 'false', );
 		

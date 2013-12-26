@@ -392,9 +392,9 @@ function Report_Tab() {
 			//load the saved columns
 			$('#' + self.report_summaries_data_display_div.id).pivot_display(
 				'reprocess_display', {
-					filters:eval(saved_report.filter_fields), 
-					rowLabels:eval(saved_report.row_fields), 
-					summaries:eval(saved_report.summary_fields)
+					filters:JSON.parse(saved_report.filter_fields), 
+					rowLabels:JSON.parse(saved_report.row_fields), 
+					summaries:JSON.parse(saved_report.summary_fields)
 				});
 			
 			$('#' + this.report_delete_button.id).show();

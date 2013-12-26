@@ -4,8 +4,8 @@ require_once ('config.php');
 require_once ('auth.php');
 
 //the current version of the database
-define('current_version_id', '1');
-define('current_version_string', '0.0.2');
+define('current_version_id', '2');
+define('current_version_string', '0.0.3');
 
 function Connect_To_DB()
 {
@@ -169,6 +169,23 @@ function Create_Database_Tables()
 		) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 		";
 	
+	$sql .= "
+	CREATE TABLE IF NOT EXISTS `reports` (
+	  `report_id` int(11) NOT NULL AUTO_INCREMENT,
+	  `report_name` text NOT NULL,
+	  `table_name` text NOT NULL,
+	  `summary_type` text NOT NULL,
+	  `filter_fields` text NOT NULL,
+	  `row_fields` text NOT NULL,
+	  `summary_fields` text NOT NULL,
+	  `graph_type` text NOT NULL,
+	  `graph_x` text NOT NULL,
+	  `graph_y` text NOT NULL,
+	  `member_id` int(11) NOT NULL,
+	  PRIMARY KEY (`report_id`)
+	) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+	";
+	
 	//execute query
 	$result = mysql_query($sql);
 	
@@ -180,7 +197,8 @@ function Create_Database_Tables()
 function Update_Database()
 {
 	$updates_lookup_table = array(
-			0 => 'Update_From_0_To_1'
+			0 => 'Update_From_0_To_1',
+			1 => 'Update_From_1_To_2'
 		);
 	
 	$sql = "SELECT * FROM `life_management`.`version` WHERE `version_id` >= " . current_version_id . " ORDER BY `version_id` ASC";
@@ -234,6 +252,31 @@ function Update_From_0_To_1()
 	$result = mysql_query($sql);
 	
 	$sql = "ALTER TABLE `task_targets` ADD `member_id` int(11);";
+	$result = mysql_query($sql);
+	
+	Insert_Version($version_id,$version_string);
+}
+
+function Update_From_1_To_2()
+{
+	$version_id = 2;
+	$version_string = "0.0.3";
+	
+	//execute updates from previous version
+	$sql = "CREATE TABLE IF NOT EXISTS `reports` (
+	  `report_id` int(11) NOT NULL AUTO_INCREMENT,
+	  `report_name` text NOT NULL,
+	  `table_name` text NOT NULL,
+	  `summary_type` text NOT NULL,
+	  `filter_fields` text NOT NULL,
+	  `row_fields` text NOT NULL,
+	  `summary_fields` text NOT NULL,
+	  `graph_type` text NOT NULL,
+	  `graph_x` text NOT NULL,
+	  `graph_y` text NOT NULL,
+	  `member_id` int(11) NOT NULL,
+	  PRIMARY KEY (`report_id`)
+	) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
 	$result = mysql_query($sql);
 	
 	Insert_Version($version_id,$version_string);

@@ -254,29 +254,35 @@ function Report_Tab() {
 		
 		var params = new Array();
 		
-		if(document.getElementById(self.report_saved_select.id).value == 0)
+		var pivot_config_data = pivot.config(true);	
+		
+		report_id = document.getElementById(this.report_saved_select.id).value;
+		table_name = document.getElementById(this.report_summaries_tables_select.id).value;
+		summary_type = document.getElementById(this.report_summaries_type_select.id).value;
+		filter_fields = JSON.stringify(pivot_config_data.filters);
+		row_fields = JSON.stringify(pivot_config_data.rowLabels);
+		summary_fields = JSON.stringify(pivot_config_data.summaries);
+		graph_type = document.getElementById(this.summaries_graph_type_select.id).value;
+		graph_x = document.getElementById(this.summaries_graph_select_x_column.id).value;
+		graph_y = document.getElementById(this.summaries_graph_select_y_column.id).value;
+		
+		//default first argument to report ID
+		params[0] = report_id;
+		params[1] = table_name;
+		params[2] = summary_type;
+		params[3] = filter_fields;
+		params[4] = row_fields;
+		params[5] = summary_fields;
+		params[6] = graph_type;
+		params[7] = graph_x;
+		params[8] = graph_y;
+		
+		if(report_id == 0)
 		{
 			report_name = prompt("Please enter the name for the saved report.","Report Name");
-			pivot_config_data = pivot.config(true);	
 			
-			table_name = document.getElementById(this.report_summaries_tables_select.id).value;
-			summary_type = document.getElementById(this.report_summaries_type_select.id).value;
-			filter_fields = JSON.stringify(pivot_config_data.filters);
-			row_fields = JSON.stringify(pivot_config_data.rowLabels);
-			summary_fields = JSON.stringify(pivot_config_data.summaries);
-			graph_type = document.getElementById(this.summaries_graph_type_select.id).value;
-			graph_x = document.getElementById(this.summaries_graph_select_x_column.id).value;
-			graph_y = document.getElementById(this.summaries_graph_select_y_column.id).value;
-			
+			//overwrite report ID with report name (new report)
 			params[0] = report_name;
-			params[1] = table_name;
-			params[2] = summary_type;
-			params[3] = filter_fields;
-			params[4] = row_fields;
-			params[5] = summary_fields;
-			params[6] = graph_type;
-			params[7] = graph_x;
-			params[8] = graph_y;
 			
 			app.api.Report_Data_Interface.Save_Report(params, function(jsonRpcObj) {
 				
@@ -299,26 +305,6 @@ function Report_Tab() {
 		}
 		else
 		{
-			
-			report_id = document.getElementById(this.report_saved_select.id).value;
-			table_name = document.getElementById(this.report_summaries_tables_select.id).value;
-			summary_type = document.getElementById(this.report_summaries_type_select.id).value;
-			filter_fields = JSON.stringify(pivot_config_data.filters);
-			row_fields = JSON.stringify(pivot_config_data.rowLabels);
-			summary_fields = JSON.stringify(pivot_config_data.summaries);
-			graph_type = document.getElementById(this.summaries_graph_type_select.id).value;
-			graph_x = document.getElementById(this.summaries_graph_select_x_column.id).value;
-			graph_y = document.getElementById(this.summaries_graph_select_y_column.id).value;
-			
-			params[0] = report_id;
-			params[1] = table_name;
-			params[2] = summary_type;
-			params[3] = filter_fields;
-			params[4] = row_fields;
-			params[5] = summary_fields;
-			params[6] = graph_type;
-			params[7] = graph_x;
-			params[8] = graph_y;
 			
 			app.api.Report_Data_Interface.Update_Saved_Report(params, function(jsonRpcObj) {
 				

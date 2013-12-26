@@ -45,7 +45,7 @@ function Main_Application() {
 		self.home_tab_object.Refresh(self.api.data);
 		self.item_tab_object.Refresh(self.api.data);
 		self.task_tab_object.Refresh(self.api.data);
-		self.report_tab_object.Refresh(self.api.data, self.api.schema);
+		self.report_tab_object.Refresh(self.api.data, self.api.schema, self.api.reports);
 
 	};
 	

@@ -7,13 +7,19 @@ function Report_Tab() {
 	this.div_id = null;
 	var self = this;
 	
-	this.Refresh = function(data, schema) {
+	this.Refresh = function(data, schema, reports) {
 		
 		self.data = data;
 		self.schema = schema;
+		self.reports = reports;
 		
 		self.Refresh_Summaries_Form(data);
 		
+		Refresh_Select_HTML_From_Table(
+			self.report_saved_select.id,
+			reports,
+			"report_id",
+			"report_name");
 	};
 	
 	this.Refresh_Summaries_Form = function(data){
@@ -330,9 +336,73 @@ function Report_Tab() {
 		
 	};
 	
+	this.Delete_Report_Button_Click = function(){
+		
+		var params = new Array();
+		report_id = document.getElementById(this.report_saved_select.id).value;
+		
+		if(report_id != 0)
+		{
+			params[0] = report_id;
+			
+			var r=confirm("Are you sure you want to delete this report?");
+			
+			if (r==true)
+			{
+				
+				app.api.Report_Data_Interface.Delete_Saved_Report(params, function(jsonRpcObj) {
+					
+					if (jsonRpcObj.result.success == 'true') {
+						
+						
+						alert('Report deleted.');
+		
+						app.api.Refresh_Data(function() {
+							//self.refresh_item_log_callback();
+						});
+						
+					} else {
+						alert('Report failed to delete.');
+						//alert(jsonRpcObj.result.debug);
+					}
+					
+		
+				});
+				
+			}
+		}
+		
+	};
+	
 	this.Saved_Reports_Select_Changed = function(){
 		
-		alert("Report saved select changed!");
+		report_id = document.getElementById(this.report_saved_select.id).value;
+		
+		if(report_id != 0)
+		{
+			var selected_index = document.getElementById(self.report_saved_select.id).selectedIndex;
+			
+			saved_report = self.reports[selected_index - 1];
+			
+			document.getElementById(this.report_summaries_tables_select.id).value = saved_report.table_name;
+			
+			//refresh the data
+			self.Tables_Select_Changed(false);
+			
+			//load the saved columns
+			$('#' + self.report_summaries_data_display_div.id).pivot_display(
+				'reprocess_display', {
+					filters:eval(saved_report.filter_fields), 
+					rowLabels:eval(saved_report.row_fields), 
+					summaries:eval(saved_report.summary_fields)
+				});
+			
+			$('#' + this.report_delete_button.id).show();
+		}
+		else
+		{
+			$('#' + this.report_delete_button.id).hide();
+		}
 		
 	};
 	
@@ -614,6 +684,14 @@ function Report_Tab() {
 		this.report_save_button.value = 'Save';
 		this.report_summaries_data_form.appendChild(this.report_save_button);
 		
+		this.report_summaries_data_form.innerHTML += '<br/><br/>';
+		
+		this.report_delete_button = document.createElement("input");
+		this.report_delete_button.setAttribute('id', 'report_delete_button');
+		this.report_delete_button.setAttribute('type', 'submit');
+		this.report_delete_button.value = 'Delete';
+		this.report_summaries_data_form.appendChild(this.report_delete_button);
+		
 		var div_tab = document.getElementById(form_div_id);
 		div_tab.appendChild(this.report_summaries_data_form);
 		
@@ -626,6 +704,18 @@ function Report_Tab() {
 			//execute the click event
 			self.Save_Report_Button_Click();			
 		});
+		
+		$('#' + this.report_delete_button.id).button();
+		$('#' + this.report_delete_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+			//execute the click event
+			self.Delete_Report_Button_Click();	
+		});
+		
+		$('#' + this.report_delete_button.id).hide();
 		
 		$('#' + self.report_saved_select.id).change(function() {
 			

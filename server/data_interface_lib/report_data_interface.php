@@ -139,6 +139,9 @@ class Report_Data_Interface
 			$filter_fields = mysql_result($result, $i, "filter_fields");
 			$row_fields = mysql_result($result, $i, "row_fields");
 			$summary_fields = mysql_result($result, $i, "summary_fields");
+			$graph_type = mysql_result($result, $i, "graph_type");
+			$graph_x = mysql_result($result, $i, "graph_x");
+			$graph_y = mysql_result($result, $i, "graph_y");
 			
 			$return_json['reports'][$i] = array(
 				'report_id' => $report_id,
@@ -147,7 +150,10 @@ class Report_Data_Interface
 				'summary_type' => $summary_type,
 				'filter_fields' => $filter_fields,
 				'row_fields' => $row_fields,
-				'summary_fields' => $summary_fields);
+				'summary_fields' => $summary_fields,
+				'graph_type' => $graph_type,
+				'graph_x' => $graph_x,
+				'graph_y' => $graph_y);
 
 
 			$i++;

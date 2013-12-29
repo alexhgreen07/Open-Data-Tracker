@@ -397,6 +397,12 @@ function Report_Tab() {
 					summaries:JSON.parse(saved_report.summary_fields)
 				});
 			
+			document.getElementById(this.summaries_graph_type_select.id).value = saved_report.graph_type;
+			document.getElementById(this.summaries_graph_select_x_column.id).value = saved_report.graph_x;
+			document.getElementById(this.summaries_graph_select_y_column.id).value = saved_report.graph_y;
+			
+			this.Refresh_Chart_Data(true);
+			
 			$('#' + this.report_delete_button.id).show();
 		}
 		else

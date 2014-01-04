@@ -13,13 +13,14 @@ function Report_Tab() {
 		self.schema = schema;
 		self.reports = reports;
 		
-		self.Refresh_Summaries_Form(data);
-		
 		Refresh_Select_HTML_From_Table(
 			self.report_saved_select.id,
 			reports,
 			"report_id",
 			"report_name");
+		
+		self.Refresh_Summaries_Form(data);
+		
 	};
 	
 	this.Refresh_Summaries_Form = function(data){
@@ -116,9 +117,12 @@ function Report_Tab() {
 			if(data_has_changed)
 			{
 				//set the height and width for proper rendering
-				document.getElementById(self.summaries_graph_canvas.id).width = document.getElementById(self.report_summaries_data_form.id).offsetWidth;
-				document.getElementById(self.summaries_graph_canvas.id).height = window.innerHeight * 0.4;
-				
+				var render_width = document.getElementById(self.report_summaries_data_form.id).offsetWidth;
+				if(render_width != 0)
+				{
+					document.getElementById(self.summaries_graph_canvas.id).width = document.getElementById(self.report_summaries_data_form.id).offsetWidth;
+					document.getElementById(self.summaries_graph_canvas.id).height = window.innerHeight * 0.4;
+				}
 				
 				//format xy data
 				var data_xy = {

@@ -58,7 +58,7 @@
 			}
 
 			//Create query
-			$qry = "INSERT INTO `life_management`.`members` (
+			$qry = "INSERT INTO `members` (
 				`member_id` ,
 				`firstname` ,
 				`lastname` ,

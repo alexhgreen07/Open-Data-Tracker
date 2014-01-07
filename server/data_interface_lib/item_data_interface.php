@@ -36,7 +36,7 @@ class Item_Data_Interface {
 
 		if ($value != "") {
 
-			$sql_insert = "INSERT INTO `life_management`.`item_log` (
+			$sql_insert = "INSERT INTO `item_log` (
 				`time` ,
 				`value` ,
 				`item_id` ,
@@ -309,7 +309,7 @@ class Item_Data_Interface {
 			`items`.`name` AS `name`,
 			`items`.`unit` AS `unit`, 
 			`item_log`.`note` AS `note` 
-			FROM `life_management`.`item_log`, `life_management`.`items` 
+			FROM `item_log`, `items` 
 			WHERE `items`.`item_id` = `item_log`.`item_id` AND `items`.`member_id` = '" . $_SESSION['session_member_id'] ."'
 			ORDER BY `time` DESC";
 			
@@ -364,7 +364,7 @@ class Item_Data_Interface {
 	public function Get_Items() {
 		$return_json = array('success' => 'false', 'data' => array(), );
 		
-		$sql_query = "SELECT `item_id`, `name`, `description`, `unit`, `date_created` FROM `life_management`.`items` WHERE `member_id`='" . $_SESSION['session_member_id'] ."' ORDER BY `name` asc";
+		$sql_query = "SELECT `item_id`, `name`, `description`, `unit`, `date_created` FROM `items` WHERE `member_id`='" . $_SESSION['session_member_id'] ."' ORDER BY `name` asc";
 		$result = mysql_query($sql_query, $this -> database_link);
 
 		if ($result) {

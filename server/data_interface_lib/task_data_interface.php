@@ -126,7 +126,7 @@ class Task_Data_Interface {
 		$task_start_stop = mysql_real_escape_string($task_start_stop);
 		$note = mysql_real_escape_string($note);
 
-		$sql_query = "SELECT DISTINCT `task_id` FROM `life_management`.`tasks` WHERE `name` = '" . $task_name_to_enter . "' AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+		$sql_query = "SELECT DISTINCT `task_id` FROM `tasks` WHERE `name` = '" . $task_name_to_enter . "' AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 		$result = mysql_query($sql_query, $this -> database_link);
 
 		$task_id = mysql_result($result, 0, "task_id");
@@ -165,7 +165,7 @@ class Task_Data_Interface {
 			$task_start_stop = mysql_real_escape_string($task_start_stop);
 
 			//find the task by its name
-			$sql_query = "SELECT DISTINCT `task_id` FROM `life_management`.`tasks` WHERE `name` = '" . $task_name_to_enter . "' AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+			$sql_query = "SELECT DISTINCT `task_id` FROM `tasks` WHERE `name` = '" . $task_name_to_enter . "' AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 			$result = mysql_query($sql_query, $this -> database_link);
 
 			if (!$result) {
@@ -204,7 +204,7 @@ class Task_Data_Interface {
 		$task_estimated_time = mysql_real_escape_string($estimated_time);
 		$task_note = mysql_real_escape_string($note);
 
-		$sql = 'INSERT INTO `life_management`.`tasks` 
+		$sql = 'INSERT INTO `tasks` 
 			(`name`, 
 			`description`, 
 			`date_created`, 
@@ -315,7 +315,7 @@ class Task_Data_Interface {
 			`note`,
 			`estimated_time`,
 			`category_id`,
-			`status` FROM `life_management`.`tasks` WHERE `member_id`='" . $_SESSION['session_member_id'] ."' ORDER BY `name` ASC";
+			`status` FROM `tasks` WHERE `member_id`='" . $_SESSION['session_member_id'] ."' ORDER BY `name` ASC";
 		$result = mysql_query($sql_query, $this -> database_link);
 
 		if ($result) {

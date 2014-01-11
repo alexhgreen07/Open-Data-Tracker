@@ -49,6 +49,20 @@ function Main_Application() {
 
 	};
 	
+	this.Is_Busy_Callback = function(is_busy)
+	{
+		
+		if(is_busy)
+		{
+			$('#' + self.loader_div.id).show();
+		}
+		else
+		{
+			$('#' + self.loader_div.id).hide();
+		}
+		
+	};
+	
 	/** @method Connect
 	 * @desc Connects to the specified server.
 	 * @param 
@@ -57,6 +71,7 @@ function Main_Application() {
 		
 		var self = this;
 		
+		self.api.is_busy_callback = self.Is_Busy_Callback;
 		self.api.data_changed_callback = self.Refresh_Data;
 		
 		self.api.Connect(url, function () {
@@ -74,7 +89,14 @@ function Main_Application() {
 
 		var self = this;
 		var main_tabs_div = "main_tab_navigation_div";
-
+	
+		//create the loader image div
+		self.loader_div = document.createElement("div");
+		self.loader_div.id = "loader_div";
+		self.loader_div.className = "loader_div";
+		self.loader_div.innerHTML = '<img class="loader_img" src="ajax-loader.gif"/></div>';
+		document.body.appendChild(this.loader_div);
+	
 		//append the main tab div
 		document.body.innerHTML += '<div id="' + main_tabs_div + '"></div>';
 

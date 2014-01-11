@@ -373,4 +373,30 @@ function Update_From_1_To_2()
 	Insert_Version($version_id,$version_string);
 }
 
+function Update_From_2_To_3()
+{
+	$version_id = 3;
+	$version_string = "0.0.4";
+	
+	$sql = "ALTER TABLE `task_targets` DROP `scheduled`";
+	$result = mysql_query($sql);
+	
+	$sql = "ALTER TABLE `task_targets` ADD `recurrance_child_id` INT NOT NULL";
+	$result = mysql_query($sql);
+	
+	$sql = "ALTER TABLE `task_targets` ADD `allowed_variance` DOUBLE NOT NULL";
+	$result = mysql_query($sql);
+	
+	$sql = "ALTER TABLE `task_targets` ADD `estimated_time` DOUBLE NOT NULL";
+	$result = mysql_query($sql);
+	
+	$sql = "ALTER TABLE `tasks` DROP `estimated_time`";
+	$result = mysql_query($sql);
+	
+	$sql = "UPDATE `task_log` SET `status`='Stopped' WHERE `status`='Completed'";
+	$result = mysql_query($sql);
+	
+	Insert_Version($version_id,$version_string);
+}
+
 ?>

@@ -5,19 +5,20 @@
  */
 function Server_API() {
 	
+	var self = this;
 	
 	this.rpc_queue = new JSON_RPC_Queue();
 	
 	this.rpc = null;
 	
+	this.is_busy_callback = function(is_busy){};
 	this.data_changed_callback = function(){};
 	
 	this.Build_Method = function(method, source_object){
 		
-		var self = this;
-		
 		var return_function = function(args,callback){
         	
+        	self.is_busy_callback(true);
         	
         	self.rpc_queue.Queue_RPC(
 				source_object[method],
@@ -26,6 +27,8 @@ function Server_API() {
 					
 					
 					callback(jsonRpcObj);
+					
+					self.is_busy_callback(false);
 					
 				});
         	

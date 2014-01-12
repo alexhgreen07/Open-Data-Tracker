@@ -37,6 +37,7 @@ function New_Task_Target_Form(){
 			var recurrance_type = document.getElementById(self.task_recurring_target_select_type.id).value;
 			var recurrance_period = document.getElementById(self.task_reccurance_target_period.id).value;
 			var variance = document.getElementById(self.task_scheduled_variance.id).value;
+			var estimated_time = document.getElementById(self.task_target_estimated_time.id).value;
 			var end_date = document.getElementById(self.task_recurring_end_date.id).value;
 			
 			//load all function parameters
@@ -51,7 +52,8 @@ function New_Task_Target_Form(){
 			params[3] = recurrance_type;
 			params[4] = recurrance_period;
 			params[5] = variance;
-			params[6] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(end_date);
+			params[6] = estimated_time;
+			params[7] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(end_date);
 
 			//execute the RPC callback for retrieving the item log
 			app.api.Task_Data_Interface.Insert_Task_Target(params, function(jsonRpcObj) {

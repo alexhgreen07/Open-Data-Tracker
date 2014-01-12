@@ -62,7 +62,9 @@ function Edit_Task_Target_Form(){
 		}
 		var new_recurrance_type = document.getElementById(this.task_edit_recurring_target_select_type.id).value;
 		var new_recurrance_period = document.getElementById(this.task_edit_reccurance_target_period.id).value;
-		
+		var variance = document.getElementById(this.task_target_edit_scheduled_variance.id).value;
+		var estimated_time = document.getElementById(this.task_target_edit_estimated_time.id).value;
+		var recurring_end_time = document.getElementById(this.task_target_edit_recurring_end_date.id).value;
 		
 		if(index_to_edit != 0)
 		{
@@ -74,13 +76,16 @@ function Edit_Task_Target_Form(){
 			params.push(new_recurring);
 			params.push(new_recurrance_type);
 			params.push(new_recurrance_period);
+			params.push(variance);
+			params.push(estimated_time);
+			params.push(Cast_Local_Server_Datetime_To_UTC_Server_Datetime(recurring_end_time));
 			
 			app.api.Task_Data_Interface.Update_Task_Target(params, function(jsonRpcObj) {
 			
 				if(jsonRpcObj.result.success == 'true'){
 					
 					alert('Index updated successfully.');
-					
+					alert(jsonRpcObj.result.debug);
 					app.api.Refresh_Data(function() {
 						//self.refresh_item_log_callback();
 					});
@@ -184,7 +189,9 @@ function Edit_Task_Target_Form(){
 			
 			document.getElementById(this.task_edit_recurring_target_select_type.id).value = self.task_targets_log[index_to_fill - 1].recurrance_type;
 			document.getElementById(this.task_edit_reccurance_target_period.id).value = self.task_targets_log[index_to_fill - 1].recurrance_period;
-		
+			document.getElementById(this.task_target_edit_scheduled_variance.id).value = self.task_targets_log[index_to_fill - 1].variance;
+			document.getElementById(this.task_target_edit_estimated_time.id).value = self.task_targets_log[index_to_fill - 1].estimated_time;
+			document.getElementById(this.task_target_edit_recurring_end_date.id).value = self.task_targets_log[index_to_fill - 1].recurrance_end_time;
 		}
 		else
 		{
@@ -287,7 +294,16 @@ function Edit_Task_Target_Form(){
 		this.task_edit_reccurance_target_period.setAttribute('type', 'text');
 		this.task_edit_reccurance_target_period.setAttribute('value', '0');
 		this.edit_task_target_form.appendChild(this.task_edit_reccurance_target_period);
+		
+		this.edit_task_target_form.innerHTML += '<br />';
+		
+		this.edit_task_target_form.innerHTML += 'Recurrance End:<br />';
 
+		this.task_target_edit_recurring_end_date = document.createElement("input");
+		this.task_target_edit_recurring_end_date.setAttribute('id', 'task_target_edit_recurring_end_date');
+		this.task_target_edit_recurring_end_date.innerHTML = '<option>False</option><option>True</option>';
+		this.edit_task_target_form.appendChild(this.task_target_edit_recurring_end_date);
+		
 		this.edit_task_target_form.innerHTML += '<br /><br />';
 
 		//task submit creation
@@ -348,6 +364,12 @@ function Edit_Task_Target_Form(){
 			dateFormat : 'yy-mm-dd'
 		});
 		$('#' + this.task_edit_scheduled_target_date.id).datetimepicker("setDate", new Date());
+		
+		$('#' + this.task_target_edit_recurring_end_date.id).datetimepicker({
+			timeFormat : "HH:mm:ss",
+			dateFormat : 'yy-mm-dd'
+		});
+		$('#' + this.task_target_edit_recurring_end_date.id).datetimepicker("setDate", new Date());
 		
 		$('#' + this.task_edit_target_select.id).change(function(){
 			

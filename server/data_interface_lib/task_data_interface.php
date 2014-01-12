@@ -436,6 +436,9 @@ class Task_Data_Interface {
 			'recurring' => 'bool',
 			'recurrance_type' => 'string',
 			'recurrance_period' => 'int',
+			'variance' => 'float',
+			'estimated_time' => 'float',
+			'recurrance_end_time' => 'date',
 			'task_id' => 'int'
 		);
 		
@@ -454,6 +457,10 @@ class Task_Data_Interface {
 			`task_targets`.`recurring` AS `recurring`, 
 			`task_targets`.`recurrance_type` AS `recurrance_type`, 
 			`task_targets`.`recurrance_period` AS `recurrance_period`, 
+			`task_targets`.`recurrance_type` AS `recurrance_type`, 
+			`task_targets`.`allowed_variance` AS `allowed_variance`, 
+			`task_targets`.`estimated_time` AS `estimated_time`,
+			`task_targets`.`recurrance_end_time` AS `recurrance_end_time`,
 			`tasks`.`name` AS `name` 
 			FROM `task_targets`, `tasks`
 			WHERE `tasks`.`task_id` = `task_targets`.`task_id` AND `tasks`.`member_id`='" . $_SESSION['session_member_id'] ."'
@@ -474,16 +481,22 @@ class Task_Data_Interface {
 			$task_entry_recurring = mysql_result($result, $i, "recurring");
 			$task_entry_recurrance_type = mysql_result($result, $i, "recurrance_type");
 			$task_entry_recurrance_period = mysql_result($result, $i, "recurrance_period");
+			$variance = mysql_result($result, $i, "allowed_variance");
+			$estimated_time = mysql_result($result, $i, "estimated_time");
+			$recurrance_end_time = mysql_result($result, $i, "recurrance_end_time");
 			$task_id = mysql_result($result, $i, "task_id");
 
 			$return_json['data'][$i] = array(
 				'task_schedule_id' => $task_schedule_id,
-				'task_schedule_id' => $task_id,
+				'task_id' => $task_id,
 				'name' => $task_entry_name,
 				'scheduled_time' => $task_entry_scheduled_time,
 				'recurring' => $task_entry_recurring,
 				'recurrance_type' => $task_entry_recurrance_type,
 				'recurrance_period' => $task_entry_recurrance_period,
+				'variance' => $variance,
+				'estimated_time' => $estimated_time,
+				'recurrance_end_time' => $recurrance_end_time,
 				'task_id' => $task_id);
 			
 			
@@ -493,7 +506,7 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 
-	public function Insert_Task_Target($task_id, $scheduled_time, $recurring, $recurrance_type, $recurrance_period, $variance, $recurrance_end_date)
+	public function Insert_Task_Target($task_id, $scheduled_time, $recurring, $recurrance_type, $recurrance_period, $variance, $estimated_time, $recurrance_end_date)
 	{
 		$return_json = array('success' => 'false', );
 		
@@ -502,6 +515,7 @@ class Task_Data_Interface {
 		$recurrance_type = mysql_real_escape_string($recurrance_type);
 		$recurrance_period = mysql_real_escape_string($recurrance_period);
 		$variance = mysql_real_escape_string($variance);
+		$estimated_time = mysql_real_escape_string($estimated_time);
 		$recurrance_end_date = mysql_real_escape_string($recurrance_end_date);
 
 		$sql = "INSERT INTO `task_targets`(
@@ -512,6 +526,7 @@ class Task_Data_Interface {
 			`recurrance_period`,
 			`allowed_variance`,
 			`recurrance_end_time`,
+			`estimated_time`,
 			`member_id`) VALUES ('" . 
 			$task_id . "','" . 
 			$scheduled_time . "'," . 
@@ -520,6 +535,7 @@ class Task_Data_Interface {
 			$recurrance_period . "," . 
 			$variance . ",'" . 
 			$recurrance_end_date . "','" . 
+			$estimated_time . "','" . 
 			$_SESSION['session_member_id'] ."')";
 
 		$success = mysql_query($sql, $this -> database_link);
@@ -535,7 +551,7 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 	
-	public function Update_Task_Target($task_target_id, $task_id, $scheduled_time, $recurring, $recurrance_type, $recurrance_period, $variance, $recurrance_end_date)
+	public function Update_Task_Target($task_target_id, $task_id, $scheduled_time, $recurring, $recurrance_type, $recurrance_period, $variance, $estimated_time, $recurrance_end_date)
 	{
 		$return_json = array('success' => 'false', );
 
@@ -544,6 +560,7 @@ class Task_Data_Interface {
 		$recurrance_type = mysql_real_escape_string($recurrance_type);
 		$recurrance_period = mysql_real_escape_string($recurrance_period);
 		$variance = mysql_real_escape_string($variance);
+		$estimated_time = mysql_real_escape_string($estimated_time);
 		$recurrance_end_date = mysql_real_escape_string($recurrance_end_date);
 
 		$sql = "UPDATE `task_targets` SET 
@@ -552,8 +569,9 @@ class Task_Data_Interface {
 			`recurring`=".$recurring.",
 			`recurrance_type`='".$recurrance_type."',
 			`recurrance_period`=".$recurrance_period.",
-			`allowed_variance`,=".$variance."
-			`recurrance_end_time`=".$recurrance_end_date.",
+			`allowed_variance`=".$variance.",
+			`estimated_time`=".$estimated_time.",
+			`recurrance_end_time`='".$recurrance_end_date."'
 			WHERE `task_schedule_id`=" . $task_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 		$success = mysql_query($sql, $this -> database_link);

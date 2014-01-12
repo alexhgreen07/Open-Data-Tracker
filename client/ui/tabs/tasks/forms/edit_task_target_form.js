@@ -51,14 +51,6 @@ function Edit_Task_Target_Form(){
 		var selected_index = document.getElementById(this.task_target_edit_name_select.id).selectedIndex;
 		var selected_task = this.task_info_json_array[selected_index - 1];
 		var new_task_id = selected_task.task_id;
-		var new_scheduled = 0;
-		if(document.getElementById(this.task_edit_scheduled_target_select.id).value == "Scheduled")
-		{
-			new_scheduled = 1;
-		}
-		else{
-			new_scheduled = 0;
-		}
 		var new_scheduled_time = document.getElementById(this.task_edit_scheduled_target_date.id).value;
 		var new_recurring = 0;
 		if(document.getElementById(this.task_edit_recurring_target_select.id).value == "True")
@@ -78,7 +70,6 @@ function Edit_Task_Target_Form(){
 			var params = new Array();
 			params.push(self.task_targets_log[index_to_edit - 1].task_schedule_id);
 			params.push(new_task_id);
-			params.push(new_scheduled);
 			params.push(Cast_Local_Server_Datetime_To_UTC_Server_Datetime(new_scheduled_time));
 			params.push(new_recurring);
 			params.push(new_recurrance_type);
@@ -181,15 +172,6 @@ function Edit_Task_Target_Form(){
 		if(index_to_fill != 0)
 		{
 			document.getElementById(this.task_target_edit_name_select.id).value = self.task_targets_log[index_to_fill - 1].name;
-			if(self.task_targets_log[index_to_fill - 1].scheduled == 1)
-			{
-				document.getElementById(this.task_edit_scheduled_target_select.id).value = "Scheduled";
-			
-			}
-			else{
-				document.getElementById(this.task_edit_scheduled_target_select.id).value = "Floating";
-			
-			}
 			
 			document.getElementById(this.task_edit_scheduled_target_date.id).value = self.task_targets_log[index_to_fill - 1].scheduled_time;
 			if(self.task_targets_log[index_to_fill - 1].recurring == 1)
@@ -207,7 +189,6 @@ function Edit_Task_Target_Form(){
 		else
 		{
 			document.getElementById(this.task_target_edit_name_select.id).value = "-";
-			document.getElementById(this.task_edit_scheduled_target_select.id).value = "Floating";
 			document.getElementById(this.task_edit_recurring_target_select.id).value = "False";
 			document.getElementById(this.task_edit_recurring_target_select_type.id).value = "Minutes";
 			document.getElementById(this.task_edit_reccurance_target_period.id).value = "0";
@@ -247,16 +228,6 @@ function Edit_Task_Target_Form(){
 		this.edit_task_target_form.appendChild(this.task_target_edit_name_select);
 
 		this.edit_task_target_form.innerHTML += '<br /><br />';	
-
-		this.edit_task_target_form.innerHTML += 'Scheduled/Floating:<br />';
-
-		//task recurring
-		this.task_edit_scheduled_target_select = document.createElement("select");
-		this.task_edit_scheduled_target_select.setAttribute('id', 'task_edit_scheduled_target_select');
-		this.task_edit_scheduled_target_select.innerHTML = '<option>Floating</option><option>Scheduled</option>';
-		this.edit_task_target_form.appendChild(this.task_edit_scheduled_target_select);
-
-		this.edit_task_target_form.innerHTML += '<br />';
 		
 		this.edit_task_target_form.innerHTML += 'Scheduled Date:<br />';
 
@@ -265,8 +236,28 @@ function Edit_Task_Target_Form(){
 		this.task_edit_scheduled_target_date.setAttribute('id', 'task_edit_scheduled_target_date');
 		this.task_edit_scheduled_target_date.setAttribute('type', 'text');
 		this.edit_task_target_form.appendChild(this.task_edit_scheduled_target_date);
+		
+		this.edit_task_target_form.innerHTML += 'Scheduled Date Variance (Hours):<br />';
+
+		//task estimate creation
+		this.task_target_edit_scheduled_variance = document.createElement("input");
+		this.task_target_edit_scheduled_variance.setAttribute('id', 'task_target_edit_scheduled_variance');
+		this.task_target_edit_scheduled_variance.setAttribute('type', 'text');
+		this.task_target_edit_scheduled_variance.setAttribute('value', '0');
+		this.edit_task_target_form.appendChild(this.task_target_edit_scheduled_variance);
 
 		this.edit_task_target_form.innerHTML += '<br />';
+		
+		this.edit_task_target_form.innerHTML += 'Estimated Time (Hours):<br />';
+
+		//task estimate creation
+		this.task_target_edit_estimated_time = document.createElement("input");
+		this.task_target_edit_estimated_time.setAttribute('id', 'task_target_edit_estimated_time');
+		this.task_target_edit_estimated_time.setAttribute('type', 'text');
+		this.task_target_edit_estimated_time.setAttribute('value', '0');
+		this.edit_task_target_form.appendChild(this.task_target_edit_estimated_time);
+		
+		this.edit_task_target_form.innerHTML += '<br /><br />';
 
 		this.edit_task_target_form.innerHTML += 'Recurring:<br />';
 

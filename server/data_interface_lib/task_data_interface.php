@@ -535,23 +535,25 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 	
-	public function Update_Task_Target($task_target_id, $task_id, $scheduled, $scheduled_time, $recurring, $recurrance_type, $recurrance_period)
+	public function Update_Task_Target($task_target_id, $task_id, $scheduled_time, $recurring, $recurrance_type, $recurrance_period, $variance, $recurrance_end_date)
 	{
 		$return_json = array('success' => 'false', );
 
-		$scheduled = mysql_real_escape_string($scheduled);
 		$scheduled_time = mysql_real_escape_string($scheduled_time);
 		$recurring = mysql_real_escape_string($recurring);
 		$recurrance_type = mysql_real_escape_string($recurrance_type);
 		$recurrance_period = mysql_real_escape_string($recurrance_period);
+		$variance = mysql_real_escape_string($variance);
+		$recurrance_end_date = mysql_real_escape_string($recurrance_end_date);
 
 		$sql = "UPDATE `task_targets` SET 
 			`task_id`=".$task_id.",
-			`scheduled`=".$scheduled.",
 			`scheduled_time`='".$scheduled_time."',
 			`recurring`=".$recurring.",
 			`recurrance_type`='".$recurrance_type."',
-			`recurrance_period`=".$recurrance_period." 
+			`recurrance_period`=".$recurrance_period.",
+			`allowed_variance`,=".$variance."
+			`recurrance_end_time`=".$recurrance_end_date.",
 			WHERE `task_schedule_id`=" . $task_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 		$success = mysql_query($sql, $this -> database_link);

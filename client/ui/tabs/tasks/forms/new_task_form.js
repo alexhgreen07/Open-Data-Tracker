@@ -21,9 +21,8 @@ function New_Task_Form(){
 		var params = new Array();
 		params[0] = $("#" + this.task_name.id).val();
 		params[1] = $("#" + this.task_description.id).val();
-		params[2] = $("#" + this.task_estimate.id).val();
-		params[3] = $("#" + this.task_note.id).val();
-		params[4] = $("#" + this.task_category_select.id).val();
+		params[2] = $("#" + this.task_note.id).val();
+		params[3] = $("#" + this.task_category_select.id).val();
 
 		var self = this;
 
@@ -83,16 +82,6 @@ function New_Task_Form(){
 		this.task_description.setAttribute('id', 'task_description');
 		this.task_description.setAttribute('type', 'text');
 		this.data_form_new_task.appendChild(this.task_description);
-
-		this.data_form_new_task.innerHTML += '<br />Estimated Time (Hours):<br />';
-
-		//task estimate creation
-		this.task_estimate = document.createElement("input");
-		this.task_estimate.setAttribute('name', 'task_estimated_time');
-		this.task_estimate.setAttribute('id', 'task_estimated_time');
-		this.task_estimate.setAttribute('type', 'text');
-		this.task_estimate.setAttribute('value', '0');
-		this.data_form_new_task.appendChild(this.task_estimate);
 
 		this.data_form_new_task.innerHTML += '<br />Note:<br />';
 

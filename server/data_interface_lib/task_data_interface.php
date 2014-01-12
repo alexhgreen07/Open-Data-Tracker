@@ -196,19 +196,17 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 
-	public function Insert_Task($name, $description = "", $estimated_time = 0, $note = "", $category_id = 0) {
+	public function Insert_Task($name, $description = "", $note = "", $category_id = 0) {
 		$return_json = array('success' => 'false', );
 
 		$task_name = mysql_real_escape_string($name);
 		$task_description = mysql_real_escape_string($description);
-		$task_estimated_time = mysql_real_escape_string($estimated_time);
 		$task_note = mysql_real_escape_string($note);
 
 		$sql = 'INSERT INTO `tasks` 
 			(`name`, 
 			`description`, 
 			`date_created`, 
-			`estimated_time`,
 			`note`,
 			`category_id`,
 			`status`,
@@ -217,7 +215,6 @@ class Task_Data_Interface {
 		$sql .= "'" . $task_name . "',";
 		$sql .= "'" . $task_description . "',";
 		$sql .= "UTC_TIMESTAMP(),";
-		$sql .= "" . $task_estimated_time . ",";
 		$sql .= "'" . $task_note . "',";
 		$sql .= "" . $category_id . ",";
 		$sql .= "'Active',";
@@ -255,19 +252,17 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 
-	public function Update_Task($task_id, $name, $category_id, $description, $estimated_time, $note, $status) {
+	public function Update_Task($task_id, $name, $category_id, $description, $note, $status) {
 		$return_json = array('success' => 'false', );
 
 		$task_name = mysql_real_escape_string($name);
 		$task_description = mysql_real_escape_string($description);
-		$task_estimated_time = mysql_real_escape_string($estimated_time);
 		$task_note = mysql_real_escape_string($note);
 
 		$sql = "UPDATE `tasks` 
 			SET `category_id`=" . $category_id . ",
 			`name`='" . $name . "',
 			`description`='" . $description . "',
-			`estimated_time`=" . $estimated_time . ",
 			`note`='" . $note . "',
 			`status`= '".$status."'
 			WHERE `task_id`=" . $task_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";

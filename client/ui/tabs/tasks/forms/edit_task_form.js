@@ -42,9 +42,8 @@ function Edit_Task_Form(){
 			params[1] = document.getElementById(this.task_edit_name.id).value;
 			params[2] = document.getElementById(this.task_edit_category_select.id).value;
 			params[3] = document.getElementById(this.task_edit_description.id).value;
-			params[4] = document.getElementById(this.task_edit_estimate.id).value;
-			params[5] = document.getElementById(this.task_edit_note.id).value;
-			params[6] = document.getElementById(this.task_edit_status.id).value;
+			params[4] = document.getElementById(this.task_edit_note.id).value;
+			params[5] = document.getElementById(this.task_edit_status.id).value;
 			
 			app.api.Task_Data_Interface.Update_Task(params, function(jsonRpcObj) {
 			
@@ -145,7 +144,6 @@ function Edit_Task_Form(){
 			
 			document.getElementById(this.task_edit_name.id).value = selected_task.name;
 			document.getElementById(this.task_edit_description.id).value = selected_task.description;
-			document.getElementById(this.task_edit_estimate.id).value = selected_task.estimated_time;
 			document.getElementById(this.task_edit_note.id).value = selected_task.note;
 			document.getElementById(this.task_edit_category_select.id).value = selected_task.category_id;
 			
@@ -154,7 +152,6 @@ function Edit_Task_Form(){
 		{
 			document.getElementById(this.task_edit_name.id).value = '';
 			document.getElementById(this.task_edit_description.id).value = '';
-			document.getElementById(this.task_edit_estimate.id).value = '0';
 			document.getElementById(this.task_edit_note.id).value = '';
 			document.getElementById(this.task_edit_category_select.id).selectedIndex = 0;
 		}
@@ -217,16 +214,6 @@ function Edit_Task_Form(){
 		this.data_form_edit_task.appendChild(this.task_edit_description);
 
 		this.data_form_edit_task.innerHTML += '<br />';
-		
-		this.data_form_edit_task.innerHTML += 'Estimated Time (Hours):<br />';
-
-		//task estimate creation
-		this.task_edit_estimate = document.createElement("input");
-		this.task_edit_estimate.setAttribute('name', 'task_edit_estimated_time');
-		this.task_edit_estimate.setAttribute('id', 'task_edit_estimated_time');
-		this.task_edit_estimate.setAttribute('type', 'text');
-		this.task_edit_estimate.setAttribute('value', '0');
-		this.data_form_edit_task.appendChild(this.task_edit_estimate);
 
 		this.data_form_edit_task.innerHTML += '<br />';
 		

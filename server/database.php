@@ -390,10 +390,16 @@ function Update_From_2_To_3()
 	$sql = "ALTER TABLE `task_targets` ADD `estimated_time` DOUBLE NOT NULL";
 	$result = mysql_query($sql);
 	
+	$sql = "ALTER TABLE `task_targets` ADD `status` TEXT NOT NULL ";
+	$result = mysql_query($sql);
+	
 	$sql = "ALTER TABLE `tasks` DROP `estimated_time`";
 	$result = mysql_query($sql);
 	
 	$sql = "UPDATE `task_log` SET `status`='Stopped' WHERE `status`='Completed'";
+	$result = mysql_query($sql);
+	
+	$sql = "UPDATE `task_targets` SET `status`='Incomplete'";
 	$result = mysql_query($sql);
 	
 	Insert_Version($version_id,$version_string);

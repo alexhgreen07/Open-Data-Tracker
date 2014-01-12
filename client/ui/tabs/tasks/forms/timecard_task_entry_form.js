@@ -313,21 +313,24 @@ function Timecard_Task_Entry_Form(){
 			var task_status = 'Stopped';
 			var target_id = self.selected_task_entry.task_target_id;
 			
-			if(is_complete)
-			{
-				task_status = 'Completed';
-			}
-			
 			var params = Array();
 			
 			params[0] = selected_task_entry_id;
 			params[1] = selected_task_id;
 			params[2] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(task_time);
 			params[3] = duration;
-			params[4] = 0;
-			params[5] = task_status;
-			params[6] = task_note;
-			params[7] = target_id;
+			params[4] = task_status;
+			params[5] = task_note;
+			params[6] = target_id;
+			if(is_complete && target_id != 0)
+			{
+				params[7] = 1;
+			}
+			else
+			{
+				params[7] = 0;
+			}
+			
 	
 			//execute the RPC callback for retrieving the item log
 			app.api.Task_Data_Interface.Update_Task_Entry(params, function(jsonRpcObj) {

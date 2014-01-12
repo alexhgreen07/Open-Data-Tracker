@@ -70,10 +70,10 @@ function Edit_Task_Entry_Form(){
 			params[1] = selected_task.task_id;
 			params[2] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(task_time);
 			params[3] = duration;
-			params[4] = 0;
-			params[5] = task_status;
-			params[6] = task_note;
-			params[7] = target_id;
+			params[4] = task_status;
+			params[5] = task_note;
+			params[6] = target_id;
+			params[7] = 0;
 
 			//execute the RPC callback for retrieving the item log
 			app.api.Task_Data_Interface.Update_Task_Entry(params, function(jsonRpcObj) {

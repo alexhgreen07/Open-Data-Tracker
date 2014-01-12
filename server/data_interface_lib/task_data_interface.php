@@ -27,7 +27,6 @@ class Task_Data_Interface {
 		$start_time = mysql_real_escape_string($start_time);
 		$task_id = mysql_real_escape_string($task_id);
 		$hours = mysql_real_escape_string($hours);
-		$completed = mysql_real_escape_string($completed);
 		$note = mysql_real_escape_string($note);
 
 		try {
@@ -59,7 +58,7 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 
-	public function Update_Task_Entry($task_log_id, $task_id, $start_time, $hours, $completed, $status, $note, $task_target_id) {
+	public function Update_Task_Entry($task_log_id, $task_id, $start_time, $hours, $status, $note, $task_target_id, $completed = 0) {
 
 		$return_json = array('success' => 'false', );
 
@@ -70,8 +69,8 @@ class Task_Data_Interface {
 		$completed = mysql_real_escape_string($completed);
 		$status = mysql_real_escape_string($status);
 		$note = mysql_real_escape_string($note);
+		$task_target_id = mysql_real_escape_string($task_target_id);
 
-		
 		$sql = "UPDATE `task_log` 
 			SET `task_id`=" . $task_id . ",
 			`start_time`='" . $start_time . "',
@@ -85,6 +84,19 @@ class Task_Data_Interface {
 		
 		//execute insert
 		$success = mysql_query($sql, $this -> database_link);
+		
+		if($completed)
+		{
+			$sql = "UPDATE `task_targets` 
+				SET `status`='Complete'
+				WHERE `task_schedule_id` = " . $task_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+			
+			$return_json['debug'] = $sql;
+			
+			//execute insert
+			$success = mysql_query($sql, $this -> database_link);
+		}
+
 
 		if ($success) {
 			$return_json['success'] = 'true';

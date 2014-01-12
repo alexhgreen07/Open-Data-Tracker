@@ -439,6 +439,7 @@ class Task_Data_Interface {
 			'variance' => 'float',
 			'estimated_time' => 'float',
 			'recurrance_end_time' => 'date',
+			'recurrance_child_id' => 'int',
 			'task_id' => 'int'
 		);
 		
@@ -461,6 +462,7 @@ class Task_Data_Interface {
 			`task_targets`.`allowed_variance` AS `allowed_variance`, 
 			`task_targets`.`estimated_time` AS `estimated_time`,
 			`task_targets`.`recurrance_end_time` AS `recurrance_end_time`,
+			`task_targets`.`recurrance_child_id` AS `recurrance_child_id`,
 			`tasks`.`name` AS `name` 
 			FROM `task_targets`, `tasks`
 			WHERE `tasks`.`task_id` = `task_targets`.`task_id` AND `tasks`.`member_id`='" . $_SESSION['session_member_id'] ."'
@@ -484,6 +486,7 @@ class Task_Data_Interface {
 			$variance = mysql_result($result, $i, "allowed_variance");
 			$estimated_time = mysql_result($result, $i, "estimated_time");
 			$recurrance_end_time = mysql_result($result, $i, "recurrance_end_time");
+			$recurrance_child_id = mysql_result($result, $i, "recurrance_child_id");
 			$task_id = mysql_result($result, $i, "task_id");
 
 			$return_json['data'][$i] = array(
@@ -497,6 +500,7 @@ class Task_Data_Interface {
 				'variance' => $variance,
 				'estimated_time' => $estimated_time,
 				'recurrance_end_time' => $recurrance_end_time,
+				'recurrance_child_id' => $recurrance_child_id,
 				'task_id' => $task_id);
 			
 			
@@ -539,10 +543,48 @@ class Task_Data_Interface {
 			$_SESSION['session_member_id'] ."')";
 
 		$success = mysql_query($sql, $this -> database_link);
+		
+		if (!$success) {
+			$return_json['success'] = 'false';
+			$return_json['debug'] = $sql;
+			return $return_json;
+		}
+		
+		$sql = "SELECT * FROM `task_targets` WHERE 
+			`task_id` = ".$task_id." AND 
+			`scheduled_time` =  '".$scheduled_time."' AND 
+			`recurring` =  ".$recurring." AND 
+			`recurrance_type` =  '".$recurrance_type."' AND 
+			`recurrance_period` = ".$recurrance_period." AND 
+			`allowed_variance` = ".$variance." AND 
+			`recurrance_end_time` = '".$recurrance_end_date."' AND 
+			`estimated_time` = ".$estimated_time." AND 
+			`member_id` = ".$_SESSION['session_member_id'];
+		
+		$result = mysql_query($sql, $this -> database_link);
+		
+		if (!$result) {
+			$return_json['success'] = 'false';
+			$return_json['debug'] = "SQL select failed." . $sql;
+			return $return_json;
+		}
+		
+		$num = mysql_numrows($result);
+		
+		if($num > 0)
+		{
+			$task_schedule_id = mysql_result($result, 0, "task_schedule_id");
+			$local_return_json = $this->Insert_Recurring_Children($task_schedule_id);
+		}
+		else {
+			$return_json['success'] = 'false';
+			$return_json['debug'] = "Number of rows = 0. " . $sql;
+			return $return_json;
+		}
+		
+		$return_json['debug'] = $local_return_json['debug'];
 
-		$return_json['debug'] = $sql;
-
-		if ($success) {
+		if ($local_return_json['success'] === 'true') {
 			$return_json['success'] = 'true';
 		} else {
 			$return_json['success'] = 'false';
@@ -562,7 +604,7 @@ class Task_Data_Interface {
 		$variance = mysql_real_escape_string($variance);
 		$estimated_time = mysql_real_escape_string($estimated_time);
 		$recurrance_end_date = mysql_real_escape_string($recurrance_end_date);
-
+		
 		$sql = "UPDATE `task_targets` SET 
 			`task_id`=".$task_id.",
 			`scheduled_time`='".$scheduled_time."',
@@ -575,7 +617,10 @@ class Task_Data_Interface {
 			WHERE `task_schedule_id`=" . $task_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 		$success = mysql_query($sql, $this -> database_link);
-
+		
+		$this->Delete_Recurring_Children($task_target_id);
+		$this->Insert_Recurring_Children($task_target_id);
+		
 		$return_json['debug'] = $sql;
 
 		if ($success) {
@@ -595,6 +640,8 @@ class Task_Data_Interface {
 
 		$success = mysql_query($sql, $this -> database_link);
 
+		$this->Delete_Recurring_Children($task_target_id);
+		
 		$return_json['debug'] = $sql;
 
 		if ($success) {
@@ -604,6 +651,116 @@ class Task_Data_Interface {
 		}
 
 		return $return_json;
+	}
+	
+	public function Insert_Recurring_Children($task_target_id)
+	{
+		$return_json = array('success' => 'false', );
+		
+		$sql = "SELECT 
+			`task_targets`.`task_id` AS `task_id`,
+			`task_targets`.`task_schedule_id` AS `task_schedule_id`, 
+			`task_targets`.`scheduled_time` AS `scheduled_time`, 
+			`task_targets`.`recurring` AS `recurring`, 
+			`task_targets`.`recurrance_type` AS `recurrance_type`, 
+			`task_targets`.`recurrance_period` AS `recurrance_period`, 
+			`task_targets`.`recurrance_type` AS `recurrance_type`, 
+			`task_targets`.`allowed_variance` AS `allowed_variance`, 
+			`task_targets`.`estimated_time` AS `estimated_time`,
+			`task_targets`.`recurrance_end_time` AS `recurrance_end_time`
+			FROM `task_targets`
+			WHERE `task_targets`.`task_schedule_id` = ".$task_target_id." AND `task_targets`.`member_id`='" . $_SESSION['session_member_id'] ."'
+			ORDER BY `task_targets`.`scheduled_time` DESC";
+			
+		$result = mysql_query($sql, $this -> database_link);
+		
+		if(!$result){
+			
+			$return_json['debug'] = $sql;
+			return $return_json;
+			
+		} 
+		
+		$num = mysql_numrows($result);
+
+		$i = 0;
+		if ($num > 0) {
+			
+			$task_schedule_id = mysql_result($result, $i, "task_schedule_id");
+			$task_entry_scheduled_time = mysql_result($result, $i, "scheduled_time");
+			$task_entry_recurring = mysql_result($result, $i, "recurring");
+			$task_entry_recurrance_type = mysql_result($result, $i, "recurrance_type");
+			$task_entry_recurrance_period = mysql_result($result, $i, "recurrance_period");
+			$variance = mysql_result($result, $i, "allowed_variance");
+			$estimated_time = mysql_result($result, $i, "estimated_time");
+			$recurrance_end_time = mysql_result($result, $i, "recurrance_end_time");
+			$task_id = mysql_result($result, $i, "task_id");
+			
+			if($task_entry_recurring)
+			{
+				$recurring_timestamp = strtotime($task_entry_scheduled_time);
+				$recurrance_end_timestamp = strtotime($recurrance_end_time);
+				
+				$recurrance_period_seconds = (int)$task_entry_recurrance_period * 60 * 60;
+				
+				while($recurring_timestamp < $recurrance_end_timestamp)
+				{
+					
+					$recurring_timestamp = $recurring_timestamp + $recurrance_period_seconds;
+					
+					$recurring_timestring = date("Y-m-d H:i:s", $recurring_timestamp);
+					
+					$sql = "INSERT INTO `task_targets`(
+						`task_id`, 
+						`scheduled_time`, 
+						`recurring`, 
+						`recurrance_type`, 
+						`recurrance_period`,
+						`allowed_variance`,
+						`recurrance_end_time`,
+						`estimated_time`,
+						`recurrance_child_id`,
+						`member_id`) VALUES (
+						'" . $task_id . "',
+						'" . $recurring_timestring . "',
+						" . $task_entry_recurring . ",
+						'" . $task_entry_recurrance_type . "',
+						" . $task_entry_recurrance_period . ",
+						" . $variance . ",
+						'" . $recurrance_end_time . "',
+						'" . $estimated_time . "',
+						" . $task_schedule_id . ",
+						'" . $_SESSION['session_member_id'] ."')";
+					
+					$result = mysql_query($sql, $this -> database_link);
+					
+					if(!$result){
+						
+						
+						$return_json['debug'] = $sql;
+						return $return_json;
+						
+					} 
+				}
+			}
+						
+		}
+		else {
+			
+			$return_json['debug'] = $sql;
+			return $return_json;
+			
+		}
+		
+		$return_json['success'] = 'true';
+		return $return_json;
+	}
+	
+	public function Delete_Recurring_Children($task_target_id)
+	{
+		
+		$sql = "DELETE FROM `task_targets` WHERE `recurrance_child_id` = " . $task_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+		$result = mysql_query($sql, $this -> database_link);
 	}
 }
 ?>

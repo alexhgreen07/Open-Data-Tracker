@@ -246,7 +246,7 @@ function Edit_Task_Entry_Form(){
 		this.edit_task_entry_task_status_select = document.createElement("select");
 		this.edit_task_entry_task_status_select.setAttribute('name', "edit_task_entry_status_to_enter");
 		this.edit_task_entry_task_status_select.setAttribute('id', "edit_task_entry_status_to_enter");
-		this.edit_task_entry_task_status_select.innerHTML = '<option>Stopped</option><option>Started</option><option>Completed</option>';
+		this.edit_task_entry_task_status_select.innerHTML = '<option>Stopped</option><option>Started</option>';
 		this.data_form_edit_entry.appendChild(this.edit_task_entry_task_status_select);
 
 		this.data_form_edit_entry.innerHTML += '<br />';

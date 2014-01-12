@@ -313,7 +313,6 @@ class Task_Data_Interface {
 			`description`,
 			`date_created`,
 			`note`,
-			`estimated_time`,
 			`category_id`,
 			`status` FROM `tasks` WHERE `member_id`='" . $_SESSION['session_member_id'] ."' ORDER BY `name` ASC";
 		$result = mysql_query($sql_query, $this -> database_link);
@@ -331,7 +330,6 @@ class Task_Data_Interface {
 				$task_id= mysql_result($result,$i,"task_id");
 				$task_name = mysql_result($result, $i, "name");
 				$task_description = mysql_result($result, $i, "description");
-				$task_estimated_time = mysql_result($result, $i, "estimated_time");
 				$date_created = mysql_result($result,$i,'date_created');
 				$task_note = mysql_result($result,$i,'note');
 				$category_id = mysql_result($result,$i,'category_id');
@@ -341,7 +339,6 @@ class Task_Data_Interface {
 					'task_id' => $task_id,
 					'name' => $task_name,
 					'description' => $task_description,
-					'estimated_time' => $task_estimated_time, 
 					'date_created' => $date_created,
 					'note' => $task_note,
 					'category_id' => $category_id,
@@ -436,7 +433,6 @@ class Task_Data_Interface {
 			'task_schedule_id' => 'int',
 			'name' => 'string',
 			'scheduled_time' => 'date',
-			'scheduled' => 'bool',
 			'recurring' => 'bool',
 			'recurrance_type' => 'string',
 			'recurrance_period' => 'int',
@@ -454,7 +450,6 @@ class Task_Data_Interface {
 		$query = "SELECT 
 			`task_targets`.`task_id` AS `task_id`,
 			`task_targets`.`task_schedule_id` AS `task_schedule_id`, 
-			`task_targets`.`scheduled` AS `scheduled`, 
 			`task_targets`.`scheduled_time` AS `scheduled_time`, 
 			`task_targets`.`recurring` AS `recurring`, 
 			`task_targets`.`recurrance_type` AS `recurrance_type`, 
@@ -475,7 +470,6 @@ class Task_Data_Interface {
 			
 			$task_schedule_id = mysql_result($result, $i, "task_schedule_id");
 			$task_entry_name = mysql_result($result, $i, "name");
-			$task_entry_scheduled = mysql_result($result, $i, "scheduled");
 			$task_entry_scheduled_time = mysql_result($result, $i, "scheduled_time");
 			$task_entry_recurring = mysql_result($result, $i, "recurring");
 			$task_entry_recurrance_type = mysql_result($result, $i, "recurrance_type");
@@ -487,7 +481,6 @@ class Task_Data_Interface {
 				'task_schedule_id' => $task_id,
 				'name' => $task_entry_name,
 				'scheduled_time' => $task_entry_scheduled_time,
-				'scheduled' => $task_entry_scheduled,
 				'recurring' => $task_entry_recurring,
 				'recurrance_type' => $task_entry_recurrance_type,
 				'recurrance_period' => $task_entry_recurrance_period,

@@ -65,6 +65,7 @@ function Edit_Task_Target_Form(){
 		var variance = document.getElementById(this.task_target_edit_scheduled_variance.id).value;
 		var estimated_time = document.getElementById(this.task_target_edit_estimated_time.id).value;
 		var recurring_end_time = document.getElementById(this.task_target_edit_recurring_end_date.id).value;
+		var status = document.getElementById(this.task_edit_target_status.id).value;
 		
 		if(index_to_edit != 0)
 		{
@@ -79,13 +80,14 @@ function Edit_Task_Target_Form(){
 			params.push(variance);
 			params.push(estimated_time);
 			params.push(Cast_Local_Server_Datetime_To_UTC_Server_Datetime(recurring_end_time));
+			params.push(status);
 			
 			app.api.Task_Data_Interface.Update_Task_Target(params, function(jsonRpcObj) {
 			
 				if(jsonRpcObj.result.success == 'true'){
 					
 					alert('Index updated successfully.');
-					alert(jsonRpcObj.result.debug);
+
 					app.api.Refresh_Data(function() {
 						//self.refresh_item_log_callback();
 					});
@@ -192,6 +194,7 @@ function Edit_Task_Target_Form(){
 			document.getElementById(this.task_target_edit_scheduled_variance.id).value = self.task_targets_log[index_to_fill - 1].variance;
 			document.getElementById(this.task_target_edit_estimated_time.id).value = self.task_targets_log[index_to_fill - 1].estimated_time;
 			document.getElementById(this.task_target_edit_recurring_end_date.id).value = self.task_targets_log[index_to_fill - 1].recurrance_end_time;
+			document.getElementById(this.task_edit_target_status.id).value = self.task_targets_log[index_to_fill - 1].status;
 		}
 		else
 		{
@@ -263,6 +266,16 @@ function Edit_Task_Target_Form(){
 		this.task_target_edit_estimated_time.setAttribute('type', 'text');
 		this.task_target_edit_estimated_time.setAttribute('value', '0');
 		this.edit_task_target_form.appendChild(this.task_target_edit_estimated_time);
+		
+		this.edit_task_target_form.innerHTML += '<br />';
+		
+		this.edit_task_target_form.innerHTML += 'Status:<br />';
+
+		//task estimate creation
+		this.task_edit_target_status = document.createElement("select");
+		this.task_edit_target_status.setAttribute('id', 'task_edit_target_status');
+		this.task_edit_target_status.innerHTML = '<option>Incomplete</option><option>Complete</option>';
+		this.edit_task_target_form.appendChild(this.task_edit_target_status);
 		
 		this.edit_task_target_form.innerHTML += '<br /><br />';
 

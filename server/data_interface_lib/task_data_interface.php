@@ -500,32 +500,35 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 
-	public function Insert_Task_Target($task_id, $scheduled, $scheduled_time, $recurring, $recurrance_type, $recurrance_period)
+	public function Insert_Task_Target($task_id, $scheduled_time, $recurring, $recurrance_type, $recurrance_period, $variance, $recurrance_end_date)
 	{
 		$return_json = array('success' => 'false', );
-
-		$scheduled = mysql_real_escape_string($scheduled);
+		
 		$scheduled_time = mysql_real_escape_string($scheduled_time);
 		$recurring = mysql_real_escape_string($recurring);
 		$recurrance_type = mysql_real_escape_string($recurrance_type);
 		$recurrance_period = mysql_real_escape_string($recurrance_period);
+		$variance = mysql_real_escape_string($variance);
+		$recurrance_end_date = mysql_real_escape_string($recurrance_end_date);
 
-		$sql = 'INSERT INTO `task_targets`(
+		$sql = "INSERT INTO `task_targets`(
 			`task_id`, 
 			`scheduled`, 
 			`scheduled_time`, 
 			`recurring`, 
 			`recurrance_type`, 
 			`recurrance_period`,
-			`member_id`) VALUES (';
-
-		$sql .= "'" . $task_id . "',";
-		$sql .= "" . $scheduled . ",";
-		$sql .= "'" . $scheduled_time . "',";
-		$sql .= "" . $recurring . ",";
-		$sql .= "'" . $recurrance_type . "',";
-		$sql .= "" . $recurrance_period . ",";
-		$sql .= "'" . $_SESSION['session_member_id'] ."')";
+			`allowed_variance`,
+			`recurrance_end_time`,
+			`member_id`) VALUES ('" . 
+			$task_id . "','" . 
+			$scheduled_time . "'," . 
+			$recurring . ",'" . 
+			$recurrance_type . "'," . 
+			$recurrance_period . "," . 
+			$variance . ",'" . 
+			$recurrance_end_date . "','" . 
+			$_SESSION['session_member_id'] ."')";
 
 		$success = mysql_query($sql, $this -> database_link);
 

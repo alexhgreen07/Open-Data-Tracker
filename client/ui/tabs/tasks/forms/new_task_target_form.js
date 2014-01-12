@@ -51,7 +51,7 @@ function New_Task_Target_Form(){
 			params[3] = recurrance_type;
 			params[4] = recurrance_period;
 			params[5] = variance;
-
+			params[6] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(end_date);
 
 			//execute the RPC callback for retrieving the item log
 			app.api.Task_Data_Interface.Insert_Task_Target(params, function(jsonRpcObj) {

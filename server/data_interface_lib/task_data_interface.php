@@ -506,7 +506,6 @@ class Task_Data_Interface {
 
 		$sql = "INSERT INTO `task_targets`(
 			`task_id`, 
-			`scheduled`, 
 			`scheduled_time`, 
 			`recurring`, 
 			`recurrance_type`, 

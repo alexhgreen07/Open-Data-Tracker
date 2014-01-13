@@ -202,6 +202,17 @@ function Timecard_Task_Entry_Form(){
 	
 	this.On_Task_Target_Select_Change_Event = function() {
 		
+		var self = this;
+		
+		for (var i = 0; i < self.data.task_targets.length; i++) {
+		
+			if(self.data.task_targets[i].task_schedule_id == document.getElementById(self.task_target_select.id).value)
+			{
+				document.getElementById(self.task_name_select.id).value = self.data.task_targets[i].task_id;
+			}
+		
+		}
+		
 		this.Refresh(this.data);
 		
 		this.On_Task_Change_Event();

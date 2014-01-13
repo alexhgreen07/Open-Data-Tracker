@@ -36,6 +36,8 @@ function Main_Application() {
 	 * */
 	this.report_tab_object = new Report_Tab();
 	
+	this.busy_count = 0;
+	
 	/** @method Refresh_Data
 	 * @desc This should be called to refresh data in all forms.
 	 * */
@@ -54,11 +56,22 @@ function Main_Application() {
 		
 		if(is_busy)
 		{
+			self.busy_count++;
 			$('#' + self.loader_div.id).show();
 		}
 		else
 		{
-			$('#' + self.loader_div.id).hide();
+			
+			if(self.busy_count > 0)
+			{
+				self.busy_count--;
+			}
+			
+			if(self.busy_count == 0)
+			{
+				$('#' + self.loader_div.id).hide();
+			}
+			
 		}
 		
 	};

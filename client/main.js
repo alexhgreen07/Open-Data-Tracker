@@ -56,17 +56,18 @@ function Main_Application() {
 		
 		if(is_busy)
 		{
-			this.busy_count++;
+			self.busy_count++;
 			$('#' + self.loader_div.id).show();
 		}
 		else
 		{
 			
-			if(this.busy_count > 0)
+			if(self.busy_count > 0)
 			{
-				this.busy_count--;
+				self.busy_count--;
 			}
-			else
+			
+			if(self.busy_count == 0)
 			{
 				$('#' + self.loader_div.id).hide();
 			}

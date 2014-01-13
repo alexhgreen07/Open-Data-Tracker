@@ -1,3 +1,68 @@
+function Year_Row_Converter(name){
+		
+		var self = this;
+		this.date_column = name;
+		
+		this.Convert = function(row)
+		{
+			server_date = Cast_Server_Datetime_to_Date(row[self.date_column]);
+		
+			return server_date.getFullYear(); 
+		};
+		
+}
+
+function Month_Row_Converter(name){
+	
+	var self = this;
+	this.date_column = name;
+	
+	this.Convert = function(row)
+	{
+		server_date = Cast_Server_Datetime_to_Date(row[self.date_column]);
+		
+		return_string = pivot.utils().padLeft(server_date.getMonth() + 1,2,'0');
+		
+		return return_string;
+	};
+	
+}
+
+function Week_Row_Converter(name){
+	
+	var self = this;
+	this.date_column = name;
+	
+	this.Convert = function(row)
+	{
+		server_date = Cast_Server_Datetime_to_Date(row[self.date_column]);
+		
+		var onejan = new Date(server_date.getFullYear(),0,1);
+		week_number = Math.ceil((((server_date - onejan) / 86400000) + onejan.getDay()+1)/7);
+		
+		return_string = pivot.utils().padLeft(week_number,2,'0');
+		
+		return return_string; 
+	};
+	
+}
+
+function Day_Row_Converter(name){
+	
+	var self = this;
+	this.date_column = name;
+	
+	this.Convert = function(row)
+	{
+		server_date = Cast_Server_Datetime_to_Date(row[self.date_column]);
+		
+		return_string = pivot.utils().padLeft(server_date.getDate(),2,'0');
+		
+		return return_string; 
+	};
+	
+}
+
 /** This is the report tab object which holds all UI objects for detailed data interaction.
  * @constructor Report_Tab
  */
@@ -6,6 +71,7 @@ function Report_Tab() {
 	//class variables
 	this.div_id = null;
 	var self = this;
+	self.psuedo_date_columns = [];
 	
 	this.Refresh = function(data, schema, reports) {
 		
@@ -431,6 +497,7 @@ function Report_Tab() {
 			
 			if(self.data[table_name].length > 0)
 			{
+				
 				//get all column names
 				for (var i = 0; i <  self.data[table_name].length; i++) {
 					
@@ -477,56 +544,36 @@ function Report_Tab() {
 								
 								date_column = column;
 								
-								self.fields.push({name: column + '_yyyy', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
-	      							pseudoFunction: function(row){
-	      								
-	      								server_date = Cast_Server_Datetime_to_Date(row[date_column]);
-	      								
-	      								return server_date.getFullYear(); 
-	      								 
-	      							}
+								//define _yyyy function
+								column_name = column + '_yyyy';
+								self.psuedo_date_columns[column_name] = new Year_Row_Converter(date_column);
+								
+								self.fields.push({name: column_name, type: data_type, rowLabelable: true, filterable: true, pseudo: true,
+	      							pseudoFunction: self.psuedo_date_columns[column_name].Convert
 	      						});
 	      						
-	      						self.fields.push({name: column + '_mm', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
-	      							pseudoFunction: function(row){
-	      								
-	      								server_date = Cast_Server_Datetime_to_Date(row[date_column]);
-	      								
-	      								return_string = pivot.utils().padLeft(server_date.getMonth() + 1,2,'0');
-	      								
-	      								return return_string; 
-	      								 
-	      							}
+	      						//define _mm function
+	      						column_name = column + '_mm';
+	      						self.psuedo_date_columns[column_name] = new Month_Row_Converter(date_column);
+	      						
+	      						self.fields.push({name: column_name, type: data_type, rowLabelable: true, filterable: true, pseudo: true,
+	      							pseudoFunction: self.psuedo_date_columns[column_name].Convert
 	      						});
 	      						
-	      						self.fields.push({name: column + '_ww', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
-	      							pseudoFunction: function(row){
-	      								
-	      								server_date = Cast_Server_Datetime_to_Date(row[date_column]);
-	      								
-	      								var onejan = new Date(server_date.getFullYear(),0,1);
-	      								week_number = Math.ceil((((server_date - onejan) / 86400000) + onejan.getDay()+1)/7);
-	      								
-	      								return_string = pivot.utils().padLeft(week_number,2,'0');
-	      								
-	      								return return_string; 
-	      								 
-	      							}
+	      						//define _ww function
+	      						column_name = column + '_ww';
+	      						self.psuedo_date_columns[column_name] = new Week_Row_Converter(date_column);
+	      						
+	      						self.fields.push({name: column_name, type: data_type, rowLabelable: true, filterable: true, pseudo: true,
+	      							pseudoFunction: self.psuedo_date_columns[column_name].Convert
 	      						});
 	      						
-	      						self.fields.push({name: column + '_dd', type: data_type, rowLabelable: true, filterable: true, pseudo: true,
-	      							pseudoFunction: function(row){
-	      								
-	      								server_date = Cast_Server_Datetime_to_Date(row[date_column]);
-	      								
-	      								var onejan = new Date(server_date.getFullYear(),0,1);
-	      								week_number = Math.ceil((((server_date - onejan) / 86400000) + onejan.getDay()+1)/7);
-	      								
-	      								return_string = pivot.utils().padLeft(server_date.getDate(),2,'0');
-	      								
-	      								return return_string; 
-	      								 
-	      							}
+	      						//define _dd function
+	      						column_name = column + '_dd';
+	      						self.psuedo_date_columns[column_name] = new Day_Row_Converter(date_column);
+	      						
+	      						self.fields.push({name: column_name, type: data_type, rowLabelable: true, filterable: true, pseudo: true,
+	      							pseudoFunction: self.psuedo_date_columns[column_name].Convert
 	      						});
 							}
 							else if(key_schema[column] == 'string')

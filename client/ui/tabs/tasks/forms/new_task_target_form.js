@@ -32,30 +32,28 @@ function New_Task_Target_Form(){
 		if (selected_index > 0) {
 
 			var selected_task = this.task_info_json_array[selected_index - 1];
-			var scheduled = document.getElementById(self.task_scheduled_target_select.id).value;
 			var scheduled_time = document.getElementById(self.task_scheduled_target_date.id).value;
 			var recurring = document.getElementById(self.task_recurring_target_select.id).value;
 			var recurrance_type = document.getElementById(self.task_recurring_target_select_type.id).value;
 			var recurrance_period = document.getElementById(self.task_reccurance_target_period.id).value;
+			var variance = document.getElementById(self.task_scheduled_variance.id).value;
+			var estimated_time = document.getElementById(self.task_target_estimated_time.id).value;
+			var end_date = document.getElementById(self.task_recurring_end_date.id).value;
 			
 			//load all function parameters
 			params[0] = selected_task.task_id;
-			if(scheduled == 'Scheduled')
-			{
-				params[1] = 1;
-			}else{
-				params[1] = 0;
-			}
-			params[2] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(scheduled_time);
+			params[1] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(scheduled_time);
 			if(recurring == 'True')
 			{
-				params[3] = 1;
+				params[2] = 1;
 			}else{
-				params[3] = 0;
+				params[2] = 0;
 			}
-			params[4] = recurrance_type;
-			params[5] = recurrance_period;
-
+			params[3] = recurrance_type;
+			params[4] = recurrance_period;
+			params[5] = variance;
+			params[6] = estimated_time;
+			params[7] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(end_date);
 
 			//execute the RPC callback for retrieving the item log
 			app.api.Task_Data_Interface.Insert_Task_Target(params, function(jsonRpcObj) {
@@ -103,16 +101,6 @@ function New_Task_Target_Form(){
 
 		this.new_task_target_form.innerHTML += '<br /><br />';
 		
-		this.new_task_target_form.innerHTML += 'Scheduled/Floating:<br />';
-
-		//task recurring
-		this.task_scheduled_target_select = document.createElement("select");
-		this.task_scheduled_target_select.setAttribute('id', 'task_scheduled_target_select');
-		this.task_scheduled_target_select.innerHTML = '<option>Floating</option><option>Scheduled</option>';
-		this.new_task_target_form.appendChild(this.task_scheduled_target_select);
-
-		this.new_task_target_form.innerHTML += '<br />';
-		
 		this.new_task_target_form.innerHTML += 'Scheduled Date:<br />';
 
 		//task estimate creation
@@ -120,6 +108,26 @@ function New_Task_Target_Form(){
 		this.task_scheduled_target_date.setAttribute('id', 'task_scheduled_target_date');
 		this.task_scheduled_target_date.setAttribute('type', 'text');
 		this.new_task_target_form.appendChild(this.task_scheduled_target_date);
+		
+		this.new_task_target_form.innerHTML += 'Scheduled Date Variance (Hours):<br />';
+
+		//task estimate creation
+		this.task_scheduled_variance = document.createElement("input");
+		this.task_scheduled_variance.setAttribute('id', 'task_scheduled_variance');
+		this.task_scheduled_variance.setAttribute('type', 'text');
+		this.task_scheduled_variance.setAttribute('value', '0');
+		this.new_task_target_form.appendChild(this.task_scheduled_variance);
+
+		this.new_task_target_form.innerHTML += '<br />';
+		
+		this.new_task_target_form.innerHTML += 'Estimated Time (Hours):<br />';
+
+		//task estimate creation
+		this.task_target_estimated_time = document.createElement("input");
+		this.task_target_estimated_time.setAttribute('id', 'task_target_estimated_time');
+		this.task_target_estimated_time.setAttribute('type', 'text');
+		this.task_target_estimated_time.setAttribute('value', '0');
+		this.new_task_target_form.appendChild(this.task_target_estimated_time);
 
 		this.new_task_target_form.innerHTML += '<br /><br />';
 
@@ -155,6 +163,13 @@ function New_Task_Target_Form(){
 		this.task_reccurance_target_period.setAttribute('value', '0');
 		this.task_reccurance_target_period_div.appendChild(this.task_reccurance_target_period);
 		this.new_task_target_form.appendChild(this.task_reccurance_target_period_div);
+
+		this.new_task_target_form.innerHTML += 'Recurrance End:<br />';
+
+		this.task_recurring_end_date = document.createElement("input");
+		this.task_recurring_end_date.setAttribute('id', 'task_recurring_end_date');
+		this.task_recurring_end_date.innerHTML = '<option>False</option><option>True</option>';
+		this.new_task_target_form.appendChild(this.task_recurring_end_date);
 
 		this.new_task_target_form.innerHTML += '<br /><br />';
 		
@@ -196,6 +211,12 @@ function New_Task_Target_Form(){
 			dateFormat : 'yy-mm-dd'
 		});
 		$('#' + this.task_scheduled_target_date.id).datetimepicker("setDate", new Date());
+		
+		$('#' + this.task_recurring_end_date.id).datetimepicker({
+			timeFormat : "HH:mm:ss",
+			dateFormat : 'yy-mm-dd'
+		});
+		$('#' + this.task_recurring_end_date.id).datetimepicker("setDate", new Date());
 	};
 
 }

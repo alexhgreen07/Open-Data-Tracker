@@ -140,7 +140,7 @@ function New_Task_Entry_Form(){
 		this.add_task_entry_task_status_select = document.createElement("select");
 		this.add_task_entry_task_status_select.setAttribute('name', "add_task_entry_status_to_enter");
 		this.add_task_entry_task_status_select.setAttribute('id', "add_task_entry_status_to_enter");
-		this.add_task_entry_task_status_select.innerHTML = '<option>Stopped</option><option>Started</option><option>Completed</option>';
+		this.add_task_entry_task_status_select.innerHTML = '<option>Stopped</option><option>Started</option>';
 		this.data_form_new_entry.appendChild(this.add_task_entry_task_status_select);
 
 		this.data_form_new_entry.innerHTML += '<br />';

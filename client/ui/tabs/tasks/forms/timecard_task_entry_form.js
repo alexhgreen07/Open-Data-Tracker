@@ -80,32 +80,33 @@ function Timecard_Task_Entry_Form(){
 		//iterate through all tasks
 		for (var i = 0; i < data.task_targets.length; i++) {
 			
-			for(var j = 0; j < self.active_tasks.length; j++)
+			if(data.task_targets[i].status != "Complete")
 			{
-				if(self.active_tasks[j].task_id == data.task_targets[i].task_id)
+				for(var j = 0; j < self.active_tasks.length; j++)
 				{
-					if(document.getElementById(self.task_name_select.id).value == 0 ||
-					document.getElementById(self.task_name_select.id).value == data.task_targets[i].task_id)
+					if(self.active_tasks[j].task_id == data.task_targets[i].task_id)
 					{
-						//add task option to select
-						new_inner_html += '<option value="'
-						new_inner_html += data.task_targets[i].task_schedule_id;
-						new_inner_html += '">(';
-						new_inner_html += data.task_targets[i].task_schedule_id + ') ';
-						new_inner_html += data.task_targets[i].name + '</option>';
-						
-						if(data.task_targets[i].task_schedule_id == previous_value)
+						if(document.getElementById(self.task_name_select.id).value == 0 ||
+						document.getElementById(self.task_name_select.id).value == data.task_targets[i].task_id)
 						{
-							is_previous_value_present = true;
-							self.selected_task_target = data.task_targets[i];
+							//add task option to select
+							new_inner_html += '<option value="'
+							new_inner_html += data.task_targets[i].task_schedule_id;
+							new_inner_html += '">(';
+							new_inner_html += data.task_targets[i].task_schedule_id + ') ';
+							new_inner_html += data.task_targets[i].name + '</option>';
+							
+							if(data.task_targets[i].task_schedule_id == previous_value)
+							{
+								is_previous_value_present = true;
+								self.selected_task_target = data.task_targets[i];
+							}
 						}
+						
+						break;
 					}
-					
-					break;
 				}
 			}
-			
-			
 
 		}
 
@@ -313,21 +314,24 @@ function Timecard_Task_Entry_Form(){
 			var task_status = 'Stopped';
 			var target_id = self.selected_task_entry.task_target_id;
 			
-			if(is_complete)
-			{
-				task_status = 'Completed';
-			}
-			
 			var params = Array();
 			
 			params[0] = selected_task_entry_id;
 			params[1] = selected_task_id;
 			params[2] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(task_time);
 			params[3] = duration;
-			params[4] = 0;
-			params[5] = task_status;
-			params[6] = task_note;
-			params[7] = target_id;
+			params[4] = task_status;
+			params[5] = task_note;
+			params[6] = target_id;
+			if(is_complete && target_id != 0)
+			{
+				params[7] = 1;
+			}
+			else
+			{
+				params[7] = 0;
+			}
+			
 	
 			//execute the RPC callback for retrieving the item log
 			app.api.Task_Data_Interface.Update_Task_Entry(params, function(jsonRpcObj) {

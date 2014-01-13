@@ -51,14 +51,6 @@ function Edit_Task_Target_Form(){
 		var selected_index = document.getElementById(this.task_target_edit_name_select.id).selectedIndex;
 		var selected_task = this.task_info_json_array[selected_index - 1];
 		var new_task_id = selected_task.task_id;
-		var new_scheduled = 0;
-		if(document.getElementById(this.task_edit_scheduled_target_select.id).value == "Scheduled")
-		{
-			new_scheduled = 1;
-		}
-		else{
-			new_scheduled = 0;
-		}
 		var new_scheduled_time = document.getElementById(this.task_edit_scheduled_target_date.id).value;
 		var new_recurring = 0;
 		if(document.getElementById(this.task_edit_recurring_target_select.id).value == "True")
@@ -70,7 +62,10 @@ function Edit_Task_Target_Form(){
 		}
 		var new_recurrance_type = document.getElementById(this.task_edit_recurring_target_select_type.id).value;
 		var new_recurrance_period = document.getElementById(this.task_edit_reccurance_target_period.id).value;
-		
+		var variance = document.getElementById(this.task_target_edit_scheduled_variance.id).value;
+		var estimated_time = document.getElementById(this.task_target_edit_estimated_time.id).value;
+		var recurring_end_time = document.getElementById(this.task_target_edit_recurring_end_date.id).value;
+		var status = document.getElementById(this.task_edit_target_status.id).value;
 		
 		if(index_to_edit != 0)
 		{
@@ -78,18 +73,21 @@ function Edit_Task_Target_Form(){
 			var params = new Array();
 			params.push(self.task_targets_log[index_to_edit - 1].task_schedule_id);
 			params.push(new_task_id);
-			params.push(new_scheduled);
 			params.push(Cast_Local_Server_Datetime_To_UTC_Server_Datetime(new_scheduled_time));
 			params.push(new_recurring);
 			params.push(new_recurrance_type);
 			params.push(new_recurrance_period);
+			params.push(variance);
+			params.push(estimated_time);
+			params.push(Cast_Local_Server_Datetime_To_UTC_Server_Datetime(recurring_end_time));
+			params.push(status);
 			
 			app.api.Task_Data_Interface.Update_Task_Target(params, function(jsonRpcObj) {
 			
 				if(jsonRpcObj.result.success == 'true'){
 					
 					alert('Index updated successfully.');
-					
+
 					app.api.Refresh_Data(function() {
 						//self.refresh_item_log_callback();
 					});
@@ -180,19 +178,12 @@ function Edit_Task_Target_Form(){
 
 		if(index_to_fill != 0)
 		{
-			document.getElementById(this.task_target_edit_name_select.id).value = self.task_targets_log[index_to_fill - 1].name;
-			if(self.task_targets_log[index_to_fill - 1].scheduled == 1)
-			{
-				document.getElementById(this.task_edit_scheduled_target_select.id).value = "Scheduled";
+			var selected_target = self.task_targets_log[index_to_fill - 1];
 			
-			}
-			else{
-				document.getElementById(this.task_edit_scheduled_target_select.id).value = "Floating";
+			document.getElementById(this.task_target_edit_name_select.id).value = selected_target.name;
 			
-			}
-			
-			document.getElementById(this.task_edit_scheduled_target_date.id).value = self.task_targets_log[index_to_fill - 1].scheduled_time;
-			if(self.task_targets_log[index_to_fill - 1].recurring == 1)
+			document.getElementById(this.task_edit_scheduled_target_date.id).value = selected_target.scheduled_time;
+			if(selected_target.recurring == 1)
 			{
 				document.getElementById(this.task_edit_recurring_target_select.id).value = "True";
 			}
@@ -200,14 +191,39 @@ function Edit_Task_Target_Form(){
 				document.getElementById(this.task_edit_recurring_target_select.id).value = "False";
 			}
 			
-			document.getElementById(this.task_edit_recurring_target_select_type.id).value = self.task_targets_log[index_to_fill - 1].recurrance_type;
-			document.getElementById(this.task_edit_reccurance_target_period.id).value = self.task_targets_log[index_to_fill - 1].recurrance_period;
-		
+			document.getElementById(this.task_edit_recurring_target_select_type.id).value = selected_target.recurrance_type;
+			document.getElementById(this.task_edit_reccurance_target_period.id).value = selected_target.recurrance_period;
+			document.getElementById(this.task_target_edit_scheduled_variance.id).value = selected_target.variance;
+			document.getElementById(this.task_target_edit_estimated_time.id).value = selected_target.estimated_time;
+			document.getElementById(this.task_target_edit_recurring_end_date.id).value = selected_target.recurrance_end_time;
+			document.getElementById(this.task_edit_target_status.id).value = selected_target.status;
+			
+			if(selected_target.recurrance_child_id == 0)
+			{
+				document.getElementById(this.task_edit_scheduled_target_date.id).disabled = false;
+				document.getElementById(this.task_target_edit_name_select.id).disabled = false;
+				document.getElementById(this.task_edit_recurring_target_select.id).disabled = false;
+				document.getElementById(this.task_edit_recurring_target_select_type.id).disabled = false;
+				document.getElementById(this.task_edit_reccurance_target_period.id).disabled = false;
+				document.getElementById(this.task_target_edit_scheduled_variance.id).disabled = false;
+				document.getElementById(this.task_target_edit_estimated_time.id).disabled = false;
+				document.getElementById(this.task_target_edit_recurring_end_date.id).disabled = false;
+			}
+			else
+			{
+				document.getElementById(this.task_edit_scheduled_target_date.id).disabled = true;
+				document.getElementById(this.task_target_edit_name_select.id).disabled = true;
+				document.getElementById(this.task_edit_recurring_target_select.id).disabled = true;
+				document.getElementById(this.task_edit_recurring_target_select_type.id).disabled = true;
+				document.getElementById(this.task_edit_reccurance_target_period.id).disabled = true;
+				document.getElementById(this.task_target_edit_scheduled_variance.id).disabled = true;
+				document.getElementById(this.task_target_edit_estimated_time.id).disabled = true;
+				document.getElementById(this.task_target_edit_recurring_end_date.id).disabled = true;
+			}
 		}
 		else
 		{
 			document.getElementById(this.task_target_edit_name_select.id).value = "-";
-			document.getElementById(this.task_edit_scheduled_target_select.id).value = "Floating";
 			document.getElementById(this.task_edit_recurring_target_select.id).value = "False";
 			document.getElementById(this.task_edit_recurring_target_select_type.id).value = "Minutes";
 			document.getElementById(this.task_edit_reccurance_target_period.id).value = "0";
@@ -247,16 +263,6 @@ function Edit_Task_Target_Form(){
 		this.edit_task_target_form.appendChild(this.task_target_edit_name_select);
 
 		this.edit_task_target_form.innerHTML += '<br /><br />';	
-
-		this.edit_task_target_form.innerHTML += 'Scheduled/Floating:<br />';
-
-		//task recurring
-		this.task_edit_scheduled_target_select = document.createElement("select");
-		this.task_edit_scheduled_target_select.setAttribute('id', 'task_edit_scheduled_target_select');
-		this.task_edit_scheduled_target_select.innerHTML = '<option>Floating</option><option>Scheduled</option>';
-		this.edit_task_target_form.appendChild(this.task_edit_scheduled_target_select);
-
-		this.edit_task_target_form.innerHTML += '<br />';
 		
 		this.edit_task_target_form.innerHTML += 'Scheduled Date:<br />';
 
@@ -265,8 +271,38 @@ function Edit_Task_Target_Form(){
 		this.task_edit_scheduled_target_date.setAttribute('id', 'task_edit_scheduled_target_date');
 		this.task_edit_scheduled_target_date.setAttribute('type', 'text');
 		this.edit_task_target_form.appendChild(this.task_edit_scheduled_target_date);
+		
+		this.edit_task_target_form.innerHTML += 'Scheduled Date Variance (Hours):<br />';
+
+		//task estimate creation
+		this.task_target_edit_scheduled_variance = document.createElement("input");
+		this.task_target_edit_scheduled_variance.setAttribute('id', 'task_target_edit_scheduled_variance');
+		this.task_target_edit_scheduled_variance.setAttribute('type', 'text');
+		this.task_target_edit_scheduled_variance.setAttribute('value', '0');
+		this.edit_task_target_form.appendChild(this.task_target_edit_scheduled_variance);
 
 		this.edit_task_target_form.innerHTML += '<br />';
+		
+		this.edit_task_target_form.innerHTML += 'Estimated Time (Hours):<br />';
+
+		//task estimate creation
+		this.task_target_edit_estimated_time = document.createElement("input");
+		this.task_target_edit_estimated_time.setAttribute('id', 'task_target_edit_estimated_time');
+		this.task_target_edit_estimated_time.setAttribute('type', 'text');
+		this.task_target_edit_estimated_time.setAttribute('value', '0');
+		this.edit_task_target_form.appendChild(this.task_target_edit_estimated_time);
+		
+		this.edit_task_target_form.innerHTML += '<br />';
+		
+		this.edit_task_target_form.innerHTML += 'Status:<br />';
+
+		//task estimate creation
+		this.task_edit_target_status = document.createElement("select");
+		this.task_edit_target_status.setAttribute('id', 'task_edit_target_status');
+		this.task_edit_target_status.innerHTML = '<option>Incomplete</option><option>Complete</option>';
+		this.edit_task_target_form.appendChild(this.task_edit_target_status);
+		
+		this.edit_task_target_form.innerHTML += '<br /><br />';
 
 		this.edit_task_target_form.innerHTML += 'Recurring:<br />';
 
@@ -296,7 +332,16 @@ function Edit_Task_Target_Form(){
 		this.task_edit_reccurance_target_period.setAttribute('type', 'text');
 		this.task_edit_reccurance_target_period.setAttribute('value', '0');
 		this.edit_task_target_form.appendChild(this.task_edit_reccurance_target_period);
+		
+		this.edit_task_target_form.innerHTML += '<br />';
+		
+		this.edit_task_target_form.innerHTML += 'Recurrance End:<br />';
 
+		this.task_target_edit_recurring_end_date = document.createElement("input");
+		this.task_target_edit_recurring_end_date.setAttribute('id', 'task_target_edit_recurring_end_date');
+		this.task_target_edit_recurring_end_date.innerHTML = '<option>False</option><option>True</option>';
+		this.edit_task_target_form.appendChild(this.task_target_edit_recurring_end_date);
+		
 		this.edit_task_target_form.innerHTML += '<br /><br />';
 
 		//task submit creation
@@ -357,6 +402,12 @@ function Edit_Task_Target_Form(){
 			dateFormat : 'yy-mm-dd'
 		});
 		$('#' + this.task_edit_scheduled_target_date.id).datetimepicker("setDate", new Date());
+		
+		$('#' + this.task_target_edit_recurring_end_date.id).datetimepicker({
+			timeFormat : "HH:mm:ss",
+			dateFormat : 'yy-mm-dd'
+		});
+		$('#' + this.task_target_edit_recurring_end_date.id).datetimepicker("setDate", new Date());
 		
 		$('#' + this.task_edit_target_select.id).change(function(){
 			

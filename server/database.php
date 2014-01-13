@@ -4,8 +4,8 @@ require_once ('config.php');
 require_once ('auth.php');
 
 //the current version of the database
-define('current_version_id', '2');
-define('current_version_string', '0.0.3');
+define('current_version_id', '3');
+define('current_version_string', '0.0.4');
 
 function Connect_To_DB()
 {
@@ -289,7 +289,8 @@ function Update_Database()
 {
 	$updates_lookup_table = array(
 			0 => 'Update_From_0_To_1',
-			1 => 'Update_From_1_To_2'
+			1 => 'Update_From_1_To_2',
+			2 => 'Update_From_2_To_3',
 		);
 	
 	$sql = "SELECT * FROM `version` WHERE `version_id` >= " . current_version_id . " ORDER BY `version_id` ASC";
@@ -368,6 +369,38 @@ function Update_From_1_To_2()
 	  `member_id` int(11) NOT NULL,
 	  PRIMARY KEY (`report_id`)
 	) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
+	$result = mysql_query($sql);
+	
+	Insert_Version($version_id,$version_string);
+}
+
+function Update_From_2_To_3()
+{
+	$version_id = 3;
+	$version_string = "0.0.4";
+	
+	$sql = "ALTER TABLE `task_targets` DROP `scheduled`";
+	$result = mysql_query($sql);
+	
+	$sql = "ALTER TABLE `task_targets` ADD `recurrance_child_id` INT NOT NULL";
+	$result = mysql_query($sql);
+	
+	$sql = "ALTER TABLE `task_targets` ADD `allowed_variance` DOUBLE NOT NULL";
+	$result = mysql_query($sql);
+	
+	$sql = "ALTER TABLE `task_targets` ADD `estimated_time` DOUBLE NOT NULL";
+	$result = mysql_query($sql);
+	
+	$sql = "ALTER TABLE `task_targets` ADD `status` TEXT NOT NULL ";
+	$result = mysql_query($sql);
+	
+	$sql = "ALTER TABLE `tasks` DROP `estimated_time`";
+	$result = mysql_query($sql);
+	
+	$sql = "UPDATE `task_log` SET `status`='Stopped' WHERE `status`='Completed'";
+	$result = mysql_query($sql);
+	
+	$sql = "UPDATE `task_targets` SET `status`='Incomplete'";
 	$result = mysql_query($sql);
 	
 	Insert_Version($version_id,$version_string);

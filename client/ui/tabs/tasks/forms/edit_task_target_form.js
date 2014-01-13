@@ -178,10 +178,12 @@ function Edit_Task_Target_Form(){
 
 		if(index_to_fill != 0)
 		{
-			document.getElementById(this.task_target_edit_name_select.id).value = self.task_targets_log[index_to_fill - 1].name;
+			var selected_target = self.task_targets_log[index_to_fill - 1];
 			
-			document.getElementById(this.task_edit_scheduled_target_date.id).value = self.task_targets_log[index_to_fill - 1].scheduled_time;
-			if(self.task_targets_log[index_to_fill - 1].recurring == 1)
+			document.getElementById(this.task_target_edit_name_select.id).value = selected_target.name;
+			
+			document.getElementById(this.task_edit_scheduled_target_date.id).value = selected_target.scheduled_time;
+			if(selected_target.recurring == 1)
 			{
 				document.getElementById(this.task_edit_recurring_target_select.id).value = "True";
 			}
@@ -189,12 +191,35 @@ function Edit_Task_Target_Form(){
 				document.getElementById(this.task_edit_recurring_target_select.id).value = "False";
 			}
 			
-			document.getElementById(this.task_edit_recurring_target_select_type.id).value = self.task_targets_log[index_to_fill - 1].recurrance_type;
-			document.getElementById(this.task_edit_reccurance_target_period.id).value = self.task_targets_log[index_to_fill - 1].recurrance_period;
-			document.getElementById(this.task_target_edit_scheduled_variance.id).value = self.task_targets_log[index_to_fill - 1].variance;
-			document.getElementById(this.task_target_edit_estimated_time.id).value = self.task_targets_log[index_to_fill - 1].estimated_time;
-			document.getElementById(this.task_target_edit_recurring_end_date.id).value = self.task_targets_log[index_to_fill - 1].recurrance_end_time;
-			document.getElementById(this.task_edit_target_status.id).value = self.task_targets_log[index_to_fill - 1].status;
+			document.getElementById(this.task_edit_recurring_target_select_type.id).value = selected_target.recurrance_type;
+			document.getElementById(this.task_edit_reccurance_target_period.id).value = selected_target.recurrance_period;
+			document.getElementById(this.task_target_edit_scheduled_variance.id).value = selected_target.variance;
+			document.getElementById(this.task_target_edit_estimated_time.id).value = selected_target.estimated_time;
+			document.getElementById(this.task_target_edit_recurring_end_date.id).value = selected_target.recurrance_end_time;
+			document.getElementById(this.task_edit_target_status.id).value = selected_target.status;
+			
+			if(selected_target.recurrance_child_id == 0)
+			{
+				document.getElementById(this.task_edit_scheduled_target_date.id).disabled = false;
+				document.getElementById(this.task_target_edit_name_select.id).disabled = false;
+				document.getElementById(this.task_edit_recurring_target_select.id).disabled = false;
+				document.getElementById(this.task_edit_recurring_target_select_type.id).disabled = false;
+				document.getElementById(this.task_edit_reccurance_target_period.id).disabled = false;
+				document.getElementById(this.task_target_edit_scheduled_variance.id).disabled = false;
+				document.getElementById(this.task_target_edit_estimated_time.id).disabled = false;
+				document.getElementById(this.task_target_edit_recurring_end_date.id).disabled = false;
+			}
+			else
+			{
+				document.getElementById(this.task_edit_scheduled_target_date.id).disabled = true;
+				document.getElementById(this.task_target_edit_name_select.id).disabled = true;
+				document.getElementById(this.task_edit_recurring_target_select.id).disabled = true;
+				document.getElementById(this.task_edit_recurring_target_select_type.id).disabled = true;
+				document.getElementById(this.task_edit_reccurance_target_period.id).disabled = true;
+				document.getElementById(this.task_target_edit_scheduled_variance.id).disabled = true;
+				document.getElementById(this.task_target_edit_estimated_time.id).disabled = true;
+				document.getElementById(this.task_target_edit_recurring_end_date.id).disabled = true;
+			}
 		}
 		else
 		{

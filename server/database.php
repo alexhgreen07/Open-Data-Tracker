@@ -4,8 +4,8 @@ require_once ('config.php');
 require_once ('auth.php');
 
 //the current version of the database
-define('current_version_id', '2');
-define('current_version_string', '0.0.3');
+define('current_version_id', '3');
+define('current_version_string', '0.0.4');
 
 function Connect_To_DB()
 {
@@ -289,7 +289,8 @@ function Update_Database()
 {
 	$updates_lookup_table = array(
 			0 => 'Update_From_0_To_1',
-			1 => 'Update_From_1_To_2'
+			1 => 'Update_From_1_To_2',
+			2 => 'Update_From_2_To_3',
 		);
 	
 	$sql = "SELECT * FROM `version` WHERE `version_id` >= " . current_version_id . " ORDER BY `version_id` ASC";

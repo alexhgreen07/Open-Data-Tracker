@@ -398,7 +398,7 @@ class Task_Data_Interface {
 			`tasks`.`name` AS `name` 
 			FROM `task_targets`, `tasks`
 			WHERE `tasks`.`task_id` = `task_targets`.`task_id` AND `tasks`.`member_id`='" . $_SESSION['session_member_id'] ."'
-			ORDER BY `task_targets`.`scheduled_time` DESC";
+			ORDER BY `task_targets`.`scheduled_time` ASC";
 			
 		$result = mysql_query($query, $this -> database_link);
 

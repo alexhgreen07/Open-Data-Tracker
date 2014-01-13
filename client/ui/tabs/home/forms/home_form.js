@@ -47,7 +47,7 @@ function Home_Form(home_div_id) {
 		//execute sort according to 'scheduled_time'
 		upcoming_tasks.sort(function(a,b){
 			
-			return_value = a.scheduled_time.localeCompare(b.scheduled_time);
+			return_value = b.scheduled_time.localeCompare(a.scheduled_time);
 			
 			return return_value;
 			
@@ -62,11 +62,28 @@ function Home_Form(home_div_id) {
 			
 		});
 		
+		for(var i = 0; i < upcoming_tasks.length; i++)
+		{
+			row = upcoming_tasks.shift();
+			
+			if(row.status != "Complete")
+			{
+				upcoming_tasks.push(row);
+			}
+		}
+		
 		while(upcoming_tasks.length > 3){
 			
 			upcoming_tasks.shift();
-			
 		}
+		
+		upcoming_tasks.sort(function(a,b){
+			
+			return_value = a.scheduled_time.localeCompare(b.scheduled_time);
+			
+			return return_value;
+			
+		});
 		
 		while(recent_items.length > 3){
 			

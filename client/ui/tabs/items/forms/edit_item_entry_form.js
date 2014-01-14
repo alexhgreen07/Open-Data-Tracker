@@ -56,7 +56,7 @@ function Edit_Item_Entry_Form(){
 			params.push(document.getElementById(self.item_edit_value.id).value);
 			params.push(document.getElementById(self.edit_item_name_select.id).value);
 			params.push(document.getElementById(self.item_edit_note.id).value);
-			params.push(0);
+			params.push(document.getElementById(self.edit_item_target_select.id).value);
 			
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Update_Item_Entry(params, function(jsonRpcObj) {
@@ -156,6 +156,7 @@ function Edit_Item_Entry_Form(){
 			document.getElementById(self.item_edit_value.id).value = selected_item_entry.value;
 			document.getElementById(self.edit_item_name_select.id).value = selected_item_entry.item_id;
 			document.getElementById(self.item_edit_note.id).value = selected_item_entry.note;
+			document.getElementById(self.edit_item_target_select.id).value = selected_item_entry.item_target_id;
 		}
 		else
 		{
@@ -163,6 +164,7 @@ function Edit_Item_Entry_Form(){
 			document.getElementById(self.item_edit_value.id).value = '0';
 			document.getElementById(self.edit_item_name_select.id).value = 0;
 			document.getElementById(self.item_edit_note.id).value = '';
+			document.getElementById(self.edit_item_target_select.id).value = 0;
 		}
 		
 	};

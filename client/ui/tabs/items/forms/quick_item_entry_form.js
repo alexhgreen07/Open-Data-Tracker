@@ -31,6 +31,7 @@ function Quick_Item_Entry_Form(){
 		var value_string = $("#" + self.item_value.id).val();
 		var item_select_index = $("#" + self.quick_item_name_select.id).prop("selectedIndex");
 		var note_string = $("#" + self.item_note.id).val();
+		var target_id = $("#" + self.quick_item_target_select.id).val();
 
 		//check that the string is numeric
 		if (!isNaN(Number(value_string)) && value_string != '') {
@@ -42,7 +43,7 @@ function Quick_Item_Entry_Form(){
 			params[1] = value_string;
 			params[2] = app.api.data.items[item_select_index - 1].item_id;
 			params[3] = note_string;
-			params[4] = 0;
+			params[4] = target_id;
 
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Insert_Item_Entry(params, function(jsonRpcObj) {

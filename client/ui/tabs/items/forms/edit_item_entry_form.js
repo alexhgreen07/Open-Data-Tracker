@@ -17,6 +17,17 @@ function Edit_Item_Entry_Form(){
 			"item_log_id",
 			"time");
 		
+		Refresh_Select_HTML_From_Table(
+			self.edit_item_name_select.id,
+			data.items,
+			"item_id",
+			"item_name");
+		
+		Refresh_Select_HTML_From_Table(
+			self.edit_item_target_select.id,
+			data.item_targets,
+			"item_target_id",
+			"name");
 	};
 	
 	/** @method Edit_Item_Entry_Click

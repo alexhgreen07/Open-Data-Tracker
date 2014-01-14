@@ -6,7 +6,17 @@ function Quick_Item_Entry_Form(){
 	
 	this.Refresh = function(data){
 		
+		Refresh_Select_HTML_From_Table(
+			this.quick_item_name_select.id,
+			data.items,
+			"item_id",
+			"item_name");
 		
+		Refresh_Select_HTML_From_Table(
+			this.quick_item_target_select.id,
+			data.item_targets,
+			"item_target_id",
+			"name");
 		
 	};
 	

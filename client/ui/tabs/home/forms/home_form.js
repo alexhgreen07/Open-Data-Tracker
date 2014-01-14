@@ -74,7 +74,7 @@ function Home_Form(home_div_id) {
 			
 		});
 		
-		while(upcoming_tasks.length > 3){
+		while(upcoming_tasks.length > 5){
 			
 			upcoming_tasks.shift();
 		}
@@ -93,11 +93,25 @@ function Home_Form(home_div_id) {
 			
 		});
 		
-		while(recent_items.length > 3){
+		while(recent_items.length > 5){
 			
 			recent_items.shift();
 			
 		}
+		
+		//execute sort according to 'time'
+		recent_items.sort(function(a,b){
+			
+			datetime_a = Cast_Server_Datetime_to_Date(a.time);
+			datetime_b = Cast_Server_Datetime_to_Date(b.time);
+			
+			if ( datetime_b < datetime_a )
+			  return -1;
+			if ( datetime_b > datetime_a )
+			  return 1;
+			return 0;
+			
+		});
 		
 		//create the running tasks table
 		running_tasks_table = '';

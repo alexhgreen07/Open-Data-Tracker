@@ -299,7 +299,7 @@ function Edit_Task_Target_Form(){
 		//task estimate creation
 		this.task_edit_target_status = document.createElement("select");
 		this.task_edit_target_status.setAttribute('id', 'task_edit_target_status');
-		this.task_edit_target_status.innerHTML = '<option>Incomplete</option><option>Complete</option>';
+		this.task_edit_target_status.innerHTML = '<option>Incomplete</option><option>Complete</option><option>Missed</option>';
 		this.edit_task_target_form.appendChild(this.task_edit_target_status);
 		
 		this.edit_task_target_form.innerHTML += '<br /><br />';

@@ -39,49 +39,57 @@ function Home_Form(home_div_id) {
 		//load the task targets array
 		for (var i = 0; i < data.task_targets.length; i++) {
 			
-			
-			upcoming_tasks.push(data.task_targets[i]);
+			if(data.task_targets[i].status == "Incomplete")
+			{
+				upcoming_tasks.push(data.task_targets[i]);
+			}
 			
 		}
 		
 		//execute sort according to 'scheduled_time'
 		upcoming_tasks.sort(function(a,b){
+
+			datetime_a = Cast_Server_Datetime_to_Date(a.scheduled_time);
+			datetime_b = Cast_Server_Datetime_to_Date(b.scheduled_time);
 			
-			return_value = b.scheduled_time.localeCompare(a.scheduled_time);
-			
-			return return_value;
+			if ( datetime_b < datetime_a )
+			  return -1;
+			if ( datetime_b > datetime_a )
+			  return 1;
+			return 0;
 			
 		});
 		
 		//execute sort according to 'time'
 		recent_items.sort(function(a,b){
 			
-			return_value = a.time.localeCompare(b.time);
+			datetime_a = Cast_Server_Datetime_to_Date(a.time);
+			datetime_b = Cast_Server_Datetime_to_Date(b.time);
 			
-			return return_value;
+			if ( datetime_b > datetime_a )
+			  return -1;
+			if ( datetime_b < datetime_a )
+			  return 1;
+			return 0;
 			
 		});
-		
-		for(var i = 0; i < upcoming_tasks.length; i++)
-		{
-			row = upcoming_tasks.shift();
-			
-			if(row.status != "Complete")
-			{
-				upcoming_tasks.push(row);
-			}
-		}
 		
 		while(upcoming_tasks.length > 3){
 			
 			upcoming_tasks.shift();
 		}
 		
+		//execute sort according to 'scheduled_time'
 		upcoming_tasks.sort(function(a,b){
+
+			datetime_a = Cast_Server_Datetime_to_Date(a.scheduled_time);
+			datetime_b = Cast_Server_Datetime_to_Date(b.scheduled_time);
 			
-			return_value = a.scheduled_time.localeCompare(b.scheduled_time);
-			
-			return return_value;
+			if ( datetime_b > datetime_a )
+			  return -1;
+			if ( datetime_b < datetime_a )
+			  return 1;
+			return 0;
 			
 		});
 		

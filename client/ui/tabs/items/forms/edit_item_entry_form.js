@@ -45,6 +45,7 @@ function Edit_Item_Entry_Form(){
 			params.push(document.getElementById(self.item_edit_value.id).value);
 			params.push(document.getElementById(self.edit_item_name_select.id).value);
 			params.push(document.getElementById(self.item_edit_note.id).value);
+			params.push(0);
 			
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Update_Item_Entry(params, function(jsonRpcObj) {

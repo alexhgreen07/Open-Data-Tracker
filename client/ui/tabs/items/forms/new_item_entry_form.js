@@ -31,6 +31,7 @@ function New_Item_Entry_Form(){
 			params[1] = value_string;
 			params[2] = app.api.data.items[item_select_index - 1].item_id;
 			params[3] = note_string;
+			params[4] = 0;
 
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Insert_Item_Entry(params, function(jsonRpcObj) {

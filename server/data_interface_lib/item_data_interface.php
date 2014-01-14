@@ -20,7 +20,7 @@ class Item_Data_Interface {
 
 	}
 
-	public function Insert_Item_Entry($time, $value, $item_id, $note) {
+	public function Insert_Item_Entry($time, $value, $item_id, $note , $item_target_id) {
 
 		$return_json = array('success' => 'false', );
 		
@@ -41,10 +41,16 @@ class Item_Data_Interface {
 				`value` ,
 				`item_id` ,
 				`note`,
+				`item_target_id`,
 				`member_id`
 				)
 				VALUES (
-				'" . $time . "', '" . $value . "', '" . $item_id . "', '" . $note . "','" . $_SESSION['session_member_id'] ."')";
+				'" . $time . "', 
+				'" . $value . "', 
+				'" . $item_id . "', 
+				'" . $note . "',
+				".$item_target_id.",
+				'" . $_SESSION['session_member_id'] ."')";
 
 			//$return_json['debug'] = $sql_insert;
 
@@ -62,19 +68,28 @@ class Item_Data_Interface {
 
 	}
 	
-	public function Update_Item_Entry($item_entry_id, $time, $value, $item_id, $note){
+	public function Update_Item_Entry($item_entry_id, $time, $value, $item_id, $note, $item_target_id){
 		
 		$return_json = array('success' => 'false', );
 		
 		$time = mysql_real_escape_string($time);
 		$value = mysql_real_escape_string($value);
 		$note = mysql_real_escape_string($note);
+		$item_target_id = mysql_real_escape_string($item_target_id);
 
 		if ($value != "") {
 
-			$sql_insert = "UPDATE `item_log` SET `item_id` = " . $item_id . ",`time` = '".$time."',`value`=".$value.",`note`='".$note."' WHERE `item_log_id` = " . $item_entry_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+			$sql_insert = "UPDATE `item_log` SET `item_id` = 
+				" . $item_id . ",
+				`time` = '".$time."',
+				`value`=".$value.",
+				`note`='".$note."',
+				`item_target_id` = ".$item_target_id." 
+				WHERE 
+				`item_log_id` = " . $item_entry_id . " AND 
+				`member_id`='" . $_SESSION['session_member_id'] ."'";
 
-			//$return_json['debug'] = $sql_insert;
+			$return_json['debug'] = $sql_insert;
 
 			$success = mysql_query($sql_insert, $this -> database_link);
 

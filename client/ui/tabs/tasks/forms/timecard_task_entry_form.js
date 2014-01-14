@@ -80,7 +80,7 @@ function Timecard_Task_Entry_Form(){
 		//iterate through all tasks
 		for (var i = 0; i < data.task_targets.length; i++) {
 			
-			if(data.task_targets[i].status != "Complete")
+			if(data.task_targets[i].status == "Incomplete")
 			{
 				for(var j = 0; j < self.active_tasks.length; j++)
 				{

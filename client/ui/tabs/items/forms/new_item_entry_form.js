@@ -112,6 +112,17 @@ function New_Item_Entry_Form(){
 		this.item_new_note.setAttribute('id', "new_notes");
 		this.item_new_note.setAttribute('type', 'text');
 		this.item_new_entry_data_form.appendChild(this.item_new_note);
+		
+		this.item_new_entry_data_form.innerHTML += '<br />';
+		
+		this.item_new_entry_data_form.innerHTML += 'Target:<br />';
+
+		//item target
+		this.new_item_target_select = document.createElement("select");
+		this.new_item_target_select.setAttribute('name', "new_item_target_select");
+		this.new_item_target_select.setAttribute('id', "new_item_target_select");
+		this.new_item_target_select.innerHTML = '<option>-</option>';
+		this.item_new_entry_data_form.appendChild(this.new_item_target_select);
 
 		this.item_new_entry_data_form.innerHTML += '<br /><br />';
 

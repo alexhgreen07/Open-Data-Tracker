@@ -221,6 +221,17 @@ function Edit_Item_Entry_Form(){
 		this.item_edit_note.setAttribute('type', 'text');
 		this.item_edit_entry_data_form.appendChild(this.item_edit_note);
 
+		this.item_edit_entry_data_form.innerHTML += '<br />';
+
+		this.item_edit_entry_data_form.innerHTML += 'Target:<br />';
+
+		//item unit
+		this.edit_item_target_select = document.createElement("select");
+		this.edit_item_target_select.setAttribute('name', "edit_item_target_select");
+		this.edit_item_target_select.setAttribute('id', "edit_item_target_select");
+		this.edit_item_target_select.innerHTML = '<option>-</option>';
+		this.item_edit_entry_data_form.appendChild(this.edit_item_target_select);
+
 		this.item_edit_entry_data_form.innerHTML += '<br /><br />';
 
 		//item submit button creation

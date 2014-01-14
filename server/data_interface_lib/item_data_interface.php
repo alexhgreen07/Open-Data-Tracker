@@ -290,7 +290,8 @@ class Item_Data_Interface {
 			'value' => 'float',
 			'name' => 'string',
 			'unit' => 'string',
-			'note' => 'string'
+			'note' => 'string',
+			'item_target_id' => 'int'
 		);	
 			
 		
@@ -306,6 +307,7 @@ class Item_Data_Interface {
 			`item_log`.`item_id` AS `item_id`, 
 			`item_log`.`time` AS `time`, 
 			`item_log`.`value` AS `value`, 
+			`item_log`.`item_target_id` AS `item_target_id`,
 			`items`.`name` AS `name`,
 			`items`.`unit` AS `unit`, 
 			`item_log`.`note` AS `note` 
@@ -329,6 +331,7 @@ class Item_Data_Interface {
 			$item_entry_name = mysql_result($result, $i, "name");
 			$item_entry_unit = mysql_result($result, $i, "unit");
 			$item_entry_note = mysql_result($result, $i, "note");
+			$item_entry_target_id = mysql_result($result, $i, "item_target_id");
 			
 			$return_json['data'][$i] = array(
 				'item_log_id' => $item_entry_log_id,
@@ -337,7 +340,8 @@ class Item_Data_Interface {
 				'value' => $item_entry_value,
 				'name' => $item_entry_name,
 				'unit' => $item_entry_unit,
-				'note' => $item_entry_note);
+				'note' => $item_entry_note,
+				'item_target_id' =>$item_entry_target_id);
 
 
 			$i++;

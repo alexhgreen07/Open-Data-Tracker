@@ -406,4 +406,15 @@ function Update_From_2_To_3()
 	Insert_Version($version_id,$version_string);
 }
 
+function Update_From_3_To_4()
+{
+	$version_id = 4;
+	$version_string = "0.0.5";
+	
+	$sql = "ALTER TABLE `item_log` ADD `item_target_id` INT NOT NULL ";
+	$result = mysql_query($sql);
+	
+	Insert_Version($version_id,$version_string);
+}
+
 ?>

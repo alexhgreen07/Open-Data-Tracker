@@ -120,9 +120,21 @@ function Home_Form(home_div_id) {
 		
 		for(var i = 0; i < running_tasks.length; i++)
 		{
+			var datetime = Cast_Server_Datetime_to_Date(running_tasks[i].start_time);
+   			var now = new Date();
+   			scheduled_interval = Get_String_From_Time_Interval(now, datetime);
+   			if(now > datetime)
+   			{
+   				scheduled_interval = scheduled_interval + " ago";
+   			}
+   			else
+   			{
+   				scheduled_interval = "in " + scheduled_interval;
+   			}
+			
 			running_tasks_table += '<tr>' + 
 				'<td>' + running_tasks[i].name + '</td>' + 
-				'<td>' + running_tasks[i].start_time + '</td>' + 
+				'<td>' + scheduled_interval + '</td>' + 
 				'</tr>';
 		}
 		
@@ -133,13 +145,25 @@ function Home_Form(home_div_id) {
 		//create the upcoming task targets table
 		upcoming_tasks_table = '';
 		
-		upcoming_tasks_table += '<table><tr><th>Name</th><th>Start Time</th></tr>';
+		upcoming_tasks_table += '<table><tr><th>Name</th><th>Time To Target</th></tr>';
 		
 		for(var i = 0; i < upcoming_tasks.length; i++)
 		{
+			var datetime = Cast_Server_Datetime_to_Date(upcoming_tasks[i].scheduled_time);
+   			var now = new Date();
+   			scheduled_interval = Get_String_From_Time_Interval(now, datetime);
+   			if(now > datetime)
+   			{
+   				scheduled_interval = scheduled_interval + " ago";
+   			}
+   			else
+   			{
+   				scheduled_interval = "in " + scheduled_interval;
+   			}
+			
 			upcoming_tasks_table += '<tr>' + 
 				'<td>' + upcoming_tasks[i].name + '</td>' + 
-				'<td>' + upcoming_tasks[i].scheduled_time + '</td>' + 
+				'<td>' + scheduled_interval + '</td>' + 
 				'</tr>';
 		}
 		
@@ -154,9 +178,22 @@ function Home_Form(home_div_id) {
 		
 		for(var i = 0; i < recent_items.length; i++)
 		{
+			var datetime = Cast_Server_Datetime_to_Date(recent_items[i].time);
+   			var now = new Date();
+   			scheduled_interval = Get_String_From_Time_Interval(now, datetime);
+			
+			if(now > datetime)
+   			{
+   				scheduled_interval = scheduled_interval + " ago";
+   			}
+   			else
+   			{
+   				scheduled_interval = "in " + scheduled_interval;
+   			}
+			
 			recent_items_table += '<tr>' + 
 				'<td>' + recent_items[i].name + '</td>' + 
-				'<td>' + recent_items[i].time + '</td>' + 
+				'<td>' + scheduled_interval + '</td>' + 
 				'<td>' + recent_items[i].value + '</td>' + 
 				'</tr>';
 		}

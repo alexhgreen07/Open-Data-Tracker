@@ -102,10 +102,12 @@ function Get_String_From_Time_Interval(time_interval1, time_interval2)
 	
 	if(hours > 0)
 	{
-		return_string +=  padDigits(hours,2) + ":"; 
+		//return_string +=  padDigits(hours,2) + ":"; 
+		return_string +=  hours + ":"; 
 	}
 	
-	return_string +=   + padDigits(minutes,2) + ":" + padDigits(seconds,2);
+	//return_string += padDigits(minutes,2) + ":" + padDigits(seconds,2);
+	return_string += minutes + ":" + seconds;
 	
     return return_string;
 	

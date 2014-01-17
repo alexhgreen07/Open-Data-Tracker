@@ -145,7 +145,7 @@ function Home_Form(home_div_id) {
 		//create the upcoming task targets table
 		upcoming_tasks_table = '';
 		
-		upcoming_tasks_table += '<table><tr><th>Name</th><th>Time To Target</th></tr>';
+		upcoming_tasks_table += '<table><tr><th>Name</th><th>Time To Target</th><th>Estimated Time</th></tr>';
 		
 		for(var i = 0; i < upcoming_tasks.length; i++)
 		{
@@ -160,10 +160,12 @@ function Home_Form(home_div_id) {
    			{
    				scheduled_interval = "in " + scheduled_interval;
    			}
+   			estimated_time_string = Get_String_From_Time_Interval(0,Math.round(upcoming_tasks[i].estimated_time * 60 * 60 * 1000));
 			
 			upcoming_tasks_table += '<tr>' + 
 				'<td>' + upcoming_tasks[i].name + '</td>' + 
 				'<td>' + scheduled_interval + '</td>' + 
+				'<td>' + estimated_time_string + '</td>' + 
 				'</tr>';
 		}
 		

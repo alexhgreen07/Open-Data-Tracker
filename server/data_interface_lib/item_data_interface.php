@@ -438,7 +438,8 @@ class Item_Data_Interface {
 				'recurring' => 'bool', 
 				'recurring_child_id' => 'int',
 				'recurrance_end_time' => 'date',
-				'allowed_variance' => 'float'
+				'allowed_variance' => 'float',
+				'recurrance_period' => 'float'
 			);
 		
 		return $return_json;
@@ -461,6 +462,7 @@ class Item_Data_Interface {
 			`item_targets`.`recurring_child_id` AS `recurring_child_id`,
 			`item_targets`.`recurrance_end_time` AS `recurrance_end_time`,
 			`item_targets`.`allowed_variance` AS `allowed_variance`,
+			`item_targets`.`recurrance_period` AS `recurrance_period`,
 			`items`.`name` AS `name`
 			FROM `item_targets`, `items` WHERE `items`.`item_id` = `item_targets`.`item_id` AND `items`.`member_id`='" . $_SESSION['session_member_id'] ."'";
 		$result = mysql_query($sql_query, $this -> database_link);
@@ -486,6 +488,7 @@ class Item_Data_Interface {
 				$recurring_child_id = mysql_result($result, $i, "recurring_child_id");
 				$recurrance_end_time = mysql_result($result, $i, "recurrance_end_time");
 				$allowed_variance = mysql_result($result, $i, "allowed_variance");
+				$recurrance_period = mysql_result($result, $i, "recurrance_period");
 
 				$return_json['data'][$i] = 
 					array(
@@ -501,6 +504,7 @@ class Item_Data_Interface {
 						'recurring_child_id' => $recurring_child_id,
 						'recurrance_end_time' => $recurrance_end_time,
 						'allowed_variance' => $allowed_variance,
+						'recurrance_period' => $recurrance_period
 					);
 
 				$i++;

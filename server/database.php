@@ -423,6 +423,9 @@ function Update_From_3_To_4()
 	$sql = "ALTER TABLE `item_targets` ADD `allowed_variance` DOUBLE NOT NULL ";
 	$result = mysql_query($sql);
 	
+	$sql = "ALTER TABLE `item_targets` ADD `recurrance_period` DOUBLE NOT NULL ";
+	$result = mysql_query($sql);
+	
 	Insert_Version($version_id,$version_string);
 }
 

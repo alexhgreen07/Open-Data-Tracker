@@ -18,7 +18,10 @@ function New_Item_Target_Form(){
 		var item = $("#" + self.new_item_target_name_select.id).val();
 		var period_type = $("#" + self.new_item_target_recurrance_type_select.id).val();
 		var period = $("#" + self.item_target_period.id).val();
+		var variance = $("#" + self.item_target_variance.id).val();
 		var recurring = $("#" + self.new_item_target_recurring_select.id).val();
+		var recurrance_period = $('#' + self.item_target_recurring_period.id).val();
+		var recurrance_end_date = $('#' + self.item_target_recurring_end_date.id).val();
 		
 		if(value == '')
 		{
@@ -42,7 +45,10 @@ function New_Item_Target_Form(){
 			params[3] = item;
 			params[4] = period_type;
 			params[5] = period;
-			params[6] = recurring;
+			params[6] = variance;
+			params[7] = recurring;
+			params[8] = recurrance_period;
+			params[9] = recurrance_end_date;
 
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Insert_Item_Target(params, function(jsonRpcObj) {

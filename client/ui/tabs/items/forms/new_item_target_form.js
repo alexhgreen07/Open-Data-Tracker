@@ -20,6 +20,14 @@ function New_Item_Target_Form(){
 		var period = $("#" + self.item_target_period.id).val();
 		var variance = $("#" + self.item_target_variance.id).val();
 		var recurring = $("#" + self.new_item_target_recurring_select.id).val();
+		if(recurring == "True")
+		{
+			recurring = 1;
+		}
+		else
+		{
+			recurring = 0;
+		}
 		var recurrance_period = $('#' + self.item_target_recurring_period.id).val();
 		var recurrance_end_date = $('#' + self.item_target_recurring_end_date.id).val();
 		

@@ -14,17 +14,46 @@ function Edit_Item_Target_Form(){
 		
 		selected_index = document.getElementById(self.edit_item_target_id_select.id).selectedIndex;
 		
+		document.getElementById(self.item_edit_target_time.id).disabled = false;
+		document.getElementById(self.edit_item_target_type_select.id).disabled = false;
+		document.getElementById(self.item_edit_target_value.id).disabled = false;
+		document.getElementById(self.edit_item_target_name_select.id).disabled = false;
+		document.getElementById(self.edit_item_target_recurrance_type_select.id).disabled = false;
+		document.getElementById(self.edit_item_target_period.id).disabled = false;
+		document.getElementById(self.edit_item_target_recurring_select.id).disabled = false;
+		document.getElementById(self.edit_item_target_variance.id).disabled = false;
+		document.getElementById(self.edit_item_target_recurring_period.id).disabled = false;
+		document.getElementById(this.edit_item_target_recurring_end_date.id).disabled = false;
+		
 		if(selected_index != 0)
 		{
 			selected_target = self.data.item_targets[selected_index - 1];
+			
+			if(selected_target.recurring_child_id != 0)
+			{
+				document.getElementById(self.item_edit_target_time.id).disabled = true;
+				document.getElementById(self.edit_item_target_type_select.id).disabled = true;
+				document.getElementById(self.item_edit_target_value.id).disabled = true;
+				document.getElementById(self.edit_item_target_name_select.id).disabled = true;
+				document.getElementById(self.edit_item_target_recurrance_type_select.id).disabled = true;
+				document.getElementById(self.edit_item_target_period.id).disabled = true;
+				document.getElementById(self.edit_item_target_recurring_select.id).disabled = true;
+				document.getElementById(self.edit_item_target_variance.id).disabled = true;
+				document.getElementById(self.edit_item_target_recurring_period.id).disabled = true;
+				document.getElementById(self.edit_item_target_recurring_end_date.id).disabled = true;
+			}
 		
 			$("#" + self.item_edit_target_time.id).val(selected_target.start_time);
 			$("#" + self.edit_item_target_type_select.id).val(selected_target.type);
 			$("#" + self.item_edit_target_value.id).val(selected_target.value);
 			$("#" + self.edit_item_target_name_select.id).val(selected_target.item_id);
 			$("#" + self.edit_item_target_recurrance_type_select.id).val(selected_target.period_type);
-			$("#" + self.edit_item_target_recurrance_period.id).val(selected_target.period);
+			$("#" + self.edit_item_target_period.id).val(selected_target.period);
 			$("#" + self.edit_item_target_recurring_select.id).val(selected_target.recurring);
+			$("#" + self.edit_item_target_variance.id).val(selected_target.allowed_variance);
+			$("#" + self.edit_item_target_recurring_period.id).val(selected_target.recurrance_period);
+			$('#' + self.edit_item_target_recurring_end_date.id).val(selected_target.recurrance_end_time);
+			$('#' + self.edit_item_target_status_select.id).val(selected_target.status);
 		}
 		else
 		{
@@ -33,8 +62,10 @@ function Edit_Item_Target_Form(){
 			$("#" + self.item_edit_target_value.id).val('');
 			$("#" + self.edit_item_target_name_select.id).val(0);
 			$("#" + self.edit_item_target_recurrance_type_select.id).val('Minutes');
-			$("#" + self.edit_item_target_recurrance_period.id).val('');
+			$("#" + self.edit_item_target_period.id).val('');
 			$("#" + self.edit_item_target_recurring_select.id).val(0);
+			$("#" + self.edit_item_target_variance.id).val('');
+			$("#" + self.edit_item_target_recurring_period.id).val('');
 		}
 		
 		
@@ -49,8 +80,12 @@ function Edit_Item_Target_Form(){
 		var value = $("#" + self.item_edit_target_value.id).val();
 		var item = $("#" + self.edit_item_target_name_select.id).val();
 		var period_type = $("#" + self.edit_item_target_recurrance_type_select.id).val();
-		var period = $("#" + self.edit_item_target_recurrance_period.id).val();
+		var period = $("#" + self.edit_item_target_period.id).val();
+		var variance = $("#" + self.edit_item_target_variance.id).val();
+		var status = $('#' + self.edit_item_target_status_select.id).val();
 		var recurring = $("#" + self.edit_item_target_recurring_select.id).val();
+		var recurrance_period = $("#" + self.edit_item_target_recurring_period.id).val();
+		var recurrance_end_date = $("#" + self.edit_item_target_recurring_end_date.id).val();
 		
 		if(item_target_id == 0)
 		{
@@ -79,7 +114,11 @@ function Edit_Item_Target_Form(){
 			params[4] = item;
 			params[5] = period_type;
 			params[6] = period;
-			params[7] = recurring;
+			params[7] = variance;
+			params[8] = status;
+			params[9] = recurring;
+			params[10] = recurrance_period;
+			params[11] = recurrance_end_date;
 
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Update_Item_Target(params, function(jsonRpcObj) {
@@ -207,8 +246,6 @@ function Edit_Item_Target_Form(){
 		this.edit_item_target_form.appendChild(this.edit_item_target_name_select);
 
 		this.edit_item_target_form.innerHTML += '<br />';
-
-		this.edit_item_target_form.innerHTML += '<br />';
 		
 		this.edit_item_target_form.innerHTML += 'Period Type:<br />';
 
@@ -229,10 +266,34 @@ function Edit_Item_Target_Form(){
 		this.edit_item_target_form.innerHTML += 'Period:<br />';
 
 		//item value
-		this.edit_item_target_recurrance_period = document.createElement("input");
-		this.edit_item_target_recurrance_period.setAttribute('id', "edit_item_target_recurrance_period");
-		this.edit_item_target_recurrance_period.setAttribute('type', 'text');
-		this.edit_item_target_form.appendChild(this.edit_item_target_recurrance_period);
+		this.edit_item_target_period = document.createElement("input");
+		this.edit_item_target_period.setAttribute('id', "edit_item_target_period");
+		this.edit_item_target_period.setAttribute('type', 'text');
+		this.edit_item_target_form.appendChild(this.edit_item_target_period);
+		
+		this.edit_item_target_form.innerHTML += '<br />';
+		
+		this.edit_item_target_form.innerHTML += 'Variance:<br />';
+
+		//item value
+		this.edit_item_target_variance = document.createElement("input");
+		this.edit_item_target_variance.setAttribute('id', "edit_item_target_variance");
+		this.edit_item_target_variance.setAttribute('type', 'text');
+		this.edit_item_target_form.appendChild(this.edit_item_target_variance);
+		
+		this.edit_item_target_form.innerHTML += '<br />';
+		
+		this.edit_item_target_form.innerHTML += 'Status:<br />';
+
+		//item unit
+		this.edit_item_target_status_select = document.createElement("select");
+		this.edit_item_target_status_select.setAttribute('id', "edit_item_target_status_select");
+		this.edit_item_target_status_select.innerHTML = '<option>Incomplete</option>';
+		this.edit_item_target_status_select.innerHTML += '<option>Complete</option>';
+		this.edit_item_target_status_select.innerHTML += '<option>Missed</option>';
+		this.edit_item_target_form.appendChild(this.edit_item_target_status_select);
+
+		this.edit_item_target_form.innerHTML += '<br />';
 		
 		this.edit_item_target_form.innerHTML += '<br />';
 		
@@ -245,6 +306,26 @@ function Edit_Item_Target_Form(){
 		this.edit_item_target_recurring_select.innerHTML += '<option value="1">True</option>';
 		this.edit_item_target_form.appendChild(this.edit_item_target_recurring_select);
 
+		this.edit_item_target_form.innerHTML += '<br />';
+		
+		this.edit_item_target_form.innerHTML += 'Recurrance Period:<br />';
+
+		//item value
+		this.edit_item_target_recurring_period = document.createElement("input");
+		this.edit_item_target_recurring_period.setAttribute('id', "edit_item_target_recurring_period");
+		this.edit_item_target_recurring_period.setAttribute('type', 'text');
+		this.edit_item_target_form.appendChild(this.edit_item_target_recurring_period);
+		
+		this.edit_item_target_form.innerHTML += '<br />';
+		
+		this.edit_item_target_form.innerHTML += 'Recurrance End Date:<br />';
+
+		//item value
+		this.edit_item_target_recurring_end_date = document.createElement("input");
+		this.edit_item_target_recurring_end_date.setAttribute('id', "edit_item_target_recurring_end_date");
+		this.edit_item_target_recurring_end_date.setAttribute('type', 'text');
+		this.edit_item_target_form.appendChild(this.edit_item_target_recurring_end_date);
+		
 		this.edit_item_target_form.innerHTML += '<br />';
 
 		this.edit_item_target_form.innerHTML += '<br />';
@@ -302,6 +383,13 @@ function Edit_Item_Target_Form(){
 			dateFormat : 'yy-mm-dd'
 		});
 		$('#' + this.item_edit_target_time.id).datetimepicker("setDate", new Date());
+		
+		//initialize the datetime picker
+		$('#' + this.edit_item_target_recurring_end_date.id).datetimepicker({
+			timeFormat : "HH:mm:ss",
+			dateFormat : 'yy-mm-dd'
+		});
+		$('#' + this.edit_item_target_recurring_end_date.id).datetimepicker("setDate", new Date());
 	
 	};
 }

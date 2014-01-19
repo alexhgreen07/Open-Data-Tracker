@@ -79,6 +79,38 @@ function Cast_Local_Server_Datetime_To_UTC_Server_Datetime(local_datetime_string
 	return utc_datetime_string;
 }
 
+function Get_String_From_Time_Interval(time_interval1, time_interval2)
+{
+
+    var datetime1 = new Date( time_interval1 ).getTime();
+    var datetime2 = new Date(time_interval2).getTime();
+	
+	var milisec_diff = datetime2 - datetime1;
+	var milisec_diff_abs = Math.abs(milisec_diff);
+	
+	var days = Math.floor(milisec_diff_abs / 1000 / 60 / (60 * 24));
+	var hours = Math.floor(milisec_diff_abs / 1000 / 60 / 60) % 24;
+	var minutes = Math.floor(milisec_diff_abs / 1000 / 60) % 60;
+	var seconds = Math.floor(milisec_diff_abs / 1000) % 60;
+
+	var return_string = ""; 
+	
+	if(days > 0)
+	{
+		return_string += days + "d "; 
+	}
+	
+	if(hours > 0)
+	{
+		return_string +=  hours + "h "; 
+	}
+	
+	return_string += minutes + "m ";
+	
+    return return_string;
+	
+}
+
 function padDigits(number, digits) {
     return Array(Math.max(digits - String(number).length + 1, 0)).join(0) + number;
 }

@@ -17,6 +17,17 @@ function Edit_Item_Entry_Form(){
 			"item_log_id",
 			"time");
 		
+		Refresh_Select_HTML_From_Table(
+			self.edit_item_name_select.id,
+			data.items,
+			"item_id",
+			"item_name");
+		
+		Refresh_Select_HTML_From_Table(
+			self.edit_item_target_select.id,
+			data.item_targets,
+			"item_target_id",
+			"name");
 	};
 	
 	/** @method Edit_Item_Entry_Click
@@ -45,6 +56,7 @@ function Edit_Item_Entry_Form(){
 			params.push(document.getElementById(self.item_edit_value.id).value);
 			params.push(document.getElementById(self.edit_item_name_select.id).value);
 			params.push(document.getElementById(self.item_edit_note.id).value);
+			params.push(document.getElementById(self.edit_item_target_select.id).value);
 			
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Update_Item_Entry(params, function(jsonRpcObj) {
@@ -144,6 +156,7 @@ function Edit_Item_Entry_Form(){
 			document.getElementById(self.item_edit_value.id).value = selected_item_entry.value;
 			document.getElementById(self.edit_item_name_select.id).value = selected_item_entry.item_id;
 			document.getElementById(self.item_edit_note.id).value = selected_item_entry.note;
+			document.getElementById(self.edit_item_target_select.id).value = selected_item_entry.item_target_id;
 		}
 		else
 		{
@@ -151,6 +164,7 @@ function Edit_Item_Entry_Form(){
 			document.getElementById(self.item_edit_value.id).value = '0';
 			document.getElementById(self.edit_item_name_select.id).value = 0;
 			document.getElementById(self.item_edit_note.id).value = '';
+			document.getElementById(self.edit_item_target_select.id).value = 0;
 		}
 		
 	};
@@ -219,6 +233,17 @@ function Edit_Item_Entry_Form(){
 		this.item_edit_note.setAttribute('id', "edit_notes");
 		this.item_edit_note.setAttribute('type', 'text');
 		this.item_edit_entry_data_form.appendChild(this.item_edit_note);
+
+		this.item_edit_entry_data_form.innerHTML += '<br />';
+
+		this.item_edit_entry_data_form.innerHTML += 'Target:<br />';
+
+		//item unit
+		this.edit_item_target_select = document.createElement("select");
+		this.edit_item_target_select.setAttribute('name', "edit_item_target_select");
+		this.edit_item_target_select.setAttribute('id', "edit_item_target_select");
+		this.edit_item_target_select.innerHTML = '<option>-</option>';
+		this.item_edit_entry_data_form.appendChild(this.edit_item_target_select);
 
 		this.item_edit_entry_data_form.innerHTML += '<br /><br />';
 

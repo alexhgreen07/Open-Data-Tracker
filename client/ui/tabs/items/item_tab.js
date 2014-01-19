@@ -80,24 +80,6 @@ function Item_Tab() {
 		this.items_list = data.items;
 
 		Refresh_Select_HTML_From_Table(
-			self.quick_item_entry_form.quick_item_name_select.id,
-			data.items,
-			"item_id",
-			"item_name");
-		
-		Refresh_Select_HTML_From_Table(
-			self.new_item_entry_form.new_item_name_select.id,
-			data.items,
-			"item_id",
-			"item_name");
-			
-		Refresh_Select_HTML_From_Table(
-			self.edit_item_entry_form.edit_item_name_select.id,
-			data.items,
-			"item_id",
-			"item_name");
-		
-		Refresh_Select_HTML_From_Table(
 			self.new_item_target_form.new_item_target_name_select.id,
 			data.items,
 			"item_id",
@@ -109,6 +91,9 @@ function Item_Tab() {
 			"item_id",
 			"item_name");
 		
+		
+		this.quick_item_entry_form.Refresh(data);
+		this.new_item_entry_form.Refresh(data);
 		this.edit_item_entry_form.Refresh(data);
 		this.edit_item_form.Refresh(data);
 		this.view_items_form.Refresh(data);

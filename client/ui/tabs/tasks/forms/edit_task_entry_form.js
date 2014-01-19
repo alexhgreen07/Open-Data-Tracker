@@ -171,6 +171,7 @@ function Edit_Task_Entry_Form(){
 			document.getElementById(self.edit_task_entry_task_status_select.id).value = selected_task_entry.status;
 			document.getElementById(self.task_entry_edit_duration.id).value = selected_task_entry.hours;
 			document.getElementById(self.task_entry_edit_note.id).value = selected_task_entry.note;
+			document.getElementById(self.task_target_select.id).value = selected_task_entry.task_target_id;
 			
 		}
 		else
@@ -180,6 +181,7 @@ function Edit_Task_Entry_Form(){
 			document.getElementById(self.edit_task_entry_task_status_select.id).value = 'Stopped';
 			document.getElementById(self.task_entry_edit_duration.id).value = '';
 			document.getElementById(self.task_entry_edit_note.id).value = '';
+			document.getElementById(self.task_target_select.id).value = 0;
 		}
 	};
 	

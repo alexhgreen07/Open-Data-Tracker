@@ -820,40 +820,42 @@ class Task_Data_Interface {
 				}
 				else{
 							
-					$sql = "INSERT INTO `task_targets`(
-						`task_id`, 
-						`scheduled_time`, 
-						`recurring`, 
-						`recurrance_type`, 
-						`recurrance_period`,
-						`allowed_variance`,
-						`recurrance_end_time`,
-						`estimated_time`,
-						`recurrance_child_id`,
-						`status`,
-						`member_id`) VALUES (
-						'" . $new_task_id . "',
-						'" . $recurring_timestring . "',
-						" . $new_recurring . ",
-						'" . $new_recurrance_type . "',
-						" . $new_recurrance_period . ",
-						" . $new_variance . ",
-						'" . $new_recurrance_end_date . "',
-						'" . $new_estimated_time . "',
-						" . $task_target_id . ",
-						'Incomplete',
-						'" . $_SESSION['session_member_id'] ."')";
-					
-					$result = mysql_query($sql, $this -> database_link);
-					
-					if(!$result){
+					if($recurring_timestamp < $recurrance_end_timestamp)
+					{
+						$sql = "INSERT INTO `task_targets`(
+							`task_id`, 
+							`scheduled_time`, 
+							`recurring`, 
+							`recurrance_type`, 
+							`recurrance_period`,
+							`allowed_variance`,
+							`recurrance_end_time`,
+							`estimated_time`,
+							`recurrance_child_id`,
+							`status`,
+							`member_id`) VALUES (
+							'" . $new_task_id . "',
+							'" . $recurring_timestring . "',
+							" . $new_recurring . ",
+							'" . $new_recurrance_type . "',
+							" . $new_recurrance_period . ",
+							" . $new_variance . ",
+							'" . $new_recurrance_end_date . "',
+							'" . $new_estimated_time . "',
+							" . $task_target_id . ",
+							'Incomplete',
+							'" . $_SESSION['session_member_id'] ."')";
 						
+						$result = mysql_query($sql, $this -> database_link);
 						
-						$return_json['debug'] = $sql;
-						return $return_json;
-						
-					} 
-					
+						if(!$result){
+							
+							
+							$return_json['debug'] = $sql;
+							return $return_json;
+							
+						} 
+					}
 				}
 				
 				

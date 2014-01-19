@@ -6,7 +6,17 @@ function Quick_Item_Entry_Form(){
 	
 	this.Refresh = function(data){
 		
+		Refresh_Select_HTML_From_Table(
+			this.quick_item_name_select.id,
+			data.items,
+			"item_id",
+			"item_name");
 		
+		Refresh_Select_HTML_From_Table(
+			this.quick_item_target_select.id,
+			data.item_targets,
+			"item_target_id",
+			"name");
 		
 	};
 	
@@ -21,6 +31,7 @@ function Quick_Item_Entry_Form(){
 		var value_string = $("#" + self.item_value.id).val();
 		var item_select_index = $("#" + self.quick_item_name_select.id).prop("selectedIndex");
 		var note_string = $("#" + self.item_note.id).val();
+		var target_id = $("#" + self.quick_item_target_select.id).val();
 
 		//check that the string is numeric
 		if (!isNaN(Number(value_string)) && value_string != '') {
@@ -32,6 +43,7 @@ function Quick_Item_Entry_Form(){
 			params[1] = value_string;
 			params[2] = app.api.data.items[item_select_index - 1].item_id;
 			params[3] = note_string;
+			params[4] = target_id;
 
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Insert_Item_Entry(params, function(jsonRpcObj) {
@@ -102,6 +114,17 @@ function Quick_Item_Entry_Form(){
 		this.item_note.setAttribute('id', "notes");
 		this.item_note.setAttribute('type', 'text');
 		this.item_quick_entry_data_form.appendChild(this.item_note);
+		
+		this.item_quick_entry_data_form.innerHTML += '<br />';
+
+		this.item_quick_entry_data_form.innerHTML += 'Target:<br />';
+
+		//item target
+		this.quick_item_target_select = document.createElement("select");
+		this.quick_item_target_select.setAttribute('name', "quick_item_target_select");
+		this.quick_item_target_select.setAttribute('id', "quick_item_target_select");
+		this.quick_item_target_select.innerHTML = '<option>-</option>';
+		this.item_quick_entry_data_form.appendChild(this.quick_item_target_select);
 
 		this.item_quick_entry_data_form.innerHTML += '<br /><br />';
 

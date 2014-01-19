@@ -4,8 +4,8 @@ require_once ('config.php');
 require_once ('auth.php');
 
 //the current version of the database
-define('current_version_id', '3');
-define('current_version_string', '0.0.4');
+define('current_version_id', '4');
+define('current_version_string', '0.0.5');
 
 function Connect_To_DB()
 {
@@ -291,6 +291,7 @@ function Update_Database()
 			0 => 'Update_From_0_To_1',
 			1 => 'Update_From_1_To_2',
 			2 => 'Update_From_2_To_3',
+			3 => 'Update_From_3_To_4',
 		);
 	
 	$sql = "SELECT * FROM `version` WHERE `version_id` >= " . current_version_id . " ORDER BY `version_id` ASC";
@@ -300,21 +301,21 @@ function Update_Database()
 	if($num == 0)
 	{
 		//update to next versions
-		$sql = "SELECT * FROM `version` WHERE `version_id` < " . current_version_id . " ORDER BY `version_id` ASC";
+		$sql = "SELECT MAX(`version_id`) AS `version_id` FROM `version` WHERE `version_id` < " . current_version_id . " ORDER BY `version_id` ASC";
 		$result = mysql_query($sql);
 		$num = mysql_numrows($result);
 		
-		$i = 0;
-		while ($i < $num) {
+		while ($num > 0) {
 			
-			$version_id_to_update = mysql_result($result, $i, "version_id");
+			$version_id_to_update = mysql_result($result, 0, "version_id");
 			
 			$update_function = $updates_lookup_table[$version_id_to_update];
 			
 			//execute update
 			$update_function();
 			
-			$i++;
+			$result = mysql_query($sql);
+			$num = mysql_numrows($result);
 		}
 
 	}

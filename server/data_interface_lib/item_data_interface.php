@@ -302,7 +302,14 @@ class Item_Data_Interface {
 			
 			$local_return_json = $this->Update_Recurring_Children($item_target_id, $start_time, $type, $value, $item_id, $period_type, $period, $variance, $recurring, $recurrance_period, $recurrance_end_date);
 			
-			$return_json['success'] = 'true';
+			$return_json['debug'] = $local_return_json['debug'];		
+
+			if ($local_return_json['success'] === 'true') {
+				$return_json['success'] = 'true';
+			} else {
+				$return_json['success'] = 'false';
+			}
+
 			
 		} else {
 			
@@ -623,6 +630,7 @@ class Item_Data_Interface {
 						`recurring`,
 						`recurrance_period`,
 						`recurrance_end_time`,
+						`recurring_child_id`,
 						`member_id`) VALUES (
 						'".$recurring_timestring."',
 						'".$type."',
@@ -634,6 +642,7 @@ class Item_Data_Interface {
 						".$recurring.",
 						".$recurrance_period.",
 						'".$recurring_timestring."',
+						".$item_target_id.",
 						'" . $_SESSION['session_member_id'] ."')";
 					
 					$result = mysql_query($sql, $this -> database_link);
@@ -662,7 +671,145 @@ class Item_Data_Interface {
 	
 	public function Update_Recurring_Children($item_target_id, $new_start_time, $new_type, $new_value, $new_item_id, $new_period_type, $new_period, $new_variance, $new_recurring, $new_recurrance_period, $new_recurrance_end_date)
 	{
-		//TODO: implement
+		
+		if($new_recurring)
+		{
+			$sql = "SELECT * FROM `item_targets` WHERE `item_targets`.`recurring_child_id` = ".$item_target_id." AND 
+			`item_targets`.`member_id`='" . $_SESSION['session_member_id'] ."'
+			ORDER BY `item_targets`.`start_time` ASC";
+			
+			$result = mysql_query($sql, $this -> database_link);
+			
+			if(!$result){
+				
+				$return_json['debug'] = $sql;
+				return $return_json;
+				
+			} 
+			
+			$num = mysql_numrows($result);
+	
+			$return_json['debug'] = $sql;
+	
+			$i = 0;
+			
+			$recurring_timestamp = strtotime($new_start_time);
+			$recurrance_end_timestamp = strtotime($new_recurrance_end_date);
+			
+			$recurrance_period_seconds = (int)$new_recurrance_period * 60 * 60;
+			
+			while($i < $num || $recurring_timestamp < $recurrance_end_timestamp){
+					
+				
+				$recurring_timestamp = $recurring_timestamp + $recurrance_period_seconds;
+				$recurring_timestring = date("Y-m-d H:i:s", $recurring_timestamp);
+				
+				if($i < $num){
+					
+					$recurring_item_target_id = mysql_result($result, $i, "item_target_id");
+					$type = mysql_result($result, $i, "type");
+					$value = mysql_result($result, $i, "value");
+					$item_id = mysql_result($result, $i, "item_id");
+					$period_type = mysql_result($result, $i, "period_type");
+					$period = mysql_result($result, $i, "period");
+					$variance = mysql_result($result, $i, "allowed_variance");
+					$recurring = mysql_result($result, $i, "recurring");
+					$recurrance_period = mysql_result($result, $i, "recurrance_period");
+					$recurrance_end_date = mysql_result($result, $i, "recurrance_end_time");
+					
+					if($recurring_timestamp < $recurrance_end_timestamp)
+					{
+					
+						$sql_insert = "UPDATE `item_targets` SET
+							`start_time` = '".$recurring_timestring."', 
+							`type` = '".$new_type."',
+							`value` = ".$new_value.", 
+							`item_id` = ".$new_item_id.",
+							`period_type` = '".$new_period_type."',
+							`period` = ".$new_period.",
+							`allowed_variance` = ".$new_variance.",
+							`recurring` = ".$new_recurring.",
+							`recurrance_period` = ".$new_recurrance_period.",
+							`recurrance_end_time` = '".$recurring_timestring."'
+							WHERE `item_target_id` = " . $recurring_item_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+						
+						$success = mysql_query($sql, $this -> database_link);
+						
+						if(!$success){
+							
+							
+							$return_json['debug'] = $sql;
+							return $return_json;
+							
+						} 
+					}
+					else {
+						
+						$sql = "DELETE FROM `item_targets` WHERE 
+							`item_target_id` = " . $recurring_item_target_id . " AND
+							`member_id` = '" . $_SESSION['session_member_id'] ."'";
+						
+						$success = mysql_query($sql, $this -> database_link);
+						
+						if(!$success){
+							
+							
+							$return_json['debug'] = $sql;
+							return $return_json;
+							
+						} 
+						
+					}
+				}
+				else{
+							
+					$sql = "INSERT INTO `item_targets`(
+						`start_time`, 
+						`type`, 
+						`value`, 
+						`item_id`, 
+						`period_type`, 
+						`period`, 
+						`allowed_variance`,
+						`recurring`,
+						`recurrance_period`,
+						`recurrance_end_time`,
+						`recurring_child_id`,
+						`member_id`) VALUES (
+						'".$recurring_timestring."',
+						'".$new_type."',
+						".$new_value.",
+						".$new_item_id.",
+						'".$new_period_type."',
+						".$new_period.",
+						".$new_variance.",
+						".$new_recurring.",
+						".$new_recurrance_period.",
+						'".$recurring_timestring."',
+						".$item_target_id.",
+						'" . $_SESSION['session_member_id'] ."')";
+					
+					$result = mysql_query($sql, $this -> database_link);
+					
+					if(!$result){
+						
+						
+						$return_json['debug'] = $sql;
+						return $return_json;
+						
+					} 
+					
+				}
+				
+				
+				$i++;
+			}
+		}
+		
+		
+		
+		$return_json['success'] = 'true';
+		return $return_json;
 	}
 	
 	public function Delete_Recurring_Children($item_target_id)

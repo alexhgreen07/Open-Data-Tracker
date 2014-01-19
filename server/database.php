@@ -426,6 +426,12 @@ function Update_From_3_To_4()
 	$sql = "ALTER TABLE `item_targets` ADD `recurrance_period` DOUBLE NOT NULL ";
 	$result = mysql_query($sql);
 	
+	$sql = "ALTER TABLE `item_targets` ADD `status` TEXT NOT NULL ";
+	$result = mysql_query($sql);
+	
+	$sql = "UPDATE `item_targets` SET `status` = 'Incomplete' ";
+	$result = mysql_query($sql);
+	
 	Insert_Version($version_id,$version_string);
 }
 

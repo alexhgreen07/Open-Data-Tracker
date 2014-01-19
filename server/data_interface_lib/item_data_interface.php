@@ -207,7 +207,7 @@ class Item_Data_Interface {
 				
 		$return_json = array('success' => 'false', );
 		
-		$sql_insert = "INSERT INTO `item_targets`(
+		$sql = "INSERT INTO `item_targets`(
 			`start_time`, 
 			`type`, 
 			`value`, 
@@ -231,8 +231,42 @@ class Item_Data_Interface {
 			'".$recurrance_end_date."',
 			'" . $_SESSION['session_member_id'] ."')";
 
-		$success = mysql_query($sql_insert, $this -> database_link);
-
+		$success = mysql_query($sql, $this -> database_link);
+		
+		$sql = "SELECT * FROM `task_targets` WHERE 
+			`start_time` = '".$start_time."' AND 
+			`type` = '".$type."' AND 
+			`value` = ".$value." AND
+			`item_id` = ".$item_id." AND
+			`period_type` = '".$period_type."' AND
+			`period` = ".$period." AND
+			`allowed_variance` = ".$variance." AND
+			`recurring` = ".$recurring." AND
+			`recurrance_period` = ".$recurrance_period." AND
+			`recurrance_end_time` = '".$recurrance_end_date."' AND
+			`member_id` = '" . $_SESSION['session_member_id'] ."'";
+		
+		$result = mysql_query($sql, $this -> database_link);
+		
+		if (!$result) {
+			$return_json['success'] = 'false';
+			$return_json['debug'] = "SQL select failed." . $sql;
+			return $return_json;
+		}
+		
+		$num = mysql_numrows($result);
+		
+		if($num > 0)
+		{
+			$item_target_id = mysql_result($result, 0, "item_target_id");
+			$local_return_json = $this->Insert_Recurring_Children($item_target_id);
+		}
+		else {
+			$return_json['success'] = 'false';
+			$return_json['debug'] = "Number of rows = 0. " . $sql;
+			return $return_json;
+		}
+		
 		if ($success) {
 			
 			$return_json['success'] = 'true';
@@ -266,6 +300,8 @@ class Item_Data_Interface {
 
 		if ($success) {
 			
+			$local_return_json = $this->Update_Recurring_Children($item_target_id, $start_time, $type, $value, $item_id, $period_type, $period, $variance, $recurring, $recurrance_period, $recurrance_end_date);
+			
 			$return_json['success'] = 'true';
 			
 		} else {
@@ -286,8 +322,10 @@ class Item_Data_Interface {
 			$sql_insert = "DELETE FROM `item_targets` WHERE `item_target_id`=" . $item_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 			$success = mysql_query($sql_insert, $this -> database_link);
-
+			
 			if ($success) {
+						
+				$this->Delete_Recurring_Children($item_target_id);
 				
 				$return_json['success'] = 'true';
 				
@@ -526,6 +564,19 @@ class Item_Data_Interface {
 		
 	}
 	
-
+	public function Insert_Recurring_Children($item_target_id)
+	{
+		//TODO: implement
+	}
+	
+	public function Update_Recurring_Children($item_target_id, $new_start_time, $new_type, $new_value, $new_item_id, $new_period_type, $new_period, $new_variance, $new_recurring, $new_recurrance_period, $new_recurrance_end_date)
+	{
+		//TODO: implement
+	}
+	
+	public function Delete_Recurring_Children($item_target_id)
+	{
+		//TODO: implement
+	}
 }
 ?>

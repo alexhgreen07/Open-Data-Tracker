@@ -218,6 +218,7 @@ class Item_Data_Interface {
 			`recurring`,
 			`recurrance_period`,
 			`recurrance_end_time`,
+			`status`,
 			`member_id`) VALUES (
 			'".$start_time."',
 			'".$type."',
@@ -229,6 +230,7 @@ class Item_Data_Interface {
 			".$recurring.",
 			".$recurrance_period.",
 			'".$recurrance_end_date."',
+			'Incomplete',
 			'" . $_SESSION['session_member_id'] ."')";
 
 		$success = mysql_query($sql, $this -> database_link);
@@ -279,7 +281,7 @@ class Item_Data_Interface {
 		return $return_json;
 	}
 
-	public function Update_Item_Target($item_target_id, $start_time, $type, $value, $item_id, $period_type, $period, $variance, $recurring, $recurrance_period, $recurrance_end_date){
+	public function Update_Item_Target($item_target_id, $start_time, $type, $value, $item_id, $period_type, $period, $variance, $status, $recurring, $recurrance_period, $recurrance_end_date){
 		
 		$return_json = array('success' => 'false', );
 		
@@ -293,7 +295,8 @@ class Item_Data_Interface {
 			`allowed_variance` = ".$variance.",
 			`recurring` = ".$recurring.",
 			`recurrance_period` = ".$recurrance_period.",
-			`recurrance_end_time` = '".$recurrance_end_date."'
+			`recurrance_end_time` = '".$recurrance_end_date."',
+			`status` = '".$status."'
 			WHERE `item_target_id` = " . $item_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 		$success = mysql_query($sql_insert, $this -> database_link);
@@ -493,7 +496,8 @@ class Item_Data_Interface {
 				'recurring_child_id' => 'int',
 				'recurrance_end_time' => 'date',
 				'allowed_variance' => 'float',
-				'recurrance_period' => 'float'
+				'recurrance_period' => 'float',
+				'status' => 'string'
 			);
 		
 		return $return_json;
@@ -517,6 +521,7 @@ class Item_Data_Interface {
 			`item_targets`.`recurrance_end_time` AS `recurrance_end_time`,
 			`item_targets`.`allowed_variance` AS `allowed_variance`,
 			`item_targets`.`recurrance_period` AS `recurrance_period`,
+			`item_targets`.`status` AS `status`,
 			`items`.`name` AS `name`
 			FROM `item_targets`, `items` WHERE `items`.`item_id` = `item_targets`.`item_id` AND `items`.`member_id`='" . $_SESSION['session_member_id'] ."'";
 		$result = mysql_query($sql_query, $this -> database_link);
@@ -543,6 +548,7 @@ class Item_Data_Interface {
 				$recurrance_end_time = mysql_result($result, $i, "recurrance_end_time");
 				$allowed_variance = mysql_result($result, $i, "allowed_variance");
 				$recurrance_period = mysql_result($result, $i, "recurrance_period");
+				$status = mysql_result($result, $i, "status");
 
 				$return_json['data'][$i] = 
 					array(
@@ -558,7 +564,8 @@ class Item_Data_Interface {
 						'recurring_child_id' => $recurring_child_id,
 						'recurrance_end_time' => $recurrance_end_time,
 						'allowed_variance' => $allowed_variance,
-						'recurrance_period' => $recurrance_period
+						'recurrance_period' => $recurrance_period,
+						'status' => $status
 					);
 
 				$i++;
@@ -631,6 +638,7 @@ class Item_Data_Interface {
 						`recurrance_period`,
 						`recurrance_end_time`,
 						`recurring_child_id`,
+						`status`,
 						`member_id`) VALUES (
 						'".$recurring_timestring."',
 						'".$type."',
@@ -643,6 +651,7 @@ class Item_Data_Interface {
 						".$recurrance_period.",
 						'".$recurring_timestring."',
 						".$item_target_id.",
+						'Incomplete',
 						'" . $_SESSION['session_member_id'] ."')";
 					
 					$result = mysql_query($sql, $this -> database_link);
@@ -733,7 +742,7 @@ class Item_Data_Interface {
 							`recurrance_end_time` = '".$recurring_timestring."'
 							WHERE `item_target_id` = " . $recurring_item_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 						
-						$success = mysql_query($sql, $this -> database_link);
+						$success = mysql_query($sql_insert, $this -> database_link);
 						
 						if(!$success){
 							
@@ -762,42 +771,48 @@ class Item_Data_Interface {
 					}
 				}
 				else{
+					
+					if($recurring_timestamp < $recurrance_end_timestamp)
+					{
+						$sql = "INSERT INTO `item_targets`(
+							`start_time`, 
+							`type`, 
+							`value`, 
+							`item_id`, 
+							`period_type`, 
+							`period`, 
+							`allowed_variance`,
+							`recurring`,
+							`recurrance_period`,
+							`recurrance_end_time`,
+							`recurring_child_id`,
+							`status`,
+							`member_id`) VALUES (
+							'".$recurring_timestring."',
+							'".$new_type."',
+							".$new_value.",
+							".$new_item_id.",
+							'".$new_period_type."',
+							".$new_period.",
+							".$new_variance.",
+							".$new_recurring.",
+							".$new_recurrance_period.",
+							'".$recurring_timestring."',
+							".$item_target_id.",
+							'Incomplete',
+							'" . $_SESSION['session_member_id'] ."')";
+						
+						$result = mysql_query($sql, $this -> database_link);
+						
+						if(!$result){
 							
-					$sql = "INSERT INTO `item_targets`(
-						`start_time`, 
-						`type`, 
-						`value`, 
-						`item_id`, 
-						`period_type`, 
-						`period`, 
-						`allowed_variance`,
-						`recurring`,
-						`recurrance_period`,
-						`recurrance_end_time`,
-						`recurring_child_id`,
-						`member_id`) VALUES (
-						'".$recurring_timestring."',
-						'".$new_type."',
-						".$new_value.",
-						".$new_item_id.",
-						'".$new_period_type."',
-						".$new_period.",
-						".$new_variance.",
-						".$new_recurring.",
-						".$new_recurrance_period.",
-						'".$recurring_timestring."',
-						".$item_target_id.",
-						'" . $_SESSION['session_member_id'] ."')";
+							
+							$return_json['debug'] = $sql;
+							return $return_json;
+							
+						} 
 					
-					$result = mysql_query($sql, $this -> database_link);
-					
-					if(!$result){
-						
-						
-						$return_json['debug'] = $sql;
-						return $return_json;
-						
-					} 
+					}
 					
 				}
 				

@@ -52,7 +52,8 @@ function Edit_Item_Target_Form(){
 			$("#" + self.edit_item_target_recurring_select.id).val(selected_target.recurring);
 			$("#" + self.edit_item_target_variance.id).val(selected_target.allowed_variance);
 			$("#" + self.edit_item_target_recurring_period.id).val(selected_target.recurrance_period);
-			$('#' + this.edit_item_target_recurring_end_date.id).val(selected_target.recurrance_end_time);
+			$('#' + self.edit_item_target_recurring_end_date.id).val(selected_target.recurrance_end_time);
+			$('#' + self.edit_item_target_status_select.id).val(selected_target.status);
 		}
 		else
 		{
@@ -81,6 +82,7 @@ function Edit_Item_Target_Form(){
 		var period_type = $("#" + self.edit_item_target_recurrance_type_select.id).val();
 		var period = $("#" + self.edit_item_target_period.id).val();
 		var variance = $("#" + self.edit_item_target_variance.id).val();
+		var status = $('#' + self.edit_item_target_status_select.id).val();
 		var recurring = $("#" + self.edit_item_target_recurring_select.id).val();
 		var recurrance_period = $("#" + self.edit_item_target_recurring_period.id).val();
 		var recurrance_end_date = $("#" + self.edit_item_target_recurring_end_date.id).val();
@@ -113,9 +115,10 @@ function Edit_Item_Target_Form(){
 			params[5] = period_type;
 			params[6] = period;
 			params[7] = variance;
-			params[8] = recurring;
-			params[9] = recurrance_period;
-			params[10] = recurrance_end_date;
+			params[8] = status;
+			params[9] = recurring;
+			params[10] = recurrance_period;
+			params[11] = recurrance_end_date;
 
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Update_Item_Target(params, function(jsonRpcObj) {
@@ -278,6 +281,18 @@ function Edit_Item_Target_Form(){
 		this.edit_item_target_variance.setAttribute('type', 'text');
 		this.edit_item_target_form.appendChild(this.edit_item_target_variance);
 		
+		this.edit_item_target_form.innerHTML += '<br />';
+		
+		this.edit_item_target_form.innerHTML += 'Status:<br />';
+
+		//item unit
+		this.edit_item_target_status_select = document.createElement("select");
+		this.edit_item_target_status_select.setAttribute('id', "edit_item_target_status_select");
+		this.edit_item_target_status_select.innerHTML = '<option>Incomplete</option>';
+		this.edit_item_target_status_select.innerHTML += '<option>Complete</option>';
+		this.edit_item_target_status_select.innerHTML += '<option>Missed</option>';
+		this.edit_item_target_form.appendChild(this.edit_item_target_status_select);
+
 		this.edit_item_target_form.innerHTML += '<br />';
 		
 		this.edit_item_target_form.innerHTML += '<br />';

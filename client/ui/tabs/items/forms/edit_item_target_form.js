@@ -14,9 +14,34 @@ function Edit_Item_Target_Form(){
 		
 		selected_index = document.getElementById(self.edit_item_target_id_select.id).selectedIndex;
 		
+		document.getElementById(self.item_edit_target_time.id).disabled = false;
+		document.getElementById(self.edit_item_target_type_select.id).disabled = false;
+		document.getElementById(self.item_edit_target_value.id).disabled = false;
+		document.getElementById(self.edit_item_target_name_select.id).disabled = false;
+		document.getElementById(self.edit_item_target_recurrance_type_select.id).disabled = false;
+		document.getElementById(self.edit_item_target_period.id).disabled = false;
+		document.getElementById(self.edit_item_target_recurring_select.id).disabled = false;
+		document.getElementById(self.edit_item_target_variance.id).disabled = false;
+		document.getElementById(self.edit_item_target_recurring_period.id).disabled = false;
+		document.getElementById(this.edit_item_target_recurring_end_date.id).disabled = false;
+		
 		if(selected_index != 0)
 		{
 			selected_target = self.data.item_targets[selected_index - 1];
+			
+			if(selected_target.recurring_child_id != 0)
+			{
+				document.getElementById(self.item_edit_target_time.id).disabled = true;
+				document.getElementById(self.edit_item_target_type_select.id).disabled = true;
+				document.getElementById(self.item_edit_target_value.id).disabled = true;
+				document.getElementById(self.edit_item_target_name_select.id).disabled = true;
+				document.getElementById(self.edit_item_target_recurrance_type_select.id).disabled = true;
+				document.getElementById(self.edit_item_target_period.id).disabled = true;
+				document.getElementById(self.edit_item_target_recurring_select.id).disabled = true;
+				document.getElementById(self.edit_item_target_variance.id).disabled = true;
+				document.getElementById(self.edit_item_target_recurring_period.id).disabled = true;
+				document.getElementById(self.edit_item_target_recurring_end_date.id).disabled = true;
+			}
 		
 			$("#" + self.item_edit_target_time.id).val(selected_target.start_time);
 			$("#" + self.edit_item_target_type_select.id).val(selected_target.type);

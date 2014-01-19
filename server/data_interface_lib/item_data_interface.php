@@ -814,7 +814,8 @@ class Item_Data_Interface {
 	
 	public function Delete_Recurring_Children($item_target_id)
 	{
-		//TODO: implement
+		$sql = "DELETE FROM `item_targets` WHERE `recurring_child_id` = " . $item_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+		$result = mysql_query($sql, $this -> database_link);
 	}
 }
 ?>

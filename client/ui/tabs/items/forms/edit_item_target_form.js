@@ -23,8 +23,11 @@ function Edit_Item_Target_Form(){
 			$("#" + self.item_edit_target_value.id).val(selected_target.value);
 			$("#" + self.edit_item_target_name_select.id).val(selected_target.item_id);
 			$("#" + self.edit_item_target_recurrance_type_select.id).val(selected_target.period_type);
-			$("#" + self.edit_item_target_recurrance_period.id).val(selected_target.period);
+			$("#" + self.edit_item_target_period.id).val(selected_target.period);
 			$("#" + self.edit_item_target_recurring_select.id).val(selected_target.recurring);
+			$("#" + self.edit_item_target_variance.id).val(selected_target.allowed_variance);
+			$("#" + self.edit_item_target_recurring_period.id).val(selected_target.recurrance_period);
+			$('#' + this.edit_item_target_recurring_end_date.id).val(selected_target.recurrance_end_time);
 		}
 		else
 		{
@@ -33,8 +36,10 @@ function Edit_Item_Target_Form(){
 			$("#" + self.item_edit_target_value.id).val('');
 			$("#" + self.edit_item_target_name_select.id).val(0);
 			$("#" + self.edit_item_target_recurrance_type_select.id).val('Minutes');
-			$("#" + self.edit_item_target_recurrance_period.id).val('');
+			$("#" + self.edit_item_target_period.id).val('');
 			$("#" + self.edit_item_target_recurring_select.id).val(0);
+			$("#" + self.edit_item_target_variance.id).val('');
+			$("#" + self.edit_item_target_recurring_period.id).val('');
 		}
 		
 		
@@ -49,7 +54,7 @@ function Edit_Item_Target_Form(){
 		var value = $("#" + self.item_edit_target_value.id).val();
 		var item = $("#" + self.edit_item_target_name_select.id).val();
 		var period_type = $("#" + self.edit_item_target_recurrance_type_select.id).val();
-		var period = $("#" + self.edit_item_target_recurrance_period.id).val();
+		var period = $("#" + self.edit_item_target_period.id).val();
 		var recurring = $("#" + self.edit_item_target_recurring_select.id).val();
 		
 		if(item_target_id == 0)
@@ -207,8 +212,6 @@ function Edit_Item_Target_Form(){
 		this.edit_item_target_form.appendChild(this.edit_item_target_name_select);
 
 		this.edit_item_target_form.innerHTML += '<br />';
-
-		this.edit_item_target_form.innerHTML += '<br />';
 		
 		this.edit_item_target_form.innerHTML += 'Period Type:<br />';
 
@@ -229,10 +232,22 @@ function Edit_Item_Target_Form(){
 		this.edit_item_target_form.innerHTML += 'Period:<br />';
 
 		//item value
-		this.edit_item_target_recurrance_period = document.createElement("input");
-		this.edit_item_target_recurrance_period.setAttribute('id', "edit_item_target_recurrance_period");
-		this.edit_item_target_recurrance_period.setAttribute('type', 'text');
-		this.edit_item_target_form.appendChild(this.edit_item_target_recurrance_period);
+		this.edit_item_target_period = document.createElement("input");
+		this.edit_item_target_period.setAttribute('id', "edit_item_target_period");
+		this.edit_item_target_period.setAttribute('type', 'text');
+		this.edit_item_target_form.appendChild(this.edit_item_target_period);
+		
+		this.edit_item_target_form.innerHTML += '<br />';
+		
+		this.edit_item_target_form.innerHTML += 'Variance:<br />';
+
+		//item value
+		this.edit_item_target_variance = document.createElement("input");
+		this.edit_item_target_variance.setAttribute('id', "edit_item_target_variance");
+		this.edit_item_target_variance.setAttribute('type', 'text');
+		this.edit_item_target_form.appendChild(this.edit_item_target_variance);
+		
+		this.edit_item_target_form.innerHTML += '<br />';
 		
 		this.edit_item_target_form.innerHTML += '<br />';
 		
@@ -245,6 +260,26 @@ function Edit_Item_Target_Form(){
 		this.edit_item_target_recurring_select.innerHTML += '<option value="1">True</option>';
 		this.edit_item_target_form.appendChild(this.edit_item_target_recurring_select);
 
+		this.edit_item_target_form.innerHTML += '<br />';
+		
+		this.edit_item_target_form.innerHTML += 'Recurrance Period:<br />';
+
+		//item value
+		this.edit_item_target_recurring_period = document.createElement("input");
+		this.edit_item_target_recurring_period.setAttribute('id', "edit_item_target_recurring_period");
+		this.edit_item_target_recurring_period.setAttribute('type', 'text');
+		this.edit_item_target_form.appendChild(this.edit_item_target_recurring_period);
+		
+		this.edit_item_target_form.innerHTML += '<br />';
+		
+		this.edit_item_target_form.innerHTML += 'Recurrance End Date:<br />';
+
+		//item value
+		this.edit_item_target_recurring_end_date = document.createElement("input");
+		this.edit_item_target_recurring_end_date.setAttribute('id', "edit_item_target_recurring_end_date");
+		this.edit_item_target_recurring_end_date.setAttribute('type', 'text');
+		this.edit_item_target_form.appendChild(this.edit_item_target_recurring_end_date);
+		
 		this.edit_item_target_form.innerHTML += '<br />';
 
 		this.edit_item_target_form.innerHTML += '<br />';
@@ -302,6 +337,13 @@ function Edit_Item_Target_Form(){
 			dateFormat : 'yy-mm-dd'
 		});
 		$('#' + this.item_edit_target_time.id).datetimepicker("setDate", new Date());
+		
+		//initialize the datetime picker
+		$('#' + this.edit_item_target_recurring_end_date.id).datetimepicker({
+			timeFormat : "HH:mm:ss",
+			dateFormat : 'yy-mm-dd'
+		});
+		$('#' + this.edit_item_target_recurring_end_date.id).datetimepicker("setDate", new Date());
 	
 	};
 }

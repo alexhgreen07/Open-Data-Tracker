@@ -2,8 +2,8 @@ body {
 	font: 12px Verdana, Arial, Helvetica, sans-serif;
 	color: #666666;
 	margin: 0px;
-	padding: 20px 10px 0px;
 }
+
 .textfield {
 	font-size: 11px;
 	color: #333333;
@@ -67,4 +67,14 @@ th {
 {
 	width:100%;
 	height:15px;
+}
+
+
+/*override jquery*/
+.ui-tabs .ui-tabs-panel{
+	padding: 0em 0em;
+}
+
+.ui-accordion .ui-accordion-content {
+	padding: 0em 0em;
 }

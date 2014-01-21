@@ -78,3 +78,14 @@ th {
 .ui-accordion .ui-accordion-content {
 	padding: 0em 0em;
 }
+
+.ui-tabs .ui-tabs-nav { 
+    height: 2.35em; 
+    text-align: center; 
+} 
+.ui-tabs .ui-tabs-nav li { 
+    display: inline-block; 
+    float: none; 
+    top: 0px; 
+    margin: 0em; 
+}

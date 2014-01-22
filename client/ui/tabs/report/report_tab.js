@@ -183,10 +183,10 @@ function Report_Tab() {
 			if(data_has_changed)
 			{
 				//set the height and width for proper rendering
-				var render_width = document.getElementById(self.report_summaries_data_form.id).offsetWidth;
+				var render_width = window.innerWidth;
 				if(render_width != 0)
 				{
-					document.getElementById(self.summaries_graph_canvas.id).width = document.getElementById(self.report_summaries_data_form.id).offsetWidth;
+					document.getElementById(self.summaries_graph_canvas.id).width = window.innerWidth;
 					document.getElementById(self.summaries_graph_canvas.id).height = window.innerHeight * 0.4;
 				}
 				

@@ -204,13 +204,22 @@ function main() {
 			
 			rpc = app.api.rpc;
 			
+			app.last_refresh = Date.now();
+			
 			//setup timer based refresh for 60s
 			var myVar=setInterval(function(){
-				
-					//refresh the data form the server, then refresh UI data
-					app.api.Refresh_Data(app.Refresh_Data);
 					
-				},60000);
+					if((Date.now() - app.last_refresh) / 1000 > 60)
+					{
+						app.last_refresh = Date.now();
+					
+						//refresh the data form the server, then refresh UI data
+						app.api.Refresh_Data(app.Refresh_Data);
+					}
+					
+					
+					
+				},1000);
 			
 			
 		});

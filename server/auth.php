@@ -162,7 +162,7 @@ function Update_Authorization_Cookie()
 	}
 	
 	//delete old expired cookies
-	$qry = "DELETE FROM sessions WHERE session_expiry < FROM_UNIXTIME(".time().");";
+	$qry = "DELETE FROM sessions WHERE session_expiry < NOW();";
 	$result = mysql_query($qry);
 }
 

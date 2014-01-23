@@ -209,7 +209,7 @@ function main() {
 			//setup timer based refresh for 60s
 			var myVar=setInterval(function(){
 					
-					if((Date.now() - app.last_refresh) / 1000 > 10)
+					if((Date.now() - app.last_refresh) / 1000 > 60)
 					{
 						app.last_refresh = Date.now();
 					

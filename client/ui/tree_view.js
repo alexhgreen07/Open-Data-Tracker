@@ -10,7 +10,6 @@ function Tree_View(div_id, data) {
 	//class variables
 	self.div_id = div_id;
 	self.tree_view_div = self.div_id + '_treeview_div';
-	self.tree_view_div1 = self.div_id + '_treeview_div1';
 	self.data = data;
 	self.layer_is_enabled = [];
 	self.node_click_callback = function(id){};
@@ -19,22 +18,11 @@ function Tree_View(div_id, data) {
 	{
 		self.data = new_data;
 		
-		
-		
-		self.tree_nodes = self.Create_Category_Tree_Nodes(self.data.categories);
-		self.item_tree_nodes = self.Create_Task_Tree_Nodes(self.data.tasks,self.data.task_targets,self.data.task_entries);
+		self.tree_nodes = self.Create_Category_Tree_Nodes(self.data);
 		
 		document.getElementById(self.tree_view_div).innerHTML = "";
-		document.getElementById(self.tree_view_div1).innerHTML = "";
 		
-		self.tree = new Resnyanskiy.Tree(document.getElementById(self.tree_view_div),self.tree_nodes);
-		self.tree_items = new Resnyanskiy.Tree(document.getElementById(self.tree_view_div1),self.item_tree_nodes); 
-		
-		self.tree_items.onNodeClick = function(id)
-		{
-			self.node_click_callback(id);
-			alert(id);
-		};
+		self.tree = new Resnyanskiy.Tree(document.getElementById(self.tree_view_div),[self.tree_nodes]);
 		
 		self.tree.onNodeClick = function(id)
 		{
@@ -69,26 +57,30 @@ function Tree_View(div_id, data) {
 		return return_array;
 	};
 	
-	self.Create_Category_Tree_Node_Children = function(categories_table, node)
+	self.Create_Category_Tree_Node_Children = function(data, node)
 	{
 		
 		return_array = [];
+		categories_table = data.categories;
 		
+		node.hasChildren = true;
 		
-		
-		node.hasChildren = false;
+		task_node = self.Create_Task_Tree_Nodes(data,node.category_id);
+		node.addItem(task_node);
 		
 		for (var i=0; i < categories_table.length; i++) {
 		
 			var current_row = categories_table[i];
 			
-			if(current_row["parent_category_id"] == node.id)
+			if(current_row["parent_category_id"] == node.category_id)
 			{
-				var new_tree_row = new TreeNode(current_row["category_id"], current_row["name"], false);
+				var new_tree_row = new TreeNode(self.Generate_Random_ID(), current_row["name"], false);
+				
+				new_tree_row.category_id = current_row["category_id"];
 				
 				node.hasChildren = true;
 				
-				self.Create_Category_Tree_Node_Children(categories_table,new_tree_row);
+				self.Create_Category_Tree_Node_Children(data,new_tree_row);
 				
 				if(new_tree_row.hasChildren)
 				{
@@ -102,24 +94,26 @@ function Tree_View(div_id, data) {
 		
 	};
 	
-	self.Create_Category_Tree_Nodes = function(categories_table)
+	self.Create_Category_Tree_Nodes = function(data)
 	{
 		return_array = [];
 		processed_categories = [];
 		
+		var primary_node = new TreeNode(self.Generate_Random_ID(), "Categories", true);
 		
+		primary_node.category_id = 0;
 		
-		var primary_node = new TreeNode(0, "Categories", true);
-		
-		self.Create_Category_Tree_Node_Children(categories_table,primary_node);
+		self.Create_Category_Tree_Node_Children(data,primary_node);
 		
 		return_array = [primary_node];
 		
-		return return_array;
+		return primary_node;
 	};
 	
-	self.Create_Task_Target_Entries_Tree_Node_Children = function(item_entries, node)
+	self.Create_Task_Target_Entries_Tree_Node_Children = function(data, node)
 	{
+		item_entries = data.task_entries;
+		
 		for(var i = 0; i < item_entries.length; i++)
 		{
 			var current_entry_row = item_entries[i];
@@ -136,8 +130,10 @@ function Tree_View(div_id, data) {
 		
 	};
 	
-	self.Create_Task_Target_Tree_Node_Children = function(item_targets, item_entries, node)
+	self.Create_Task_Target_Tree_Node_Children = function(data, node)
 	{
+		item_targets = data.task_targets;
+		item_entries = data.task_entries;
 	
 		for(var i = 0; i < item_targets.length; i++)
 		{
@@ -149,7 +145,7 @@ function Tree_View(div_id, data) {
 				
 				var new_tree_row = new TreeNode(current_target_row["task_schedule_id"], current_target_row["scheduled_time"], false);
 				
-				self.Create_Task_Target_Entries_Tree_Node_Children(item_entries,new_tree_row);
+				self.Create_Task_Target_Entries_Tree_Node_Children(data,new_tree_row);
 				
 				if(new_tree_row.hasChildren)
 				{
@@ -162,79 +158,98 @@ function Tree_View(div_id, data) {
 		}
 	};
 	
-	self.Create_Task_Tree_Node_Children = function(items_table, item_targets, item_entries, node)
+	self.Create_Task_Tree_Node_Children = function(data, node, category_filter)
 	{
 		return_array = [];
-		
-		
+		items_table = data.tasks;
+		item_targets = data.task_targets;
+		item_entries = data.task_entries;
 		
 		for(var i = 0; i < items_table.length; i++)
 		{
 			var current_item_row = items_table[i];
 			
-			var targets_id = Math.floor((Math.random()*1000000)+1); 
-			var new_item_row = new TreeNode(targets_id, current_item_row["name"], false);
-			var new_item_row_targets = new TreeNode(current_item_row["task_id"], "Targets", false);
-			new_item_row.hasChildren = false;
-			
-			for(var j = 0; j < item_targets.length; j++)
+			if(current_item_row["category_id"] == category_filter)
 			{
-				var current_target_row = item_targets[j];
+				var targets_id = Math.floor((Math.random()*1000000)+1); 
+				var new_item_row = new TreeNode(targets_id, current_item_row["name"], false);
+				var new_item_row_targets = new TreeNode(current_item_row["task_id"], "Targets", false);
+				new_item_row.hasChildren = false;
 				
-				if(current_target_row["task_id"] == current_item_row["task_id"] && current_target_row["recurrance_child_id"] == 0)
+				for(var j = 0; j < item_targets.length; j++)
 				{
-					new_item_row_targets.hasChildren = true;
+					var current_target_row = item_targets[j];
 					
-					var new_tree_row = new TreeNode(current_target_row["task_schedule_id"], current_target_row["scheduled_time"], false);
-					
-					self.Create_Task_Target_Entries_Tree_Node_Children(item_entries,new_tree_row);
-
-					self.Create_Task_Target_Tree_Node_Children(item_targets, item_entries, new_tree_row);
-					
-					if(new_tree_row.hasChildren)
+					if(current_target_row["task_id"] == current_item_row["task_id"] && current_target_row["recurrance_child_id"] == 0)
 					{
-						new_tree_row.isBranch = true;
+						new_item_row_targets.hasChildren = true;
+						
+						var new_tree_row = new TreeNode(current_target_row["task_schedule_id"], current_target_row["scheduled_time"], false);
+						
+						self.Create_Task_Target_Entries_Tree_Node_Children(data,new_tree_row);
+	
+						self.Create_Task_Target_Tree_Node_Children(data, new_tree_row);
+						
+						if(new_tree_row.hasChildren)
+						{
+							new_tree_row.isBranch = true;
+						}
+						
+						new_item_row_targets.addItem(new_tree_row);
+						
 					}
-					
-					new_item_row_targets.addItem(new_tree_row);
-					
 				}
+				
+				if(new_item_row_targets.hasChildren)
+				{
+					new_item_row_targets.isBranch = true;
+					new_item_row.hasChildren = true;
+					new_item_row.addItem(new_item_row_targets);
+				}
+				
+				//new_item_row.addItem(new_item_row_entries);
+				
+				if(new_item_row.hasChildren)
+				{
+					new_item_row.isBranch = true;
+				}
+	
+				node.addItem(new_item_row);
+				
+				node.hasChildren = true;
 			}
 			
-			if(new_item_row_targets.hasChildren)
-			{
-				new_item_row_targets.isBranch = true;
-				new_item_row.hasChildren = true;
-				new_item_row.addItem(new_item_row_targets);
-			}
 			
-			//new_item_row.addItem(new_item_row_entries);
-			
-			if(new_item_row.hasChildren)
-			{
-				new_item_row.isBranch = true;
-			}
-
-			node.addItem(new_item_row);
 		}
 		
 	};
 	
-	self.Create_Task_Tree_Nodes = function(items_table, item_targets, item_entries)
+	self.Create_Task_Tree_Nodes = function(data, category_filter)
 	{
 		
 		return_array = [];
 		processed_categories = [];
 		
+		var primary_node = new TreeNode(self.Generate_Random_ID(), "Tasks", false);
 		
+		self.Create_Task_Tree_Node_Children(data,primary_node,category_filter);
 		
-		var primary_node = new TreeNode(0, "Items", true);
+		if(primary_node.hasChildren)
+		{
+			primary_node.isBranch = true;
+		}
 		
-		self.Create_Task_Tree_Node_Children(items_table, item_targets, item_entries,primary_node);
+		return primary_node;
 		
-		return_array = [primary_node];
+	};
+	
+	self.Generate_Random_ID = function()
+	{
 		
-		return return_array;
+		random_id = Math.random() * 100000000;
+		random_id = Math.round(random_id);
+		
+		return random_id;
 		
 	};
 	
@@ -242,6 +257,5 @@ function Tree_View(div_id, data) {
 	self.Render = function() {
 		
 		document.getElementById(self.div_id).innerHTML += '<div id="'+self.tree_view_div+'"></div>';
-		document.getElementById(self.div_id).innerHTML += '<div id="'+self.tree_view_div1+'"></div>';
 	};
 }

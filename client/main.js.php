@@ -42,6 +42,7 @@ require_once(dirname(__FILE__).'/core/api.js.php');
 //ensure all include files are present.
 require_once(dirname(__FILE__).'/ui/tabs.js.php');
 require_once(dirname(__FILE__).'/ui/tabs/home/home_tab.js.php');
+require_once(dirname(__FILE__).'/ui/tabs/entry/entry_tab.js.php');
 require_once(dirname(__FILE__).'/ui/tabs/items/item_tab.js.php');
 require_once(dirname(__FILE__).'/ui/tabs/tasks/task_tab.js.php');
 require_once(dirname(__FILE__).'/ui/tabs/report/report_tab.js.php');

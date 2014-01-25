@@ -24,6 +24,10 @@ function Main_Application() {
 	 * */
 	this.home_tab_object = new Home_Tab();
 	/** This is the item tab navigation object.
+	 * @type Entry_Tab
+	 * */
+	this.entry_tab_object = new Entry_Tab();
+	/** This is the item tab navigation object.
 	 * @type Item_Tab
 	 * */
 	this.item_tab_object = new Item_Tab();
@@ -45,6 +49,7 @@ function Main_Application() {
 		
 		//refresh all data in all forms
 		self.home_tab_object.Refresh(self.api.data);
+		self.entry_tab_object.Refresh(self.api.data);
 		self.item_tab_object.Refresh(self.api.data);
 		self.task_tab_object.Refresh(self.api.data);
 		self.report_tab_object.Refresh(self.api.data, self.api.schema, self.api.reports);
@@ -116,18 +121,22 @@ function Main_Application() {
 		this.tabs_array[0] = new Array();
 		this.tabs_array[0][0] = "Home";
 		this.tabs_array[0][1] = "<div id='home_tab_div'></div>";
-
+		
 		this.tabs_array[1] = new Array();
-		this.tabs_array[1][0] = "Items";
-		this.tabs_array[1][1] = "<div id='item_tab_div'></div>";
-
+		this.tabs_array[1][0] = "Entry";
+		this.tabs_array[1][1] = "<div id='entry_tab_div'></div>";
+		
 		this.tabs_array[2] = new Array();
-		this.tabs_array[2][0] = "Tasks";
-		this.tabs_array[2][1] = "<div id='task_tab_div'></div>";
+		this.tabs_array[2][0] = "Items";
+		this.tabs_array[2][1] = "<div id='item_tab_div'></div>";
 
 		this.tabs_array[3] = new Array();
-		this.tabs_array[3][0] = "Reports";
-		this.tabs_array[3][1] = "<div id='report_tab_div'></div>";
+		this.tabs_array[3][0] = "Tasks";
+		this.tabs_array[3][1] = "<div id='task_tab_div'></div>";
+
+		this.tabs_array[4] = new Array();
+		this.tabs_array[4][0] = "Reports";
+		this.tabs_array[4][1] = "<div id='report_tab_div'></div>";
 
 		//render the tabs
 		this.main_tab_nav = new Tabs(main_tabs_div, this.tabs_array);
@@ -135,7 +144,9 @@ function Main_Application() {
 
 		
 		this.home_tab_object.Render('home_tab_div');
-
+		
+		this.entry_tab_object.Render('entry_tab_div');
+		
 		this.item_tab_object.Render('item_tab_div');
 
 		this.task_tab_object.Render('task_tab_div');

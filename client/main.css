@@ -94,3 +94,8 @@ th {
     top: 0px; 
     margin: 0em; 
 }
+
+/*override js.tree*/
+.resnyanskiy-tree > ul.container li span {
+	background-image: url("../externals/js.tree/images/resnyanskiy-tree-icons.png");
+}

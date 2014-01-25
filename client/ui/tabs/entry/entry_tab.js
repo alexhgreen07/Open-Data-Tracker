@@ -40,6 +40,8 @@ function Entry_Tab() {
 		self.tree_view_div.id = form_div_id + '_tree_view_div';
 		self.form.appendChild(self.tree_view_div);
 		
+		self.form.innerHTML += "<hr>";
+		
 		self.tree_items_div = document.createElement("div");
 		self.tree_items_div.id = form_div_id + '_tree_items_div';
 		self.form.appendChild(self.tree_items_div);
@@ -48,29 +50,47 @@ function Entry_Tab() {
 		self.tree_tasks_div.id = form_div_id + '_tree_tasks_div';
 		self.form.appendChild(self.tree_tasks_div);
 		
-		self.form.innerHTML += "<hr>";
+		self.cancel_button_div = document.createElement("div");
+		self.cancel_button_div.id = form_div_id + '_cancel_button_div';
+		
+		self.cancel_button_div.innerHTML += "<br>";
+		
+		self.cancel_button = document.createElement("input");
+		self.cancel_button.id = form_div_id + '_cancel_button';
+		self.cancel_button.type = "submit";
+		self.cancel_button.value = "Cancel";
+		self.cancel_button_div.appendChild(self.cancel_button);
+		
+		self.form.appendChild(self.cancel_button_div);
+		
+		self.category_buttons_div = document.createElement("div");
+		self.category_buttons_div.id = form_div_id + '_category_buttons_div';
 		
 		self.new_category_button = document.createElement("input");
 		self.new_category_button.id = form_div_id + '_new_category_button';
 		self.new_category_button.type = "submit";
 		self.new_category_button.value = "New Category";
-		self.form.appendChild(self.new_category_button);
+		self.category_buttons_div.appendChild(self.new_category_button);
 		
-		self.form.innerHTML += "<br><br>";
+		self.category_buttons_div.innerHTML += "<br><br>";
 		
 		self.new_task_button = document.createElement("input");
 		self.new_task_button.id = form_div_id + '_new_task_button';
 		self.new_task_button.type = "submit";
 		self.new_task_button.value = "New Task";
-		self.form.appendChild(self.new_task_button);
+		self.category_buttons_div.appendChild(self.new_task_button);
 		
-		self.form.innerHTML += "<br><br>";
+		self.category_buttons_div.innerHTML += "<br><br>";
 		
 		self.new_item_button = document.createElement("input");
 		self.new_item_button.id = form_div_id + '_new_item_button';
 		self.new_item_button.type = "submit";
 		self.new_item_button.value = "New Item";
-		self.form.appendChild(self.new_item_button);
+		self.category_buttons_div.appendChild(self.new_item_button);
+		
+		self.category_buttons_div.innerHTML += "<br><br>";
+		
+		self.form.appendChild(self.category_buttons_div);
 		
 		div_tab.appendChild(self.form);
 		
@@ -83,8 +103,22 @@ function Entry_Tab() {
 		self.tasks_tab = new Task_Tab();
 		self.tasks_tab.Render(self.tree_tasks_div.id);
 		
-		$('#' + self.tree_items_div.id).hide();
-		$('#' + self.tree_tasks_div.id).hide();
+		$('#' + self.cancel_button_div.id).hide();
+		
+		$('#' + self.cancel_button.id).button();
+		$('#' + self.cancel_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+			//execute the click event
+			self.items_tab.Show_Form('');
+			self.tasks_tab.Show_Form('');
+			
+			$('#' + self.cancel_button_div.id).hide();
+			$('#' + self.category_buttons_div.id).show();
+			
+		});
 		
 		$('#' + self.new_category_button.id).button();
 		$('#' + self.new_category_button.id).click(function(event) {
@@ -92,7 +126,6 @@ function Entry_Tab() {
 			//ensure a normal postback does not occur
 			event.preventDefault();
 
-			
 			//execute the click event
 			alert('Not implemented.');
 		});
@@ -105,7 +138,11 @@ function Entry_Tab() {
 
 			
 			//execute the click event
-			alert('Not implemented.');
+			self.items_tab.Show_Form('');
+			self.tasks_tab.Show_Form('add_task_div');
+			
+			$('#' + self.category_buttons_div.id).hide();
+			$('#' + self.cancel_button_div.id).show();
 		});
 		
 		$('#' + self.new_item_button.id).button();
@@ -116,7 +153,11 @@ function Entry_Tab() {
 
 			
 			//execute the click event
-			alert('Not implemented.');
+			self.tasks_tab.Show_Form('');
+			self.items_tab.Show_Form('add_item_div');
+			
+			$('#' + self.category_buttons_div.id).hide();
+			$('#' + self.cancel_button_div.id).show();
 		});
 		
 	};

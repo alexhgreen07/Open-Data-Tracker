@@ -3,11 +3,6 @@
  */
 function Item_Tab() {
 
-	/** This is the parent div ID where the item tab is.
-	 * @type String
-	 * */
-	this.div_id = null;
-	
 	/** This is the array for the item log.
 	 * @type Array
 	 * */
@@ -136,38 +131,50 @@ function Item_Tab() {
 			"category_id",
 			"category_path");
 	};
-
+	
+	this.Show_Form = function(div_id){
+		
+		for(var i = 0; i < this.div_ids.length; i++)
+		{
+			if(div_id == this.div_ids[i])
+			{
+				$('#'+this.div_ids[i]).show();
+			}
+			else
+			{
+				$('#'+this.div_ids[i]).hide();
+			}
+			
+		}
+		
+	};
+	
 	/** @method Render
 	 * @desc This function will render the full tab in the div that it was initialized with.
 	 * */
 	this.Render = function(item_div_id) {
 		
-		this.div_id = item_div_id;
+		this.div_ids = [
+			'quick_item_entry_div',
+			'new_item_entry_div',
+			'edit_item_log_div',
+			'view_item_log_div',
+			'add_item_div',
+			'edit_item_div',
+			'view_item_div',
+			'new_item_target_div',
+			'edit_item_target_div',
+		];
 		
-		var tabs_array = new Array();
-
-		var new_tab;
 		var return_html = '';
-
-		return_html += '<div id="quick_item_entry_div"></div>';
-
-		return_html += '<div id="new_item_entry_div"></div>';
-
-		return_html += '<div id="edit_item_log_div"></div>';
-
-		return_html += '<div id="view_item_log_div"></div>';
-
-		return_html += '<div id="add_item_div"></div>';
-
-		return_html += '<div id="edit_item_div"></div>';
-
-		return_html += '<div id="view_item_div"></div>';
-
-		return_html += '<div id="new_item_target_div"></div>';
-
-		return_html += '<div id="edit_item_target_div"></div>';
 		
-		document.getElementById(item_div_id).innerHTML = return_html;
+		for(var i = 0; i < this.div_ids.length; i++)
+		{
+			return_html += '<div id="'+this.div_ids[i]+'"></div>';
+		}
+
+		var div_tab = document.getElementById(item_div_id);
+		div_tab.innerHTML = return_html;
 		
 		//render the accordian panes
 		this.quick_item_entry_form.Render('quick_item_entry_div');
@@ -187,6 +194,11 @@ function Item_Tab() {
 		this.new_item_target_form.Render('new_item_target_div');
 		
 		this.edit_item_target_form.Render('edit_item_target_div');
+		
+		for(var i = 0; i < this.div_ids.length; i++)
+		{
+			$('#'+this.div_ids[i]).hide();
+		}
 	};
 }
 

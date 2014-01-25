@@ -3,11 +3,6 @@
  */
 function Task_Tab() {
 
-	/** This is the parent div ID where the task tab is.
-	 * @type String
-	 * */
-	this.div_id = null;
-	
 	/** This is the array for the task log.
 	 * @type Array
 	 * */
@@ -96,6 +91,23 @@ function Task_Tab() {
 		this.view_task_targets_form.Refresh(data);
 		
 	};
+	
+	this.Show_Form = function(div_id){
+		
+		for(var i = 0; i < this.div_ids.length; i++)
+		{
+			if(div_id == this.div_ids[i])
+			{
+				$('#'+this.div_ids[i]).show();
+			}
+			else
+			{
+				$('#'+this.div_ids[i]).hide();
+			}
+			
+		}
+		
+	};
 
 	/** @method Render
 	 * @desc This function renders the tab in the div the object was initialized with.
@@ -103,31 +115,27 @@ function Task_Tab() {
 	 * */
 	this.Render = function(task_div_id) {
 		
-		this.div_id = task_div_id;
+		this.div_ids = [
+			'timecard_task_entry_div',
+			'new_task_entry_div',
+			'edit_task_entry_div',
+			'view_task_log_div',
+			'add_task_div',
+			'edit_tasks_div',
+			'view_tasks_div',
+			'new_target_task_entry_div',
+			'edit_target_task_entry_div',
+			'view_target_task_entry_div',
+		];
 		
 		var return_html = '';
+		
+		for(var i = 0; i < this.div_ids.length; i++)
+		{
+			return_html += '<div id="'+this.div_ids[i]+'"></div>';
+		}
 
-		return_html += '<div id="timecard_task_entry_div"></div>';
-
-		return_html += '<div id="new_task_entry_div"></div>';
-
-		return_html += '<div id="edit_task_entry_div"></div>';
-
-		return_html += '<div id="view_task_log_div"></div>';
-
-		return_html += '<div id="add_task_div"></div>';
-
-		return_html += '<div id="edit_tasks_div"></div>';
-
-		return_html += '<div id="view_tasks_div"></div>';
-
-		return_html += '<div id="new_target_task_entry_div"></div>';
-
-		return_html += '<div id="edit_target_task_entry_div"></div>';
-
-		return_html += '<div id="view_target_task_entry_div"></div>';
-
-		var div_tab = document.getElementById(this.div_id);
+		var div_tab = document.getElementById(task_div_id);
 		div_tab.innerHTML = return_html;
 
 		//now render all accordian tabs
@@ -150,6 +158,11 @@ function Task_Tab() {
 		this.edit_task_target_form.Render('edit_target_task_entry_div');
 		
 		this.view_task_targets_form.Render('view_target_task_entry_div');
+		
+		for(var i = 0; i < this.div_ids.length; i++)
+		{
+			$('#'+this.div_ids[i]).hide();
+		}
 		
 	};
 }

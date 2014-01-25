@@ -27,6 +27,8 @@ function Tree_View(div_id, data) {
 			
 			self.tree = new Resnyanskiy.Tree(document.getElementById(self.tree_view_div),[self.tree_nodes]);
 			
+			self.tree.updateNode(self.tree_nodes.id,[],true);
+			
 			self.tree.onNodeClick = function(id)
 			{
 				info = self.tree_view_id_lookup[id];

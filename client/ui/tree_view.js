@@ -31,8 +31,11 @@ function Tree_View(div_id, data) {
 			{
 				info = self.tree_view_id_lookup[id];
 				
+				//expand/collapse the children
+				self.tree.updateNode(id,[],true);
+				
+				//execute callback
 				self.node_click_callback(info);
-				alert(JSON.stringify(info));
 			};
 		}
 		

@@ -20,7 +20,8 @@ function Entry_Tab() {
 	this.Refresh = function(data) {
 		
 		this.tree_view.Refresh(data);
-		
+		this.items_tab.Refresh(data);
+		this.tasks_tab.Refresh(data);
 	};
 
 	/** @method Render

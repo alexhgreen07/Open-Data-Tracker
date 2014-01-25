@@ -2,7 +2,9 @@
  * @constructor Task_Tab
  */
 function Entry_Tab() {
-
+	
+	var self = this;
+	
 	/** This is the parent div ID where the task tab is.
 	 * @type String
 	 * */
@@ -28,24 +30,95 @@ function Entry_Tab() {
 	 * @desc This function renders the tab in the div the object was initialized with.
 	 * @param {String} form_div_id The div ID to render the form in. 
 	 * */
-	this.Render = function(task_div_id) {
+	this.Render = function(form_div_id) {
 		
-		self.tree_view_div_id = task_div_id+'_tree_view_div';
-		self.tree_items_div_id = task_div_id+'_items_div';
-		self.tree_tasks_div_id = task_div_id+'_tasks_div';
+		var div_tab = document.getElementById(form_div_id);
+		self.form = document.createElement("form");
+		self.form.id = form_div_id + '_form';
 		
-		document.getElementById(task_div_id).innerHTML += '<div id="'+self.tree_view_div_id+'"></div>';
-		document.getElementById(task_div_id).innerHTML += '<div id="'+self.tree_items_div_id+'"></div>';
-		document.getElementById(task_div_id).innerHTML += '<div id="'+self.tree_tasks_div_id+'"></div>';
+		self.tree_view_div = document.createElement("div");
+		self.tree_view_div.id = form_div_id + '_tree_view_div';
+		self.form.appendChild(self.tree_view_div);
 		
-		this.tree_view = new Tree_View(self.tree_view_div_id);
-		this.tree_view.Render();
+		self.tree_items_div = document.createElement("div");
+		self.tree_items_div.id = form_div_id + '_tree_items_div';
+		self.form.appendChild(self.tree_items_div);
 		
-		this.items_tab = new Item_Tab();
-		this.items_tab.Render(self.tree_items_div_id);
+		self.tree_tasks_div = document.createElement("div");
+		self.tree_tasks_div.id = form_div_id + '_tree_tasks_div';
+		self.form.appendChild(self.tree_tasks_div);
 		
-		this.tasks_tab = new Task_Tab();
-		this.tasks_tab.Render(self.tree_tasks_div_id);
+		self.form.innerHTML += "<hr>";
+		
+		self.new_category_button = document.createElement("input");
+		self.new_category_button.id = form_div_id + '_new_category_button';
+		self.new_category_button.type = "submit";
+		self.new_category_button.value = "New Category";
+		self.form.appendChild(self.new_category_button);
+		
+		self.form.innerHTML += "<br><br>";
+		
+		self.new_task_button = document.createElement("input");
+		self.new_task_button.id = form_div_id + '_new_task_button';
+		self.new_task_button.type = "submit";
+		self.new_task_button.value = "New Task";
+		self.form.appendChild(self.new_task_button);
+		
+		self.form.innerHTML += "<br><br>";
+		
+		self.new_item_button = document.createElement("input");
+		self.new_item_button.id = form_div_id + '_new_item_button';
+		self.new_item_button.type = "submit";
+		self.new_item_button.value = "New Item";
+		self.form.appendChild(self.new_item_button);
+		
+		div_tab.appendChild(self.form);
+		
+		self.tree_view = new Tree_View(self.tree_view_div.id);
+		self.tree_view.Render();
+		
+		self.items_tab = new Item_Tab();
+		self.items_tab.Render(self.tree_items_div.id);
+		
+		self.tasks_tab = new Task_Tab();
+		self.tasks_tab.Render(self.tree_tasks_div.id);
+		
+		$('#' + self.tree_items_div.id).hide();
+		$('#' + self.tree_tasks_div.id).hide();
+		
+		$('#' + self.new_category_button.id).button();
+		$('#' + self.new_category_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+			
+			//execute the click event
+			alert('Not implemented.');
+		});
+		
+		$('#' + self.new_task_button.id).button();
+		$('#' + self.new_task_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+			
+			//execute the click event
+			alert('Not implemented.');
+		});
+		
+		$('#' + self.new_item_button.id).button();
+		$('#' + self.new_item_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+			
+			//execute the click event
+			alert('Not implemented.');
+		});
+		
 	};
 }
 

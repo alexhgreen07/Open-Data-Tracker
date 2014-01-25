@@ -105,70 +105,30 @@ function Task_Tab() {
 		
 		this.div_id = task_div_id;
 		
-		var tabs_array = new Array();
-
-		var new_tab;
-
-		new_tab = new Array();
-		new_tab.push("Timecard Task Entry");
-		new_tab.push('<div id="timecard_task_entry_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("New Task Entry");
-		new_tab.push('<div id="new_task_entry_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("Edit Task Entry");
-		new_tab.push('<div id="edit_task_entry_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("View Task Log");
-		new_tab.push('<div id="view_task_log_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("New Task");
-		new_tab.push('<div id="add_task_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("Edit Task");
-		new_tab.push('<div id="edit_tasks_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("View Tasks");
-		new_tab.push('<div id="view_tasks_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("New Target Entry");
-		new_tab.push('<div id="new_target_task_entry_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("Edit Target Entry");
-		new_tab.push('<div id="edit_target_task_entry_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("View Targets");
-		new_tab.push('<div id="view_target_task_entry_div"></div>');
-		tabs_array.push(new_tab);
-
 		var return_html = '';
 
-		return_html += '<div id="tasks_accordian"></div>';
+		return_html += '<div id="timecard_task_entry_div"></div>';
+
+		return_html += '<div id="new_task_entry_div"></div>';
+
+		return_html += '<div id="edit_task_entry_div"></div>';
+
+		return_html += '<div id="view_task_log_div"></div>';
+
+		return_html += '<div id="add_task_div"></div>';
+
+		return_html += '<div id="edit_tasks_div"></div>';
+
+		return_html += '<div id="view_tasks_div"></div>';
+
+		return_html += '<div id="new_target_task_entry_div"></div>';
+
+		return_html += '<div id="edit_target_task_entry_div"></div>';
+
+		return_html += '<div id="view_target_task_entry_div"></div>';
 
 		var div_tab = document.getElementById(this.div_id);
 		div_tab.innerHTML = return_html;
-
-		//render the accordian
-		var task_accordian = new Accordian('tasks_accordian', tabs_array);
-		task_accordian.Render();
 
 		//now render all accordian tabs
 		this.timecard_task_entry_form.Render('timecard_task_entry_div');

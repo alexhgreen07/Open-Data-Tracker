@@ -147,69 +147,28 @@ function Item_Tab() {
 		var tabs_array = new Array();
 
 		var new_tab;
-
-		new_tab = new Array();
-		new_tab.push("Quick Item Entry");
-		new_tab.push('<div id="quick_item_entry_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("New Item Entry");
-		new_tab.push('<div id="new_item_entry_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("Edit Item Entry");
-		new_tab.push('<div id="edit_item_log_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("View Item Log");
-		new_tab.push('<div id="view_item_log_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("New Item");
-		new_tab.push('<div id="add_item_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("Edit Item");
-		new_tab.push('<div id="edit_item_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("View Items");
-		new_tab.push('<div id="view_item_div"></div>');
-		tabs_array.push(new_tab);
-		
-		new_tab = new Array();
-		new_tab.push("New Target Entry");
-		new_tab.push('<div id="new_item_target_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("Edit Target Entry");
-		new_tab.push('<div id="edit_item_target_div"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("View Targets");
-		new_tab.push('Under construction...');
-		tabs_array.push(new_tab);
-
 		var return_html = '';
 
-		return_html += '<div id="items_accordian"></div>';
+		return_html += '<div id="quick_item_entry_div"></div>';
 
-		var div_tab = document.getElementById(this.div_id);
+		return_html += '<div id="new_item_entry_div"></div>';
 
-		div_tab.innerHTML = return_html;
+		return_html += '<div id="edit_item_log_div"></div>';
 
-		var items_accordian = new Accordian('items_accordian', tabs_array);
+		return_html += '<div id="view_item_log_div"></div>';
 
-		items_accordian.Render();
+		return_html += '<div id="add_item_div"></div>';
 
+		return_html += '<div id="edit_item_div"></div>';
+
+		return_html += '<div id="view_item_div"></div>';
+
+		return_html += '<div id="new_item_target_div"></div>';
+
+		return_html += '<div id="edit_item_target_div"></div>';
+		
+		document.getElementById(item_div_id).innerHTML = return_html;
+		
 		//render the accordian panes
 		this.quick_item_entry_form.Render('quick_item_entry_div');
 

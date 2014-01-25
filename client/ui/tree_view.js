@@ -96,7 +96,6 @@ function Tree_View(div_id, data) {
 	
 	self.Create_Category_Tree_Nodes = function(data)
 	{
-		return_array = [];
 		processed_categories = [];
 		
 		var primary_node = new TreeNode(self.Generate_Random_ID(), "Categories", true);
@@ -105,24 +104,22 @@ function Tree_View(div_id, data) {
 		
 		self.Create_Category_Tree_Node_Children(data,primary_node);
 		
-		return_array = [primary_node];
-		
 		return primary_node;
 	};
 	
-	self.Create_Task_Target_Entries_Tree_Node_Children = function(data, node)
+	self.Create_Task_Entries_Tree_Node_Children = function(data, node, task_id, task_target_id)
 	{
-		item_entries = data.task_entries;
+		task_entries = data.task_entries;
 		
-		for(var i = 0; i < item_entries.length; i++)
+		for(var i = 0; i < task_entries.length; i++)
 		{
-			var current_entry_row = item_entries[i];
+			var current_entry_row = task_entries[i];
 			
-			if(current_entry_row["task_target_id"] == node.id)
+			if(current_entry_row["task_target_id"] == task_target_id && current_entry_row["task_id"] == task_id)
 			{
 				node.hasChildren = true;
 				
-				var new_tree_row = new TreeNode(current_entry_row["task_target_id"], current_entry_row["start_time"], false);
+				var new_tree_row = new TreeNode(self.Generate_Random_ID(), current_entry_row["start_time"], false);
 				
 				node.addItem(new_tree_row);
 			}
@@ -130,22 +127,22 @@ function Tree_View(div_id, data) {
 		
 	};
 	
-	self.Create_Task_Target_Tree_Node_Children = function(data, node)
+	self.Create_Task_Target_Recurring_Tree_Node_Children = function(data, node, schedule_id)
 	{
-		item_targets = data.task_targets;
-		item_entries = data.task_entries;
+		task_targets = data.task_targets;
+		task_entries = data.task_entries;
 	
-		for(var i = 0; i < item_targets.length; i++)
+		for(var i = 0; i < task_targets.length; i++)
 		{
-			var current_target_row = item_targets[i];
+			var current_target_row = task_targets[i];
 			
-			if(current_target_row["recurrance_child_id"] == node.id)
+			if(current_target_row["recurrance_child_id"] == schedule_id)
 			{
 				node.hasChildren = true;
 				
-				var new_tree_row = new TreeNode(current_target_row["task_schedule_id"], current_target_row["scheduled_time"], false);
+				var new_tree_row = new TreeNode(self.Generate_Random_ID(), current_target_row["scheduled_time"], false);
 				
-				self.Create_Task_Target_Entries_Tree_Node_Children(data,new_tree_row);
+				self.Create_Task_Entries_Tree_Node_Children(data,new_tree_row, current_target_row["task_id"], current_target_row["task_schedule_id"]);
 				
 				if(new_tree_row.hasChildren)
 				{
@@ -161,34 +158,34 @@ function Tree_View(div_id, data) {
 	self.Create_Task_Tree_Node_Children = function(data, node, category_filter)
 	{
 		return_array = [];
-		items_table = data.tasks;
-		item_targets = data.task_targets;
-		item_entries = data.task_entries;
+		task_table = data.tasks;
+		task_targets = data.task_targets;
+		task_entries = data.task_entries;
 		
-		for(var i = 0; i < items_table.length; i++)
+		for(var i = 0; i < task_table.length; i++)
 		{
-			var current_item_row = items_table[i];
+			var current_item_row = task_table[i];
 			
 			if(current_item_row["category_id"] == category_filter)
 			{
-				var targets_id = Math.floor((Math.random()*1000000)+1); 
-				var new_item_row = new TreeNode(targets_id, current_item_row["name"], false);
-				var new_item_row_targets = new TreeNode(current_item_row["task_id"], "Targets", false);
+				var new_item_row = new TreeNode(self.Generate_Random_ID(), current_item_row["name"], false);
+				var new_item_row_targets = new TreeNode(self.Generate_Random_ID(), "Targets", false);
+				var new_item_row_entries = new TreeNode(self.Generate_Random_ID(), "Entries", false);
 				new_item_row.hasChildren = false;
 				
-				for(var j = 0; j < item_targets.length; j++)
+				self.Create_Task_Entries_Tree_Node_Children(data,new_item_row_entries,current_item_row["task_id"],0);
+				
+				for(var j = 0; j < task_targets.length; j++)
 				{
-					var current_target_row = item_targets[j];
+					var current_target_row = task_targets[j];
 					
 					if(current_target_row["task_id"] == current_item_row["task_id"] && current_target_row["recurrance_child_id"] == 0)
 					{
 						new_item_row_targets.hasChildren = true;
 						
-						var new_tree_row = new TreeNode(current_target_row["task_schedule_id"], current_target_row["scheduled_time"], false);
-						
-						self.Create_Task_Target_Entries_Tree_Node_Children(data,new_tree_row);
+						var new_tree_row = new TreeNode(self.Generate_Random_ID(), current_target_row["scheduled_time"], false);
 	
-						self.Create_Task_Target_Tree_Node_Children(data, new_tree_row);
+						self.Create_Task_Target_Recurring_Tree_Node_Children(data, new_tree_row, current_target_row["task_schedule_id"]);
 						
 						if(new_tree_row.hasChildren)
 						{
@@ -205,6 +202,13 @@ function Tree_View(div_id, data) {
 					new_item_row_targets.isBranch = true;
 					new_item_row.hasChildren = true;
 					new_item_row.addItem(new_item_row_targets);
+				}
+				
+				if(new_item_row_entries.hasChildren)
+				{
+					new_item_row_entries.isBranch = true;
+					new_item_row.hasChildren = true;
+					new_item_row.addItem(new_item_row_entries);
 				}
 				
 				//new_item_row.addItem(new_item_row_entries);

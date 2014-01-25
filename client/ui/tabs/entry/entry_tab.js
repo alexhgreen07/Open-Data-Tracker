@@ -29,9 +29,22 @@ function Entry_Tab() {
 	 * */
 	this.Render = function(task_div_id) {
 		
-		this.tree_view = new Tree_View(task_div_id);
+		self.tree_view_div_id = task_div_id+'_tree_view_div';
+		self.tree_items_div_id = task_div_id+'_items_div';
+		self.tree_tasks_div_id = task_div_id+'_tasks_div';
 		
+		document.getElementById(task_div_id).innerHTML += '<div id="'+self.tree_view_div_id+'"></div>';
+		document.getElementById(task_div_id).innerHTML += '<div id="'+self.tree_items_div_id+'"></div>';
+		document.getElementById(task_div_id).innerHTML += '<div id="'+self.tree_tasks_div_id+'"></div>';
+		
+		this.tree_view = new Tree_View(self.tree_view_div_id);
 		this.tree_view.Render();
+		
+		this.items_tab = new Item_Tab();
+		this.items_tab.Render(self.tree_items_div_id);
+		
+		this.tasks_tab = new Task_Tab();
+		this.tasks_tab.Render(self.tree_tasks_div_id);
 	};
 }
 

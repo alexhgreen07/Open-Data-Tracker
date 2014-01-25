@@ -9,7 +9,7 @@
 Header("content-type: application/x-javascript");
 
 //jquery code
-include_once(dirname(__FILE__).'/../../../../externals/jquery-ui/jquery-1.10.2.js');
+include_once(dirname(__FILE__).'/../../../../../externals/jquery-ui/jquery-1.10.2.js');
 
 //jquery UI code
 include_once(dirname(__FILE__).'/../../../../../externals/jquery-ui/ui/jquery.ui.core.js');

@@ -12,9 +12,10 @@ function Edit_Item_Form(){
 		Refresh_Select_HTML_From_Table(
 			self.item_edit_select.id,
 			data.items,
-			"item_name",
+			"item_id",
 			"item_name");
 		
+		self.Item_Select_Change();
 	};
 	
 	/** @method Edit_Item_Click

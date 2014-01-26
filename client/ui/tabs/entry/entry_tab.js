@@ -78,6 +78,10 @@ function Entry_Tab() {
 		}
 		else if(self.current_selected_info.table == 'items')
 		{
+			name_select_id = self.items_tab.quick_item_entry_form.quick_item_name_select.id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row.item_id;
+			self.items_tab.Refresh(self.data);
+			
 			self.items_tab.Show_Form('quick_item_entry_div');
 		}
 		
@@ -104,6 +108,10 @@ function Entry_Tab() {
 		}
 		else if(self.current_selected_info.table == 'items')
 		{
+			name_select_id = self.items_tab.edit_item_form.item_edit_select.id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row.item_id;
+			self.items_tab.Refresh(self.data);
+			
 			self.items_tab.Show_Form('edit_item_div');
 		}
 		
@@ -129,6 +137,10 @@ function Entry_Tab() {
 		}
 		else if(self.current_selected_info.table == 'items')
 		{
+			name_select_id = self.items_tab.new_item_target_form.new_item_target_name_select.id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row.item_id;
+			self.items_tab.Refresh(self.data);
+			
 			self.items_tab.Show_Form('new_item_target_div');
 		}
 		
@@ -154,6 +166,10 @@ function Entry_Tab() {
 		}
 		else if(self.current_selected_info.table == 'items')
 		{
+			name_select_id = self.items_tab.new_item_entry_form.new_item_name_select.id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row.item_id;
+			self.items_tab.Refresh(self.data);
+			
 			self.items_tab.Show_Form('new_item_entry_div');
 		}
 		
@@ -278,6 +294,14 @@ function Entry_Tab() {
 		
 		self.category_buttons_div.innerHTML += "<br><br>";
 		
+		self.edit_category_button = document.createElement("input");
+		self.edit_category_button.id = form_div_id + '_edit_category_button';
+		self.edit_category_button.type = "submit";
+		self.edit_category_button.value = "Edit";
+		self.category_buttons_div.appendChild(self.edit_category_button);
+		
+		self.category_buttons_div.innerHTML += "<br><br>";
+		
 		self.new_task_button = document.createElement("input");
 		self.new_task_button.id = form_div_id + '_new_task_button';
 		self.new_task_button.type = "submit";
@@ -376,6 +400,16 @@ function Entry_Tab() {
 			//ensure a normal postback does not occur
 			event.preventDefault();
 
+			//execute the click event
+			alert('Not implemented.');
+		});
+		
+		$('#' + self.edit_category_button.id).button();
+		$('#' + self.edit_category_button.id).click(function(event){
+			
+			//ensure a normal postback does not occur
+			event.preventDefault();
+			
 			//execute the click event
 			alert('Not implemented.');
 		});

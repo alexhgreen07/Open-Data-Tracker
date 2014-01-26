@@ -63,6 +63,14 @@ function Entry_Tab() {
 		{
 			$('#' + self.target_buttons_div.id).fadeIn();
 		}
+		else if(info.table == 'task_entries')
+		{
+			$('#' + self.entry_buttons_div.id).fadeIn();
+		}
+		else if(info.table == 'item_entries')
+		{
+			$('#' + self.entry_buttons_div.id).fadeIn();
+		}
 		
 	};
 	
@@ -200,6 +208,7 @@ function Entry_Tab() {
 		
 		$('#' + self.cancel_button_div.id).hide();
 		$('#' + self.category_buttons_div.id).hide();
+		$('#' + self.entry_buttons_div.id).hide();
 		$('#' + self.target_buttons_div.id).hide();
 		$('#' + self.node_buttons_div.id).hide();
 		
@@ -291,7 +300,7 @@ function Entry_Tab() {
 		
 		self.form.appendChild(self.node_buttons_div);
 		
-		//category buttons div
+		//target buttons div
 		self.target_buttons_div = document.createElement("div");
 		self.target_buttons_div.id = form_div_id + '_target_buttons_div';
 		
@@ -320,6 +329,20 @@ function Entry_Tab() {
 		self.target_buttons_div.innerHTML += '<br><br>';
 		
 		self.form.appendChild(self.target_buttons_div);
+		
+		//entry buttons div
+		self.entry_buttons_div = document.createElement("div");
+		self.entry_buttons_div.id = form_div_id + '_entry_buttons_div';
+		
+		self.edit_entry_button = document.createElement("input");
+		self.edit_entry_button.id = form_div_id + '_edit_entry_button';
+		self.edit_entry_button.type = "submit";
+		self.edit_entry_button.value = "Edit";
+		self.entry_buttons_div.appendChild(self.edit_entry_button);
+		
+		self.entry_buttons_div.innerHTML += '<br><br>';
+		
+		self.form.appendChild(self.entry_buttons_div);
 		
 		//category buttons div
 		self.category_buttons_div = document.createElement("div");
@@ -432,6 +455,13 @@ function Entry_Tab() {
 		
 		$('#' + self.target_new_entry_button.id).button();
 		$('#' + self.target_new_entry_button.id).click(function(event){
+			
+			event.preventDefault();
+			
+		});
+		
+		$('#' + self.edit_entry_button.id).button();
+		$('#' + self.edit_entry_button.id).click(function(event){
 			
 			event.preventDefault();
 			

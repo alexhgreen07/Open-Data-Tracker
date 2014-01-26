@@ -3,9 +3,9 @@
  */
 function Edit_Task_Form(){
 	
+	var self = this;
+	
 	this.Refresh = function(data){
-		
-		var self = this;
 		
 		//ensure the task info array is saved
 		self.task_info_json_array = data.tasks;
@@ -13,7 +13,7 @@ function Edit_Task_Form(){
 		Refresh_Select_HTML_From_Table(
 			self.task_entry_task_edit_name_select.id,
 			data.tasks,
-			"name",
+			"task_id",
 			"name");
 			
 		Refresh_Select_HTML_From_Table(
@@ -22,6 +22,8 @@ function Edit_Task_Form(){
 			"category_id",
 			"category_path");
 		
+		self.Task_Edit_Select_Change();
+		
 	};
 	
 	/** @method Task_Edit_Submit_Click
@@ -29,7 +31,6 @@ function Edit_Task_Form(){
 	 * */
 	this.Task_Edit_Submit_Click = function()
 	{
-		var self = this;
 		
 		var selected_index = document.getElementById(this.task_entry_task_edit_name_select.id).selectedIndex;
 
@@ -80,7 +81,7 @@ function Edit_Task_Form(){
 	 * */
 	this.Task_Edit_Delete_Click = function()
 	{
-		var self = this;
+		
 		
 		var selected_index = document.getElementById(this.task_entry_task_edit_name_select.id).selectedIndex;
 
@@ -165,7 +166,7 @@ function Edit_Task_Form(){
 	 * */
 	this.Render = function(form_div_id) {
 
-		var self = this;
+		
 
 		//create the top form
 		this.data_form_edit_task = document.createElement("form");
@@ -245,7 +246,7 @@ function Edit_Task_Form(){
 		this.task_edit_submit_button.setAttribute('type', 'submit');
 		this.task_edit_submit_button.value = 'Submit';
 		this.data_form_edit_task.appendChild(this.task_edit_submit_button);
-		var self = this;
+		
 		
 		this.data_form_edit_task.innerHTML += '<br /><br />';
 		

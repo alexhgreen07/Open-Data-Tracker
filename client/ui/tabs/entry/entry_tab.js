@@ -21,9 +21,11 @@ function Entry_Tab() {
 	 * */
 	this.Refresh = function(data) {
 		
-		this.tree_view.Refresh(data);
-		this.items_tab.Refresh(data);
-		this.tasks_tab.Refresh(data);
+		self.data = data;
+		
+		self.tree_view.Refresh(self.data);
+		self.items_tab.Refresh(self.data);
+		self.tasks_tab.Refresh(self.data);
 	};
 	
 	this.Node_Click_Callback = function(info){
@@ -67,6 +69,10 @@ function Entry_Tab() {
 		
 		if(self.current_selected_info.table == 'tasks')
 		{
+			name_select_id = self.tasks_tab.timecard_task_entry_form.task_name_select.id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
+			self.tasks_tab.Refresh(self.data);
+			
 			//execute the click event
 			self.tasks_tab.Show_Form('timecard_task_entry_div');
 		}
@@ -88,6 +94,11 @@ function Entry_Tab() {
 		
 		if(self.current_selected_info.table == 'tasks')
 		{
+			
+			name_select_id = self.tasks_tab.edit_task_form.task_entry_task_edit_name_select.id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
+			self.tasks_tab.Refresh(self.data);
+			
 			//execute the click event
 			self.tasks_tab.Show_Form('edit_tasks_div');
 		}
@@ -109,6 +120,10 @@ function Entry_Tab() {
 		
 		if(self.current_selected_info.table == 'tasks')
 		{
+			name_select_id = self.tasks_tab.new_task_target_form.task_target_new_name_select.id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
+			self.tasks_tab.Refresh(self.data);
+			
 			//execute the click event
 			self.tasks_tab.Show_Form('new_target_task_entry_div');
 		}
@@ -130,6 +145,10 @@ function Entry_Tab() {
 		
 		if(self.current_selected_info.table == 'tasks')
 		{
+			name_select_id = self.tasks_tab.new_task_entry_form.add_task_entry_task_name_select.id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
+			self.tasks_tab.Refresh(self.data);
+			
 			//execute the click event
 			self.tasks_tab.Show_Form('new_task_entry_div');
 		}

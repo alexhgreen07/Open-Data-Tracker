@@ -13,7 +13,7 @@ function New_Task_Entry_Form(){
 		Refresh_Select_HTML_From_Table(
 			self.add_task_entry_task_name_select.id,
 			data.tasks,
-			"name",
+			"task_id",
 			"name");
 
 		Refresh_Select_HTML_From_Table(

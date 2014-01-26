@@ -13,7 +13,7 @@ function New_Task_Target_Form(){
 		Refresh_Select_HTML_From_Table(
 			self.task_target_new_name_select.id,
 			data.tasks,
-			"name",
+			"task_id",
 			"name");
 		
 	};

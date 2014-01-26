@@ -25,7 +25,20 @@ function Entry_Tab() {
 		this.items_tab.Refresh(data);
 		this.tasks_tab.Refresh(data);
 	};
-
+	
+	this.Node_Click_Callback = function(info){
+		
+		info_div = document.getElementById(self.selected_info_div.id);
+		
+		info_div.innerHTML = '';
+		
+		for(var key in info.row)
+		{
+			info_div.innerHTML += key +': ' + info.row[key] + '<br>';
+		}
+		
+	};
+	
 	/** @method Render
 	 * @desc This function renders the tab in the div the object was initialized with.
 	 * @param {String} form_div_id The div ID to render the form in. 
@@ -39,6 +52,10 @@ function Entry_Tab() {
 		self.tree_view_div = document.createElement("div");
 		self.tree_view_div.id = form_div_id + '_tree_view_div';
 		self.form.appendChild(self.tree_view_div);
+		
+		self.selected_info_div = document.createElement("div");
+		self.selected_info_div.id = form_div_id + '_selected_info_div';
+		self.form.appendChild(self.selected_info_div);
 		
 		self.form.innerHTML += "<hr>";
 		
@@ -60,6 +77,8 @@ function Entry_Tab() {
 		self.cancel_button.type = "submit";
 		self.cancel_button.value = "Cancel";
 		self.cancel_button_div.appendChild(self.cancel_button);
+		
+		self.cancel_button_div.innerHTML += "<br><br>";
 		
 		self.form.appendChild(self.cancel_button_div);
 		
@@ -92,7 +111,17 @@ function Entry_Tab() {
 		
 		self.form.appendChild(self.category_buttons_div);
 		
-		div_tab.appendChild(self.form);
+		var tabs_array = new Array();
+		var new_tab = new Array();
+		new_tab.push("Tree View");
+		var accordian_div = form_div_id + '_accordian_div';
+		new_tab.push('<div id="'+accordian_div+'"></div>');
+		tabs_array.push(new_tab);
+		
+		var items_accordian = new Accordian(form_div_id, tabs_array);
+		items_accordian.Render();
+		
+		document.getElementById(accordian_div).appendChild(self.form);
 		
 		self.tree_view = new Tree_View(self.tree_view_div.id);
 		self.tree_view.Render();
@@ -102,6 +131,8 @@ function Entry_Tab() {
 		
 		self.tasks_tab = new Task_Tab();
 		self.tasks_tab.Render(self.tree_tasks_div.id);
+		
+		self.tree_view.node_click_callback = self.Node_Click_Callback;
 		
 		$('#' + self.cancel_button_div.id).hide();
 		

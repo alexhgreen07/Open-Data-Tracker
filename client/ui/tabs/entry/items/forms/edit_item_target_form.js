@@ -8,6 +8,8 @@ function Edit_Item_Target_Form(){
 	this.Refresh = function(data){
 		
 		self.data = data;
+		
+		this.Selected_Item_Target_Change();
 	};
 	
 	this.Selected_Item_Target_Change = function(){

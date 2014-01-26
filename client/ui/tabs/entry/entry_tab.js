@@ -133,6 +133,101 @@ function Entry_Tab() {
 		
 	};
 	
+	this.Target_Entry_Button_Click = function(){
+		
+		window.scrollTo(0, 0);
+		
+		this.Hide_All();
+		$('#' + self.tree_view_div.id).hide();
+		
+		$('#' + self.cancel_button_div.id).fadeIn();
+		
+		if(self.current_selected_info.table == 'task_targets')
+		{
+			
+			name_select_id = self.tasks_tab.timecard_task_entry_form.task_name_select.id;
+			target_select_id = self.tasks_tab.timecard_task_entry_form.task_target_select.id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
+			document.getElementById(target_select_id).value = self.current_selected_info.row.task_schedule_id;
+			self.tasks_tab.Refresh(self.data);
+			
+			//execute the click event
+			self.tasks_tab.Show_Form('timecard_task_entry_div');
+		}
+		else if(self.current_selected_info.table == 'item_targets')
+		{
+			name_select_id = self.items_tab.quick_item_entry_form.quick_item_name_select.id;
+			target_select_id = self.items_tab.quick_item_entry_form.quick_item_target_select.id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row.item_id;
+			document.getElementById(target_select_id).value = self.current_selected_info.row.item_target_id;
+			self.items_tab.Refresh(self.data);
+			
+			self.items_tab.Show_Form('quick_item_entry_div');
+		}
+	};
+	
+	this.Target_Edit_Button_Click = function(){
+		
+		window.scrollTo(0, 0);
+		
+		this.Hide_All();
+		$('#' + self.tree_view_div.id).hide();
+		
+		$('#' + self.cancel_button_div.id).fadeIn();
+		
+		if(self.current_selected_info.table == 'task_targets')
+		{
+			
+			target_select_id = self.tasks_tab.edit_task_target_form.task_edit_target_select.id;
+			document.getElementById(target_select_id).value = self.current_selected_info.row.task_schedule_id;
+			self.tasks_tab.Refresh(self.data);
+			
+			//execute the click event
+			self.tasks_tab.Show_Form('edit_target_task_entry_div');
+		}
+		else if(self.current_selected_info.table == 'item_targets')
+		{
+			target_select_id = self.items_tab.edit_item_target_form.edit_item_target_id_select.id;
+			document.getElementById(target_select_id).value = self.current_selected_info.row.item_target_id;
+			self.items_tab.Refresh(self.data);
+			
+			self.items_tab.Show_Form('edit_item_target_div');
+		}
+	};
+	
+	this.Target_New_Entry_Button_Click = function(){
+		
+		window.scrollTo(0, 0);
+		
+		self.Hide_All();
+		$('#' + self.tree_view_div.id).hide();
+		
+		$('#' + self.cancel_button_div.id).fadeIn();
+		
+		if(self.current_selected_info.table == 'task_targets')
+		{
+			name_select_id = self.tasks_tab.new_task_entry_form.add_task_entry_task_name_select.id;
+			target_select_id = self.tasks_tab.new_task_entry_form.task_target_select.id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
+			document.getElementById(target_select_id).value = self.current_selected_info.row.task_schedule_id;
+			self.tasks_tab.Refresh(self.data);
+			
+			//execute the click event
+			self.tasks_tab.Show_Form('new_task_entry_div');
+		}
+		else if(self.current_selected_info.table == 'item_targets')
+		{
+			name_select_id = self.items_tab.new_item_entry_form.new_item_name_select.id;
+			target_select_id = self.items_tab.new_item_entry_form.new_item_target_select.id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row.item_id;
+			document.getElementById(target_select_id).value = self.current_selected_info.row.item_target_id;
+			self.items_tab.Refresh(self.data);
+			
+			self.items_tab.Show_Form('new_item_entry_div');
+		}
+		
+	};
+	
 	this.Node_New_Target_Button_Click = function(){
 		
 		window.scrollTo(0, 0);
@@ -444,6 +539,7 @@ function Entry_Tab() {
 			
 			event.preventDefault();
 			
+			self.Target_Entry_Button_Click();
 		});
 		
 		$('#' + self.target_edit_button.id).button();
@@ -451,6 +547,7 @@ function Entry_Tab() {
 			
 			event.preventDefault();
 			
+			self.Target_Edit_Button_Click();
 		});
 		
 		$('#' + self.target_new_entry_button.id).button();
@@ -458,6 +555,7 @@ function Entry_Tab() {
 			
 			event.preventDefault();
 			
+			self.Target_New_Entry_Button_Click();
 		});
 		
 		$('#' + self.edit_entry_button.id).button();

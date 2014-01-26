@@ -80,33 +80,31 @@ function Timecard_Task_Entry_Form(){
 		//iterate through all tasks
 		for (var i = 0; i < data.task_targets.length; i++) {
 			
-			if(data.task_targets[i].status == "Incomplete")
+			for(var j = 0; j < self.active_tasks.length; j++)
 			{
-				for(var j = 0; j < self.active_tasks.length; j++)
+				if(self.active_tasks[j].task_id == data.task_targets[i].task_id)
 				{
-					if(self.active_tasks[j].task_id == data.task_targets[i].task_id)
+					if(document.getElementById(self.task_name_select.id).value == 0 ||
+					document.getElementById(self.task_name_select.id).value == data.task_targets[i].task_id)
 					{
-						if(document.getElementById(self.task_name_select.id).value == 0 ||
-						document.getElementById(self.task_name_select.id).value == data.task_targets[i].task_id)
-						{
-							//add task option to select
-							new_inner_html += '<option value="'
-							new_inner_html += data.task_targets[i].task_schedule_id;
-							new_inner_html += '">(';
-							new_inner_html += data.task_targets[i].task_schedule_id + ') ';
-							new_inner_html += data.task_targets[i].name + '</option>';
-							
-							if(data.task_targets[i].task_schedule_id == previous_value)
-							{
-								is_previous_value_present = true;
-								self.selected_task_target = data.task_targets[i];
-							}
-						}
+						//add task option to select
+						new_inner_html += '<option value="'
+						new_inner_html += data.task_targets[i].task_schedule_id;
+						new_inner_html += '">(';
+						new_inner_html += data.task_targets[i].task_schedule_id + ') ';
+						new_inner_html += data.task_targets[i].name + '</option>';
 						
-						break;
+						if(data.task_targets[i].task_schedule_id == previous_value)
+						{
+							is_previous_value_present = true;
+							self.selected_task_target = data.task_targets[i];
+						}
 					}
+					
+					break;
 				}
 			}
+			
 
 		}
 

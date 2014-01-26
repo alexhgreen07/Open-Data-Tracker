@@ -207,8 +207,26 @@ function Tree_View(div_id, data) {
 					"row" : current_item_row
 				};
 				
-				var new_item_row_targets = new TreeNode(self.Generate_Random_ID(), "Targets", false);
-				var new_item_row_entries = new TreeNode(self.Generate_Random_ID(), "Entries", false);
+				random_id = self.Generate_Random_ID();
+				var new_item_row_targets = new TreeNode(random_id, "Targets", false);
+				
+				self.tree_view_id_lookup[random_id] = 
+					{
+						"tree_view_id" : random_id,
+						"table" : 'task_targets',
+						"row" : {}
+					};
+				
+				random_id = self.Generate_Random_ID();
+				var new_item_row_entries = new TreeNode(random_id, "Entries", false);
+				
+				self.tree_view_id_lookup[random_id] = 
+					{
+						"tree_view_id" : random_id,
+						"table" : 'task_entries',
+						"row" : {}
+					};
+				
 				new_item_row.hasChildren = false;
 				
 				self.Create_Task_Entries_Tree_Node_Children(data,new_item_row_entries,current_item_row["task_id"],0);
@@ -394,8 +412,26 @@ function Tree_View(div_id, data) {
 					"row" : current_item_row
 				};
 				
-				var new_item_row_targets = new TreeNode(self.Generate_Random_ID(), "Targets", false);
-				var new_item_row_entries = new TreeNode(self.Generate_Random_ID(), "Entries", false);
+				random_id = self.Generate_Random_ID();
+				var new_item_row_targets = new TreeNode(random_id, "Targets", false);
+				
+				self.tree_view_id_lookup[random_id] = 
+					{
+						"tree_view_id" : random_id,
+						"table" : 'item_targets',
+						"row" : {}
+					};
+				
+				random_id = self.Generate_Random_ID();
+				var new_item_row_entries = new TreeNode(random_id, "Entries", false);
+				
+				self.tree_view_id_lookup[random_id] = 
+					{
+						"tree_view_id" : random_id,
+						"table" : 'item_entries',
+						"row" : {}
+					};
+				
 				new_item_row.hasChildren = false;
 				
 				self.Create_Item_Entries_Tree_Node_Children(data,new_item_row_entries,current_item_row["item_id"],0);

@@ -24,6 +24,7 @@ function Entry_Tab() {
 		self.data = data;
 		
 		self.tree_view.Refresh(self.data);
+		self.category_tab.Refresh(self.data);
 		self.items_tab.Refresh(self.data);
 		self.tasks_tab.Refresh(self.data);
 	};
@@ -315,6 +316,42 @@ function Entry_Tab() {
 		
 	};
 	
+	this.Category_New_Button_Click = function(){
+		
+		window.scrollTo(0, 0);
+		
+		self.Hide_All();
+		$('#' + self.tree_view_div.id).hide();
+		
+		$('#' + self.cancel_button_div.id).fadeIn();
+		
+		name_select_id = self.category_tab.new_category_form.add_new_category_parent_select.id;
+		document.getElementById(name_select_id).value = self.current_selected_info.row.category_id;
+		self.category_tab.Refresh(self.data);
+		
+		//execute the click event
+		self.category_tab.Show_Form('home_category_add_new_tab');
+		
+	};
+	
+	this.Category_Edit_Button_Click = function(){
+		
+		window.scrollTo(0, 0);
+		
+		self.Hide_All();
+		$('#' + self.tree_view_div.id).hide();
+		
+		$('#' + self.cancel_button_div.id).fadeIn();
+		
+		name_select_id = self.category_tab.edit_category_form.edit_category_select.id;
+		document.getElementById(name_select_id).value = self.current_selected_info.row.category_id;
+		self.category_tab.Refresh(self.data);
+		
+		//execute the click event
+		self.category_tab.Show_Form('home_category_edit_tab');
+		
+	};
+	
 	this.Cancel_Button_Click_Event = function(){
 		
 		$('#' + self.tree_view_div.id).fadeIn();
@@ -327,6 +364,7 @@ function Entry_Tab() {
 		
 		//execute the click event
 		
+		self.category_tab.Show_Form('');
 		self.items_tab.Show_Form('');
 		self.tasks_tab.Show_Form('');
 		
@@ -362,6 +400,10 @@ function Entry_Tab() {
 		self.tree_view_div.innerHTML += "<hr>";
 		
 		self.form.appendChild(self.tree_view_div);
+		
+		self.tree_category_div = document.createElement("div");
+		self.tree_category_div.id = form_div_id + '_tree_category_div';
+		self.form.appendChild(self.tree_category_div);
 		
 		self.tree_items_div = document.createElement("div");
 		self.tree_items_div.id = form_div_id + '_tree_items_div';
@@ -521,6 +563,9 @@ function Entry_Tab() {
 		self.tree_view = new Tree_View(self.tree_view_disp_div.id);
 		self.tree_view.Render();
 		
+		self.category_tab = new Category_Form();
+		self.category_tab.Render(self.tree_category_div.id);
+		
 		self.items_tab = new Item_Tab();
 		self.items_tab.Render(self.tree_items_div.id);
 		
@@ -619,7 +664,7 @@ function Entry_Tab() {
 			event.preventDefault();
 
 			//execute the click event
-			alert('Not implemented.');
+			self.Category_New_Button_Click();
 		});
 		
 		$('#' + self.edit_category_button.id).button();
@@ -629,7 +674,7 @@ function Entry_Tab() {
 			event.preventDefault();
 			
 			//execute the click event
-			alert('Not implemented.');
+			self.Category_Edit_Button_Click();
 		});
 		
 		$('#' + self.new_task_button.id).button();

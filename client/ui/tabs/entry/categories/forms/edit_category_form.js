@@ -2,12 +2,14 @@
  * @constructor Edit_Category_Form
  */
 function Edit_Category_Form(){
-
+	
+	var self = this;
 	
 	this.Refresh = function(data){
 		
-		this.categories_list = data.categories;
+		self.categories_list = data.categories;
 		
+		self.Category_Edit_Select_Change_Event();
 	};
 	
 	/** @method Category_Edit_Submit_Click_Event

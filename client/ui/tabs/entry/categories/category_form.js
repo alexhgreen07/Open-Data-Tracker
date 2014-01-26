@@ -44,43 +44,53 @@ function Category_Form(){
 		this.edit_category_form.Refresh(data);
 	};
 	
+	this.Show_Form = function(div_id){
+		
+		for(var i = 0; i < this.div_ids.length; i++)
+		{
+			if(div_id == this.div_ids[i])
+			{
+				$('#'+this.div_ids[i]).fadeIn();
+			}
+			else
+			{
+				$('#'+this.div_ids[i]).hide();
+			}
+			
+		}
+		
+	};
+	
 	/** @method Render
 	 * @desc This function will render the general home form in the specified div.
 	 * @param {String} form_div_id The div ID to render the form in.
 	 * */
 	this.Render = function(form_div_id) {
-		var tabs_array = new Array();
-		var new_tab;
-
-		new_tab = new Array();
-		new_tab.push("View Categories");
-		new_tab.push('<div id="home_category_view_tab"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("New Category");
-		new_tab.push('<div id="home_category_add_new_tab"></div>');
-		tabs_array.push(new_tab);
-
-		new_tab = new Array();
-		new_tab.push("Edit Category");
-		new_tab.push('<div id="home_category_edit_tab"></div>');
-		tabs_array.push(new_tab);
-
-		this.general_form = document.createElement("form");
-		this.general_form.setAttribute('method', "post");
-		this.general_form.setAttribute('id', "home_general_form");
+		
+		this.div_ids = [
+			'home_category_view_tab',
+			'home_category_add_new_tab',
+			'home_category_edit_tab',
+		];
+		
+		var return_html = '';
+		
+		for(var i = 0; i < this.div_ids.length; i++)
+		{
+			return_html += '<div id="'+this.div_ids[i]+'"></div>';
+		}
 
 		var div_tab = document.getElementById(form_div_id);
-		div_tab.innerHTML = '<div id="home_category_accordian_div"></div>';
-		div_tab.appendChild(this.general_form);
-
-		var category_accordian = new Accordian('home_category_accordian_div', tabs_array);
-		category_accordian.Render();
-
+		div_tab.innerHTML = return_html;
+		
 		this.view_categories_forms.Render('home_category_view_tab');
 		this.new_category_form.Render('home_category_add_new_tab');
 		this.edit_category_form.Render('home_category_edit_tab');
+		
+		for(var i = 0; i < this.div_ids.length; i++)
+		{
+			$('#'+this.div_ids[i]).hide();
+		}
 	};
 	
 }

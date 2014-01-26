@@ -21,8 +21,6 @@ require_once(dirname(__FILE__).'/../../accordian.js.php');
 
 require_once(dirname(__FILE__).'/forms/home_form.js.php');
 
-require_once(dirname(__FILE__).'/forms/category_form.js.php');
-
 require_once(dirname(__FILE__).'/forms/settings_form.js.php');
 
 //main file

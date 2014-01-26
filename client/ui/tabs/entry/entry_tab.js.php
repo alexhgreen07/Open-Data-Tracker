@@ -24,6 +24,7 @@ include_once(dirname(__FILE__).'/../../../../externals/json-rpc2php/jsonRPC2php.
 require_once(dirname(__FILE__).'/../../accordian.js.php');
 require_once(dirname(__FILE__).'/../../tree_view.js.php');
 
+require_once(dirname(__FILE__).'/categories/category_form.js.php');
 require_once(dirname(__FILE__).'/items/item_tab.js.php');
 require_once(dirname(__FILE__).'/tasks/task_tab.js.php');
 

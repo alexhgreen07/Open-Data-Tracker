@@ -55,6 +55,14 @@ function Entry_Tab() {
 		{
 			$('#' + self.node_buttons_div.id).fadeIn();
 		}
+		else if(info.table == 'task_targets')
+		{
+			$('#' + self.target_buttons_div.id).fadeIn();
+		}
+		else if(info.table == 'item_targets')
+		{
+			$('#' + self.target_buttons_div.id).fadeIn();
+		}
 		
 	};
 	
@@ -192,6 +200,7 @@ function Entry_Tab() {
 		
 		$('#' + self.cancel_button_div.id).hide();
 		$('#' + self.category_buttons_div.id).hide();
+		$('#' + self.target_buttons_div.id).hide();
 		$('#' + self.node_buttons_div.id).hide();
 		
 	};
@@ -283,6 +292,36 @@ function Entry_Tab() {
 		self.form.appendChild(self.node_buttons_div);
 		
 		//category buttons div
+		self.target_buttons_div = document.createElement("div");
+		self.target_buttons_div.id = form_div_id + '_target_buttons_div';
+		
+		self.target_entry_button = document.createElement("input");
+		self.target_entry_button.id = form_div_id + '_target_entry_button';
+		self.target_entry_button.type = "submit";
+		self.target_entry_button.value = "Entry";
+		self.target_buttons_div.appendChild(self.target_entry_button);
+		
+		self.target_buttons_div.innerHTML += '<br><br>';
+		
+		self.target_edit_button = document.createElement("input");
+		self.target_edit_button.id = form_div_id + '_target_edit_button';
+		self.target_edit_button.type = "submit";
+		self.target_edit_button.value = "Edit";
+		self.target_buttons_div.appendChild(self.target_edit_button);
+		
+		self.target_buttons_div.innerHTML += '<br><br>';
+		
+		self.target_new_entry_button = document.createElement("input");
+		self.target_new_entry_button.id = form_div_id + '_target_new_entry_button';
+		self.target_new_entry_button.type = "submit";
+		self.target_new_entry_button.value = "New Entry";
+		self.target_buttons_div.appendChild(self.target_new_entry_button);
+		
+		self.target_buttons_div.innerHTML += '<br><br>';
+		
+		self.form.appendChild(self.target_buttons_div);
+		
+		//category buttons div
 		self.category_buttons_div = document.createElement("div");
 		self.category_buttons_div.id = form_div_id + '_category_buttons_div';
 		
@@ -344,8 +383,8 @@ function Entry_Tab() {
 		self.tree_view.node_click_callback = self.Node_Click_Callback;
 		
 		//hide unselected divs
-		$('#' + self.node_buttons_div.id).hide();
-		$('#' + self.cancel_button_div.id).hide();
+		self.Hide_All();
+		$('#' + self.category_buttons_div.id).fadeIn();
 		
 		$('#' + self.entry_button.id).button();
 		$('#' + self.entry_button.id).click(function(event) {
@@ -374,6 +413,27 @@ function Entry_Tab() {
 			event.preventDefault();
 			
 			self.Node_New_Target_Button_Click();
+			
+		});
+		
+		$('#' + self.target_entry_button.id).button();
+		$('#' + self.target_entry_button.id).click(function(event){
+			
+			event.preventDefault();
+			
+		});
+		
+		$('#' + self.target_edit_button.id).button();
+		$('#' + self.target_edit_button.id).click(function(event){
+			
+			event.preventDefault();
+			
+		});
+		
+		$('#' + self.target_new_entry_button.id).button();
+		$('#' + self.target_new_entry_button.id).click(function(event){
+			
+			event.preventDefault();
 			
 		});
 		

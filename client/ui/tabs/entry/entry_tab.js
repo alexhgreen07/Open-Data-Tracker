@@ -37,6 +37,25 @@ function Entry_Tab() {
 			info_div.innerHTML += key +': ' + info.row[key] + '<br>';
 		}
 		
+		if(info.table == 'categories')
+		{
+			self.items_tab.Show_Form('');
+			self.tasks_tab.Show_Form('');
+			
+			$('#' + self.cancel_button_div.id).hide();
+			$('#' + self.task_buttons_div.id).hide();
+			$('#' + self.category_buttons_div.id).show();
+		}
+		else if(info.table == 'tasks')
+		{
+			self.items_tab.Show_Form('');
+			self.tasks_tab.Show_Form('');
+			
+			$('#' + self.cancel_button_div.id).hide();
+			$('#' + self.category_buttons_div.id).hide();
+			$('#' + self.task_buttons_div.id).show();
+		}
+		
 	};
 	
 	/** @method Render
@@ -82,6 +101,37 @@ function Entry_Tab() {
 		
 		self.form.appendChild(self.cancel_button_div);
 		
+		//task buttons div
+		self.task_buttons_div = document.createElement("div");
+		self.task_buttons_div.id = form_div_id + '_task_buttons_div';
+		
+		self.task_start_button = document.createElement("input");
+		self.task_start_button.id = form_div_id + '_task_start_button';
+		self.task_start_button.type = "submit";
+		self.task_start_button.value = "Start";
+		self.task_buttons_div.appendChild(self.task_start_button);
+		
+		self.task_buttons_div.innerHTML += "<br><br>";
+		
+		self.edit_task_button = document.createElement("input");
+		self.edit_task_button.id = form_div_id + '_edit_task_button';
+		self.edit_task_button.type = "submit";
+		self.edit_task_button.value = "Edit Task";
+		self.task_buttons_div.appendChild(self.edit_task_button);
+		
+		self.task_buttons_div.innerHTML += "<br><br>";
+		
+		self.new_task_target_button = document.createElement("input");
+		self.new_task_target_button.id = form_div_id + '_new_task_target_button';
+		self.new_task_target_button.type = "submit";
+		self.new_task_target_button.value = "New Target";
+		self.task_buttons_div.appendChild(self.new_task_target_button);
+		
+		self.task_buttons_div.innerHTML += "<br><br>";
+		
+		self.form.appendChild(self.task_buttons_div);
+		
+		//category buttons div
 		self.category_buttons_div = document.createElement("div");
 		self.category_buttons_div.id = form_div_id + '_category_buttons_div';
 		
@@ -134,7 +184,33 @@ function Entry_Tab() {
 		
 		self.tree_view.node_click_callback = self.Node_Click_Callback;
 		
+		//hide unselected divs
+		$('#' + self.task_buttons_div.id).hide();
 		$('#' + self.cancel_button_div.id).hide();
+		
+		$('#' + self.task_start_button.id).button();
+		$('#' + self.task_start_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+		});
+		
+		$('#' + self.edit_task_button.id).button();
+		$('#' + self.edit_task_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+		});
+		
+		$('#' + self.new_task_target_button.id).button();
+		$('#' + self.new_task_target_button.id).click(function(event) {
+
+			//ensure a normal postback does not occur
+			event.preventDefault();
+
+		});
 		
 		$('#' + self.cancel_button.id).button();
 		$('#' + self.cancel_button.id).click(function(event) {

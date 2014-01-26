@@ -37,24 +37,127 @@ function Entry_Tab() {
 			info_div.innerHTML += key +': ' + info.row[key] + '<br>';
 		}
 		
+		self.current_selected_info = info;
+		
+		self.Hide_All();
+		
 		if(info.table == 'categories')
 		{
-			self.items_tab.Show_Form('');
-			self.tasks_tab.Show_Form('');
-			
-			$('#' + self.cancel_button_div.id).hide();
-			$('#' + self.task_buttons_div.id).hide();
-			$('#' + self.category_buttons_div.id).show();
+			$('#' + self.category_buttons_div.id).fadeIn();
 		}
 		else if(info.table == 'tasks')
 		{
-			self.items_tab.Show_Form('');
-			self.tasks_tab.Show_Form('');
-			
-			$('#' + self.cancel_button_div.id).hide();
-			$('#' + self.category_buttons_div.id).hide();
-			$('#' + self.task_buttons_div.id).show();
+			$('#' + self.node_buttons_div.id).fadeIn();
 		}
+		else if(info.table == 'items')
+		{
+			$('#' + self.node_buttons_div.id).fadeIn();
+		}
+		
+	};
+	
+	this.Node_Entry_Button_Click = function(){
+		
+		window.scrollTo(0, 0);
+		
+		this.Hide_All();
+		$('#' + self.tree_view_div.id).hide();
+		
+		$('#' + self.cancel_button_div.id).fadeIn();
+		
+		if(self.current_selected_info.table == 'tasks')
+		{
+			//execute the click event
+			self.tasks_tab.Show_Form('timecard_task_entry_div');
+		}
+		else if(self.current_selected_info.table == 'items')
+		{
+			self.items_tab.Show_Form('quick_item_entry_div');
+		}
+		
+	};
+	
+	this.Node_Edit_Button_Click = function(){
+		
+		window.scrollTo(0, 0);
+		
+		this.Hide_All();
+		$('#' + self.tree_view_div.id).hide();
+		
+		$('#' + self.cancel_button_div.id).fadeIn();
+		
+		if(self.current_selected_info.table == 'tasks')
+		{
+			//execute the click event
+			self.tasks_tab.Show_Form('edit_tasks_div');
+		}
+		else if(self.current_selected_info.table == 'items')
+		{
+			self.items_tab.Show_Form('edit_item_div');
+		}
+		
+	};
+	
+	this.Node_New_Target_Button_Click = function(){
+		
+		window.scrollTo(0, 0);
+		
+		self.Hide_All();
+		$('#' + self.tree_view_div.id).hide();
+		
+		$('#' + self.cancel_button_div.id).fadeIn();
+		
+		if(self.current_selected_info.table == 'tasks')
+		{
+			//execute the click event
+			self.tasks_tab.Show_Form('new_target_task_entry_div');
+		}
+		else if(self.current_selected_info.table == 'items')
+		{
+			self.items_tab.Show_Form('new_item_target_div');
+		}
+		
+	};
+	
+	this.Node_New_Entry_Button_Click = function(){
+		
+		window.scrollTo(0, 0);
+		
+		self.Hide_All();
+		$('#' + self.tree_view_div.id).hide();
+		
+		$('#' + self.cancel_button_div.id).fadeIn();
+		
+		if(self.current_selected_info.table == 'tasks')
+		{
+			//execute the click event
+			self.tasks_tab.Show_Form('new_task_entry_div');
+		}
+		else if(self.current_selected_info.table == 'items')
+		{
+			self.items_tab.Show_Form('new_item_entry_div');
+		}
+		
+	};
+	
+	this.Cancel_Button_Click_Event = function(){
+		
+		$('#' + self.tree_view_div.id).fadeIn();
+		
+		self.Node_Click_Callback(self.current_selected_info);
+		
+	};
+	
+	this.Hide_All = function(){
+		
+		//execute the click event
+		
+		self.items_tab.Show_Form('');
+		self.tasks_tab.Show_Form('');
+		
+		$('#' + self.cancel_button_div.id).hide();
+		$('#' + self.category_buttons_div.id).hide();
+		$('#' + self.node_buttons_div.id).hide();
 		
 	};
 	
@@ -70,13 +173,18 @@ function Entry_Tab() {
 		
 		self.tree_view_div = document.createElement("div");
 		self.tree_view_div.id = form_div_id + '_tree_view_div';
-		self.form.appendChild(self.tree_view_div);
+		
+		self.tree_view_disp_div = document.createElement("div");
+		self.tree_view_disp_div.id = form_div_id + '_tree_view_disp_div';
+		self.tree_view_div.appendChild(self.tree_view_disp_div);
 		
 		self.selected_info_div = document.createElement("div");
 		self.selected_info_div.id = form_div_id + '_selected_info_div';
-		self.form.appendChild(self.selected_info_div);
+		self.tree_view_div.appendChild(self.selected_info_div);
 		
-		self.form.innerHTML += "<hr>";
+		self.tree_view_div.innerHTML += "<hr>";
+		
+		self.form.appendChild(self.tree_view_div);
 		
 		self.tree_items_div = document.createElement("div");
 		self.tree_items_div.id = form_div_id + '_tree_items_div';
@@ -102,34 +210,42 @@ function Entry_Tab() {
 		self.form.appendChild(self.cancel_button_div);
 		
 		//task buttons div
-		self.task_buttons_div = document.createElement("div");
-		self.task_buttons_div.id = form_div_id + '_task_buttons_div';
+		self.node_buttons_div = document.createElement("div");
+		self.node_buttons_div.id = form_div_id + '_node_buttons_div';
 		
-		self.task_start_button = document.createElement("input");
-		self.task_start_button.id = form_div_id + '_task_start_button';
-		self.task_start_button.type = "submit";
-		self.task_start_button.value = "Start";
-		self.task_buttons_div.appendChild(self.task_start_button);
+		self.entry_button = document.createElement("input");
+		self.entry_button.id = form_div_id + '_entry_button';
+		self.entry_button.type = "submit";
+		self.entry_button.value = "Entry";
+		self.node_buttons_div.appendChild(self.entry_button);
 		
-		self.task_buttons_div.innerHTML += "<br><br>";
+		self.node_buttons_div.innerHTML += "<br><br>";
 		
-		self.edit_task_button = document.createElement("input");
-		self.edit_task_button.id = form_div_id + '_edit_task_button';
-		self.edit_task_button.type = "submit";
-		self.edit_task_button.value = "Edit Task";
-		self.task_buttons_div.appendChild(self.edit_task_button);
+		self.edit_node_button = document.createElement("input");
+		self.edit_node_button.id = form_div_id + '_edit_node_button';
+		self.edit_node_button.type = "submit";
+		self.edit_node_button.value = "Edit";
+		self.node_buttons_div.appendChild(self.edit_node_button);
 		
-		self.task_buttons_div.innerHTML += "<br><br>";
+		self.node_buttons_div.innerHTML += "<br><br>";
 		
-		self.new_task_target_button = document.createElement("input");
-		self.new_task_target_button.id = form_div_id + '_new_task_target_button';
-		self.new_task_target_button.type = "submit";
-		self.new_task_target_button.value = "New Target";
-		self.task_buttons_div.appendChild(self.new_task_target_button);
+		self.new_node_target_button = document.createElement("input");
+		self.new_node_target_button.id = form_div_id + '_new_node_target_button';
+		self.new_node_target_button.type = "submit";
+		self.new_node_target_button.value = "New Target";
+		self.node_buttons_div.appendChild(self.new_node_target_button);
 		
-		self.task_buttons_div.innerHTML += "<br><br>";
+		self.node_buttons_div.innerHTML += "<br><br>";
 		
-		self.form.appendChild(self.task_buttons_div);
+		self.new_node_entry_button = document.createElement("input");
+		self.new_node_entry_button.id = form_div_id + '_new_node_entry_button';
+		self.new_node_entry_button.type = "submit";
+		self.new_node_entry_button.value = "New Entry";
+		self.node_buttons_div.appendChild(self.new_node_entry_button);
+		
+		self.node_buttons_div.innerHTML += "<br><br>";
+		
+		self.form.appendChild(self.node_buttons_div);
 		
 		//category buttons div
 		self.category_buttons_div = document.createElement("div");
@@ -173,7 +289,7 @@ function Entry_Tab() {
 		
 		document.getElementById(accordian_div).appendChild(self.form);
 		
-		self.tree_view = new Tree_View(self.tree_view_div.id);
+		self.tree_view = new Tree_View(self.tree_view_disp_div.id);
 		self.tree_view.Render();
 		
 		self.items_tab = new Item_Tab();
@@ -185,31 +301,45 @@ function Entry_Tab() {
 		self.tree_view.node_click_callback = self.Node_Click_Callback;
 		
 		//hide unselected divs
-		$('#' + self.task_buttons_div.id).hide();
+		$('#' + self.node_buttons_div.id).hide();
 		$('#' + self.cancel_button_div.id).hide();
 		
-		$('#' + self.task_start_button.id).button();
-		$('#' + self.task_start_button.id).click(function(event) {
+		$('#' + self.entry_button.id).button();
+		$('#' + self.entry_button.id).click(function(event) {
 
 			//ensure a normal postback does not occur
 			event.preventDefault();
-
+			
+			self.Node_Entry_Button_Click();
+			
 		});
 		
-		$('#' + self.edit_task_button.id).button();
-		$('#' + self.edit_task_button.id).click(function(event) {
+		$('#' + self.edit_node_button.id).button();
+		$('#' + self.edit_node_button.id).click(function(event) {
 
 			//ensure a normal postback does not occur
 			event.preventDefault();
-
+			
+			self.Node_Edit_Button_Click();
+			
 		});
 		
-		$('#' + self.new_task_target_button.id).button();
-		$('#' + self.new_task_target_button.id).click(function(event) {
+		$('#' + self.new_node_target_button.id).button();
+		$('#' + self.new_node_target_button.id).click(function(event) {
 
 			//ensure a normal postback does not occur
 			event.preventDefault();
-
+			
+			self.Node_New_Target_Button_Click();
+			
+		});
+		
+		$('#' + self.new_node_entry_button.id).button();
+		$('#' + self.new_node_entry_button.id).click(function(event){
+			
+			event.preventDefault();
+			
+			self.Node_New_Entry_Button_Click();
 		});
 		
 		$('#' + self.cancel_button.id).button();
@@ -218,13 +348,7 @@ function Entry_Tab() {
 			//ensure a normal postback does not occur
 			event.preventDefault();
 
-			//execute the click event
-			self.items_tab.Show_Form('');
-			self.tasks_tab.Show_Form('');
-			
-			$('#' + self.cancel_button_div.id).hide();
-			$('#' + self.category_buttons_div.id).show();
-			
+			self.Cancel_Button_Click_Event();
 		});
 		
 		$('#' + self.new_category_button.id).button();
@@ -243,13 +367,12 @@ function Entry_Tab() {
 			//ensure a normal postback does not occur
 			event.preventDefault();
 
+			self.Hide_All();
 			
 			//execute the click event
-			self.items_tab.Show_Form('');
 			self.tasks_tab.Show_Form('add_task_div');
 			
-			$('#' + self.category_buttons_div.id).hide();
-			$('#' + self.cancel_button_div.id).show();
+			$('#' + self.cancel_button_div.id).fadeIn();
 		});
 		
 		$('#' + self.new_item_button.id).button();
@@ -258,13 +381,12 @@ function Entry_Tab() {
 			//ensure a normal postback does not occur
 			event.preventDefault();
 
+			self.Hide_All();
 			
 			//execute the click event
-			self.tasks_tab.Show_Form('');
 			self.items_tab.Show_Form('add_item_div');
 			
-			$('#' + self.category_buttons_div.id).hide();
-			$('#' + self.cancel_button_div.id).show();
+			$('#' + self.cancel_button_div.id).fadeIn();
 		});
 		
 	};

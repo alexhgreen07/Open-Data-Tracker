@@ -98,7 +98,7 @@ function Task_Tab() {
 		{
 			if(div_id == this.div_ids[i])
 			{
-				$('#'+this.div_ids[i]).show();
+				$('#'+this.div_ids[i]).fadeIn();
 			}
 			else
 			{

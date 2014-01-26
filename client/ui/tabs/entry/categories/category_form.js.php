@@ -19,9 +19,9 @@ include_once(dirname(__FILE__).'/../../../../../externals/json-rpc2php/jsonRPC2p
 
 require_once(dirname(__FILE__).'/../../../accordian.js.php');
 
-require_once(dirname(__FILE__).'/new_category_form.js.php');
-require_once(dirname(__FILE__).'/edit_category_form.js.php');
-require_once(dirname(__FILE__).'/view_categories_form.js.php');
+require_once(dirname(__FILE__).'/forms/new_category_form.js.php');
+require_once(dirname(__FILE__).'/forms/edit_category_form.js.php');
+require_once(dirname(__FILE__).'/forms/view_categories_form.js.php');
 
 //main file
 include_once(dirname(__FILE__).'/category_form.js');

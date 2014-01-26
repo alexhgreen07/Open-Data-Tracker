@@ -9,13 +9,13 @@
 Header("content-type: application/x-javascript");
 
 //jquery code
-include_once(dirname(__FILE__).'/../../../../../externals/jquery-ui/jquery-1.10.2.js');
+include_once(dirname(__FILE__).'/../../../../../../../externals/jquery-ui/jquery-1.10.2.js');
 
 //jquery UI code
-include_once(dirname(__FILE__).'/../../../../../externals/jquery-ui/ui/jquery.ui.core.js');
+include_once(dirname(__FILE__).'/../../../../../../../externals/jquery-ui/ui/jquery.ui.core.js');
 
 //JSON RPC library
-include_once(dirname(__FILE__).'/../../../../../externals/json-rpc2php/jsonRPC2php.client.js');
+include_once(dirname(__FILE__).'/../../../../../../../externals/json-rpc2php/jsonRPC2php.client.js');
 
 //main file
 include_once(dirname(__FILE__).'/view_categories_form.js');

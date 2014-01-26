@@ -228,6 +228,35 @@ function Entry_Tab() {
 		
 	};
 	
+	this.Edit_Entry_Button_Click = function(){
+		
+		window.scrollTo(0, 0);
+		
+		self.Hide_All();
+		$('#' + self.tree_view_div.id).hide();
+		
+		$('#' + self.cancel_button_div.id).fadeIn();
+		
+		if(self.current_selected_info.table == 'task_entries')
+		{
+			name_select_id = self.tasks_tab.edit_task_entry_form.edit_task_entry_select.id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row.task_log_id;
+			self.tasks_tab.Refresh(self.data);
+			
+			//execute the click event
+			self.tasks_tab.Show_Form('edit_task_entry_div');
+		}
+		else if(self.current_selected_info.table == 'item_entries')
+		{
+			name_select_id = self.items_tab.edit_item_entry_form.edit_item_entry_select.id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row.item_log_id;
+			self.items_tab.Refresh(self.data);
+			
+			self.items_tab.Show_Form('edit_item_log_div');
+		}
+		
+	};
+	
 	this.Node_New_Target_Button_Click = function(){
 		
 		window.scrollTo(0, 0);
@@ -563,6 +592,7 @@ function Entry_Tab() {
 			
 			event.preventDefault();
 			
+			self.Edit_Entry_Button_Click();
 		});
 		
 		$('#' + self.new_node_entry_button.id).button();

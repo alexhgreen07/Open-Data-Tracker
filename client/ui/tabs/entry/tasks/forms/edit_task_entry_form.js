@@ -8,6 +8,7 @@ function Edit_Task_Entry_Form(){
 		this.Refresh_Task_Select(data);
 		this.Refresh_Task_Entry_Select(data);
 		
+		this.Task_Edit_Entry_Select_Change();
 	};
 	
 	this.Refresh_Task_Select = function(data){

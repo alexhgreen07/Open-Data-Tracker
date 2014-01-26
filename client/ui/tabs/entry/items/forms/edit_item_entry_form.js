@@ -28,6 +28,8 @@ function Edit_Item_Entry_Form(){
 			data.item_targets,
 			"item_target_id",
 			"name");
+			
+		self.Item_Entry_Select_Change();
 	};
 	
 	/** @method Edit_Item_Entry_Click

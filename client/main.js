@@ -27,6 +27,8 @@ function Main_Application() {
 	 * @type Entry_Tab
 	 * */
 	this.entry_tab_object = new Entry_Tab();
+	
+	this.calendar_tab_object = new Calendar_Tab();
 	/** This is the report tab navigation object.
 	 * @type Report_Tab
 	 * */
@@ -42,6 +44,7 @@ function Main_Application() {
 		//refresh all data in all forms
 		self.home_tab_object.Refresh(self.api.data);
 		self.entry_tab_object.Refresh(self.api.data);
+		self.calendar_tab_object.Refresh(self.api.data);
 		self.report_tab_object.Refresh(self.api.data, self.api.schema, self.api.reports);
 
 	};
@@ -115,10 +118,14 @@ function Main_Application() {
 		this.tabs_array[1] = new Array();
 		this.tabs_array[1][0] = "Entry";
 		this.tabs_array[1][1] = "<div id='entry_tab_div'></div>";
-
+		
 		this.tabs_array[2] = new Array();
-		this.tabs_array[2][0] = "Reports";
-		this.tabs_array[2][1] = "<div id='report_tab_div'></div>";
+		this.tabs_array[2][0] = "Calendar";
+		this.tabs_array[2][1] = "<div id='calendar_tab_div'></div>";
+		
+		this.tabs_array[3] = new Array();
+		this.tabs_array[3][0] = "Reports";
+		this.tabs_array[3][1] = "<div id='report_tab_div'></div>";
 
 		//render the tabs
 		this.main_tab_nav = new Tabs(main_tabs_div, this.tabs_array);
@@ -128,7 +135,9 @@ function Main_Application() {
 		this.home_tab_object.Render('home_tab_div');
 		
 		this.entry_tab_object.Render('entry_tab_div');
-
+		
+		self.calendar_tab_object.Render('calendar_tab_div');
+		
 		this.report_tab_object.Render('report_tab_div');
 
 	};

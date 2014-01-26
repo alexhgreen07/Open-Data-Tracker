@@ -43,6 +43,7 @@ require_once(dirname(__FILE__).'/core/api.js.php');
 require_once(dirname(__FILE__).'/ui/tabs.js.php');
 require_once(dirname(__FILE__).'/ui/tabs/home/home_tab.js.php');
 require_once(dirname(__FILE__).'/ui/tabs/entry/entry_tab.js.php');
+require_once(dirname(__FILE__).'/ui/tabs/calendar/calendar_tab.js.php');
 require_once(dirname(__FILE__).'/ui/tabs/report/report_tab.js.php');
 
 //main file

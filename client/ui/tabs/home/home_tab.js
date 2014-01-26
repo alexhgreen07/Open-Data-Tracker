@@ -21,8 +21,6 @@ require_once(dirname(__FILE__).'/../../accordian.js.php');
 
 require_once(dirname(__FILE__).'/forms/home_form.js.php');
 
-require_once(dirname(__FILE__).'/forms/category_form.js.php');
-
 require_once(dirname(__FILE__).'/forms/settings_form.js.php');
 
 ?>
@@ -44,11 +42,6 @@ function Home_Tab() {
 	 * */
 	this.settings_form = new Settings_Form();
 	
-	/** This is the form for the application category data.
-	 * @type Category_Form
-	 * */
-	this.category_form = new Category_Form();
-	
 	/** This is the refresh categories callback.
 	 * @type function
 	 * */
@@ -61,7 +54,6 @@ function Home_Tab() {
 	this.Refresh = function(data) {
 		
 		this.home_form.Refresh(data);
-		this.category_form.Refresh(data);
 		
 	};
 
@@ -81,11 +73,6 @@ function Home_Tab() {
 		tabs_array.push(new_tab);
 
 		new_tab = new Array();
-		new_tab.push("General");
-		new_tab.push('<div id="home_general_div"></div>');
-		tabs_array.push(new_tab);
-		
-		new_tab = new Array();
 		new_tab.push("Settings");
 		new_tab.push('<div id="home_settings_div"></div>');
 		tabs_array.push(new_tab);
@@ -102,7 +89,6 @@ function Home_Tab() {
 		items_accordian.Render();
 
 		this.home_form.Render('home_summary_data_div');
-		this.category_form.Render('home_general_div');
 		this.settings_form.Render('home_settings_div');
 
 		//call the click event function

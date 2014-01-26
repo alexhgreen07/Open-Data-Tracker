@@ -223,7 +223,6 @@ class Task_Data_Interface {
 			'task_id' => 'int',
 			'name' => 'string',
 			'description' => 'string',
-			'estimated_time' => 'float', 
 			'date_created' => 'date',
 			'note' => 'string',
 			'category_id' => 'int',

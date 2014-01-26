@@ -19,3 +19,6 @@
 [submodule "externals/Chart"]
 	path = externals/Chart
 	url = https://github.com/nnnick/Chart.js.git
+[submodule "externals/js.tree"]
+	path = externals/js.tree
+	url = https://github.com/resnyanskiy/js.tree.git

@@ -99,3 +99,8 @@ th {
 .resnyanskiy-tree > ul.container li span {
 	background-image: url("../externals/js.tree/images/resnyanskiy-tree-icons.png");
 }
+
+/*override fullcalendar*/
+.fc-header-title {
+    font-size: 0.7em;
+}

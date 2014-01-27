@@ -17,7 +17,6 @@ include_once(dirname(__FILE__).'/../../../../externals/jquery-ui/ui/jquery.ui.co
 //JSON RPC library
 include_once(dirname(__FILE__).'/../../../../externals/json-rpc2php/jsonRPC2php.client.js');
 
-include_once(dirname(__FILE__)."/../../../../externals/fullcalendar/intro.js");
 include_once(dirname(__FILE__)."/../../../../externals/fullcalendar/src/intro.js");
 include_once(dirname(__FILE__)."/../../../../externals/fullcalendar/src/defaults.js");
 include_once(dirname(__FILE__)."/../../../../externals/fullcalendar/src/main.js");

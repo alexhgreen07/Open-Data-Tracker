@@ -130,13 +130,16 @@ function Main_Application() {
 		//render the tabs
 		this.main_tab_nav = new Tabs(main_tabs_div, this.tabs_array);
 		this.main_tab_nav.Render();
-
+		
+		this.main_tab_nav.activate_callback = function(){
+			self.calendar_tab_object.Refresh(self.api.data);
+		};
 		
 		this.home_tab_object.Render('home_tab_div');
 		
 		this.entry_tab_object.Render('entry_tab_div');
 		
-		self.calendar_tab_object.Render('calendar_tab_div');
+		this.calendar_tab_object.Render('calendar_tab_div');
 		
 		this.report_tab_object.Render('report_tab_div');
 

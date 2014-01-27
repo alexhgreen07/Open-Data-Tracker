@@ -30,6 +30,8 @@ include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.dialog.js')
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.menu.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.tooltip.js');
 
+include_once(dirname(__FILE__)."/../externals/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js");
+
 //jquery datepicker code
 include_once(dirname(__FILE__).'/../externals/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js');
 

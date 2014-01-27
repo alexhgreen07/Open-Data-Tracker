@@ -1,3 +1,16 @@
+function isTouchDevice()
+{
+	var ua = navigator.userAgent;
+	var isTouchDevice = (
+		ua.match(/iPad/i) ||
+		ua.match(/iPhone/i) ||
+		ua.match(/iPod/i) ||
+		ua.match(/Android/i)
+	);
+	 
+	return isTouchDevice;
+}
+
 /** This is the home tab class which holds all UI objects for general data.
  * @constructor Home_Tab
  */
@@ -37,12 +50,14 @@ function Calendar_Tab() {
 				center: 'title',
 				right: 'prev,next'
 			}, 
-			editable: false,
+			editable: true,
 			selectable: false,
 			droppable: false,
 			events: self.new_events,
+			eventMouseover: self.Event_Mouse_Over,
 			eventClick: self.Event_Click,
 			dayClick: self.Day_Click,
+			eventAfterAllRender: self.Calendar_Load,
 		});
 		
 	};
@@ -66,10 +81,23 @@ function Calendar_Tab() {
 		}
    };
    
+   this.Event_Mouse_Over = function(calEvent, jsEvent, view){
+   	
+   		if(isTouchDevice())
+   		{
+   			self.Event_Click(calEvent, jsEvent, view);
+   		}
+   	
+   };
+   
    this.Event_Click = function(calEvent, jsEvent, view) {
-   			
    		
-   		alert('event click');
+   		if(jsEvent._dummyCalledOnStartup)
+		{
+			return;
+		} 
+   		
+   		//alert('event click');
    		
 		if($('#' + self.calendar_div.id).fullCalendar('getView').name == 'month')
 		{
@@ -89,7 +117,26 @@ function Calendar_Tab() {
    		
    		return false;
    };
-
+	
+	this.Calendar_Load = function(isLoading)
+	{
+		//if(!isLoading && isTouchDevice())
+		{
+			//alert('Calendar_Load');
+			
+			// Since the draggable events are lazy(bind)loaded, we need to
+			// trigger them all so they're all ready for us to drag/drop
+			// on the iPad. w00t!
+			$('.fc-event-draggable').each(function(){
+				var e = jQuery.Event("mouseover", {
+				target: this.firstChild,
+				_dummyCalledOnStartup: true
+			});
+			$(this).trigger(e);
+			});
+		}
+	};
+	
 	/** @method Render
 	 * @desc This function will render the tab in the div that it was initialized with.
 	 * */
@@ -104,7 +151,8 @@ function Calendar_Tab() {
 				left: 'month',
 				center: 'title',
 				right: 'prev,next'
-			}
+			},
+			eventAfterAllRender: self.Calendar_Load
 		});
 		
    		$('#' + self.calendar_div.id).fullCalendar('render');

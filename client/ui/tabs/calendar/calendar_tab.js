@@ -3,7 +3,7 @@
  */
 function Calendar_Tab() {
 
-	
+	var self = this;
 
 	/** @method Refresh_Data
 	 * @desc This function retrieves the home data from the server.
@@ -19,7 +19,13 @@ function Calendar_Tab() {
 	this.Render = function(home_div_id) {
 		
 		
-		//document.getElementById(home_div_id).innerHTML = 'Hello world!';
+		self.calendar_div = document.createElement("div");
+		self.calendar_div.id = home_div_id + '_calendar_div';
+		document.getElementById(home_div_id).appendChild(self.calendar_div);
+		
+		$('#' + self.calendar_div.id).fullCalendar({
+        // put your options and callbacks here
+   		});
 		
 	};
 }

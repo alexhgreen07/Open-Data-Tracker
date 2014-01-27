@@ -31,7 +31,12 @@ include_once(dirname(__FILE__)."/../externals/jquery-ui/themes/base/jquery.ui.th
 //jquery timepicker style sheet
 include_once(dirname(__FILE__).'/../externals/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css');
 
-include_once(dirname(__FILE__).'/../externals/js.tree/resnyanskiy.js.tree.css');
+include_once(dirname(__FILE__)."/../externals/js.tree/resnyanskiy.js.tree.css");
+
+include_once(dirname(__FILE__)."/../externals/fullcalendar/src/main.css");
+include_once(dirname(__FILE__)."/../externals/fullcalendar/src/common/common.css");
+include_once(dirname(__FILE__)."/../externals/fullcalendar/src/basic/basic.css");
+include_once(dirname(__FILE__)."/../externals/fullcalendar/src/agenda/agenda.css");
 
 //main file
 include_once(dirname(__FILE__).'/main.css');

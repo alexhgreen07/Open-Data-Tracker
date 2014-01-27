@@ -25,3 +25,6 @@
 [submodule "externals/fullcalendar"]
 	path = externals/fullcalendar
 	url = https://github.com/arshaw/fullcalendar.git
+[submodule "externals/jquery-ui-touch-punch"]
+	path = externals/jquery-ui-touch-punch
+	url = https://github.com/furf/jquery-ui-touch-punch.git

@@ -22,3 +22,6 @@
 [submodule "externals/js.tree"]
 	path = externals/js.tree
 	url = https://github.com/resnyanskiy/js.tree.git
+[submodule "externals/fullcalendar"]
+	path = externals/fullcalendar
+	url = https://github.com/arshaw/fullcalendar.git

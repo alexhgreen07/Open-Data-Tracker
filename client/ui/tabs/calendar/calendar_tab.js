@@ -57,7 +57,7 @@ function Calendar_Tab() {
 			eventMouseover: self.Event_Mouse_Over,
 			eventClick: self.Event_Click,
 			dayClick: self.Day_Click,
-			eventAfterAllRender: self.Calendar_Load,
+			eventAfterAllRender: self.Calendar_Render_Complete,
 		});
 		
 	};
@@ -85,21 +85,28 @@ function Calendar_Tab() {
    	
    		if(isTouchDevice())
    		{
-   			self.Event_Click(calEvent, jsEvent, view);
+   			
+	   		if(jsEvent._dummyCalledOnStartup)
+			{
+				return;
+			} 
+	   		
+   			self.Event_Drill_Down(calEvent, jsEvent, view);
    		}
    	
    };
    
    this.Event_Click = function(calEvent, jsEvent, view) {
    		
-   		if(jsEvent._dummyCalledOnStartup)
+		if(!isTouchDevice())
 		{
-			return;
-		} 
-   		
-   		//alert('event click');
-   		
-		if($('#' + self.calendar_div.id).fullCalendar('getView').name == 'month')
+			self.Event_Drill_Down(calEvent, jsEvent, view);
+		}
+   };
+   
+   this.Event_Drill_Down = function(calEvent, jsEvent, view)
+   {
+	   	if($('#' + self.calendar_div.id).fullCalendar('getView').name == 'month')
 		{
 			$('#' + self.calendar_div.id).fullCalendar('gotoDate',calEvent.start);
 			$('#' + self.calendar_div.id).fullCalendar('changeView', 'agendaWeek' );
@@ -118,12 +125,10 @@ function Calendar_Tab() {
    		return false;
    };
 	
-	this.Calendar_Load = function(isLoading)
+	this.Calendar_Render_Complete = function(view)
 	{
-		//if(!isLoading && isTouchDevice())
+		if(isTouchDevice())
 		{
-			//alert('Calendar_Load');
-			
 			// Since the draggable events are lazy(bind)loaded, we need to
 			// trigger them all so they're all ready for us to drag/drop
 			// on the iPad. w00t!
@@ -152,7 +157,7 @@ function Calendar_Tab() {
 				center: 'title',
 				right: 'prev,next'
 			},
-			eventAfterAllRender: self.Calendar_Load
+			eventAfterAllRender: self.Calendar_Render_Complete
 		});
 		
    		$('#' + self.calendar_div.id).fullCalendar('render');

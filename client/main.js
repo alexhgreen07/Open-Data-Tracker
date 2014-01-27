@@ -132,7 +132,7 @@ function Main_Application() {
 		this.main_tab_nav.Render();
 		
 		this.main_tab_nav.activate_callback = function(){
-			self.calendar_tab_object.Refresh(self.api.data);
+			self.calendar_tab_object.Render_Calendar();
 		};
 		
 		this.home_tab_object.Render('home_tab_div');

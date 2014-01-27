@@ -13,7 +13,7 @@ include_once(dirname(__FILE__).'/../externals/jquery-ui/jquery-1.10.2.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.core.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.widget.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.mouse.js');
-//include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.position.js');
+include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.position.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.draggable.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.droppable.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.resizable.js');

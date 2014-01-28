@@ -10,6 +10,8 @@ function Entry_Tab() {
 	 * */
 	this.div_id = null;
 	
+	self.current_selected_info = {};
+	
 	/** This is the callback function for the refresh event of the task log.
 	 * @type function
 	 * */
@@ -27,6 +29,44 @@ function Entry_Tab() {
 		self.category_tab.Refresh(self.data);
 		self.items_tab.Refresh(self.data);
 		self.tasks_tab.Refresh(self.data);
+	};
+	
+	this.Select_Entry = function(table, row)
+	{
+		
+		if(table == 'categories')
+		{
+			//TODO: implement
+		}
+		else if(table == 'tasks')
+		{
+			//TODO: implement
+		}
+		else if(table == 'items')
+		{
+			//TODO: implement
+		}
+		else if(table == 'task_targets')
+		{
+			self.current_selected_info.table = table;
+			self.current_selected_info.row = row;
+			self.Target_Edit_Button_Click();
+		}
+		else if(table == 'item_targets')
+		{
+			//TODO: implement
+		}
+		else if(table == 'task_entries')
+		{
+			self.current_selected_info.table = table;
+			self.current_selected_info.row = row;
+			self.Edit_Entry_Button_Click();
+		}
+		else if(table == 'item_entries')
+		{
+			//TODO: implement
+		}
+		
 	};
 	
 	this.Node_Click_Callback = function(info){

@@ -20,9 +20,9 @@ function Calendar_Tab() {
 	
 	self.day_view_type = 'agendaDay';
 	self.week_view_type = 'agendaWeek';
-	//self.day_view_type = 'basicDay';
-	//self.week_view_type = 'basicWeek';
-
+	
+	self.event_click_callback = function(table, row){};
+	
 	/** @method Refresh_Data
 	 * @desc This function retrieves the home data from the server.
 	 * @param {function} data The callback to call after the refresh of data has completed.
@@ -65,6 +65,7 @@ function Calendar_Tab() {
 		            end    : end_string,
 		            allDay : false,
 		            color: color,
+		            entry: {table: 'task_targets', row: data.task_targets[i]},
 		    	};
 		    	
 		    	self.new_events.push(new_event);
@@ -76,7 +77,15 @@ function Calendar_Tab() {
 		    	var start_string = data.task_entries[i].start_time;
 		    	
 		    	var start_timestamp = Cast_Server_Datetime_to_Date(start_string);
-		    	var end_timestamp = self.Generate_End_Date(start_timestamp, data.task_entries[i].hours);
+		    	
+		    	if(data.task_entries[i].status == 'Started')
+		    	{
+		    		var end_timestamp = new Date();
+		    	}
+		    	else
+		    	{
+		    		var end_timestamp = self.Generate_End_Date(start_timestamp, data.task_entries[i].hours);
+		    	}
 		    	
 		    	var end_string = Cast_Date_to_Server_Datetime(end_timestamp);
 		    	
@@ -88,6 +97,7 @@ function Calendar_Tab() {
 		            end    : end_string,
 		            allDay : false,
 		            color: color,
+		            entry: {table: 'task_entries', row: data.task_entries[i]},
 		    	};
 		    	
 		    	self.new_events.push(new_event);
@@ -173,7 +183,7 @@ function Calendar_Tab() {
 		else
 		{
 			//event selected!
-			alert(calEvent.start);
+			self.event_click_callback(calEvent.entry.table,calEvent.entry.row);
 		}
    		
    		return false;

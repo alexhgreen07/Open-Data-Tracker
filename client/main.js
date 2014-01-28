@@ -49,6 +49,14 @@ function Main_Application() {
 
 	};
 	
+	this.Calendar_Event_Click_Callback = function(table, row)
+	{
+		//activate the entry tab
+		$('#' + self.main_tabs_div).tabs({ active: 1 });
+		
+		self.entry_tab_object.Select_Entry(table,row);
+	};
+	
 	this.Is_Busy_Callback = function(is_busy)
 	{
 		
@@ -99,7 +107,7 @@ function Main_Application() {
 	this.Render_Main_Tabs = function() {
 
 		var self = this;
-		var main_tabs_div = "main_tab_navigation_div";
+		self.main_tabs_div = "main_tab_navigation_div";
 	
 		//create the loader image div
 		self.loader_div = document.createElement("div");
@@ -109,7 +117,7 @@ function Main_Application() {
 		document.body.appendChild(this.loader_div);
 	
 		//append the main tab div
-		document.body.innerHTML += '<div id="' + main_tabs_div + '"></div>';
+		document.body.innerHTML += '<div id="' + self.main_tabs_div + '"></div>';
 
 		this.tabs_array[0] = new Array();
 		this.tabs_array[0][0] = "Home";
@@ -128,7 +136,7 @@ function Main_Application() {
 		this.tabs_array[3][1] = "<div id='report_tab_div'></div>";
 
 		//render the tabs
-		this.main_tab_nav = new Tabs(main_tabs_div, this.tabs_array);
+		this.main_tab_nav = new Tabs(self.main_tabs_div, this.tabs_array);
 		this.main_tab_nav.Render();
 		
 		this.main_tab_nav.activate_callback = function(){
@@ -142,7 +150,8 @@ function Main_Application() {
 		this.calendar_tab_object.Render('calendar_tab_div');
 		
 		this.report_tab_object.Render('report_tab_div');
-
+		
+		this.calendar_tab_object.event_click_callback = this.Calendar_Event_Click_Callback;
 	};
 	
 	/** @method Render

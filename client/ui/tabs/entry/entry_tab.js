@@ -34,6 +34,9 @@ function Entry_Tab() {
 	this.Select_Entry = function(table, row)
 	{
 		
+		self.current_selected_info.table = table;
+		self.current_selected_info.row = row;
+		
 		if(table == 'categories')
 		{
 			//TODO: implement
@@ -48,9 +51,14 @@ function Entry_Tab() {
 		}
 		else if(table == 'task_targets')
 		{
-			self.current_selected_info.table = table;
-			self.current_selected_info.row = row;
-			self.Target_Edit_Button_Click();
+			if(self.current_selected_info.row.status == 'Incomplete')
+			{
+				self.Target_Entry_Button_Click();
+			}
+			else
+			{
+				self.Target_Edit_Button_Click();
+			}
 		}
 		else if(table == 'item_targets')
 		{
@@ -58,9 +66,15 @@ function Entry_Tab() {
 		}
 		else if(table == 'task_entries')
 		{
-			self.current_selected_info.table = table;
-			self.current_selected_info.row = row;
-			self.Edit_Entry_Button_Click();
+			if(self.current_selected_info.row.status == 'Started')
+			{
+				self.New_Entry_Button_Click();
+			}
+			else
+			{
+				self.Edit_Entry_Button_Click();
+			}
+			
 		}
 		else if(table == 'item_entries')
 		{
@@ -265,6 +279,38 @@ function Entry_Tab() {
 			self.items_tab.Refresh(self.data);
 			
 			self.items_tab.Show_Form('new_item_entry_div');
+		}
+		
+	};
+	
+	this.New_Entry_Button_Click = function(){
+		
+		window.scrollTo(0, 0);
+		
+		self.Hide_All();
+		$('#' + self.tree_view_div.id).hide();
+		
+		$('#' + self.cancel_button_div.id).fadeIn();
+		
+		if(self.current_selected_info.table == 'task_entries')
+		{
+			name_select_id = self.tasks_tab.timecard_task_entry_form.task_name_select.id;
+			target_select_id = self.tasks_tab.timecard_task_entry_form.task_target_select.id;
+			entry_select_id = self.tasks_tab.timecard_task_entry_form.task_entries_started_select.id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
+			document.getElementById(target_select_id).value = self.current_selected_info.row.task_target_id;
+			document.getElementById(entry_select_id).value = self.current_selected_info.row.task_log_id;
+			self.tasks_tab.Refresh(self.data);
+			
+			//execute the click event
+			self.tasks_tab.Show_Form('timecard_task_entry_div');
+			
+			//execute the click event
+			self.tasks_tab.Show_Form('timecard_task_entry_div');
+		}
+		else if(self.current_selected_info.table == 'item_entries')
+		{
+			//TODO: implement
 		}
 		
 	};
@@ -540,6 +586,14 @@ function Entry_Tab() {
 		self.entry_buttons_div = document.createElement("div");
 		self.entry_buttons_div.id = form_div_id + '_entry_buttons_div';
 		
+		self.new_entry_button = document.createElement("input");
+		self.new_entry_button.id = form_div_id + '_new_entry_button';
+		self.new_entry_button.type = "submit";
+		self.new_entry_button.value = "Entry";
+		self.entry_buttons_div.appendChild(self.new_entry_button);
+		
+		self.entry_buttons_div.innerHTML += '<br><br>';
+		
 		self.edit_entry_button = document.createElement("input");
 		self.edit_entry_button.id = form_div_id + '_edit_entry_button';
 		self.edit_entry_button.type = "submit";
@@ -670,6 +724,14 @@ function Entry_Tab() {
 			event.preventDefault();
 			
 			self.Target_New_Entry_Button_Click();
+		});
+		
+		$('#' + self.new_entry_button.id).button();
+		$('#' + self.new_entry_button.id).click(function(event){
+			
+			event.preventDefault();
+			
+			self.New_Entry_Button_Click();
 		});
 		
 		$('#' + self.edit_entry_button.id).button();

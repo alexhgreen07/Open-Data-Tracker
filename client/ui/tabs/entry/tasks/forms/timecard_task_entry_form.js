@@ -14,6 +14,7 @@ function Timecard_Task_Entry_Form(){
 		
 		self.Refresh_Task_Started_Entries(data);
 		
+		self.On_Task_Entry_Select_Change_Event();
 	};
 	
 	this.Refresh_Task_Name_Select = function(data){

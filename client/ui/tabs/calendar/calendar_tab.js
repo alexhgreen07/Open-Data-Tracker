@@ -78,9 +78,11 @@ function Calendar_Tab() {
 		    	
 		    	var start_timestamp = Cast_Server_Datetime_to_Date(start_string);
 		    	
+		    	var color = '#00FFFF';
 		    	if(data.task_entries[i].status == 'Started')
 		    	{
 		    		var end_timestamp = new Date();
+		    		color = '#9900FF';
 		    	}
 		    	else
 		    	{
@@ -88,8 +90,6 @@ function Calendar_Tab() {
 		    	}
 		    	
 		    	var end_string = Cast_Date_to_Server_Datetime(end_timestamp);
-		    	
-		    	var color = '#00FFFF';
 		    	
 		    	var new_event = {
 		    		title  : name,

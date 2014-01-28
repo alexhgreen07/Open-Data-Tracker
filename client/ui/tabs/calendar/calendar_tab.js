@@ -48,12 +48,23 @@ function Calendar_Tab() {
 		    	
 		    	var end_string = Cast_Date_to_Server_Datetime(end_timestamp);
 		    	
+		    	var color = '#00FF00';
+		    	
+		    	if(data.task_targets[i].status == 'Incomplete')
+		    	{
+		    		color = '#0000FF';
+		    	}
+		    	else if(data.task_targets[i].status == 'Missed')
+		    	{
+		    		color = '#FF0000';
+		    	}
+		    	
 		    	var new_event = {
 		    		title  : name,
 		            start  : start_string,
 		            end    : end_string,
 		            allDay : false,
-		            color: '#0000FF',
+		            color: color,
 		    	};
 		    	
 		    	self.new_events.push(new_event);
@@ -69,12 +80,14 @@ function Calendar_Tab() {
 		    	
 		    	var end_string = Cast_Date_to_Server_Datetime(end_timestamp);
 		    	
+		    	var color = '#00FFFF';
+		    	
 		    	var new_event = {
 		    		title  : name,
 		            start  : start_string,
 		            end    : end_string,
 		            allDay : false,
-		            color: '#FF0000',
+		            color: color,
 		    	};
 		    	
 		    	self.new_events.push(new_event);

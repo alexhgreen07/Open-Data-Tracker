@@ -80,6 +80,9 @@ function Calendar_Tab() {
 		    	self.new_events.push(new_event);
 		    }
 			
+			var previous_name = $('#' + self.calendar_div.id).fullCalendar('getView').name;
+			var previous_date = $('#' + self.calendar_div.id).fullCalendar('getDate');
+			
 			$('#' + self.calendar_div.id).fullCalendar({
 				header: {
 					left: 'month',
@@ -94,6 +97,9 @@ function Calendar_Tab() {
 				dayClick: self.Day_Click,
 				eventAfterAllRender: self.Calendar_Render_Complete,
 			});
+			
+			$('#' + self.calendar_div.id).fullCalendar('changeView', previous_name);
+			$('#' + self.calendar_div.id).fullCalendar('gotoDate',previous_date);
 			
 		}
 		

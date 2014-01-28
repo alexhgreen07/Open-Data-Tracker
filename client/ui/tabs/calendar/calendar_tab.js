@@ -167,9 +167,20 @@ function Calendar_Tab() {
 	 * */
 	this.Render = function(home_div_id) {
 		
+		var tabs_array = new Array();
+		var new_tab = new Array();
+		new_tab.push("Calendar");
+		var accordian_div = home_div_id + '_accordian_div';
+		new_tab.push('<div id="'+accordian_div+'"></div>');
+		tabs_array.push(new_tab);
+		
+		var calendar_accordian = new Accordian(home_div_id, tabs_array);
+		calendar_accordian.Render();
+		
 		self.calendar_div = document.createElement("div");
 		self.calendar_div.id = home_div_id + '_calendar_div';
-		document.getElementById(home_div_id).appendChild(self.calendar_div);
+		document.getElementById(accordian_div).appendChild(self.calendar_div);
+		
 		
 		$('#' + self.calendar_div.id).fullCalendar({
 			header: {

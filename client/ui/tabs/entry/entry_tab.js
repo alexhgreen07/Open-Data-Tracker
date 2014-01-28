@@ -202,6 +202,10 @@ function Entry_Tab() {
 			
 			name_select_id = self.tasks_tab.timecard_task_entry_form.task_name_select.id;
 			target_select_id = self.tasks_tab.timecard_task_entry_form.task_target_select.id;
+			
+			document.getElementById(name_select_id).value = 0;
+			self.tasks_tab.Refresh(self.data);
+			
 			document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
 			document.getElementById(target_select_id).value = self.current_selected_info.row.task_schedule_id;
 			self.tasks_tab.Refresh(self.data);
@@ -297,6 +301,10 @@ function Entry_Tab() {
 			name_select_id = self.tasks_tab.timecard_task_entry_form.task_name_select.id;
 			target_select_id = self.tasks_tab.timecard_task_entry_form.task_target_select.id;
 			entry_select_id = self.tasks_tab.timecard_task_entry_form.task_entries_started_select.id;
+			
+			document.getElementById(name_select_id).value = 0;
+			self.tasks_tab.Refresh(self.data);
+			
 			document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
 			document.getElementById(target_select_id).value = self.current_selected_info.row.task_target_id;
 			document.getElementById(entry_select_id).value = self.current_selected_info.row.task_log_id;
@@ -305,8 +313,6 @@ function Entry_Tab() {
 			//execute the click event
 			self.tasks_tab.Show_Form('timecard_task_entry_div');
 			
-			//execute the click event
-			self.tasks_tab.Show_Form('timecard_task_entry_div');
 		}
 		else if(self.current_selected_info.table == 'item_entries')
 		{

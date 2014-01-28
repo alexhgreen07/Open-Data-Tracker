@@ -18,10 +18,10 @@ function Calendar_Tab() {
 
 	var self = this;
 	
-	//self.day_view_type = 'agendaDay';
-	//self.week_view_type = 'agendaWeek';
-	self.day_view_type = 'basicDay';
-	self.week_view_type = 'basicWeek';
+	self.day_view_type = 'agendaDay';
+	self.week_view_type = 'agendaWeek';
+	//self.day_view_type = 'basicDay';
+	//self.week_view_type = 'basicWeek';
 
 	/** @method Refresh_Data
 	 * @desc This function retrieves the home data from the server.
@@ -44,7 +44,7 @@ function Calendar_Tab() {
 		    	var start_string = data.task_targets[i].scheduled_time;
 		    	
 		    	var start_timestamp = Cast_Server_Datetime_to_Date(start_string);
-		    	var end_timestamp = new Date(+start_timestamp + (data.task_targets[i].estimated_time * 1000 * 60 * 60));
+		    	var end_timestamp = self.Generate_End_Date(start_timestamp, data.task_targets[i].estimated_time);
 		    	
 		    	var end_string = Cast_Date_to_Server_Datetime(end_timestamp);
 		    	
@@ -65,7 +65,7 @@ function Calendar_Tab() {
 		    	var start_string = data.task_entries[i].start_time;
 		    	
 		    	var start_timestamp = Cast_Server_Datetime_to_Date(start_string);
-		    	var end_timestamp = new Date(+start_timestamp + (data.task_entries[i].hours * 1000 * 60 * 60));
+		    	var end_timestamp = self.Generate_End_Date(start_timestamp, data.task_entries[i].hours);
 		    	
 		    	var end_string = Cast_Date_to_Server_Datetime(end_timestamp);
 		    	
@@ -97,6 +97,21 @@ function Calendar_Tab() {
 			
 		}
 		
+	};
+	
+	this.Generate_End_Date = function(start_timestamp, hours)
+	{
+		var adjusted_hours = hours;
+		var minimum_time = 0.5;
+		
+		if(adjusted_hours < minimum_time)
+		{
+			adjusted_hours = minimum_time;
+		}
+		
+		var end_timestamp = new Date(+start_timestamp + (adjusted_hours * 1000 * 60 * 60));
+		
+		return end_timestamp;
 	};
 	
 	this.Render_Calendar = function()

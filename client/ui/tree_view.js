@@ -20,7 +20,10 @@ function Tree_View(div_id, data) {
 		if(JSON.stringify(self.data) !== JSON.stringify(new_data))
 		{
 			self.data = new_data;
-		
+			
+			//re-initialize the lookup
+			self.tree_view_id_lookup = [];
+			
 			self.tree_nodes = self.Create_Category_Tree_Nodes(self.data);
 			
 			self.Force_Tree_Refresh(new_data);

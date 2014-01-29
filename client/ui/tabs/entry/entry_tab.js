@@ -308,7 +308,9 @@ function Entry_Tab() {
 			self.tasks_tab.Refresh(self.data);
 			
 			document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
+			self.tasks_tab.Refresh(self.data);
 			document.getElementById(target_select_id).value = self.current_selected_info.row.task_target_id;
+			self.tasks_tab.Refresh(self.data);
 			document.getElementById(entry_select_id).value = self.current_selected_info.row.task_log_id;
 			self.tasks_tab.Refresh(self.data);
 			

@@ -44,6 +44,57 @@ function Tree_View(div_id, data) {
 		
 	};
 	
+	self.Get_ID_From_Table_Row = function(table,row)
+	{
+		
+		var found_key = 0;
+		
+		for(var key in self.tree_view_id_lookup)
+		{
+			if(self.tree_view_id_lookup[key].table == table && 
+				JSON.stringify(self.tree_view_id_lookup[key].row) === JSON.stringify(row))
+			{
+				
+				found_key = key;
+				break;
+			}
+		}
+		
+		return found_key;
+	};
+	
+	self.Expand_All_Node_Parents = function(table, row)
+	{
+		
+		document.getElementById(self.tree_view_div).innerHTML = "";
+		self.tree = new Resnyanskiy.Tree(document.getElementById(self.tree_view_div),[self.tree_nodes]);
+		
+		var parents = [];
+		
+		id = self.Get_ID_From_Table_Row(table,row);
+		
+		var current_lookup = self.tree_view_id_lookup[id];
+		
+		while(current_lookup.parent_id !== 0)
+		{
+			
+			//alert(JSON.stringify(current_lookup));
+			parents.push(current_lookup.parent_id);
+			
+			current_lookup = self.tree_view_id_lookup[current_lookup.parent_id];
+			
+		}
+		
+		for(var i = 0; i < parents.length; i++)
+		{
+			var index = parents.length - i - 1;
+			
+			self.tree.updateNode(parents[index],[],true);
+			
+			
+		}
+	};
+	
 	self.Apply_Filter = function(layer_name, is_enabled)	{
 		
 		layer_is_enabled[layer_name] = is_enabled;
@@ -60,8 +111,10 @@ function Tree_View(div_id, data) {
 		node.hasChildren = true;
 		
 		task_node = self.Create_Task_Tree_Nodes(data,node.category_id);
+		self.tree_view_id_lookup[task_node.id].parent_id = node.id;
 		node.addItem(task_node);
 		item_node = self.Create_Item_Tree_Nodes(data,node.category_id);
+		self.tree_view_id_lookup[item_node.id].parent_id = node.id;
 		node.addItem(item_node);
 		
 		for (var i=0; i < categories_table.length; i++) {
@@ -75,7 +128,7 @@ function Tree_View(div_id, data) {
 				
 				self.tree_view_id_lookup[random_id] = 
 					{
-						"tree_view_id" : random_id,
+						"parent_id" : node.id,
 						"table" : 'categories',
 						"row" : current_row
 					};
@@ -107,7 +160,7 @@ function Tree_View(div_id, data) {
 		
 		self.tree_view_id_lookup[random_id] = 
 			{
-				"tree_view_id" : random_id,
+				"parent_id" : 0,
 				"table" : 'categories',
 				"row" : {}
 			};
@@ -136,7 +189,7 @@ function Tree_View(div_id, data) {
 				
 				self.tree_view_id_lookup[random_id] = 
 				{
-					"tree_view_id" : random_id,
+					"parent_id" : node.id,
 					"table" : 'task_entries',
 					"row" : current_entry_row
 				};
@@ -165,7 +218,7 @@ function Tree_View(div_id, data) {
 				
 				self.tree_view_id_lookup[random_id] = 
 				{
-					"tree_view_id" : random_id,
+					"parent_id" : node.id,
 					"table" : 'task_targets',
 					"row" : current_target_row
 				};
@@ -202,7 +255,7 @@ function Tree_View(div_id, data) {
 				
 				self.tree_view_id_lookup[random_id] = 
 				{
-					"tree_view_id" : random_id,
+					"parent_id" : node.id,
 					"table" : 'tasks',
 					"row" : current_item_row
 				};
@@ -212,7 +265,7 @@ function Tree_View(div_id, data) {
 				
 				self.tree_view_id_lookup[random_id] = 
 					{
-						"tree_view_id" : random_id,
+						"parent_id" : new_item_row.id,
 						"table" : 'task_targets',
 						"row" : {}
 					};
@@ -222,7 +275,7 @@ function Tree_View(div_id, data) {
 				
 				self.tree_view_id_lookup[random_id] = 
 					{
-						"tree_view_id" : random_id,
+						"parent_id" : new_item_row.id,
 						"table" : 'task_entries',
 						"row" : {}
 					};
@@ -246,7 +299,7 @@ function Tree_View(div_id, data) {
 						
 						self.tree_view_id_lookup[random_id] = 
 						{
-							"tree_view_id" : random_id,
+							"parent_id" : new_item_row_targets.id,
 							"table" : 'task_targets',
 							"row" : current_target_row
 						};
@@ -306,7 +359,7 @@ function Tree_View(div_id, data) {
 		
 		self.tree_view_id_lookup[random_id] = 
 		{
-			"tree_view_id" : random_id,
+			"parent_id" : 0,
 			"table" : 'tasks',
 			"row" : {}
 		};
@@ -340,7 +393,7 @@ function Tree_View(div_id, data) {
 				
 				self.tree_view_id_lookup[random_id] = 
 				{
-					"tree_view_id" : random_id,
+					"parent_id" : node.id,
 					"table" : 'item_entries',
 					"row" : current_entry_row
 				};
@@ -369,7 +422,7 @@ function Tree_View(div_id, data) {
 				
 				self.tree_view_id_lookup[random_id] = 
 				{
-					"tree_view_id" : random_id,
+					"parent_id" : node.id,
 					"table" : 'item_targets',
 					"row" : current_target_row
 				};
@@ -407,7 +460,7 @@ function Tree_View(div_id, data) {
 				
 				self.tree_view_id_lookup[random_id] = 
 				{
-					"tree_view_id" : random_id,
+					"parent_id" : node.id,
 					"table" : 'items',
 					"row" : current_item_row
 				};
@@ -417,7 +470,7 @@ function Tree_View(div_id, data) {
 				
 				self.tree_view_id_lookup[random_id] = 
 					{
-						"tree_view_id" : random_id,
+						"parent_id" : new_item_row.id,
 						"table" : 'item_targets',
 						"row" : {}
 					};
@@ -427,7 +480,7 @@ function Tree_View(div_id, data) {
 				
 				self.tree_view_id_lookup[random_id] = 
 					{
-						"tree_view_id" : random_id,
+						"parent_id" : new_item_row.id,
 						"table" : 'item_entries',
 						"row" : {}
 					};
@@ -450,7 +503,7 @@ function Tree_View(div_id, data) {
 						
 						self.tree_view_id_lookup[random_id] = 
 						{
-							"tree_view_id" : random_id,
+							"parent_id" : new_item_row_targets.id,
 							"table" : 'item_targets',
 							"row" : current_target_row
 						};
@@ -510,7 +563,7 @@ function Tree_View(div_id, data) {
 		
 		self.tree_view_id_lookup[random_id] = 
 		{
-			"tree_view_id" : random_id,
+			"parent_id" : 0,
 			"table" : 'items',
 			"row" : {}
 		};

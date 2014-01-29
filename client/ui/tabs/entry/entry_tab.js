@@ -37,6 +37,8 @@ function Entry_Tab() {
 		self.current_selected_info.table = table;
 		self.current_selected_info.row = row;
 		
+		self.tree_view.Expand_All_Node_Parents(table,row);
+		
 		if(table == 'categories')
 		{
 			//TODO: implement

@@ -82,6 +82,12 @@ function Calendar_Tab() {
 		    	if(data.task_entries[i].status == 'Started')
 		    	{
 		    		var end_timestamp = new Date();
+		    		
+		    		if(end_timestamp - start_timestamp < (1000 * 60 * 30))
+		    		{
+		    			end_timestamp = new Date(+start_timestamp + (1000 * 60 * 30));
+		    		}
+		    		
 		    		color = '#9900FF';
 		    	}
 		    	else
@@ -108,8 +114,8 @@ function Calendar_Tab() {
 			
 			$('#' + self.calendar_div.id).fullCalendar({
 				header: {
-					left: 'month',
-					center: 'title',
+					left: 'month,agendaWeek,agendaDay',
+					center: 'today',
 					right: 'prev,next'
 				}, 
 				editable: false,
@@ -124,6 +130,33 @@ function Calendar_Tab() {
 			$('#' + self.calendar_div.id).fullCalendar('changeView', previous_name);
 			$('#' + self.calendar_div.id).fullCalendar('gotoDate',previous_date);
 			
+		}
+		else
+		{
+			for(var i = 0; i < self.new_events.length; i++)
+			{
+				if(self.new_events[i].entry.table == 'task_entries' && 
+					self.new_events[i].entry.row.status == 'Started')
+				{
+					var start_string = self.new_events[i].entry.row.start_time;
+		    	
+			    	var start_timestamp = Cast_Server_Datetime_to_Date(start_string);
+			    	
+			    	var end_timestamp = new Date();
+		    		
+		    		if(end_timestamp - start_timestamp < (1000 * 60 * 30))
+		    		{
+		    			end_timestamp = new Date(+start_timestamp + (1000 * 60 * 30));
+		    		}
+		    		
+			    	var end_string = Cast_Date_to_Server_Datetime(end_timestamp);
+			    	
+			    	self.new_events[i].start = start_string;
+			    	self.new_events[i].end = end_string;
+			    	
+			    	$('#' + self.calendar_div.id).fullCalendar('updateEvent',self.new_events[i]);
+				}
+			}
 		}
 		
 	};
@@ -228,8 +261,8 @@ function Calendar_Tab() {
 		
 		$('#' + self.calendar_div.id).fullCalendar({
 			header: {
-				left: 'month',
-				center: 'title',
+				left: 'month,agendaWeek,agendaDay',
+				center: 'today',
 				right: 'prev,next'
 			},
 			eventAfterAllRender: self.Calendar_Render_Complete
@@ -237,6 +270,7 @@ function Calendar_Tab() {
 		
    		$('#' + self.calendar_div.id).fullCalendar('render');
    		$('#' + self.calendar_div.id).fullCalendar('today');
+   		$('#' + self.calendar_div.id).fullCalendar('changeView', self.day_view_type );
 		
 	};
 }

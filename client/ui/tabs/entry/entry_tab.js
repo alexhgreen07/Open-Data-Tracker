@@ -444,6 +444,42 @@ function Entry_Tab() {
 		
 	};
 	
+	this.Category_New_Task_Button_Click = function(){
+		
+		window.scrollTo(0, 0);
+		
+		self.Hide_All();
+		$('#' + self.tree_view_div.id).hide();
+		
+		$('#' + self.cancel_button_div.id).fadeIn();
+		
+		name_select_id = self.tasks_tab.new_task_form.task_category_select.id;
+		document.getElementById(name_select_id).value = self.current_selected_info.row.category_id;
+		self.category_tab.Refresh(self.data);
+		
+		//execute the click event
+		self.tasks_tab.Show_Form('add_task_div');
+		
+	};
+	
+	this.Category_New_Item_Button_Click = function(){
+		
+		window.scrollTo(0, 0);
+		
+		self.Hide_All();
+		$('#' + self.tree_view_div.id).hide();
+		
+		$('#' + self.cancel_button_div.id).fadeIn();
+		
+		name_select_id = self.items_tab.new_item_form.item_category_select.id;
+		document.getElementById(name_select_id).value = self.current_selected_info.row.category_id;
+		self.category_tab.Refresh(self.data);
+		
+		//execute the click event
+		self.items_tab.Show_Form('add_item_div');
+		
+	};
+	
 	this.Cancel_Button_Click_Event = function(){
 		
 		$('#' + self.tree_view_div.id).fadeIn();
@@ -790,13 +826,9 @@ function Entry_Tab() {
 
 			//ensure a normal postback does not occur
 			event.preventDefault();
-
-			self.Hide_All();
 			
-			//execute the click event
-			self.tasks_tab.Show_Form('add_task_div');
+			self.Category_New_Task_Button_Click();
 			
-			$('#' + self.cancel_button_div.id).fadeIn();
 		});
 		
 		$('#' + self.new_item_button.id).button();
@@ -804,13 +836,9 @@ function Entry_Tab() {
 
 			//ensure a normal postback does not occur
 			event.preventDefault();
-
-			self.Hide_All();
 			
-			//execute the click event
-			self.items_tab.Show_Form('add_item_div');
+			self.Category_New_Item_Button_Click();
 			
-			$('#' + self.cancel_button_div.id).fadeIn();
 		});
 		
 	};

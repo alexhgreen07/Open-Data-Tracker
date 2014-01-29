@@ -23,25 +23,30 @@ function Tree_View(div_id, data) {
 		
 			self.tree_nodes = self.Create_Category_Tree_Nodes(self.data);
 			
-			document.getElementById(self.tree_view_div).innerHTML = "";
-			
-			self.tree = new Resnyanskiy.Tree(document.getElementById(self.tree_view_div),[self.tree_nodes]);
+			self.Force_Tree_Refresh(new_data);
 			
 			self.tree.updateNode(self.tree_nodes.id,[],true);
-			
-			self.tree.onNodeClick = function(id)
-			{
-				info = self.tree_view_id_lookup[id];
-				
-				//expand/collapse the children
-				self.tree.updateNode(id,[],true);
-				
-				//execute callback
-				self.node_click_callback(info);
-			};
+		
 		}
 		
+	};
+	
+	self.Force_Tree_Refresh = function(new_data)
+	{
+		document.getElementById(self.tree_view_div).innerHTML = "";
 		
+		self.tree = new Resnyanskiy.Tree(document.getElementById(self.tree_view_div),[self.tree_nodes]);
+		
+		self.tree.onNodeClick = function(id)
+		{
+			info = self.tree_view_id_lookup[id];
+			
+			//expand/collapse the children
+			self.tree.updateNode(id,[],true);
+			
+			//execute callback
+			self.node_click_callback(info);
+		};
 	};
 	
 	self.Get_ID_From_Table_Row = function(table,row)
@@ -66,8 +71,7 @@ function Tree_View(div_id, data) {
 	self.Expand_All_Node_Parents = function(table, row)
 	{
 		
-		document.getElementById(self.tree_view_div).innerHTML = "";
-		self.tree = new Resnyanskiy.Tree(document.getElementById(self.tree_view_div),[self.tree_nodes]);
+		self.Force_Tree_Refresh(self.data);
 		
 		var parents = [];
 		

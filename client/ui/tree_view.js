@@ -8,6 +8,8 @@ function Tree_View(div_id, data) {
 	var self = this;
 	
 	//class variables
+	self.selected_css_class = 'treeview-li-selected';
+	self.last_selected_id = 0;
 	self.div_id = div_id;
 	self.tree_view_div = self.div_id + '_treeview_div';
 	self.data = data;
@@ -29,6 +31,7 @@ function Tree_View(div_id, data) {
 			self.Force_Tree_Refresh(new_data);
 			
 			self.tree.updateNode(self.tree_nodes.id,[],true);
+			self.Select_Node(self.tree_nodes.id);
 		
 		}
 		
@@ -39,10 +42,13 @@ function Tree_View(div_id, data) {
 		document.getElementById(self.tree_view_div).innerHTML = "";
 		
 		self.tree = new Resnyanskiy.Tree(document.getElementById(self.tree_view_div),[self.tree_nodes]);
+		self.last_selected_id = 0;
 		
 		self.tree.onNodeClick = function(id)
 		{
 			info = self.tree_view_id_lookup[id];
+			
+			self.Select_Node(id);
 			
 			//expand/collapse the children
 			self.tree.updateNode(id,[],true);
@@ -50,6 +56,38 @@ function Tree_View(div_id, data) {
 			//execute callback
 			self.node_click_callback(info);
 		};
+	};
+	
+	self.Select_Node = function(id)
+	{
+		if(self.last_selected_id !== id)
+		{
+			
+			self.Unselect_Node();
+			
+			self.last_selected_id = id;
+			
+			previous_class_name = document.getElementById('li-' + id).className;
+			
+			if(previous_class_name.indexOf(self.selected_css_class) == -1)
+			{
+				document.getElementById('li-' + id).className += ' ' + self.selected_css_class;
+			}
+		}
+		
+	};
+	
+	self.Unselect_Node = function(){
+		
+		if (document.getElementById('li-' + self.last_selected_id)) {
+			
+			previous_class_name = document.getElementById('li-' + self.last_selected_id).className;
+			previous_class_name = previous_class_name.replace(" " + self.selected_css_class,""); 
+			document.getElementById('li-' + self.last_selected_id).className = previous_class_name;
+			
+		}
+		
+		self.last_selected_id = 0;
 	};
 	
 	self.Get_ID_From_Table_Row = function(table,row)
@@ -62,7 +100,6 @@ function Tree_View(div_id, data) {
 			if(self.tree_view_id_lookup[key].table == table && 
 				JSON.stringify(self.tree_view_id_lookup[key].row) === JSON.stringify(row))
 			{
-				
 				found_key = key;
 				break;
 			}

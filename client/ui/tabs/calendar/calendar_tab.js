@@ -208,15 +208,20 @@ function Calendar_Tab() {
 		    	else
 		    	{
 		    		new_event = self.Create_Event_From_Task_Target_Row(current_entry.row);
+		    		
+		    		new_events.push(new_event);
 		    	}
+		    	
 		    	
 			}
 			else if(current_entry.table === 'task_entries')
 			{
 				new_event = self.Create_Event_From_Task_Entry_Row(current_entry.row);
+				
+				new_events.push(new_event);
 			}
 			
-			new_events.push(new_event);
+			
 		}
 		
 		shifted_targets.sort(function(a,b){
@@ -278,7 +283,7 @@ function Calendar_Tab() {
 		minimum_time = typeof minimum_time !== 'undefined' ? minimum_time : 0.5;
 		//var minimum_time = 0.5;
 		
-		if(adjusted_hours < minimum_time)
+		if(Math.abs(adjusted_hours) < minimum_time)
 		{
 			adjusted_hours = minimum_time;
 		}

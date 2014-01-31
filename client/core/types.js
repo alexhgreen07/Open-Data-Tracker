@@ -53,6 +53,13 @@ function Cast_Date_to_Server_Datetime(date_object)
 	return time_string;
 }
 
+function Copy_JSON_Data(data)
+{
+	var copy = JSON.parse(JSON.stringify(data));
+	
+	return copy;
+}
+
 function Convert_UTC_Date_To_Local_Timezone(utc_date_object)
 {
 	var current_date = new Date();

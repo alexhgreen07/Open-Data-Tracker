@@ -97,11 +97,60 @@ function Tree_View(div_id, data) {
 		
 		for(var key in self.tree_view_id_lookup)
 		{
-			if(self.tree_view_id_lookup[key].table == table && 
-				JSON.stringify(self.tree_view_id_lookup[key].row) === JSON.stringify(row))
+			if(self.tree_view_id_lookup[key].table == table)
 			{
-				found_key = key;
-				break;
+				
+				if(table == 'items')
+				{
+					if(self.tree_view_id_lookup[key].row.item_id == row.item_id)
+					{
+						found_key = key;
+						break;
+					}
+				}
+				else if(table == 'item_targets')
+				{
+					if(self.tree_view_id_lookup[key].row.item_target_id == row.item_target_id)
+					{
+						found_key = key;
+						break;
+					}
+				}
+				else if(table == 'item_entries')
+				{
+					if(self.tree_view_id_lookup[key].row.item_entry_id == row.item_entry_id)
+					{
+						found_key = key;
+						break;
+					}
+				}
+				else if(table == 'tasks')
+				{
+					if(self.tree_view_id_lookup[key].row.task_id == row.task_id)
+					{
+						found_key = key;
+						break;
+					}
+				}
+				else if(table == 'task_targets')
+				{
+					
+					if(self.tree_view_id_lookup[key].row.task_target_id == row.task_target_id)
+					{
+						found_key = key;
+						break;
+					}
+				}
+				else if(table == 'task_entries')
+				{
+					if(self.tree_view_id_lookup[key].row.task_entry_id == row.task_entry_id)
+					{
+						found_key = key;
+						break;
+					}
+				}
+				
+				
 			}
 		}
 		

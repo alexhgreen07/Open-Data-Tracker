@@ -40,77 +40,23 @@ function Calendar_Tab() {
 		    
 		    for(var i = 0; i < data.task_targets.length; i++)
 		    {
-		    	var name = data.task_targets[i].name;
-		    	var start_string = data.task_targets[i].scheduled_time;
-		    	
-		    	var start_timestamp = Cast_Server_Datetime_to_Date(start_string);
-		    	var end_timestamp = self.Generate_End_Date(start_timestamp, data.task_targets[i].estimated_time);
-		    	
-		    	var end_string = Cast_Date_to_Server_Datetime(end_timestamp);
-		    	
-		    	var color = '#00FF00';
-		    	
-		    	if(data.task_targets[i].status == 'Incomplete')
-		    	{
-		    		color = '#0000FF';
-		    	}
-		    	else if(data.task_targets[i].status == 'Missed')
-		    	{
-		    		color = '#FF0000';
-		    	}
-		    	
-		    	var new_event = {
-		    		title  : name,
-		            start  : start_string,
-		            end    : end_string,
-		            allDay : false,
-		            color: color,
-		            entry: {table: 'task_targets', row: data.task_targets[i]},
-		    	};
+		    	var new_event = self.Create_Event_From_Task_Target_Row(data.task_targets[i]);
 		    	
 		    	self.new_events.push(new_event);
 		    }
 		    
 		    for(var i = 0; i < data.task_entries.length; i++)
 		    {
-		    	var name = data.task_entries[i].name;
-		    	var start_string = data.task_entries[i].start_time;
 		    	
-		    	var start_timestamp = Cast_Server_Datetime_to_Date(start_string);
-		    	
-		    	var color = '#00FFFF';
-		    	if(data.task_entries[i].status == 'Started')
-		    	{
-		    		var end_timestamp = new Date();
-		    		
-		    		if(end_timestamp - start_timestamp < (1000 * 60 * 30))
-		    		{
-		    			end_timestamp = new Date(+start_timestamp + (1000 * 60 * 30));
-		    		}
-		    		
-		    		color = '#9900FF';
-		    	}
-		    	else
-		    	{
-		    		var end_timestamp = self.Generate_End_Date(start_timestamp, data.task_entries[i].hours);
-		    	}
-		    	
-		    	var end_string = Cast_Date_to_Server_Datetime(end_timestamp);
-		    	
-		    	var new_event = {
-		    		title  : name,
-		            start  : start_string,
-		            end    : end_string,
-		            allDay : false,
-		            color: color,
-		            entry: {table: 'task_entries', row: data.task_entries[i]},
-		    	};
+		    	var new_event = self.Create_Event_From_Task_Entry_Row(data.task_entries[i]);
 		    	
 		    	self.new_events.push(new_event);
 		    }
 			
 			var previous_name = $('#' + self.calendar_div.id).fullCalendar('getView').name;
 			var previous_date = $('#' + self.calendar_div.id).fullCalendar('getDate');
+			
+			self.Run_Scheduling_Algorithm();
 			
 			$('#' + self.calendar_div.id).fullCalendar({
 				header: {
@@ -161,10 +107,176 @@ function Calendar_Tab() {
 		
 	};
 	
-	this.Generate_End_Date = function(start_timestamp, hours)
+	this.Create_Event_From_Task_Target_Row = function(row)
+	{
+		var name = row.name;
+    	var start_string = row.scheduled_time;
+    	
+    	var start_timestamp = Cast_Server_Datetime_to_Date(start_string);
+    	var end_timestamp = self.Generate_End_Date(start_timestamp, row.estimated_time);
+    	
+    	var end_string = Cast_Date_to_Server_Datetime(end_timestamp);
+    	
+    	var color = '#00FF00';
+    	
+    	if(row.status == 'Incomplete')
+    	{
+    		color = '#0000FF';
+    	}
+    	else if(row.status == 'Missed')
+    	{
+    		color = '#FF0000';
+    	}
+    	else if(row.status == 'Late')
+    	{
+    		color = '#FF3300';
+    	}
+    	
+    	var new_event = {
+    		title  : name,
+            start  : start_string,
+            end    : end_string,
+            allDay : false,
+            color: color,
+            entry: {table: 'task_targets', row: row},
+    	};
+		
+		return new_event;
+	};
+	
+	this.Create_Event_From_Task_Entry_Row = function(row){
+		
+		var name = row.name;
+    	var start_string = row.start_time;
+    	
+    	var start_timestamp = Cast_Server_Datetime_to_Date(start_string);
+    	
+    	var color = '#00FFFF';
+    	if(row.status == 'Started')
+    	{
+    		var end_timestamp = new Date();
+    		
+    		if(end_timestamp - start_timestamp < (1000 * 60 * 30))
+    		{
+    			end_timestamp = new Date(+start_timestamp + (1000 * 60 * 30));
+    		}
+    		
+    		color = '#9900FF';
+    	}
+    	else
+    	{
+    		var end_timestamp = self.Generate_End_Date(start_timestamp, row.hours);
+    	}
+    	
+    	var end_string = Cast_Date_to_Server_Datetime(end_timestamp);
+    	
+    	var new_event = {
+    		title  : name,
+            start  : start_string,
+            end    : end_string,
+            allDay : false,
+            color: color,
+            entry: {table: 'task_entries', row: row},
+    	};
+    	
+    	return new_event;
+		
+	};
+	
+	this.Run_Scheduling_Algorithm = function()
+	{
+		var new_events = [];
+		var shifted_targets = [];
+		
+		for(var i = 0; i < self.new_events.length; i++)
+		{
+			var new_event = {};
+			
+			current_entry = self.new_events[i].entry;
+			
+			if(current_entry.table === 'task_targets')
+			{
+				if(current_entry.row.status === 'Incomplete')
+		    	{
+		    		
+		    		//alert(JSON.stringify(new_event));
+		    		
+		    		shifted_targets.push(current_entry);
+		    		
+		    		
+		    	}
+		    	else
+		    	{
+		    		new_event = self.Create_Event_From_Task_Target_Row(current_entry.row);
+		    	}
+		    	
+			}
+			else if(current_entry.table === 'task_entries')
+			{
+				new_event = self.Create_Event_From_Task_Entry_Row(current_entry.row);
+			}
+			
+			new_events.push(new_event);
+		}
+		
+		shifted_targets.sort(function(a,b){
+			
+			var a_timestamp = Cast_Server_Datetime_to_Date(a.row.scheduled_time);
+		    var b_timestamp = Cast_Server_Datetime_to_Date(b.row.scheduled_time);
+			
+			var a_early_start_timestamp = self.Generate_End_Date(a_timestamp, -a.row.variance, 0);
+			var b_early_start_timestamp = self.Generate_End_Date(b_timestamp, -b.row.variance, 0);
+			
+			return (a_early_start_timestamp - b_early_start_timestamp);
+			
+		});
+		
+		var now = new Date();
+		var shifted_target_start_timestamp = now;
+		
+		for(var i = 0; i < shifted_targets.length; i++)
+		{
+			var new_row = Copy_JSON_Data(shifted_targets[i].row);
+			
+			var scheduled_time = Cast_Server_Datetime_to_Date(new_row.scheduled_time);
+			
+			var early_start_timestamp = self.Generate_End_Date(scheduled_time, -new_row.variance, 0);
+			var late_start_timestamp = self.Generate_End_Date(scheduled_time, new_row.variance + new_row.estimated_time, 0);
+			
+			var start_timestamp = early_start_timestamp;
+			
+			if(start_timestamp < shifted_target_start_timestamp)
+			{
+				start_timestamp = shifted_target_start_timestamp;
+			}
+			
+			if(start_timestamp > late_start_timestamp)
+			{
+				new_row.status = 'Late';
+			}
+			
+			var start_string = Cast_Date_to_Server_Datetime(start_timestamp);
+			
+			new_row.scheduled_time = start_string;
+			
+			new_event = self.Create_Event_From_Task_Target_Row(new_row);
+			
+			new_events.push(new_event);
+			
+			var end_timestamp = self.Generate_End_Date(start_timestamp, new_row.estimated_time, 0);
+			shifted_target_start_timestamp = end_timestamp;
+			
+		}
+		
+		self.new_events = new_events;
+		
+	};
+	
+	this.Generate_End_Date = function(start_timestamp, hours, minimum_time)
 	{
 		var adjusted_hours = hours;
-		var minimum_time = 0.5;
+		minimum_time = typeof minimum_time !== 'undefined' ? minimum_time : 0.5;
+		//var minimum_time = 0.5;
 		
 		if(adjusted_hours < minimum_time)
 		{

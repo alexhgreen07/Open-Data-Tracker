@@ -110,6 +110,37 @@ function Edit_Task_Target_Form(){
 		}
 	};
 	
+	this.Break_Recuring_Child = function()
+	{
+		var self = this;
+		
+		var index_to_break = document.getElementById(this.task_edit_target_select.id).value;
+		
+		var params = new Array();
+		params[0] = index_to_break;
+		params[1] = 0;
+		
+		app.api.Task_Data_Interface.Break_Recuring_Child(params, function(jsonRpcObj) {
+		
+			if(jsonRpcObj.result.success == 'true'){
+				
+				alert('Index recurrance broken: ' + index_to_delete);
+				
+				app.api.Refresh_Data(function() {
+					//self.refresh_item_log_callback();
+				});
+				
+			}
+			else
+			{
+				alert('Failed to break the task target.');
+				alert(jsonRpcObj.result.debug);
+			}
+		
+		});
+		
+	};
+	
 	
 	/** @method Task_Target_Edit_Delete_Click
 	 * @desc This is the delete task target submit button click event handler.
@@ -209,6 +240,8 @@ function Edit_Task_Target_Form(){
 				document.getElementById(this.task_target_edit_scheduled_variance.id).disabled = false;
 				document.getElementById(this.task_target_edit_estimated_time.id).disabled = false;
 				document.getElementById(this.task_target_edit_recurring_end_date.id).disabled = false;
+				
+				$('#' + this.break_button_div.id).hide();
 			}
 			else
 			{
@@ -220,6 +253,8 @@ function Edit_Task_Target_Form(){
 				document.getElementById(this.task_target_edit_scheduled_variance.id).disabled = true;
 				document.getElementById(this.task_target_edit_estimated_time.id).disabled = true;
 				document.getElementById(this.task_target_edit_recurring_end_date.id).disabled = true;
+				
+				$('#' + this.break_button_div.id).show();
 			}
 		}
 		else
@@ -355,6 +390,21 @@ function Edit_Task_Target_Form(){
 		
 		this.edit_task_target_form.innerHTML += '<br /><br />';
 		
+		this.break_button_div = document.createElement("div");
+		this.break_button_div.id = 'break_button_div';
+		
+		//task submit creation
+		this.task_target_break_submit_button = document.createElement("input");
+		this.task_target_break_submit_button.setAttribute('id', 'task_target_break_button');
+		this.task_target_break_submit_button.setAttribute('name', 'task_target_break_button');
+		this.task_target_break_submit_button.setAttribute('type', 'submit');
+		this.task_target_break_submit_button.value = 'Break';
+		this.break_button_div.appendChild(this.task_target_break_submit_button);
+		
+		this.break_button_div.innerHTML += '<br /><br />';
+		
+		this.edit_task_target_form.appendChild(this.break_button_div);
+		
 		//task delete creation
 		this.task_target_edit_delete_button = document.createElement("input");
 		this.task_target_edit_delete_button.setAttribute('id', 'task_target_edit_delete_button');
@@ -378,6 +428,7 @@ function Edit_Task_Target_Form(){
 		div_tab.appendChild(this.edit_task_target_form);
 		
 		$('#' + this.loading_image_task_target_edit.id).hide();
+		$('#' + this.break_button_div.id).hide();
 		
 		$('#' + this.task_target_edit_submit_button.id).button();
 		$('#' + this.task_target_edit_submit_button.id).click(function(event){
@@ -388,6 +439,14 @@ function Edit_Task_Target_Form(){
 			self.Task_Target_Edit_Submit_Click();
 		});
 		
+		$('#' + this.task_target_break_submit_button.id).button();
+		$('#' + this.task_target_break_submit_button.id).click(function(event){
+			
+		     //ensure a normal postback does not occur
+			event.preventDefault();
+			
+			self.Task_Target_Edit_Break_Click();
+		});
 
 		$('#' + this.task_target_edit_delete_button.id).button();
 		$('#' + this.task_target_edit_delete_button.id).click(function(event){

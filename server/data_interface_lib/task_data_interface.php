@@ -296,7 +296,8 @@ class Task_Data_Interface {
 			'note' => 'note',
 			'status' => 'string',
 			'task_id' => 'int',
-			'task_target_id' => 'int'
+			'task_target_id' => 'int',
+			'target_status' => 'string'
 		);
 		
 		return $return_json;
@@ -315,8 +316,11 @@ class Task_Data_Interface {
 			`task_log`.`hours` AS `hours`, 
 			`task_log`.`status` AS `status`, 
 			`task_log`.`note` AS `note`,
-			`task_log`.`task_target_id` AS `task_target_id`
-			FROM `tasks` , `task_log`
+			`task_log`.`task_target_id` AS `task_target_id`,
+			`task_targets`.`status` AS `target_status`
+			FROM `task_log`
+			JOIN `tasks` ON `tasks`.`task_id` = `task_log`.`task_id`
+			LEFT JOIN `task_targets` ON `task_targets`.`task_schedule_id` = `task_log`.`task_target_id`
 			WHERE `tasks`.`task_id` = `task_log`.`task_id` AND `tasks`.`member_id`='" . $_SESSION['session_member_id'] ."'
 			ORDER BY `task_log`.`start_time` DESC";
 		$result = mysql_query($query, $this -> database_link);
@@ -336,7 +340,13 @@ class Task_Data_Interface {
 			$task_entry_status = mysql_result($result, $i, "status");
 			$task_id = mysql_result($result, $i, "task_id");
 			$task_target_id = mysql_result($result, $i, "task_target_id");
-
+			$target_status = mysql_result($result, $i, "target_status");
+			
+			if($target_status == null)
+			{
+				$target_status = "";
+			}
+			
 			$return_json['data'][$i] = array(
 				'task_log_id' => $task_entry_id,
 				'name' => $task_entry_name,
@@ -345,7 +355,8 @@ class Task_Data_Interface {
 				'note' => $task_entry_note,
 				'status' => $task_entry_status,
 				'task_id' => $task_id,
-				'task_target_id' => $task_target_id);
+				'task_target_id' => $task_target_id,
+				'target_status' => $target_status);
 			
 			
 			$i++;
@@ -370,7 +381,8 @@ class Task_Data_Interface {
 			'recurrance_end_time' => 'date',
 			'recurrance_child_id' => 'int',
 			'status' => 'string',
-			'task_id' => 'int'
+			'task_id' => 'int',
+			'hours' => 'float',
 		);
 		
 		return $return_json;
@@ -394,9 +406,13 @@ class Task_Data_Interface {
 			`task_targets`.`recurrance_end_time` AS `recurrance_end_time`,
 			`task_targets`.`recurrance_child_id` AS `recurrance_child_id`,
 			`task_targets`.`status` AS `status`,
-			`tasks`.`name` AS `name` 
-			FROM `task_targets`, `tasks`
-			WHERE `tasks`.`task_id` = `task_targets`.`task_id` AND `tasks`.`member_id`='" . $_SESSION['session_member_id'] ."'
+			`tasks`.`name` AS `name` ,
+			SUM(`task_log`.`hours`) AS `hours`
+			FROM `task_targets`
+			JOIN `tasks` ON `tasks`.`task_id` = `task_targets`.`task_id`
+			LEFT JOIN `task_log` ON `task_targets`.`task_schedule_id` = `task_log`.`task_target_id`
+			WHERE `tasks`.`member_id`='" . $_SESSION['session_member_id'] ."'
+			GROUP BY `task_targets`.`task_schedule_id`
 			ORDER BY `task_targets`.`scheduled_time` ASC";
 			
 		$result = mysql_query($query, $this -> database_link);
@@ -420,6 +436,12 @@ class Task_Data_Interface {
 			$recurrance_child_id = mysql_result($result, $i, "recurrance_child_id");
 			$status = mysql_result($result, $i, "status");
 			$task_id = mysql_result($result, $i, "task_id");
+			$hours = mysql_result($result, $i, "hours");
+			
+			if($hours == null)
+			{
+				$hours = 0;
+			}
 
 			$return_json['data'][$i] = array(
 				'task_schedule_id' => $task_schedule_id,
@@ -434,7 +456,8 @@ class Task_Data_Interface {
 				'recurrance_end_time' => $recurrance_end_time,
 				'recurrance_child_id' => $recurrance_child_id,
 				'status' => $status,
-				'task_id' => $task_id);
+				'task_id' => $task_id,
+				'hours' => $hours);
 			
 			
 			$i++;

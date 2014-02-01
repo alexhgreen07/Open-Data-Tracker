@@ -700,7 +700,8 @@ class Task_Data_Interface {
 		{
 			//get the next recurring child
 			$sql = "SELECT 
-				`task_targets`.`task_schedule_id` AS `task_schedule_id`
+				`task_targets`.`task_schedule_id` AS `task_schedule_id`,
+				`task_targets`.`scheduled_time` AS `scheduled_time`
 				FROM `task_targets`
 				WHERE `task_targets`.`recurrance_child_id` = ".$recurrance_child_id."
 				AND `task_targets`.`scheduled_time` > '".$task_start_time."'
@@ -722,6 +723,7 @@ class Task_Data_Interface {
 			if($num > 0)
 			{
 				$task_schedule_id = mysql_result($result, 0, "task_schedule_id");
+				$task_schedule_time = mysql_result($result, 0, "scheduled_time");
 				
 				//break the next child from the parent
 				$sql = "UPDATE `task_targets`
@@ -756,7 +758,7 @@ class Task_Data_Interface {
 				$this->Update_Recurring_Children(
 					$task_schedule_id,
 					$parent_task_id,
-					$task_start_time,
+					$task_schedule_time,
 					$parent_recurring,
 					$parent_recurrance_type,
 					$parent_recurrance_period,

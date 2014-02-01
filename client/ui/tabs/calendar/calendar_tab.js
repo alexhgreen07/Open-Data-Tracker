@@ -109,6 +109,8 @@ function Calendar_Tab() {
 	
 	this.Create_Event_From_Task_Target_Row = function(row)
 	{
+		var should_render_event = true;
+		
 		var name = row.name;
     	var start_string = row.scheduled_time;
     	
@@ -168,6 +170,11 @@ function Calendar_Tab() {
     		var end_timestamp = self.Generate_End_Date(start_timestamp, row.hours);
     	}
     	
+    	if(row.target_status == 'Complete')
+    	{
+    		color = '#00FF00';
+    	}
+    	
     	var end_string = Cast_Date_to_Server_Datetime(end_timestamp);
     	
     	var new_event = {
@@ -204,7 +211,7 @@ function Calendar_Tab() {
 		    		
 		    		
 		    	}
-		    	else
+		    	else if(current_entry.row.status !== 'Complete' || current_entry.row.hours == 0)
 		    	{
 		    		new_event = self.Create_Event_From_Task_Target_Row(current_entry.row);
 		    		
@@ -229,18 +236,25 @@ function Calendar_Tab() {
 		
 		for(var i = 0; i < incomplete_targets.length; i++)
 		{
-			var new_row = Copy_JSON_Data(incomplete_targets[i].row);
+			var new_entry = Copy_JSON_Data(incomplete_targets[i]);
 			
-			var scheduled_time = Cast_Server_Datetime_to_Date(new_row.scheduled_time);
-			var late_start_timestamp = self.Generate_End_Date(scheduled_time, new_row.variance, 0);
+			new_entry.row.estimated_time -= new_entry.row.hours;
+			
+			if(new_entry.row.estimated_time < 0)
+			{
+				new_entry.row.estimated_time = 0;
+			}
+			
+			var scheduled_time = Cast_Server_Datetime_to_Date(new_entry.row.scheduled_time);
+			var late_start_timestamp = self.Generate_End_Date(scheduled_time, new_entry.row.variance, 0);
 			
 			if(now > late_start_timestamp)
 			{
-				late_targets.push(incomplete_targets[i]);
+				late_targets.push(new_entry);
 			}
 			else
 			{
-				shifted_targets.push(incomplete_targets[i]);
+				shifted_targets.push(new_entry);
 			}
 			
 		}

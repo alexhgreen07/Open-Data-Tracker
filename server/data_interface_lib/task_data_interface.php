@@ -656,7 +656,7 @@ class Task_Data_Interface {
 			`task_targets`.`estimated_time` AS `estimated_time`,
 			`task_targets`.`recurrance_end_time` AS `recurrance_end_time`,
 			`task_targets`.`recurrance_child_id` AS `recurrance_child_id`,
-			`task_targets`.`status` AS `status`,
+			`task_targets`.`status` AS `status`
 			FROM `task_targets`
 			WHERE `task_targets`.`task_schedule_id` = ".$recurrance_child_id;
 		$result = mysql_query($sql, $this -> database_link);
@@ -693,15 +693,19 @@ class Task_Data_Interface {
 				LIMIT 1";
 			
 			$result = mysql_query($sql, $this -> database_link);
-			$num = mysql_numrows($result);
 			
-			if($num != 1){
+			if(!$result){
 				
 				$return_json['debug'] = $sql;
 				return $return_json;
 			}
 			
-			$task_schedule_id = mysql_result($result, 0, "task_schedule_id");
+			$num = mysql_numrows($result);
+			
+			if($num > 0)
+			{
+				$task_schedule_id = mysql_result($result, 0, "task_schedule_id");
+			}
 			
 			$sql = "UPDATE `task_targets`
 				SET `task_targets`.`recurrance_child_id` = 0
@@ -719,7 +723,7 @@ class Task_Data_Interface {
 			
 			$sql = "UPDATE `task_targets`
 				SET `task_targets`.`recurrance_child_id` = 0
-				WHERE `task_targets`.`task_schedule_id` = ".$task_schedule_id;
+				WHERE `task_targets`.`task_schedule_id` = ".$task_target_id;
 			$result = mysql_query($sql, $this -> database_link);
 			
 			if(!$result){

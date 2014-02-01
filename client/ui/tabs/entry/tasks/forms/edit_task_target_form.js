@@ -124,7 +124,7 @@ function Edit_Task_Target_Form(){
 		
 			if(jsonRpcObj.result.success == 'true'){
 				
-				alert('Index recurrance broken: ' + index_to_delete);
+				alert('Index recurrance broken: ' + index_to_break);
 				
 				app.api.Refresh_Data(function() {
 					//self.refresh_item_log_callback();
@@ -445,7 +445,7 @@ function Edit_Task_Target_Form(){
 		     //ensure a normal postback does not occur
 			event.preventDefault();
 			
-			self.Task_Target_Edit_Break_Click();
+			self.Break_Recuring_Child();
 		});
 
 		$('#' + this.task_target_edit_delete_button.id).button();

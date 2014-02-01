@@ -29,7 +29,7 @@ function Calendar_Tab() {
 	 * */
 	this.Refresh = function(data) {
 		
-		if(JSON.stringify(self.data) !== JSON.stringify(data))
+		//if(JSON.stringify(self.data) !== JSON.stringify(data))
 		{
 		
 			self.data = data;
@@ -77,34 +77,40 @@ function Calendar_Tab() {
 			$('#' + self.calendar_div.id).fullCalendar('gotoDate',previous_date);
 			
 		}
-		else
+		//else
 		{
-			for(var i = 0; i < self.new_events.length; i++)
-			{
-				if(self.new_events[i].entry.table == 'task_entries' && 
-					self.new_events[i].entry.row.status == 'Started')
-				{
-					var start_string = self.new_events[i].entry.row.start_time;
-		    	
-			    	var start_timestamp = Cast_Server_Datetime_to_Date(start_string);
-			    	
-			    	var end_timestamp = new Date();
-		    		
-		    		if(end_timestamp - start_timestamp < (1000 * 60 * 30))
-		    		{
-		    			end_timestamp = new Date(+start_timestamp + (1000 * 60 * 30));
-		    		}
-		    		
-			    	var end_string = Cast_Date_to_Server_Datetime(end_timestamp);
-			    	
-			    	self.new_events[i].start = start_string;
-			    	self.new_events[i].end = end_string;
-			    	
-			    	$('#' + self.calendar_div.id).fullCalendar('updateEvent',self.new_events[i]);
-				}
-			}
+			self.Update_Started_Tasks();
 		}
 		
+		
+	};
+	
+	this.Update_Started_Tasks = function()
+	{
+		for(var i = 0; i < self.new_events.length; i++)
+		{
+			if(self.new_events[i].entry.table == 'task_entries' && 
+				self.new_events[i].entry.row.status == 'Started')
+			{
+				var start_string = self.new_events[i].entry.row.start_time;
+	    	
+		    	var start_timestamp = Cast_Server_Datetime_to_Date(start_string);
+		    	
+		    	var end_timestamp = new Date();
+	    		
+	    		if(end_timestamp - start_timestamp < (1000 * 60 * 30))
+	    		{
+	    			end_timestamp = new Date(+start_timestamp + (1000 * 60 * 30));
+	    		}
+	    		
+		    	var end_string = Cast_Date_to_Server_Datetime(end_timestamp);
+		    	
+		    	self.new_events[i].start = start_string;
+		    	self.new_events[i].end = end_string;
+		    	
+		    	$('#' + self.calendar_div.id).fullCalendar('updateEvent',self.new_events[i]);
+			}
+		}
 	};
 	
 	this.Create_Event_From_Task_Target_Row = function(row)

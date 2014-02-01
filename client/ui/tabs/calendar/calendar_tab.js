@@ -186,8 +186,9 @@ function Calendar_Tab() {
 	this.Run_Scheduling_Algorithm = function()
 	{
 		var new_events = [];
-		var shifted_targets = [];
+		var incomplete_targets = [];
 		
+		//get all events and organize
 		for(var i = 0; i < self.new_events.length; i++)
 		{
 			var new_event = {};
@@ -199,9 +200,7 @@ function Calendar_Tab() {
 				if(current_entry.row.status === 'Incomplete')
 		    	{
 		    		
-		    		//alert(JSON.stringify(new_event));
-		    		
-		    		shifted_targets.push(current_entry);
+		    		incomplete_targets.push(current_entry);
 		    		
 		    		
 		    	}
@@ -224,6 +223,29 @@ function Calendar_Tab() {
 			
 		}
 		
+		var now = new Date();
+		var shifted_targets = [];
+		var late_targets = [];
+		
+		for(var i = 0; i < incomplete_targets.length; i++)
+		{
+			var new_row = Copy_JSON_Data(incomplete_targets[i].row);
+			
+			var scheduled_time = Cast_Server_Datetime_to_Date(new_row.scheduled_time);
+			var late_start_timestamp = self.Generate_End_Date(scheduled_time, new_row.variance, 0);
+			
+			if(now > late_start_timestamp)
+			{
+				late_targets.push(incomplete_targets[i]);
+			}
+			else
+			{
+				shifted_targets.push(incomplete_targets[i]);
+			}
+			
+		}
+		
+		//sort the shifted targets
 		shifted_targets.sort(function(a,b){
 			
 			var a_timestamp = Cast_Server_Datetime_to_Date(a.row.scheduled_time);
@@ -236,9 +258,39 @@ function Calendar_Tab() {
 			
 		});
 		
-		var now = new Date();
 		var shifted_target_start_timestamp = now;
 		
+		//process and create events for late targets
+		for(var i = 0; i < late_targets.length; i++)
+		{
+			var new_row = Copy_JSON_Data(late_targets[i].row);
+			
+			var scheduled_time = Cast_Server_Datetime_to_Date(new_row.scheduled_time);
+			
+			var early_start_timestamp = self.Generate_End_Date(scheduled_time, -new_row.variance, 0);
+			
+			var start_timestamp = early_start_timestamp;
+			
+			if(start_timestamp < shifted_target_start_timestamp)
+			{
+				start_timestamp = shifted_target_start_timestamp;
+			}
+			
+			new_row.status = 'Late';
+			
+			var start_string = Cast_Date_to_Server_Datetime(start_timestamp);
+			
+			new_row.scheduled_time = start_string;
+			
+			new_event = self.Create_Event_From_Task_Target_Row(new_row);
+			
+			new_events.push(new_event);
+			
+			var end_timestamp = self.Generate_End_Date(start_timestamp, new_row.estimated_time, 0);
+			shifted_target_start_timestamp = end_timestamp;
+		}
+		
+		//process and create evnets for shifted targets
 		for(var i = 0; i < shifted_targets.length; i++)
 		{
 			var new_row = Copy_JSON_Data(shifted_targets[i].row);
@@ -246,7 +298,7 @@ function Calendar_Tab() {
 			var scheduled_time = Cast_Server_Datetime_to_Date(new_row.scheduled_time);
 			
 			var early_start_timestamp = self.Generate_End_Date(scheduled_time, -new_row.variance, 0);
-			var late_start_timestamp = self.Generate_End_Date(scheduled_time, new_row.variance + new_row.estimated_time, 0);
+			var late_start_timestamp = self.Generate_End_Date(scheduled_time, new_row.variance, 0);
 			
 			var start_timestamp = early_start_timestamp;
 			

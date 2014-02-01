@@ -120,7 +120,7 @@ function Tree_View(div_id, data) {
 	self.Get_ID_From_Table_Row = function(table,row)
 	{
 		
-		var found_key = 0;
+		var found_key = -1;
 		
 		for(var key in self.tree_view_id_lookup)
 		{
@@ -194,26 +194,36 @@ function Tree_View(div_id, data) {
 		
 		id = self.Get_ID_From_Table_Row(table,row);
 		
-		var current_lookup = self.tree_view_id_lookup[id];
-		
-		while(current_lookup.parent_id !== 0)
+		if(id !== -1)
 		{
+			var current_lookup = self.tree_view_id_lookup[id];
+		
+			while(current_lookup.parent_id !== 0)
+			{
+				
+				parents.push(current_lookup.parent_id);
+				
+				current_lookup = self.tree_view_id_lookup[current_lookup.parent_id];
+			}
 			
-			parents.push(current_lookup.parent_id);
+			for(var i = 0; i < parents.length; i++)
+			{
+				var index = parents.length - i - 1;
+				
+				self.tree.updateNode(parents[index],[],true);
+				
+				
+			}
 			
-			current_lookup = self.tree_view_id_lookup[current_lookup.parent_id];
+			self.Select_Node(id);
+		}
+		else
+		{
+			self.tree.updateNode(self.tree_nodes.id,[],true);
+			self.Select_Node(self.tree_nodes.id);
 		}
 		
-		for(var i = 0; i < parents.length; i++)
-		{
-			var index = parents.length - i - 1;
-			
-			self.tree.updateNode(parents[index],[],true);
-			
-			
-		}
 		
-		self.Select_Node(id);
 	};
 	
 	self.Apply_Filter = function(layer_name, is_enabled)	{

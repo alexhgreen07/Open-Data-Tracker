@@ -681,9 +681,24 @@ class Task_Data_Interface {
 		$parent_status = mysql_result($result, 0, "status");
 		$parent_recurrance_child_id = mysql_result($result, 0, "recurrance_child_id");
 		
+		
+		//break the child from the parent
+		$sql = "UPDATE `task_targets`
+			SET 
+			`task_targets`.`recurrance_child_id` = 0,
+			`task_targets`.`recurring` = 0
+			WHERE `task_targets`.`task_schedule_id` = ".$task_target_id;
+		$result = mysql_query($sql, $this -> database_link);
+		
+		if(!$result){
+			
+			$return_json['debug'] = $sql;
+			return $return_json;
+		}
+		
 		if($continue_recurrance)
 		{
-			
+			//get the next recurring child
 			$sql = "SELECT 
 				`task_targets`.`task_schedule_id` AS `task_schedule_id`
 				FROM `task_targets`
@@ -702,59 +717,78 @@ class Task_Data_Interface {
 			
 			$num = mysql_numrows($result);
 			
+			//if there are any recurring children after this target
 			if($num > 0)
 			{
 				$task_schedule_id = mysql_result($result, 0, "task_schedule_id");
-			}
-			
-			$sql = "UPDATE `task_targets`
-				SET `task_targets`.`recurrance_child_id` = 0
-				WHERE `task_targets`.`task_schedule_id` = ".$task_schedule_id;
-			$result = mysql_query($sql, $this -> database_link);
-			
-			if(!$result){
 				
-				$return_json['debug'] = $sql;
-				return $return_json;
+				//break the next child from the parent
+				$sql = "UPDATE `task_targets`
+				SET 
+				`task_targets`.`recurrance_child_id` = 0,
+				`task_targets`.`recurrance_end_time` = '".$parent_recurrance_end_time."'
+				WHERE 
+				`task_targets`.`task_schedule_id` = ".$task_schedule_id;
+				$result = mysql_query($sql, $this -> database_link);
+				
+				if(!$result){
+					
+					$return_json['debug'] = $sql;
+					return $return_json;
+				}
+				
+				//update all children parents to next child parent
+				$sql = "UPDATE `task_targets`
+					SET `task_targets`.`recurrance_child_id` = ".$task_schedule_id."
+					WHERE 
+					`task_targets`.`scheduled_time` > '".$task_start_time."'
+					AND `task_targets`.`recurrance_child_id` = ".$parent_recurrance_end_time;
+				$result = mysql_query($sql, $this -> database_link);
+				
+				if(!$result){
+					
+					$return_json['debug'] = $sql;
+					return $return_json;
+				}
+				
+				//update all next child recurring children
+				$this->Update_Recurring_Children(
+					$task_schedule_id,
+					$parent_task_id,
+					$parent_scheduled_time,
+					$parent_recurring,
+					$parent_recurrance_type,
+					$parent_recurrance_period,
+					$parent_allowed_variance,
+					$parent_estimated_time,
+					$task_start_time);
 			}
 			
 		}
-		else {
+		
+		//update the parent target
+		$sql = "UPDATE `task_targets`
+			SET `task_targets`.`recurrance_end_time` = '".$task_start_time."'
+			WHERE `task_targets`.`task_schedule_id` = ".$recurrance_child_id;
+		$result = mysql_query($sql, $this -> database_link);
+		
+		if(!$result){
 			
-			$sql = "UPDATE `task_targets`
-				SET `task_targets`.`recurrance_child_id` = 0
-				WHERE `task_targets`.`task_schedule_id` = ".$task_target_id;
-			$result = mysql_query($sql, $this -> database_link);
-			
-			if(!$result){
-				
-				$return_json['debug'] = $sql;
-				return $return_json;
-			}
-			
-			$sql = "UPDATE `task_targets`
-				SET `task_targets`.`recurrance_end_time` = '".$task_start_time."'
-				WHERE `task_targets`.`task_schedule_id` = ".$recurrance_child_id;
-			$result = mysql_query($sql, $this -> database_link);
-			
-			if(!$result){
-				
-				$return_json['debug'] = $sql;
-				return $return_json;
-			}
-			
-			//update all children
-			$this->Update_Recurring_Children(
-				$parent_task_schedule_id,
-				$parent_task_id,
-				$parent_scheduled_time,
-				$parent_recurring,
-				$parent_recurrance_type,
-				$parent_recurrance_period,
-				$parent_allowed_variance,
-				$parent_estimated_time,
-				$task_start_time);
+			$return_json['debug'] = $sql;
+			return $return_json;
 		}
+		
+		//update all children
+		$this->Update_Recurring_Children(
+			$parent_task_schedule_id,
+			$parent_task_id,
+			$parent_scheduled_time,
+			$parent_recurring,
+			$parent_recurrance_type,
+			$parent_recurrance_period,
+			$parent_allowed_variance,
+			$parent_estimated_time,
+			$task_start_time);
 		
 		$return_json['success'] = 'true';
 		

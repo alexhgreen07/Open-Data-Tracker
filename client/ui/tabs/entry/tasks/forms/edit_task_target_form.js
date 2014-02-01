@@ -114,11 +114,22 @@ function Edit_Task_Target_Form(){
 	{
 		var self = this;
 		
+		var r=confirm("Press OK to delete all future recurrances, or cancel to keep future recurrances.");
+		
 		var index_to_break = document.getElementById(this.task_edit_target_select.id).value;
 		
 		var params = new Array();
 		params[0] = index_to_break;
-		params[1] = 0;
+		
+		if (r==true)
+		{
+			params[1] = 0;
+		}
+		else
+		{
+			params[1] = 1;
+		}
+		
 		
 		app.api.Task_Data_Interface.Break_Recuring_Child(params, function(jsonRpcObj) {
 		

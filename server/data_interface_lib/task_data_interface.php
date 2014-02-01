@@ -621,7 +621,7 @@ class Task_Data_Interface {
 		return $return_json;
 	}
 	
-	public function Break_Recuring_Child($task_target_id, $continue_recurrance=false)
+	public function Break_Recuring_Child($task_target_id, $continue_recurrance=0)
 	{
 		$return_json = array('success' => 'false', );
 		
@@ -696,20 +696,21 @@ class Task_Data_Interface {
 			return $return_json;
 		}
 		
-		if($continue_recurrance)
+		if($continue_recurrance != 0)
 		{
 			//get the next recurring child
 			$sql = "SELECT 
 				`task_targets`.`task_schedule_id` AS `task_schedule_id`
 				FROM `task_targets`
-				WHERE `task_targets`.`recurrance_child_id` = ".$task_target_id."
+				WHERE `task_targets`.`recurrance_child_id` = ".$recurrance_child_id."
 				AND `task_targets`.`scheduled_time` > '".$task_start_time."'
 				ORDER BY `task_targets`.`scheduled_time`
 				LIMIT 1";
 			
 			$result = mysql_query($sql, $this -> database_link);
 			
-			if(!$result){
+			if(!$result)
+			{
 				
 				$return_json['debug'] = $sql;
 				return $return_json;
@@ -742,7 +743,7 @@ class Task_Data_Interface {
 					SET `task_targets`.`recurrance_child_id` = ".$task_schedule_id."
 					WHERE 
 					`task_targets`.`scheduled_time` > '".$task_start_time."'
-					AND `task_targets`.`recurrance_child_id` = ".$parent_recurrance_end_time;
+					AND `task_targets`.`recurrance_child_id` = ".$recurrance_child_id;
 				$result = mysql_query($sql, $this -> database_link);
 				
 				if(!$result){
@@ -755,13 +756,13 @@ class Task_Data_Interface {
 				$this->Update_Recurring_Children(
 					$task_schedule_id,
 					$parent_task_id,
-					$parent_scheduled_time,
+					$task_start_time,
 					$parent_recurring,
 					$parent_recurrance_type,
 					$parent_recurrance_period,
 					$parent_allowed_variance,
 					$parent_estimated_time,
-					$task_start_time);
+					$parent_recurrance_end_time);
 			}
 			
 		}

@@ -79,7 +79,7 @@ function Calendar_Tab() {
 		}
 		//else
 		{
-			self.Update_Started_Tasks();
+			//self.Update_Started_Tasks();
 		}
 		
 		

@@ -431,7 +431,8 @@ class Item_Data_Interface {
 			'item_description' => 'string', 
 			'item_unit' => 'string', 
 			'date_created' => 'date', 
-			'item_id' => 'int'
+			'item_id' => 'int',
+			'category_id' => 'int'
 		);
 		
 		return $return_json;
@@ -440,7 +441,7 @@ class Item_Data_Interface {
 	public function Get_Items() {
 		$return_json = array('success' => 'false', 'data' => array(), );
 		
-		$sql_query = "SELECT `item_id`, `name`, `description`, `unit`, `date_created` FROM `items` WHERE `member_id`='" . $_SESSION['session_member_id'] ."' ORDER BY `name` asc";
+		$sql_query = "SELECT `item_id`, `name`, `description`, `unit`, `date_created`, `category_id` FROM `items` WHERE `member_id`='" . $_SESSION['session_member_id'] ."' ORDER BY `name` asc";
 		$result = mysql_query($sql_query, $this -> database_link);
 
 		if ($result) {
@@ -457,6 +458,7 @@ class Item_Data_Interface {
 				$item_unit = mysql_result($result, $i, "unit");
 				$item_date_created = mysql_result($result, $i, 'date_created');
 				$item_id = mysql_result($result, $i, "item_id");
+				$category_id = mysql_result($result, $i, "category_id");
 
 				if ($item_name != "") {
 					$return_json['data'][$i] = 
@@ -465,8 +467,9 @@ class Item_Data_Interface {
 						'item_description' => $item_description, 
 						'item_unit' => $item_unit, 
 						'date_created' => $item_date_created, 
-						'item_id' => $item_id, );
-
+						'item_id' => $item_id, 
+						'category_id' =>$category_id);
+	
 
 				}
 

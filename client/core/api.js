@@ -90,15 +90,19 @@ function Server_API() {
 		self.Data_Interface.Refresh_All_Data([],
 			function(jsonRpcObj){
 				
-				self.data = jsonRpcObj.result.data;
-				self.schema = jsonRpcObj.result.schema;
-				self.reports = jsonRpcObj.result.reports;
-				
-				//convert all data to the local timezone
-				self.Convert_Data_To_Local_Timezone();
-				
-				//call the data changed callback since the data was refreshed.
-				self.data_changed_callback();
+				//check the the data has changed
+				if(JSON.stringify(self.data) !== JSON.stringify(jsonRpcObj.result.data))
+				{
+					self.data = jsonRpcObj.result.data;
+					self.schema = jsonRpcObj.result.schema;
+					self.reports = jsonRpcObj.result.reports;
+					
+					//convert all data to the local timezone
+					self.Convert_Data_To_Local_Timezone();
+					
+					//call the data changed callback since the data was refreshed.
+					self.data_changed_callback();
+				}
 				
 				callback();
 				

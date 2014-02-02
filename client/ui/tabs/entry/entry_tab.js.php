@@ -14,17 +14,22 @@ include_once(dirname(__FILE__).'/../../../../externals/jquery-ui/jquery-1.10.2.j
 //jquery UI code
 include_once(dirname(__FILE__).'/../../../../externals/jquery-ui/ui/jquery.ui.core.js');
 
+//jquery datepicker code
+include_once(dirname(__FILE__).'/../../../../externals/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js');
+
 //JSON RPC library
 include_once(dirname(__FILE__).'/../../../../externals/json-rpc2php/jsonRPC2php.client.js');
 
+//get accordian
 require_once(dirname(__FILE__).'/../../accordian.js.php');
+require_once(dirname(__FILE__).'/../../tree_view.js.php');
 
-require_once(dirname(__FILE__).'/forms/home_form.js.php');
-
-require_once(dirname(__FILE__).'/forms/settings_form.js.php');
+require_once(dirname(__FILE__).'/categories/category_form.js.php');
+require_once(dirname(__FILE__).'/items/item_tab.js.php');
+require_once(dirname(__FILE__).'/tasks/task_tab.js.php');
 
 //main file
-include_once(dirname(__FILE__).'/home_tab.js');
+include_once(dirname(__FILE__).'/entry_tab.js');
 
 
 ?>

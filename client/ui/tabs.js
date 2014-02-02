@@ -2,10 +2,13 @@
  * @constructor Tabs
  */
 function Tabs(tab_div_id, tab_array) {
-
+	
+	var self = this;
+	
 	//class variables
 	this.div_id = tab_div_id;
 	this.tabs = tab_array;
+	this.activate_callback = function(){};
 
 	//render function (div must already exist)
 	this.Render = function() {
@@ -33,7 +36,11 @@ function Tabs(tab_div_id, tab_array) {
 		div_tab.innerHTML = new_inner_html;
 
 		//execute JQuery tabs initialization
-		$("#" + this.div_id).tabs();
+		$("#" + this.div_id).tabs({
+			activate: function(event, ui) {
+		        self.activate_callback();
+		    }
+		});
 
 	};
 }

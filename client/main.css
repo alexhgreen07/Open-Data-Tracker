@@ -94,3 +94,27 @@ th {
     top: 0px; 
     margin: 0em; 
 }
+
+/*override js.tree*/
+.resnyanskiy-tree > ul.container li span {
+	background-image: url("../externals/js.tree/images/resnyanskiy-tree-icons.png");
+}
+
+.resnyanskiy-tree > ul.container li a {
+	border-width:0px;
+}
+
+.resnyanskiy-tree > ul.container li a:hover {
+	border-width:1px;
+}
+
+.treeview-li-selected > a {
+	background-color: #F2F7FD !important ;
+    border: 1px solid #0066FF !important ;
+}
+
+
+/*override fullcalendar*/
+.fc-header-title {
+    font-size: 0.7em;
+}

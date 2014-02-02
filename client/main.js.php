@@ -13,7 +13,7 @@ include_once(dirname(__FILE__).'/../externals/jquery-ui/jquery-1.10.2.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.core.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.widget.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.mouse.js');
-//include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.position.js');
+include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.position.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.draggable.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.droppable.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.resizable.js');
@@ -30,6 +30,8 @@ include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.dialog.js')
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.menu.js');
 include_once(dirname(__FILE__).'/../externals/jquery-ui/ui/jquery.ui.tooltip.js');
 
+include_once(dirname(__FILE__)."/../externals/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js");
+
 //jquery datepicker code
 include_once(dirname(__FILE__).'/../externals/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js');
 
@@ -42,8 +44,8 @@ require_once(dirname(__FILE__).'/core/api.js.php');
 //ensure all include files are present.
 require_once(dirname(__FILE__).'/ui/tabs.js.php');
 require_once(dirname(__FILE__).'/ui/tabs/home/home_tab.js.php');
-require_once(dirname(__FILE__).'/ui/tabs/items/item_tab.js.php');
-require_once(dirname(__FILE__).'/ui/tabs/tasks/task_tab.js.php');
+require_once(dirname(__FILE__).'/ui/tabs/entry/entry_tab.js.php');
+require_once(dirname(__FILE__).'/ui/tabs/calendar/calendar_tab.js.php');
 require_once(dirname(__FILE__).'/ui/tabs/report/report_tab.js.php');
 
 //main file

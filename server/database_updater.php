@@ -212,6 +212,9 @@ function Update_From_4_To_5()
 		) ENGINE = MYISAM";
 	$result = mysql_query($sql);
 	
+	$sql = "DELETE FROM version";
+	$result = mysql_query($sql);
+	
 	Insert_Default_Settings();
 	
 	Insert_Version($version_id,$version_string);

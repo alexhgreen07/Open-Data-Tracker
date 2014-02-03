@@ -33,7 +33,18 @@ function create_manifest($folder) {
 	}
 }
 
-create_manifest(".");
+$files = array(
+	"client/main.js.php",
+	"client/main.css.php",
+	"ajax-loader.gif",
+	"externals/js.tree/images/resnyanskiy-tree-icons.png");
+
+foreach($files as $file)
+{
+	echo str_replace(' ', '%20',$file) . "\n";
+	
+	$hashes .= md5_file($file);
+}
 
 // Write the $hashes string
 echo "# Hash: " . md5($hashes) . "\n";

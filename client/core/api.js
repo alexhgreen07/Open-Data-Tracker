@@ -96,6 +96,7 @@ function Server_API() {
 					self.data = jsonRpcObj.result.data;
 					self.schema = jsonRpcObj.result.schema;
 					self.reports = jsonRpcObj.result.reports;
+					self.settings = jsonRpcObj.result.settings;
 					
 					//convert all data to the local timezone
 					self.Convert_Data_To_Local_Timezone();

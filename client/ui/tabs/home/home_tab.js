@@ -24,10 +24,10 @@ function Home_Tab() {
 	 * @desc This function retrieves the home data from the server.
 	 * @param {function} data The callback to call after the refresh of data has completed.
 	 * */
-	this.Refresh = function(data) {
+	this.Refresh = function(data,settings) {
 		
 		this.home_form.Refresh(data);
-		
+		this.settings_form.Refresh(settings);
 	};
 
 	/** @method Render

@@ -42,11 +42,11 @@ function Main_Application() {
 	this.Refresh_Data = function() {
 		
 		//refresh all data in all forms
-		self.home_tab_object.Refresh(self.api.data);
+		self.home_tab_object.Refresh(self.api.data, self.api.settings);
 		self.entry_tab_object.Refresh(self.api.data);
 		self.calendar_tab_object.Refresh(self.api.data);
 		self.report_tab_object.Refresh(self.api.data, self.api.schema, self.api.reports);
-
+		
 	};
 	
 	this.Calendar_Event_Click_Callback = function(table, row)

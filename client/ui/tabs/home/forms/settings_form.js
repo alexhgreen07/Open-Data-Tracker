@@ -3,16 +3,118 @@
  */
 function Settings_Form(){
 	
+	var self = this;
+	
+	this.Refresh = function(settings)
+	{
+		
+		self.settings = settings;
+		
+		for(var i = 0; i < settings.length; i++)
+		{
+			if(settings[i].name == "First Name")
+			{
+				document.getElementById(self.settings_first_name_text_box.id).value = settings[i].value;
+			}
+			else if(settings[i].name == "Last Name")
+			{
+				document.getElementById(self.settings_last_name_text_box.id).value = settings[i].value;
+			}
+			else if(settings[i].name == "Email")
+			{
+				document.getElementById(self.settings_email_text_box.id).value = settings[i].value;
+			}
+			else if(settings[i].name == "Text Size")
+			{
+				document.getElementById(self.change_text_box.id).value = settings[i].value;
+			}
+			else if(settings[i].name == "Remember Me Time")
+			{
+				document.getElementById(self.settings_remember_me_period_text_box.id).value = settings[i].value;
+			}
+		}
+		
+	};
+	
+	this.Save_Settings_Button_Click = function(){
+		
+		var params = [];
+		
+		var first_name = document.getElementById(self.settings_first_name_text_box.id).value;
+		var last_name = document.getElementById(self.settings_last_name_text_box.id).value;
+		var email = document.getElementById(self.settings_email_text_box.id).value;
+		var text_size = document.getElementById(self.change_text_box.id).value;
+		var remember_me_period = document.getElementById(self.settings_remember_me_period_text_box.id).value;
+		
+		params[0] = {
+			"First Name": first_name, 
+			"Last Name": last_name,
+			"Email": email,
+			"Text Size": text_size,
+			"Remember Me Time": remember_me_period,
+		};
+		
+		//execute the RPC callback for retrieving the item log
+		app.api.Home_Data_Interface.Update_Settings(params, function(jsonRpcObj) {
+			
+			if (jsonRpcObj.result.success == 'true') {
+				
+				alert('Settings saved.');
+	
+				app.api.Refresh_Data(function() {
+					//self.refresh_item_log_callback();
+				});
+				
+			} else {
+				alert('Settings failed to save.');
+				//alert(jsonRpcObj.result.debug);
+			}
+			
+	
+		});
+		
+	};
+	
 	/** @method Render_Text_Size_Changer
 	 * @desc This function will render the text size changer in the specified div.
 	 * @param {String} form_div_id The div ID to render the form in.
 	 * */
 	this.Render_Text_Size_Changer = function(form_div_id) {
 		
-		var self = this;
-		
 		//append the main tab div
 		this.text_changer_div = document.createElement('div');
+		
+		this.text_changer_div.innerHTML += 'First Name: <br />';
+		this.settings_first_name_text_box = document.createElement('input');
+		this.settings_first_name_text_box.id = 'settings_first_name_text_box';
+		this.settings_first_name_text_box.setAttribute('type','text');
+		this.text_changer_div.appendChild(this.settings_first_name_text_box);
+		
+		this.text_changer_div.innerHTML += '<br /><br />';
+		
+		this.text_changer_div.innerHTML += 'Last Name: <br />';
+		this.settings_last_name_text_box = document.createElement('input');
+		this.settings_last_name_text_box.id = 'settings_last_name_text_box';
+		this.settings_last_name_text_box.setAttribute('type','text');
+		this.text_changer_div.appendChild(this.settings_last_name_text_box);
+		
+		this.text_changer_div.innerHTML += '<br /><br />';
+		
+		this.text_changer_div.innerHTML += 'Email: <br />';
+		this.settings_email_text_box = document.createElement('input');
+		this.settings_email_text_box.id = 'settings_email_text_box';
+		this.settings_email_text_box.setAttribute('type','text');
+		this.text_changer_div.appendChild(this.settings_email_text_box);
+		
+		this.text_changer_div.innerHTML += '<br /><br />';
+		
+		this.text_changer_div.innerHTML += 'Remember Me Expiry Period: <br />';
+		this.settings_remember_me_period_text_box = document.createElement('input');
+		this.settings_remember_me_period_text_box.id = 'settings_remember_me_period_text_box';
+		this.settings_remember_me_period_text_box.setAttribute('type','text');
+		this.text_changer_div.appendChild(this.settings_remember_me_period_text_box);
+		
+		this.text_changer_div.innerHTML += '<br /><br />';
 		
 		this.text_changer_div.innerHTML += 'Text Size: <br />';
 		
@@ -37,7 +139,6 @@ function Settings_Form(){
 		this.smaller_text_link.setAttribute('id','smaller_text_link');
 		this.smaller_text_link.setAttribute('type','submit');
 		this.smaller_text_link.setAttribute('value','Smaller');
-		
 		this.text_changer_div.appendChild(this.smaller_text_link);
 		
 		this.text_changer_div.innerHTML += '<br /><br />';
@@ -46,8 +147,15 @@ function Settings_Form(){
 		this.larger_text_link.setAttribute('id','larger_text_link');
 		this.larger_text_link.setAttribute('type','submit');
 		this.larger_text_link.setAttribute('value','Larger');
-		
 		this.text_changer_div.appendChild(this.larger_text_link);
+		
+		this.text_changer_div.innerHTML += '<br /><br /><hr><br />';
+		
+		this.submit_new_settings_button = document.createElement('input');
+		this.submit_new_settings_button.setAttribute('id','submit_new_settings_button');
+		this.submit_new_settings_button.setAttribute('type','submit');
+		this.submit_new_settings_button.setAttribute('value','Save');
+		this.text_changer_div.appendChild(this.submit_new_settings_button);
 		
 		this.text_changer_div.innerHTML += '<br /><br />';
 		
@@ -64,8 +172,6 @@ function Settings_Form(){
 		});
 		
 		$('#' + this.smaller_text_link.id).button();
-		
-		//setup actions
 		$('#' + this.smaller_text_link.id).click(function()
 		{
 			var size = parseInt($('body').css('font-size').replace("px",""));
@@ -81,7 +187,6 @@ function Settings_Form(){
 		});
 		
 		$('#' + this.larger_text_link.id).button();
-		
 		$('#' + this.larger_text_link.id).click(function()
 		{
 			var size = parseInt($('body').css('font-size').replace("px",""));
@@ -91,6 +196,12 @@ function Settings_Form(){
 			$('body').css('font-size',size + 'px');
 			
 			document.getElementById(self.change_text_box.id).value = size;
+		});
+		
+		$('#' + this.submit_new_settings_button.id).button();
+		$('#' + this.submit_new_settings_button.id).click(function()
+		{
+			self.Save_Settings_Button_Click();
 		});
 		
 		var size = parseInt($('body').css('font-size').replace("px",""));

@@ -256,6 +256,8 @@ function Create_Database_Tables()
 			throw new Exception('Database failure.');
 		}
 		
+		Insert_Default_Settings();
+		
 		//insert the current version
 		Insert_Version(current_version_id,current_version_string);
 		

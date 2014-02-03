@@ -20,6 +20,28 @@ function Insert_Version($version_id, $version_string)
 	$result = mysql_query($sql);
 }
 
+function Insert_Default_Settings()
+{
+	$settings = array("First Name" => "string",
+		"Last Name" => "string",
+		"Email" => "string",
+		"Text Size" => "int",
+		"Remember Me Time" => "int",);
+	
+	foreach ($settings as $name => $type) {
+		
+	    $sql = "INSERT INTO `settings` (
+			`name`,
+			`type`
+			) VALUES (
+			'".$name."',
+			'".$type."'
+			)";
+		$result = mysql_query($sql);
+		
+	}
+}
+
 function Update_Database()
 {
 	$updates_lookup_table = array(
@@ -27,6 +49,7 @@ function Update_Database()
 			1 => 'Update_From_1_To_2',
 			2 => 'Update_From_2_To_3',
 			3 => 'Update_From_3_To_4',
+			4 => 'Update_From_4_To_5',
 		);
 	
 	$sql = "SELECT * FROM `version` WHERE `version_id` >= " . current_version_id . " ORDER BY `version_id` ASC";
@@ -48,6 +71,9 @@ function Update_Database()
 			
 			//execute update
 			$update_function();
+			
+			//delay for all upates to take effect (0.25 s)
+			usleep(250000);
 			
 			$result = mysql_query($sql);
 			$num = mysql_numrows($result);
@@ -167,6 +193,33 @@ function Update_From_3_To_4()
 	
 	$sql = "UPDATE `item_targets` SET `status` = 'Incomplete' ";
 	$result = mysql_query($sql);
+	
+	Insert_Version($version_id,$version_string);
+}
+
+function Update_From_4_To_5()
+{
+	$version_id = 5;
+	$version_string = "0.0.6";
+	
+	$sql = "CREATE TABLE `life_management`.`settings` (
+		`setting_id` INT NOT NULL AUTO_INCREMENT ,
+		`name` TEXT NOT NULL ,
+		`type` TEXT NOT NULL ,
+		PRIMARY KEY ( `setting_id` )
+		) ENGINE = MYISAM";
+	$result = mysql_query($sql);
+	
+	$sql = "CREATE TABLE `life_management`.`setting_entries` (
+		`setting_entry_id` INT NOT NULL AUTO_INCREMENT ,
+		`setting_id` INT NOT NULL ,
+		`value` TEXT NOT NULL ,
+		`member_id` INT NOT NULL ,
+		PRIMARY KEY ( `setting_entry_id` )
+		) ENGINE = MYISAM";
+	$result = mysql_query($sql);
+	
+	Insert_Default_Settings();
 	
 	Insert_Version($version_id,$version_string);
 }

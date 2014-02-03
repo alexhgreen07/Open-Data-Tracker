@@ -4,8 +4,8 @@ require_once ('config.php');
 require_once ('auth.php');
 
 //the current version of the database
-define('current_version_id', '4');
-define('current_version_string', '0.0.5');
+define('current_version_id', '5');
+define('current_version_string', '0.0.6');
 
 function Insert_Version($version_id, $version_string)
 {
@@ -44,6 +44,7 @@ function Insert_Default_Settings()
 
 function Update_Database()
 {
+	//NOTE: Order matters in this array.
 	$updates_lookup_table = array(
 			0 => 'Update_From_0_To_1',
 			1 => 'Update_From_1_To_2',
@@ -52,34 +53,26 @@ function Update_Database()
 			4 => 'Update_From_4_To_5',
 		);
 	
-	$sql = "SELECT * FROM `version` WHERE `version_id` >= " . current_version_id . " ORDER BY `version_id` ASC";
+	$sql = "SELECT MAX(`version_id`) AS `version_id` FROM `version`";
 	$result = mysql_query($sql);
 	$num = mysql_numrows($result);
-
-	if($num == 0)
+	
+	if($num > 0)
 	{
-		//update to next versions
-		$sql = "SELECT MAX(`version_id`) AS `version_id` FROM `version` WHERE `version_id` < " . current_version_id . " ORDER BY `version_id` ASC";
-		$result = mysql_query($sql);
-		$num = mysql_numrows($result);
+		$current_version = mysql_result($result, 0, "version_id");
 		
-		while ($num > 0) {
+		foreach($updates_lookup_table as $version_id => $update_function)
+		{
+			if($version_id >= $current_version)
+			{
+				$update_function = $updates_lookup_table[$version_id];
 			
-			$version_id_to_update = mysql_result($result, 0, "version_id");
-			
-			$update_function = $updates_lookup_table[$version_id_to_update];
-			
-			//execute update
-			$update_function();
-			
-			//delay for all upates to take effect (0.25 s)
-			usleep(250000);
-			
-			$result = mysql_query($sql);
-			$num = mysql_numrows($result);
+				//execute update
+				$update_function();
+			}
 		}
-
 	}
+	
 }
 
 //-----------------------------------------------------------------

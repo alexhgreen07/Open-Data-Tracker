@@ -46,6 +46,9 @@ foreach($files as $file)
 	$hashes .= md5_file($file);
 }
 
+echo "NETWORK:\n
+		server/api.php\n";
+
 // Write the $hashes string
 echo "# Hash: " . md5($hashes) . "\n";
 ?>

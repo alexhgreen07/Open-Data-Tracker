@@ -256,6 +256,33 @@ function Create_Database_Tables()
 			throw new Exception('Database failure.');
 		}
 		
+		$sql = "CREATE TABLE `life_management`.`settings` (
+			`setting_id` INT NOT NULL AUTO_INCREMENT ,
+			`name` TEXT NOT NULL ,
+			`type` TEXT NOT NULL ,
+			PRIMARY KEY ( `setting_id` )
+			) ENGINE = MYISAM";
+		$result = mysql_query($sql);
+		
+		if(!$result)
+		{
+			throw new Exception('Database failure.');
+		}
+		
+		$sql = "CREATE TABLE `life_management`.`setting_entries` (
+			`setting_entry_id` INT NOT NULL AUTO_INCREMENT ,
+			`setting_id` INT NOT NULL ,
+			`value` TEXT NOT NULL ,
+			`member_id` INT NOT NULL ,
+			PRIMARY KEY ( `setting_entry_id` )
+			) ENGINE = MYISAM";
+		$result = mysql_query($sql);
+		
+		if(!$result)
+		{
+			throw new Exception('Database failure.');
+		}
+		
 		Insert_Default_Settings();
 		
 		//insert the current version

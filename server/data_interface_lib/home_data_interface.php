@@ -206,6 +206,57 @@ class Home_Data_Interface {
 		return $return_json;
 	}
 	
-	 
+	public function Get_Settings()
+	{
+		$return_json = array('success' => 'false', );
+		
+		$sql = "SELECT * 
+			FROM `setting_entries` 
+			JOIN `settings` 
+			ON `setting_entries`.`setting_id` = `settings`.`setting_id`
+			WHERE `setting_entries`.`member_id` = '" . $_SESSION['session_member_id'] ."'";
+		
+		$result = mysql_query($sql_query, $this -> database_link);
+		
+		if ($result) {
+			$return_json['success'] = 'true';
+			
+			$return_json['data'] = array();
+			
+			$num = mysql_numrows($result);
+
+			$i = 0;
+			while ($i < $num) {
+
+				$name = mysql_result($result, $i, "name");
+				$type = mysql_result($result, $i, "type");
+				$setting_id = mysql_result($result, $i, 'setting_id');
+				$setting_entry_id = mysql_result($result, $i, 'setting_entry_id');
+				$value = mysql_result($result, $i, 'value');
+				
+				$return_json['data'][$i] = 
+					array(
+					'name' => $name, 
+					'type' => $type, 
+					'setting_id' => $setting_id, 
+					'setting_entry_id' => $setting_entry_id,
+					'value	' => $value);
+
+				$i++;
+			}
+		} else {
+			$return_json['success'] = 'false';
+		}
+		
+		return $return_json;
+	}
+	
+	public function Update_Settings($settings)
+	{
+		$return_json = array('success' => 'false', );
+		
+		return $return_json;
+	}
+	
 }
 ?>

@@ -79,7 +79,7 @@ class Data_Interface {
 		$return_json['schema']['task_entries'] = $task_entries_schema['schema'];
 		$return_json['schema']['task_targets'] = $task_targets_schema['schema'];
 		
-		$return_json['settings'] = $settings['settings'];
+		$return_json['settings'] = $settings;
 		$return_json['reports'] = $reports['reports'];
 		
 		return $return_json;

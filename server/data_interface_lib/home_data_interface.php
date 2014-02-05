@@ -210,11 +210,9 @@ class Home_Data_Interface {
 	{
 		$return_json = array('success' => 'false', );
 		
+		//settings
 		$sql = "SELECT * 
-			FROM `setting_entries` 
-			JOIN `settings` 
-			ON `setting_entries`.`setting_id` = `settings`.`setting_id`
-			WHERE `setting_entries`.`member_id` = '" . $_SESSION['session_member_id'] ."'";
+			FROM `settings`";
 		
 		$result = mysql_query($sql, $this -> database_link);
 		
@@ -229,23 +227,62 @@ class Home_Data_Interface {
 			while ($i < $num) {
 
 				$name = mysql_result($result, $i, "name");
+				$setting_id = mysql_result($result, $i, "setting_id");
+				$type = mysql_result($result, $i, 'type');
+				
+				$return_json['settings'][$i] = 
+					array(
+					'setting_id' => $setting_id, 
+					'name' => $name, 
+					'type' => $type);
+
+				$i++;
+			}
+		} else {
+			$return_json['debug'] = $sql;
+			$return_json['success'] = 'false';
+			return $return_json;
+		}
+		
+		//setting entries
+		$sql = "SELECT * 
+			FROM `setting_entries` 
+			JOIN `settings` 
+			ON `setting_entries`.`setting_id` = `settings`.`setting_id`
+			WHERE `setting_entries`.`member_id` = '" . $_SESSION['session_member_id'] ."'";
+		
+		$result = mysql_query($sql, $this -> database_link);
+		
+		if ($result) {
+			$return_json['success'] = 'true';
+			
+			$return_json['setting_entries'] = array();
+			
+			$num = mysql_numrows($result);
+
+			$i = 0;
+			while ($i < $num) {
+
+				$name = mysql_result($result, $i, "name");
 				$type = mysql_result($result, $i, "type");
 				$setting_id = mysql_result($result, $i, 'setting_id');
 				$setting_entry_id = mysql_result($result, $i, 'setting_entry_id');
 				$value = mysql_result($result, $i, 'value');
 				
-				$return_json['settings'][$i] = 
+				$return_json['setting_entries'][$i] = 
 					array(
 					'name' => $name, 
 					'type' => $type, 
 					'setting_id' => $setting_id, 
 					'setting_entry_id' => $setting_entry_id,
-					'value	' => $value);
+					'value' => $value);
 
 				$i++;
 			}
 		} else {
+			$return_json['debug'] = $sql;
 			$return_json['success'] = 'false';
+			return $return_json;
 		}
 		
 		return $return_json;
@@ -255,7 +292,53 @@ class Home_Data_Interface {
 	{
 		$return_json = array('success' => 'false', );
 		
-		$new_settings = json_decode($settings);
+		//$new_settings = json_decode($settings);
+		
+		foreach($settings  as $setting_id => $value)
+		{
+			
+			$sql = "SELECT * 
+				FROM `setting_entries` 
+				JOIN `settings` 
+				ON `setting_entries`.`setting_id` = `settings`.`setting_id`
+				WHERE `setting_entries`.`setting_id` = " . $setting_id ." 
+				AND `setting_entries`.`member_id` = " . $_SESSION['session_member_id'] ."";
+				
+			$result = mysql_query($sql, $this -> database_link);
+			
+			$num = mysql_numrows($result);
+			
+			if($num > 0)
+			{
+				$sql = "UPDATE `setting_entries` 
+					SET `value`='".$value."' 
+					WHERE `setting_entry_id` = " . $setting_id . "";
+					
+				$result = mysql_query($sql, $this -> database_link);
+				
+				if (!$result) 
+				{
+					$return_json['debug'] = $sql;
+					return $return_json;
+				}
+			}
+			else {
+				
+				$sql = "INSERT INTO `setting_entries` (`setting_id`,`value`,`member_id`) 
+					VALUES (".$setting_id.",'".$value."'," . $_SESSION['session_member_id'] .")";
+					
+				$result = mysql_query($sql, $this -> database_link);
+				
+				if (!$result) 
+				{
+					$return_json['debug'] = $sql;
+					return $return_json;
+				}
+			}
+			
+		}
+		
+		$return_json['success'] = 'true';
 		
 		return $return_json;
 	}

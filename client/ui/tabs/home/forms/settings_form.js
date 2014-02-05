@@ -10,27 +10,29 @@ function Settings_Form(){
 		
 		self.settings = settings;
 		
-		for(var i = 0; i < settings.length; i++)
+		for(var i = 0; i < settings.setting_entries.length; i++)
 		{
-			if(settings[i].name == "First Name")
+			var current_setting_entry = settings.setting_entries[i];
+			
+			if(current_setting_entry.name == "First Name")
 			{
-				document.getElementById(self.settings_first_name_text_box.id).value = settings[i].value;
+				document.getElementById(self.settings_first_name_text_box.id).value = current_setting_entry.value;
 			}
-			else if(settings[i].name == "Last Name")
+			else if(current_setting_entry.name == "Last Name")
 			{
-				document.getElementById(self.settings_last_name_text_box.id).value = settings[i].value;
+				document.getElementById(self.settings_last_name_text_box.id).value = current_setting_entry.value;
 			}
-			else if(settings[i].name == "Email")
+			else if(current_setting_entry.name == "Email")
 			{
-				document.getElementById(self.settings_email_text_box.id).value = settings[i].value;
+				document.getElementById(self.settings_email_text_box.id).value = current_setting_entry.value;
 			}
-			else if(settings[i].name == "Text Size")
+			else if(current_setting_entry.name == "Text Size")
 			{
-				document.getElementById(self.change_text_box.id).value = settings[i].value;
+				document.getElementById(self.change_text_box.id).value = current_setting_entry.value;
 			}
-			else if(settings[i].name == "Remember Me Time")
+			else if(current_setting_entry.name == "Remember Me Time")
 			{
-				document.getElementById(self.settings_remember_me_period_text_box.id).value = settings[i].value;
+				document.getElementById(self.settings_remember_me_period_text_box.id).value = current_setting_entry.value;
 			}
 		}
 		
@@ -46,13 +48,36 @@ function Settings_Form(){
 		var text_size = document.getElementById(self.change_text_box.id).value;
 		var remember_me_period = document.getElementById(self.settings_remember_me_period_text_box.id).value;
 		
-		params[0] = {
-			"First Name": first_name, 
-			"Last Name": last_name,
-			"Email": email,
-			"Text Size": text_size,
-			"Remember Me Time": remember_me_period,
-		};
+		params[0] = {};
+		
+		for(var i = 0; i < self.settings.settings.length; i++)
+		{
+			
+			var current_setting = self.settings.settings[i];
+			
+			if(current_setting.name == "First Name")
+			{
+				params[0][current_setting.setting_id] = first_name;
+			}
+			else if(current_setting.name == "Last Name")
+			{
+				params[0][current_setting.setting_id] = last_name;
+			}
+			else if(current_setting.name == "Email")
+			{
+				params[0][current_setting.setting_id] = email;
+			}
+			else if(current_setting.name == "Text Size")
+			{
+				params[0][current_setting.setting_id] = text_size;
+			}
+			else if(current_setting.name == "Remember Me Time")
+			{
+				params[0][current_setting.setting_id] = remember_me_period;
+			}
+			
+			
+		}
 		
 		//execute the RPC callback for retrieving the item log
 		app.api.Home_Data_Interface.Update_Settings(params, function(jsonRpcObj) {
@@ -67,7 +92,7 @@ function Settings_Form(){
 				
 			} else {
 				alert('Settings failed to save.');
-				//alert(jsonRpcObj.result.debug);
+				alert(jsonRpcObj.result.debug);
 			}
 			
 	

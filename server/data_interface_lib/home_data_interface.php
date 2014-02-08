@@ -203,81 +203,26 @@ class Home_Data_Interface {
 		}
 		
 		$return_json['settings'] = $data;
-		/*
-		//settings
-		$sql = "SELECT * 
-			FROM `settings`";
 		
-		$result = mysql_query($sql, $this -> database_link);
+		$join = "setting_entries JOIN settings ON setting_entries.setting_id = settings.setting_id";
+		$columns = array(
+			"Name" => "name",
+			"Type" => "type",
+			"Setting ID" => "setting_entries.setting_id",
+			"Setting Entry ID" => "setting_entry_id",
+			"Value" => "value");
 		
-		if ($result) {
-			$return_json['success'] = 'true';
-			
-			$return_json['settings'] = array();
-			
-			$num = mysql_numrows($result);
-
-			$i = 0;
-			while ($i < $num) {
-
-				$name = mysql_result($result, $i, "name");
-				$setting_id = mysql_result($result, $i, "setting_id");
-				$type = mysql_result($result, $i, 'type');
-				
-				$return_json['settings'][$i] = 
-					array(
-					'setting_id' => $setting_id, 
-					'name' => $name, 
-					'type' => $type);
-
-				$i++;
-			}
-		} else {
-			$return_json['debug'] = $sql;
+		$data = Select_By_Member($join,$columns,"1","ORDER BY setting_entry_id");
+		
+		if(!$data)
+		{
 			$return_json['success'] = 'false';
 			return $return_json;
 		}
-		*/
-		//setting entries
-		$sql = "SELECT * 
-			FROM `setting_entries` 
-			JOIN `settings` 
-			ON `setting_entries`.`setting_id` = `settings`.`setting_id`
-			WHERE `setting_entries`.`member_id` = '" . $_SESSION['session_member_id'] ."'";
 		
-		$result = mysql_query($sql, $this -> database_link);
+		$return_json['setting_entries'] = $data;
 		
-		if ($result) {
-			$return_json['success'] = 'true';
-			
-			$return_json['setting_entries'] = array();
-			
-			$num = mysql_numrows($result);
-
-			$i = 0;
-			while ($i < $num) {
-
-				$name = mysql_result($result, $i, "name");
-				$type = mysql_result($result, $i, "type");
-				$setting_id = mysql_result($result, $i, 'setting_id');
-				$setting_entry_id = mysql_result($result, $i, 'setting_entry_id');
-				$value = mysql_result($result, $i, 'value');
-				
-				$return_json['setting_entries'][$i] = 
-					array(
-					'name' => $name, 
-					'type' => $type, 
-					'setting_id' => $setting_id, 
-					'setting_entry_id' => $setting_entry_id,
-					'value' => $value);
-
-				$i++;
-			}
-		} else {
-			$return_json['debug'] = $sql;
-			$return_json['success'] = 'false';
-			return $return_json;
-		}
+		$return_json['success'] = 'true';
 		
 		return $return_json;
 	}

@@ -14,25 +14,25 @@ function Settings_Form(){
 		{
 			var current_setting_entry = settings.setting_entries[i];
 			
-			if(current_setting_entry.name == "First Name")
+			if(current_setting_entry["Name"] == "First Name")
 			{
-				document.getElementById(self.settings_first_name_text_box.id).value = current_setting_entry.value;
+				document.getElementById(self.settings_first_name_text_box.id).value = current_setting_entry["Value"];
 			}
-			else if(current_setting_entry.name == "Last Name")
+			else if(current_setting_entry["Name"] == "Last Name")
 			{
-				document.getElementById(self.settings_last_name_text_box.id).value = current_setting_entry.value;
+				document.getElementById(self.settings_last_name_text_box.id).value = current_setting_entry["Value"];
 			}
-			else if(current_setting_entry.name == "Email")
+			else if(current_setting_entry["Name"] == "Email")
 			{
-				document.getElementById(self.settings_email_text_box.id).value = current_setting_entry.value;
+				document.getElementById(self.settings_email_text_box.id).value = current_setting_entry["Value"];
 			}
-			else if(current_setting_entry.name == "Text Size")
+			else if(current_setting_entry["Name"] == "Text Size")
 			{
-				document.getElementById(self.change_text_box.id).value = current_setting_entry.value;
+				document.getElementById(self.change_text_box.id).value = current_setting_entry["Value"];
 			}
-			else if(current_setting_entry.name == "Remember Me Time")
+			else if(current_setting_entry["Name"] == "Remember Me Time")
 			{
-				document.getElementById(self.settings_remember_me_period_text_box.id).value = current_setting_entry.value;
+				document.getElementById(self.settings_remember_me_period_text_box.id).value = current_setting_entry["Value"];
 			}
 		}
 		

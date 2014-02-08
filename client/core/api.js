@@ -74,6 +74,9 @@ function Server_API() {
 			
 			self.Refresh_Data(function(){
 				
+				//call the data changed callback since the data was refreshed.
+				self.data_changed_callback();
+				
 				callback();
 				
 			});
@@ -92,6 +95,8 @@ function Server_API() {
 		{
 			self.Refresh_Data_From_Diff(function(){
 				
+				//call the data changed callback since the data was refreshed.
+				self.data_changed_callback();
 				
 				callback();
 			});
@@ -131,23 +136,54 @@ function Server_API() {
 				
 				new_patch = jsonRpcObj.result;
 				
-				self.Patch_Table(self.data["Categories"],new_patch.data["Categories"]);
-				self.Patch_Table(self.data["items"],new_patch.data["items"]);
-				self.Patch_Table(self.data["item_entries"],new_patch.data["item_entries"]);
-				self.Patch_Table(self.data["item_targets"],new_patch.data["item_targets"]);
-				self.Patch_Table(self.data["tasks"],new_patch.data["tasks"]);
-				self.Patch_Table(self.data["task_entries"],new_patch.data["task_entries"]);
-				self.Patch_Table(self.data["task_targets"],new_patch.data["task_targets"]);
+				self.Patch_Table(
+					self.data["Categories"],
+					self.schema["Categories"],
+					new_patch.data["Categories"],
+					'Category ID');
+				self.Patch_Table(
+					self.data["items"],
+					self.schema["items"],
+					new_patch.data["items"],
+					'item_id');
+				self.Patch_Table(
+					self.data["item_entries"],
+					self.schema["item_entries"],
+					new_patch.data["item_entries"],
+					'item_log_id');
+				self.Patch_Table(
+					self.data["item_targets"],
+					self.schema["item_targets"],
+					new_patch.data["item_targets"],
+					'item_target_id');
+				self.Patch_Table(
+					self.data["tasks"],
+					self.schema["tasks"],
+					new_patch.data["tasks"],
+					'task_id');
+				self.Patch_Table(
+					self.data["task_entries"],
+					self.schema["task_entries"],
+					new_patch.data["task_entries"],
+					'task_log_id');
+				self.Patch_Table(
+					self.data["task_targets"],
+					self.schema["task_targets"],
+					new_patch.data["task_targets"],
+					'task_schedule_id');
 				
-				self.Patch_Table(self.settings["settings"],new_patch.settings["settings"]);
-				self.Patch_Table(self.settings["setting_entries"],new_patch.settings["setting_entries"]);
-				self.Patch_Table(self.reports,new_patch.reports);
-				
-				//convert all data to the local timezone
-				//self.Convert_Data_To_Local_Timezone();
-				
-				//call the data changed callback since the data was refreshed.
-				self.data_changed_callback();
+				self.Patch_Table(
+					self.settings["settings"],
+					new_patch.settings["settings"],
+					'Setting ID');
+				self.Patch_Table(
+					self.settings["setting_entries"],
+					new_patch.settings["setting_entries"],
+					'Setting Entry ID');
+				self.Patch_Table(
+					self.reports,
+					new_patch.reports,
+					'report_id');
 				
 				callback();
 				
@@ -155,8 +191,9 @@ function Server_API() {
 		
 	};
 	
-	this.Patch_Table = function(table, patch, primary_column)
+	this.Patch_Table = function(table, schema, patch, primary_column)
 	{
+		var diff_table = [];
 		
 		for(var i = 0; i < patch.length; i++)
 		{
@@ -165,7 +202,9 @@ function Server_API() {
 			
 			if(patch_row.operation == 'insert')
 			{
+				
 				table.push(patch_row.row);
+				diff_table.push(patch_row.row);
 			}
 			else if(patch_row.operation == 'update')
 			{
@@ -174,8 +213,11 @@ function Server_API() {
 					if(table[key][primary_column] === patch_row.row[primary_column])
 					{
 						table[key] = patch_row.row;
+						break;
 					}
 				}
+				
+				diff_table.push(patch_row.row);
 			}
 			else if(patch_row.operation == 'remove')
 			{
@@ -189,6 +231,8 @@ function Server_API() {
 			}
 		}
 		
+		this.Convert_Table_To_Local_Timezone(diff_table,schema);
+		
 	};
 	
 	this.Convert_Data_To_Local_Timezone = function(){
@@ -197,26 +241,31 @@ function Server_API() {
 		
 		for(var key in self.data)
 		{
-			for(i = 0; i < self.data[key].length; i++)
-			{
-				//iterate through the columns
-				for(var column in self.data[key][i])
-				{
-					if(self.schema[key][column] == "date")
-					{
-						//convert UTC datetime to local timezone
-						var utc_date = Cast_Server_Datetime_to_Date(self.data[key][i][column]);
-						var local_date = Convert_UTC_Date_To_Local_Timezone(utc_date);
-						
-						//reset the date string in the column
-						self.data[key][i][column] = Cast_Date_to_Server_Datetime(local_date);
-					}
-				}
-				
-			}
+			self.Convert_Table_To_Local_Timezone(self.data[key],self.schema[key]);
 			
 		}
 		
+	};
+	
+	this.Convert_Table_To_Local_Timezone = function(table, schema)
+	{
+		for(i = 0; i < table.length; i++)
+		{
+			//iterate through the columns
+			for(var column in table[i])
+			{
+				if(schema[column] == "date")
+				{
+					//convert UTC datetime to local timezone
+					var utc_date = Cast_Server_Datetime_to_Date(table[i][column]);
+					var local_date = Convert_UTC_Date_To_Local_Timezone(utc_date);
+					
+					//reset the date string in the column
+					table[i][column] = Cast_Date_to_Server_Datetime(local_date);
+				}
+			}
+			
+		}
 	};
 	
 }

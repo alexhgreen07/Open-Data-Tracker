@@ -16,7 +16,7 @@ function View_Category_Form(){
 		
 		select_html += '<option value="0">-</option>';
 		
-		self.categories_list = data.categories;
+		self.categories_list = data['Categories'];
 		
 		for (var i=0; i < self.categories_list.length; i++) {
 			

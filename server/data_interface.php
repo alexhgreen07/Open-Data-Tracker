@@ -62,7 +62,7 @@ class Data_Interface {
 		$reports = $this->reportdatainterface->Get_Saved_Reports();
 		
 		//load all data in the return json arrays
-		$return_json['data']['categories'] = $categories['data'];
+		$return_json['data']['Categories'] = $categories['data'];
 		$return_json['data']['items'] = $items['data'];
 		$return_json['data']['item_entries'] = $item_entries['data'];
 		$return_json['data']['item_targets'] = $item_targets['data'];
@@ -71,7 +71,7 @@ class Data_Interface {
 		$return_json['data']['task_targets'] = $task_targets['data'];
 		
 		//load all data schemas in the return json arrays
-		$return_json['schema']['categories'] = $categories_schema['schema'];
+		$return_json['schema']['Categories'] = $categories_schema['schema'];
 		$return_json['schema']['items'] = $items_schema['schema'];
 		$return_json['schema']['item_entries'] = $item_entries_schema['schema'];
 		$return_json['schema']['item_targets'] = $item_targets_schema['schema'];
@@ -84,6 +84,13 @@ class Data_Interface {
 		
 		return $return_json;
 		
+	}
+
+	public function Refresh_From_Session_Diff(){
+		
+		$return_json = array('success' => 'false', 'data' => '', );
+		
+		return $return_json;
 	}
 
 }

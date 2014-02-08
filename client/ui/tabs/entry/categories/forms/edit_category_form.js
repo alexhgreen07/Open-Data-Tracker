@@ -7,7 +7,7 @@ function Edit_Category_Form(){
 	
 	this.Refresh = function(data){
 		
-		self.categories_list = data.categories;
+		self.categories_list = data["Categories"];
 		
 		self.Category_Edit_Select_Change_Event();
 	};
@@ -132,9 +132,9 @@ function Edit_Category_Form(){
 			//TODO: Fix this bug. It needs category data.
 			var selected_category = this.categories_list[selected_index - 1];
 		
-			document.getElementById(this.edit_category_name.id).value = selected_category.name;
-			document.getElementById(this.edit_category_description.id).value = selected_category.description;
-			document.getElementById(this.edit_category_parent_select.id).value = selected_category.parent_category_id;
+			document.getElementById(this.edit_category_name.id).value = selected_category["Name"];
+			document.getElementById(this.edit_category_description.id).value = selected_category["Description"];
+			document.getElementById(this.edit_category_parent_select.id).value = selected_category["Parent Category ID"];
 			
 		}
 		else{

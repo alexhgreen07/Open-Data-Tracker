@@ -55,25 +55,25 @@ function Settings_Form(){
 			
 			var current_setting = self.settings.settings[i];
 			
-			if(current_setting.name == "First Name")
+			if(current_setting["Name"] == "First Name")
 			{
-				params[0][current_setting.setting_id] = first_name;
+				params[0][current_setting["Setting ID"]] = first_name;
 			}
-			else if(current_setting.name == "Last Name")
+			else if(current_setting["Name"] == "Last Name")
 			{
-				params[0][current_setting.setting_id] = last_name;
+				params[0][current_setting["Setting ID"]] = last_name;
 			}
-			else if(current_setting.name == "Email")
+			else if(current_setting["Name"] == "Email")
 			{
-				params[0][current_setting.setting_id] = email;
+				params[0][current_setting["Setting ID"]] = email;
 			}
-			else if(current_setting.name == "Text Size")
+			else if(current_setting["Name"] == "Text Size")
 			{
-				params[0][current_setting.setting_id] = text_size;
+				params[0][current_setting["Setting ID"]] = text_size;
 			}
-			else if(current_setting.name == "Remember Me Time")
+			else if(current_setting["Name"] == "Remember Me Time")
 			{
-				params[0][current_setting.setting_id] = remember_me_period;
+				params[0][current_setting["Setting ID"]] = remember_me_period;
 			}
 			
 			

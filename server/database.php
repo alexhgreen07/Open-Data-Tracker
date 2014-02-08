@@ -81,6 +81,8 @@ function Select($table, $columns, $where, $extra)
 	$sql .= " WHERE (" . $where . ")";
 	$sql .= " " . $extra;
 	
+	//echo $sql;
+	
 	//execute query
 	$result = mysql_query($sql);
 	

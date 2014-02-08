@@ -41,18 +41,16 @@ class Item_Data_Interface {
 				`value` ,
 				`item_id` ,
 				`note`,
-				`item_target_id`,
-				`member_id`
+				`item_target_id`
 				)
 				VALUES (
 				'" . $time . "', 
 				'" . $value . "', 
 				'" . $item_id . "', 
 				'" . $note . "',
-				".$item_target_id.",
-				'" . $_SESSION['session_member_id'] ."')";
+				".$item_target_id.")";
 
-			//$return_json['debug'] = $sql_insert;
+			$return_json['debug'] = $sql_insert;
 
 			$success = mysql_query($sql_insert, $this -> database_link);
 
@@ -86,8 +84,7 @@ class Item_Data_Interface {
 				`note`='".$note."',
 				`item_target_id` = ".$item_target_id." 
 				WHERE 
-				`item_log_id` = " . $item_entry_id . " AND 
-				`member_id`='" . $_SESSION['session_member_id'] ."'";
+				`item_log_id` = " . $item_entry_id . "";
 
 			$return_json['debug'] = $sql_insert;
 
@@ -109,7 +106,7 @@ class Item_Data_Interface {
 		
 		$return_json = array('success' => 'false', );
 		
-		$sql_insert = "DELETE FROM `item_log` WHERE `item_log_id` = " . $item_entry_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+		$sql_insert = "DELETE FROM `item_log` WHERE `item_log_id` = " . $item_entry_id . "";
 
 		//$return_json['debug'] = $sql_insert;
 
@@ -218,8 +215,7 @@ class Item_Data_Interface {
 			`recurring`,
 			`recurrance_period`,
 			`recurrance_end_time`,
-			`status`,
-			`member_id`) VALUES (
+			`status`) VALUES (
 			'".$start_time."',
 			'".$type."',
 			".$value.",
@@ -230,8 +226,7 @@ class Item_Data_Interface {
 			".$recurring.",
 			".$recurrance_period.",
 			'".$recurrance_end_date."',
-			'Incomplete',
-			'" . $_SESSION['session_member_id'] ."')";
+			'Incomplete')";
 
 		$success = mysql_query($sql, $this -> database_link);
 		
@@ -245,8 +240,7 @@ class Item_Data_Interface {
 			`allowed_variance` = ".$variance." AND
 			`recurring` = ".$recurring." AND
 			`recurrance_period` = ".$recurrance_period." AND
-			`recurrance_end_time` = '".$recurrance_end_date."' AND
-			`member_id` = '" . $_SESSION['session_member_id'] ."'";
+			`recurrance_end_time` = '".$recurrance_end_date."'";
 		
 		$result = mysql_query($sql, $this -> database_link);
 		
@@ -297,7 +291,7 @@ class Item_Data_Interface {
 			`recurrance_period` = ".$recurrance_period.",
 			`recurrance_end_time` = '".$recurrance_end_date."',
 			`status` = '".$status."'
-			WHERE `item_target_id` = " . $item_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+			WHERE `item_target_id` = " . $item_target_id . "";
 
 		$success = mysql_query($sql_insert, $this -> database_link);
 
@@ -329,7 +323,7 @@ class Item_Data_Interface {
 		
 		if ($item_target_id != "") {
 
-			$sql_insert = "DELETE FROM `item_targets` WHERE `item_target_id`=" . $item_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+			$sql_insert = "DELETE FROM `item_targets` WHERE `item_target_id`=" . $item_target_id . "";
 
 			$success = mysql_query($sql_insert, $this -> database_link);
 			
@@ -373,52 +367,28 @@ class Item_Data_Interface {
 	public function Get_Item_Log() {
 
 		$return_json = array('success' => 'false', 'data' => '', );
-
-		$query = "SELECT 
-			`item_log`.`item_log_id` AS `item_log_id`,
-			`item_log`.`item_id` AS `item_id`, 
-			`item_log`.`time` AS `time`, 
-			`item_log`.`value` AS `value`, 
-			`item_log`.`item_target_id` AS `item_target_id`,
-			`items`.`name` AS `name`,
-			`items`.`unit` AS `unit`, 
-			`item_log`.`note` AS `note` 
-			FROM `item_log`, `items` 
-			WHERE `items`.`item_id` = `item_log`.`item_id` AND `items`.`member_id` = '" . $_SESSION['session_member_id'] ."'
-			ORDER BY `time` DESC";
-			
-		$result = mysql_query($query, $this -> database_link);
-
-		$num = mysql_numrows($result);
-
-		$return_json['data'] = array();
 		
-		$i = 0;
-		while ($i < $num) {
-			
-			$item_entry_log_id = mysql_result($result, $i, "item_log_id");
-			$item_entry_id = mysql_result($result, $i, "item_id");
-			$item_entry_time = mysql_result($result, $i, "time");
-			$item_entry_value = mysql_result($result, $i, "value");
-			$item_entry_name = mysql_result($result, $i, "name");
-			$item_entry_unit = mysql_result($result, $i, "unit");
-			$item_entry_note = mysql_result($result, $i, "note");
-			$item_entry_target_id = mysql_result($result, $i, "item_target_id");
-			
-			$return_json['data'][$i] = array(
-				'item_log_id' => $item_entry_log_id,
-				'item_id' => $item_entry_id,
-				'time' => $item_entry_time,
-				'value' => $item_entry_value,
-				'name' => $item_entry_name,
-				'unit' => $item_entry_unit,
-				'note' => $item_entry_note,
-				'item_target_id' =>$item_entry_target_id);
-
-
-			$i++;
+		$join = "item_log JOIN items ON item_log.item_id = items.item_id";
+		$columns = array(
+			"item_log_id" => "item_log.item_log_id",
+			"item_id" => "item_log.item_id",
+			"time" => "item_log.time",
+			"value" => "item_log.value",
+			"item_target_id" => "item_log.item_target_id",
+			"note" => "item_log.note",
+			"name" => "items.name",
+			"unit" => "items.unit");
+		$data = Select_By_Member($join,$columns,"1","ORDER BY item_log_id");
+		
+		if(!$data)
+		{
+			$return_json['success'] = 'false';
+			return $return_json;
 		}
-
+		
+		$return_json['data'] = $data;
+		$return_json['success'] = 'true';
+		
 		return $return_json;
 	}
 	
@@ -441,43 +411,23 @@ class Item_Data_Interface {
 	public function Get_Items() {
 		$return_json = array('success' => 'false', 'data' => array(), );
 		
-		$sql_query = "SELECT `item_id`, `name`, `description`, `unit`, `date_created`, `category_id` FROM `items` WHERE `member_id`='" . $_SESSION['session_member_id'] ."' ORDER BY `name` asc";
-		$result = mysql_query($sql_query, $this -> database_link);
-
-		if ($result) {
-			$return_json['success'] = 'true';
-			$return_json['data'] = array();
-			
-			$num = mysql_numrows($result);
-
-			$i = 0;
-			while ($i < $num) {
-
-				$item_name = mysql_result($result, $i, "name");
-				$item_description = mysql_result($result, $i, 'description');
-				$item_unit = mysql_result($result, $i, "unit");
-				$item_date_created = mysql_result($result, $i, 'date_created');
-				$item_id = mysql_result($result, $i, "item_id");
-				$category_id = mysql_result($result, $i, "category_id");
-
-				if ($item_name != "") {
-					$return_json['data'][$i] = 
-						array(
-						'item_name' => $item_name, 
-						'item_description' => $item_description, 
-						'item_unit' => $item_unit, 
-						'date_created' => $item_date_created, 
-						'item_id' => $item_id, 
-						'category_id' =>$category_id);
-	
-
-				}
-
-				$i++;
-			}
-		} else {
+		$columns = array(
+			"item_id" => "item_id",
+			"item_name" => "name",
+			"item_description" => "description",
+			"item_unit" => "unit",
+			"date_created" => "date_created",
+			"category_id" => "category_id");
+		$data = Select_By_Member("items",$columns,"1","ORDER BY item_id");
+		
+		if(!$data)
+		{
 			$return_json['success'] = 'false';
+			return $return_json;
 		}
+		
+		$return_json['data'] = $data;
+		$return_json['success'] = 'true';
 		
 		return $return_json;
 	}
@@ -511,71 +461,32 @@ class Item_Data_Interface {
 		
 		$return_json = array('success' => 'false', 'data' => array(), );
 		
-		$sql_query = "SELECT 
-			`item_targets`.`item_target_id` AS `item_target_id`, 
-			`item_targets`.`start_time` AS `start_time`, 
-			`item_targets`.`type` AS `type`, 
-			`item_targets`.`value` AS `value`, 
-			`item_targets`.`item_id` AS `item_id`, 
-			`item_targets`.`period_type` AS `period_type`, 
-			`item_targets`.`period` AS `period`, 
-			`item_targets`.`recurring` AS `recurring`,
-			`item_targets`.`recurring_child_id` AS `recurring_child_id`,
-			`item_targets`.`recurrance_end_time` AS `recurrance_end_time`,
-			`item_targets`.`allowed_variance` AS `allowed_variance`,
-			`item_targets`.`recurrance_period` AS `recurrance_period`,
-			`item_targets`.`status` AS `status`,
-			`items`.`name` AS `name`
-			FROM `item_targets`, `items` WHERE `items`.`item_id` = `item_targets`.`item_id` AND `items`.`member_id`='" . $_SESSION['session_member_id'] ."'";
-		$result = mysql_query($sql_query, $this -> database_link);
-
-		if ($result) {
-			$return_json['success'] = 'true';
-			$return_json['data'] = array();
-			
-			$num = mysql_numrows($result);
-
-			$i = 0;
-			while ($i < $num) {
-
-				$item_target_id = mysql_result($result, $i, "item_target_id");
-				$start_time = mysql_result($result, $i, 'start_time');
-				$type = mysql_result($result, $i, "type");
-				$value = mysql_result($result, $i, 'value');
-				$item_id = mysql_result($result, $i, "item_id");
-				$name = mysql_result($result, $i, "name");
-				$period_type = mysql_result($result, $i, "period_type");
-				$period = mysql_result($result, $i, "period");
-				$recurring = mysql_result($result, $i, "recurring");
-				$recurring_child_id = mysql_result($result, $i, "recurring_child_id");
-				$recurrance_end_time = mysql_result($result, $i, "recurrance_end_time");
-				$allowed_variance = mysql_result($result, $i, "allowed_variance");
-				$recurrance_period = mysql_result($result, $i, "recurrance_period");
-				$status = mysql_result($result, $i, "status");
-
-				$return_json['data'][$i] = 
-					array(
-						'item_target_id' => $item_target_id, 
-						'start_time' => $start_time, 
-						'type' => $type, 
-						'value' => $value, 
-						'item_id' => $item_id, 
-						'name' => $name,
-						'period_type' => $period_type, 
-						'period' => $period, 
-						'recurring' => $recurring,
-						'recurring_child_id' => $recurring_child_id,
-						'recurrance_end_time' => $recurrance_end_time,
-						'allowed_variance' => $allowed_variance,
-						'recurrance_period' => $recurrance_period,
-						'status' => $status
-					);
-
-				$i++;
-			}
-		} else {
+		$join = "item_targets JOIN items ON item_targets.item_id = items.item_id";
+		$columns = array(
+			"item_target_id" => "item_targets.item_target_id",
+			"start_time" => "item_targets.start_time",
+			"type" => "item_targets.type",
+			"value" => "item_targets.value",
+			"item_id" => "item_targets.item_id",
+			"period_type" => "item_targets.period_type",
+			"period" => "item_targets.period",
+			"recurring" => "item_targets.recurring",
+			"recurring_child_id" => "item_targets.recurring_child_id",
+			"recurrance_end_time" => "item_targets.recurrance_end_time",
+			"allowed_variance" => "item_targets.allowed_variance",
+			"recurrance_period" => "item_targets.recurrance_period",
+			"status" => "item_targets.status",
+			"name" => "items.name");
+		$data = Select_By_Member($join,$columns,"1","ORDER BY item_target_id");
+		
+		if(!$data)
+		{
 			$return_json['success'] = 'false';
+			return $return_json;
 		}
+		
+		$return_json['data'] = $data;
+		$return_json['success'] = 'true';
 		
 		return $return_json;
 		

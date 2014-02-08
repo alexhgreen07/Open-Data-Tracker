@@ -194,7 +194,7 @@ class Home_Data_Interface {
 			'Name' => 'name',
 			'Type' => 'type');
 		
-		$data = Select("settings",$columns,"1","ORDER BY `setting_id`");
+		$data = Select("settings",$columns,"1","ORDER BY setting_id");
 		
 		if (!$data) {
 			

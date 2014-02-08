@@ -21,6 +21,104 @@ function Connect_To_DB()
 	return $link;
 }
 
+function Insert($table, $value_lookup)
+{
+	$sql = "INSERT INTO `" . $table . "`";
+	
+	$columns = array();
+	$values = array();
+	
+	foreach($value_lookup as $column => $value)
+	{
+		$columns[] = "`".$column."`";
+		$values[] = "'" . $value . "'";
+	}
+	
+	$sql .= " (" . implode(", ", $columns) . ")";
+	$sql .= " VALUES (" . implode(", ", $values) . ")";
+	
+	$result = mysql_query($sql);
+	
+	return $result;
+}
+
+function Update($table, $value_lookup, $where)
+{
+	$sql = "UPDATE `" . $table . "` ";
+	
+	$set_columns = array();
+	
+	foreach($value_lookup as $column => $value)
+	{
+		$set_columns[] = "`" . $column . "` = '" . $value . "'";
+	}
+	
+	$sql .= "SET " . implode(",",$set_columns);
+	
+	$sql .= " WHERE (" . $where . ")";
+	
+	$result = mysql_query($sql);
+	
+	return $result;
+}
+
+function Delete($table, $where)
+{
+	$sql = "DELETE FROM `".$table."` WHERE (" . $where . ")";
+	
+	$result = mysql_query($sql);
+	
+	return $result;
+}
+
+function Select($table, $columns, $where, $extra)
+{
+	$sql = "SELECT ";
+	
+	$sql .= implode(", ",$columns);
+	
+	$sql .= " FROM " . $table . "";
+	$sql .= " WHERE (" . $where . ")";
+	$sql .= " " . $extra;
+	
+	//execute query
+	$result = mysql_query($sql);
+	
+	if(!$result)
+	{
+		return $result;
+	}
+	
+	$num = mysql_numrows($result);
+
+	$data = array();
+
+	$i = 0;
+	while ($i < $num) {
+		
+		$data[$i] = array();
+		
+		foreach($columns as $key => $column)
+		{
+			$value = mysql_result($result, $i, $column);
+			
+			$data[$i][$key] = $value;
+		}
+		
+		$i++;
+	}
+	
+	return $data;
+}
+
+function Select_By_Member($table, $columns, $where, $extra)
+{
+	$where = "(" . $where . ") AND `member_id` = '" . $_SESSION['session_member_id'] . "'";
+	$data = Select($table,$columns,$where,$extra);
+	
+	return $data;
+}
+
 function Create_Database_Tables()
 {
 	$sql = "";

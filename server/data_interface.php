@@ -174,7 +174,7 @@ class Data_Interface {
 			if(($old_cnt >= count($old_table)) || ($old_row[$primary_column] < $new_row[$primary_column]))
 			{
 				
-				$diff_table[] = array('insert',$new_row);
+				$diff_table[] = array('operation' => 'insert','row' => $new_row);
 				$new_cnt++;
 				
 				
@@ -182,7 +182,7 @@ class Data_Interface {
 			else if(($new_cnt >= count($new_table)) || ($old_row[$primary_column] > $new_row[$primary_column]))
 			{
 				
-				$diff_table[] = array('remove',$old_row);
+				$diff_table[] = array('operation' => 'remove','row' => $old_row);
 				$old_cnt++;
 			}
 			else {
@@ -193,7 +193,7 @@ class Data_Interface {
 				//check the JSON encoded row
 				if($old_row_string !== $new_row_string)
 				{
-					$diff_table[] = array('update',$new_row);
+					$diff_table[] = array('operation' => 'update','row' => $new_row);
 				}
 				
 				$old_cnt++;

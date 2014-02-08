@@ -232,6 +232,12 @@ function Update_From_5_To_6()
 	$sql = "ALTER TABLE `item_targets` DROP `member_id` ";
 	$result = mysql_query($sql);
 	
+	$sql = "ALTER TABLE `task_targets` DROP `member_id`";
+	$result = mysql_query($sql);
+	
+	$sql = "ALTER TABLE `task_log` DROP `member_id`";
+	$result = mysql_query($sql);
+	
 	Insert_Version($version_id,$version_string);
 }
 

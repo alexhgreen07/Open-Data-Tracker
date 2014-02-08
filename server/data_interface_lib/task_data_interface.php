@@ -235,52 +235,26 @@ class Task_Data_Interface {
 	public function Get_Tasks() {
 		
 		$return_json = array('success' => 'false', 'data' => '');
-
-		$sql_query = "SELECT DISTINCT 
-			`task_id`,
-			`name`,
-			`description`,
-			`date_created`,
-			`note`,
-			`category_id`,
-			`status` FROM `tasks` WHERE `member_id`='" . $_SESSION['session_member_id'] ."' ORDER BY `name` ASC";
-		$result = mysql_query($sql_query, $this -> database_link);
-
-		if ($result) {
-			$return_json['success'] = 'true';
-
-			$num = mysql_numrows($result);
-
-			$return_json['data'] = array();
-			
-			$i = 0;
-			while ($i < $num) {
-				
-				$task_id= mysql_result($result,$i,"task_id");
-				$task_name = mysql_result($result, $i, "name");
-				$task_description = mysql_result($result, $i, "description");
-				$date_created = mysql_result($result,$i,'date_created');
-				$task_note = mysql_result($result,$i,'note');
-				$category_id = mysql_result($result,$i,'category_id');
-				$status = mysql_result($result,$i,'status');
-				
-				$return_json['data'][$i] = array(
-					'task_id' => $task_id,
-					'name' => $task_name,
-					'description' => $task_description,
-					'date_created' => $date_created,
-					'note' => $task_note,
-					'category_id' => $category_id,
-					'status' => $status);
-				
-				
-				$i++;
-			}
-
-			
-		} else {
+		
+		$columns = array(
+			"task_id" => "tasks.task_id",
+			"name" => "tasks.name",
+			"description" => "tasks.description",
+			"date_created" => "tasks.date_created",
+			"note" => "tasks.note",
+			"category_id" => "tasks.category_id",
+			"status" => "tasks.status");
+		$extra = "ORDER BY tasks.task_id";
+		$data = Select_By_Member('tasks',$columns,"1",$extra);
+		
+		if(!$data)
+		{
 			$return_json['success'] = 'false';
+			return $return_json;
 		}
+		
+		$return_json['data'] = $data;
+		$return_json['success'] = 'true';
 		
 		return $return_json;
 	}
@@ -307,61 +281,32 @@ class Task_Data_Interface {
 	public function Get_Task_Log() {
 
 		$return_json = array('success' => 'false', 'data' => '');
-
-		$query = "SELECT 
-			`tasks`.`name` AS `name`, 
-			`task_log`.`task_log_id` AS `task_log_id`,
-			`tasks`.`task_id` AS `task_id`,
-			`task_log`.`start_time` AS `start_time`, 
-			`task_log`.`hours` AS `hours`, 
-			`task_log`.`status` AS `status`, 
-			`task_log`.`note` AS `note`,
-			`task_log`.`task_target_id` AS `task_target_id`,
-			`task_targets`.`status` AS `target_status`
-			FROM `task_log`
-			JOIN `tasks` ON `tasks`.`task_id` = `task_log`.`task_id`
-			LEFT JOIN `task_targets` ON `task_targets`.`task_schedule_id` = `task_log`.`task_target_id`
-			WHERE `tasks`.`task_id` = `task_log`.`task_id` AND `tasks`.`member_id`='" . $_SESSION['session_member_id'] ."'
-			ORDER BY `task_log`.`start_time` DESC";
-		$result = mysql_query($query, $this -> database_link);
-
-		$num = mysql_numrows($result);
-
-		$return_json['data'] = array();
-
-		$i = 0;
-		while ($i < $num) {
-			
-			$task_entry_id = mysql_result($result, $i, "task_log_id");
-			$task_entry_name = mysql_result($result, $i, "name");
-			$task_entry_start_time = mysql_result($result, $i, "start_time");
-			$task_entry_hours = mysql_result($result, $i, "hours");
-			$task_entry_note = mysql_result($result, $i, "note");
-			$task_entry_status = mysql_result($result, $i, "status");
-			$task_id = mysql_result($result, $i, "task_id");
-			$task_target_id = mysql_result($result, $i, "task_target_id");
-			$target_status = mysql_result($result, $i, "target_status");
-			
-			if($target_status == null)
-			{
-				$target_status = "";
-			}
-			
-			$return_json['data'][$i] = array(
-				'task_log_id' => $task_entry_id,
-				'name' => $task_entry_name,
-				'start_time' => $task_entry_start_time,
-				'hours' => $task_entry_hours,
-				'note' => $task_entry_note,
-				'status' => $task_entry_status,
-				'task_id' => $task_id,
-				'task_target_id' => $task_target_id,
-				'target_status' => $target_status);
-			
-			
-			$i++;
+		
+		$join = "task_log
+			JOIN tasks ON tasks.task_id = task_log.task_id
+			LEFT JOIN task_targets ON task_targets.task_schedule_id = task_log.task_target_id";
+		$columns = array(
+			"name" => "tasks.name",
+			"task_log_id" => "task_log.task_log_id",
+			"task_id" => "tasks.task_id",
+			"start_time" => "task_log.start_time",
+			"hours" => "task_log.hours",
+			"status" => "task_log.status",
+			"note" => "task_log.note",
+			"task_target_id" => "task_log.task_target_id",
+			"target_status" => "task_targets.status");
+		$extra = "ORDER BY task_log.task_log_id";
+		$data = Select_By_Member($join,$columns,"1",$extra);
+		
+		if(!$data)
+		{
+			$return_json['success'] = 'false';
+			return $return_json;
 		}
-
+		
+		$return_json['data'] = $data;
+		$return_json['success'] = 'true';
+		
 		return $return_json;
 	}
 	
@@ -392,77 +337,36 @@ class Task_Data_Interface {
 	public function Get_Task_Targets()
 	{
 		$return_json = array('success' => 'false', 'data' => '');
-
-		$query = "SELECT 
-			`task_targets`.`task_id` AS `task_id`,
-			`task_targets`.`task_schedule_id` AS `task_schedule_id`, 
-			`task_targets`.`scheduled_time` AS `scheduled_time`, 
-			`task_targets`.`recurring` AS `recurring`, 
-			`task_targets`.`recurrance_type` AS `recurrance_type`, 
-			`task_targets`.`recurrance_period` AS `recurrance_period`, 
-			`task_targets`.`recurrance_type` AS `recurrance_type`, 
-			`task_targets`.`allowed_variance` AS `allowed_variance`, 
-			`task_targets`.`estimated_time` AS `estimated_time`,
-			`task_targets`.`recurrance_end_time` AS `recurrance_end_time`,
-			`task_targets`.`recurrance_child_id` AS `recurrance_child_id`,
-			`task_targets`.`status` AS `status`,
-			`tasks`.`name` AS `name` ,
-			SUM(`task_log`.`hours`) AS `hours`
-			FROM `task_targets`
-			JOIN `tasks` ON `tasks`.`task_id` = `task_targets`.`task_id`
-			LEFT JOIN `task_log` ON `task_targets`.`task_schedule_id` = `task_log`.`task_target_id`
-			WHERE `tasks`.`member_id`='" . $_SESSION['session_member_id'] ."'
-			GROUP BY `task_targets`.`task_schedule_id`
-			ORDER BY `task_targets`.`scheduled_time` ASC";
-			
-		$result = mysql_query($query, $this -> database_link);
-
-		$num = mysql_numrows($result);
-
-		$return_json['data'] = array();
-
-		$i = 0;
-		while ($i < $num) {
-			
-			$task_schedule_id = mysql_result($result, $i, "task_schedule_id");
-			$task_entry_name = mysql_result($result, $i, "name");
-			$task_entry_scheduled_time = mysql_result($result, $i, "scheduled_time");
-			$task_entry_recurring = mysql_result($result, $i, "recurring");
-			$task_entry_recurrance_type = mysql_result($result, $i, "recurrance_type");
-			$task_entry_recurrance_period = mysql_result($result, $i, "recurrance_period");
-			$variance = mysql_result($result, $i, "allowed_variance");
-			$estimated_time = mysql_result($result, $i, "estimated_time");
-			$recurrance_end_time = mysql_result($result, $i, "recurrance_end_time");
-			$recurrance_child_id = mysql_result($result, $i, "recurrance_child_id");
-			$status = mysql_result($result, $i, "status");
-			$task_id = mysql_result($result, $i, "task_id");
-			$hours = mysql_result($result, $i, "hours");
-			
-			if($hours == null)
-			{
-				$hours = 0;
-			}
-
-			$return_json['data'][$i] = array(
-				'task_schedule_id' => $task_schedule_id,
-				'task_id' => $task_id,
-				'name' => $task_entry_name,
-				'scheduled_time' => $task_entry_scheduled_time,
-				'recurring' => $task_entry_recurring,
-				'recurrance_type' => $task_entry_recurrance_type,
-				'recurrance_period' => $task_entry_recurrance_period,
-				'variance' => $variance,
-				'estimated_time' => $estimated_time,
-				'recurrance_end_time' => $recurrance_end_time,
-				'recurrance_child_id' => $recurrance_child_id,
-				'status' => $status,
-				'task_id' => $task_id,
-				'hours' => $hours);
-			
-			
-			$i++;
+		
+		$join = "task_targets
+			JOIN tasks ON tasks.task_id = task_targets.task_id
+			LEFT JOIN task_log ON task_targets.task_schedule_id = task_log.task_target_id ";
+		$columns = array(
+			"task_id" => "task_targets.task_id",
+			"task_schedule_id" => "task_targets.task_schedule_id",
+			"scheduled_time" => "task_targets.scheduled_time",
+			"recurring" => "task_targets.recurring",
+			"recurrance_type" => "task_targets.recurrance_type",
+			"variance" => "task_targets.allowed_variance",
+			"estimated_time" => "task_targets.estimated_time",
+			"recurrance_end_time" => "task_targets.recurrance_end_time",
+			"recurrance_child_id" => "task_targets.recurrance_child_id",
+			"status" => "task_targets.status",
+			"name" => "tasks.name",
+			"hours" => "SUM(task_log.hours)");
+		$extra = "GROUP BY task_targets.task_schedule_id
+			ORDER BY task_targets.task_schedule_id";
+		$data = Select_By_Member($join,$columns,"1",$extra);
+		
+		if(!$data)
+		{
+			$return_json['success'] = 'false';
+			return $return_json;
 		}
-
+		
+		$return_json['data'] = $data;
+		$return_json['success'] = 'true';
+		
 		return $return_json;
 	}
 

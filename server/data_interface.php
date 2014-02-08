@@ -41,6 +41,7 @@ class Data_Interface {
 		$return_json = array('success' => 'false', 'data' => '', );
 		
 		$return_json['data'] = array();
+		$return_json['schema'] = array();
 	
 		$categories = $this->homedatainteface->Get_Categories();
 		$items = $this->itemdatainterface->Get_Items();
@@ -90,7 +91,117 @@ class Data_Interface {
 		
 		$return_json = array('success' => 'false', 'data' => '', );
 		
+		$new_return_json = $this->Refresh_All_Data();
+		
+		if(isset($_SESSION['last_return_json']))
+		{
+			//TODO: Generate diff between new JSON and old JSON
+			
+			$old_return_json = $_SESSION['last_return_json'];
+			
+			$return_json['data']['Categories'] = 
+				$this->Diff_Table(
+					$old_return_json['data']['Categories'], 
+					$new_return_json['data']['Categories'], 
+					'Category ID');
+			$return_json['data']['items'] = 
+				$this->Diff_Table(
+					$old_return_json['data']['items'], 
+					$new_return_json['data']['items'], 
+					'item_id');
+			$return_json['data']['item_entries'] = 
+				$this->Diff_Table(
+					$old_return_json['data']['item_entries'], 
+					$new_return_json['data']['item_entries'], 
+					'item_log_id');
+			$return_json['data']['item_targets'] = 
+				$this->Diff_Table(
+					$old_return_json['data']['item_targets'], 
+					$new_return_json['data']['item_targets'], 
+					'item_target_id');
+			$return_json['data']['tasks'] = 
+				$this->Diff_Table(
+					$old_return_json['data']['tasks'], 
+					$new_return_json['data']['tasks'], 
+					'task_id');
+			$return_json['data']['task_entries'] = 
+				$this->Diff_Table(
+					$old_return_json['data']['task_entries'], 
+					$new_return_json['data']['task_entries'], 
+					'task_log_id');
+			$return_json['data']['task_targets'] = 
+				$this->Diff_Table(
+					$old_return_json['data']['task_targets'], 
+					$new_return_json['data']['task_targets'], 
+					'task_schedule_id');
+			
+			$return_json['settings']['settings'] = 
+				$this->Diff_Table(
+					$old_return_json['settings']['settings'], 
+					$new_return_json['settings']['settings'], 
+					'Setting ID');
+			$return_json['settings']['setting_entries'] = 
+				$this->Diff_Table(
+					$old_return_json['settings']['setting_entries'], 
+					$new_return_json['settings']['setting_entries'], 
+					'Setting Entry ID');
+			$return_json['reports'] = 
+				$this->Diff_Table(
+					$old_return_json['reports'], 
+					$new_return_json['reports'], 
+					'report_id');
+		}
+		
+		$_SESSION['last_return_json'] = $new_return_json;
+		$return_json['success'] = 'true';
+		
 		return $return_json;
+	}
+	
+	public function Diff_Table($old_table, $new_table, $primary_column)
+	{
+		//assumes table is already sorted by primary column
+		$diff_table = array();
+		
+		$old_cnt = 0;
+		$new_cnt = 0;
+		
+		while(($old_cnt < count($old_table)) || ($new_cnt < count($new_table)))
+		{
+			$old_row = $old_table[$old_cnt];
+			$new_row = $new_table[$new_cnt];
+			
+			if(($old_cnt >= count($old_table)) || ($old_row[$primary_column] < $new_row[$primary_column]))
+			{
+				
+				$diff_table[] = array('insert',$new_row);
+				$new_cnt++;
+				
+				
+			}
+			else if(($new_cnt >= count($new_table)) || ($old_row[$primary_column] > $new_row[$primary_column]))
+			{
+				
+				$diff_table[] = array('remove',$old_row);
+				$old_cnt++;
+			}
+			else {
+				
+				$old_row_string = json_encode($old_row);
+				$new_row_string = json_encode($new_row);
+				
+				//check the JSON encoded row
+				if($old_row_string !== $new_row_string)
+				{
+					$diff_table[] = array('update',$new_row);
+				}
+				
+				$old_cnt++;
+				$new_cnt++;
+			}
+		}
+		
+		return $diff_table;
 	}
 
 }

@@ -74,9 +74,6 @@ function Server_API() {
 			
 			self.Refresh_Data(function(){
 				
-				//call the data changed callback since the data was refreshed.
-				self.data_changed_callback();
-				
 				callback();
 				
 			});

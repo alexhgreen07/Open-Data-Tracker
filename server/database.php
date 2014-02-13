@@ -75,6 +75,11 @@ function Select($table, $columns, $where, $extra)
 {
 	$sql = "SELECT ";
 	
+	foreach($columns as $key => $column)
+	{
+		$columns[$key] = $column . " AS `" . $key . "`";
+	}
+	
 	$sql .= implode(", ",$columns);
 	
 	$sql .= " FROM " . $table . "";
@@ -94,7 +99,7 @@ function Select($table, $columns, $where, $extra)
 	$num = mysql_numrows($result);
 
 	$data = array();
-
+	
 	$i = 0;
 	while ($i < $num) {
 		
@@ -102,7 +107,7 @@ function Select($table, $columns, $where, $extra)
 		
 		foreach($columns as $key => $column)
 		{
-			$value = mysql_result($result, $i, $column);
+			$value = mysql_result($result, $i, $key);
 			
 			$data[$i][$key] = $value;
 		}

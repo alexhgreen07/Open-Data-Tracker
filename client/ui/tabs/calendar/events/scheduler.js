@@ -242,6 +242,146 @@ function Event_Scheduler() {
 		return new_events;
 	};
 	
+	self.Schedule_Overlap_Entry = function(overlap_entry,next_overlap_entry, shifted_target_start_timestamp){
+		
+		var new_events = [];
+		
+		//sort by late start time
+		overlap_entry.entries.sort(function(a,b){
+			
+			var a_timestamp = Cast_Server_Datetime_to_Date(a.row.scheduled_time);
+		    var b_timestamp = Cast_Server_Datetime_to_Date(b.row.scheduled_time);
+			
+			var a_late_start_timestamp = self.Generate_End_Date(a_timestamp, a.row.variance, 0);
+			var b_late_start_timestamp = self.Generate_End_Date(b_timestamp, b.row.variance, 0);
+			
+			return (a_late_start_timestamp - b_late_start_timestamp);
+			
+		});
+		
+		
+		for(var j = 0; j < overlap_entry.entries.length; j++)
+		{
+			
+			if(shifted_target_start_timestamp < next_overlap_entry.start_time)
+			{
+				
+				var new_row = Copy_JSON_Data(overlap_entry.entries[j].row);
+				
+				var scheduled_time = Cast_Server_Datetime_to_Date(new_row.scheduled_time);
+			
+				var early_start_timestamp = self.Generate_End_Date(scheduled_time, -new_row.variance, 0);
+				var late_start_timestamp = self.Generate_End_Date(scheduled_time, new_row.variance, 0);
+				
+				var start_timestamp = early_start_timestamp;
+				
+				if(start_timestamp < shifted_target_start_timestamp)
+				{
+					start_timestamp = shifted_target_start_timestamp;
+				}
+				
+				if(start_timestamp > late_start_timestamp)
+				{
+					new_row.status = 'Late';
+				}
+				
+				var start_string = Cast_Date_to_Server_Datetime(start_timestamp);
+				
+				new_row.scheduled_time = start_string;
+				
+				new_event = self.Create_Event_From_Task_Target_Row(new_row);
+				
+				new_events.push(new_event);
+				
+				var end_timestamp = self.Generate_End_Date(start_timestamp, new_row.estimated_time, 0);
+				shifted_target_start_timestamp = end_timestamp;
+				
+			}
+			else
+			{
+				
+				overlap_entry.entries.splice(0,j);
+				next_overlap_entry.entries = next_overlap_entry.entries.concat(overlap_entry.entries);
+				
+				break;
+			}
+			
+			
+		}
+		
+		return_value.new_events = new_events;
+		return_value.shifted_target_start_timestamp = shifted_target_start_timestamp;
+		
+		return return_value;
+	};
+	
+	self.Schedule_Incomplete_Task_Targets = function(incomplete_targets, started_targets)
+	{
+		var new_events = [];
+		
+		var now = new Date();
+		var shifted_targets = [];
+		var late_targets = [];
+		
+		for(var i = 0; i < incomplete_targets.length; i++)
+		{
+			var new_entry = Copy_JSON_Data(incomplete_targets[i]);
+			
+			new_entry.row.estimated_time -= new_entry.row.hours;
+			
+			if(new_entry.row.task_schedule_id in started_targets)
+			{
+				//subtract started task hours
+				new_entry.row.estimated_time -= started_targets[new_entry.row.task_schedule_id];
+			}
+			
+			if(new_entry.row.estimated_time < 0)
+			{
+				new_entry.row.estimated_time = 0;
+			}
+			
+			shifted_targets.push(new_entry);
+		}
+		
+		//sort the shifted targets
+		shifted_targets.sort(function(a,b){
+			
+			var a_timestamp = Cast_Server_Datetime_to_Date(a.row.scheduled_time);
+		    var b_timestamp = Cast_Server_Datetime_to_Date(b.row.scheduled_time);
+			
+			var a_early_start_timestamp = self.Generate_End_Date(a_timestamp, -a.row.variance, 0);
+			var b_early_start_timestamp = self.Generate_End_Date(b_timestamp, -b.row.variance, 0);
+			
+			return (a_early_start_timestamp - b_early_start_timestamp);
+			
+		});
+		
+		var overlap_table = self.Create_Overlap_Table(shifted_targets);
+		
+		var shifted_target_start_timestamp = now;
+		
+		for(var i = 0; i < overlap_table.length; i++)
+		{
+			var overlap_entry = overlap_table[i];
+			var next_overlap_entry = overlap_table[i + 1];
+			
+			if((i + 1) == overlap_table.length)
+			{
+				next_overlap_entry = Copy_JSON_Data(overlap_entry);
+				
+				//make the date far in the future
+				next_overlap_entry.start_time = next_overlap_entry.start_time * 1.5;
+			}
+			
+			scheduled_overlap_targets = self.Schedule_Overlap_Entry(overlap_entry,next_overlap_entry,shifted_target_start_timestamp);
+			
+			new_events = new_events.concat(scheduled_overlap_targets.new_events);
+			shifted_target_start_timestamp = scheduled_overlap_targets.shifted_target_start_timestamp;
+		}
+		
+		return new_events;
+	};
+	
 	self.Run_Scheduling_Algorithm = function(events)
 	{
 		self.new_events = events;
@@ -295,120 +435,18 @@ function Event_Scheduler() {
 			
 		}
 		
-		var now = new Date();
-		var shifted_targets = [];
-		var late_targets = [];
+		scheduled_incomplete_targets = self.Schedule_Incomplete_Task_Targets(incomplete_targets, started_targets);
 		
-		for(var i = 0; i < incomplete_targets.length; i++)
-		{
-			var new_entry = Copy_JSON_Data(incomplete_targets[i]);
-			
-			new_entry.row.estimated_time -= new_entry.row.hours;
-			
-			if(new_entry.row.task_schedule_id in started_targets)
-			{
-				//subtract started task hours
-				new_entry.row.estimated_time -= started_targets[new_entry.row.task_schedule_id];
-			}
-			
-			if(new_entry.row.estimated_time < 0)
-			{
-				new_entry.row.estimated_time = 0;
-			}
-			
-			shifted_targets.push(new_entry);
-		}
-		
-		//sort the shifted targets
-		shifted_targets.sort(function(a,b){
-			
-			var a_timestamp = Cast_Server_Datetime_to_Date(a.row.scheduled_time);
-		    var b_timestamp = Cast_Server_Datetime_to_Date(b.row.scheduled_time);
-			
-			var a_early_start_timestamp = self.Generate_End_Date(a_timestamp, -a.row.variance, 0);
-			var b_early_start_timestamp = self.Generate_End_Date(b_timestamp, -b.row.variance, 0);
-			
-			return (a_early_start_timestamp - b_early_start_timestamp);
-			
-		});
-		
-		var overlap_table = self.Create_Overlap_Table(shifted_targets);
-		
-		var shifted_target_start_timestamp = now;
-		
-		var scheduled_targets = [];
-			
-		for(var i = 0; i < overlap_table.length; i++)
-		{
-			var overlap_entry = overlap_table[i];
-			var next_overlap_entry = overlap_table[i + 1];
-			
-			//sort by late start time
-			overlap_entry.entries.sort(function(a,b){
-				
-				var a_timestamp = Cast_Server_Datetime_to_Date(a.row.scheduled_time);
-			    var b_timestamp = Cast_Server_Datetime_to_Date(b.row.scheduled_time);
-				
-				var a_late_start_timestamp = self.Generate_End_Date(a_timestamp, a.row.variance, 0);
-				var b_late_start_timestamp = self.Generate_End_Date(b_timestamp, b.row.variance, 0);
-				
-				return (a_late_start_timestamp - b_late_start_timestamp);
-				
-			});
-			
-			
-			for(var j = 0; j < overlap_entry.entries.length; j++)
-			{
-				
-				if(((i + 1) == overlap_table.length) || (shifted_target_start_timestamp < next_overlap_entry.start_time))
-				{
-					
-					var new_row = Copy_JSON_Data(overlap_entry.entries[j].row);
-					
-					var scheduled_time = Cast_Server_Datetime_to_Date(new_row.scheduled_time);
-				
-					var early_start_timestamp = self.Generate_End_Date(scheduled_time, -new_row.variance, 0);
-					var late_start_timestamp = self.Generate_End_Date(scheduled_time, new_row.variance, 0);
-					
-					var start_timestamp = early_start_timestamp;
-					
-					if(start_timestamp < shifted_target_start_timestamp)
-					{
-						start_timestamp = shifted_target_start_timestamp;
-					}
-					
-					if(start_timestamp > late_start_timestamp)
-					{
-						new_row.status = 'Late';
-					}
-					
-					var start_string = Cast_Date_to_Server_Datetime(start_timestamp);
-					
-					new_row.scheduled_time = start_string;
-					
-					new_event = self.Create_Event_From_Task_Target_Row(new_row);
-					
-					scheduled_targets.push(new_row.task_schedule_id);
-					new_events.push(new_event);
-					
-					var end_timestamp = self.Generate_End_Date(start_timestamp, new_row.estimated_time, 0);
-					shifted_target_start_timestamp = end_timestamp;
-					
-				}
-				else
-				{
-					
-					overlap_entry.entries.splice(0,j);
-					next_overlap_entry.entries = next_overlap_entry.entries.concat(overlap_entry.entries);
-					
-					break;
-				}
-				
-				
-			}
-		}
+		new_events = new_events.concat(scheduled_incomplete_targets);
 		
 		self.new_events = new_events;
+		
+		return self.new_events;
+	};
+	
+	self.Update_Scheduler_From_Diff = function(diff){
+		
+		
 		
 		return self.new_events;
 	};

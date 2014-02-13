@@ -31,14 +31,13 @@ class Task_Data_Interface {
 
 		try {
 
-			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`hours`, `status`, `note`, `task_target_id`,`member_id`) VALUES ('" . 
+			$sql = "INSERT INTO `task_log`(`task_id`, `start_time`,`hours`, `status`, `note`, `task_target_id`) VALUES ('" . 
 				$task_id . "','" . 
 				$start_time . "','" . 
 				$hours . "', '" . 
 				$status . "','" . 
 				$note . "',".
-				$task_target_id.",
-				'" . $_SESSION['session_member_id'] ."')";
+				$task_target_id.")";
 			
 			$return_json['debug'] = $sql;
 			
@@ -78,7 +77,7 @@ class Task_Data_Interface {
 			`status`='" . $status . "',
 			`note`='" . $note . "',
 			`task_target_id`=".$task_target_id."
-			WHERE `task_log_id` = " . $task_log_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+			WHERE `task_log_id` = " . $task_log_id . "";
 		
 		$return_json['debug'] = $sql;
 		
@@ -89,7 +88,7 @@ class Task_Data_Interface {
 		{
 			$sql = "UPDATE `task_targets` 
 				SET `status`='Complete'
-				WHERE `task_schedule_id` = " . $task_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+				WHERE `task_schedule_id` = " . $task_target_id . "";
 			
 			$return_json['debug'] = $sql;
 			
@@ -115,7 +114,7 @@ class Task_Data_Interface {
 
 		$task_log_id = mysql_real_escape_string($task_log_id);
 
-		$sql = "DELETE FROM `task_log` WHERE `task_log_id` = " . $task_log_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+		$sql = "DELETE FROM `task_log` WHERE `task_log_id` = " . $task_log_id . "";
 
 		//execute insert
 		$success = mysql_query($sql, $this -> database_link);
@@ -391,8 +390,7 @@ class Task_Data_Interface {
 			`allowed_variance`,
 			`recurrance_end_time`,
 			`estimated_time`,
-			`status`,
-			`member_id`) VALUES (
+			`status`) VALUES (
 			'" . $task_id . "',
 			'" . $scheduled_time . "',
 			" . $recurring . ",
@@ -401,8 +399,7 @@ class Task_Data_Interface {
 			" . $variance . ",
 			'" . $recurrance_end_date . "',
 			'" . $estimated_time . "',
-			'Incomplete',
-			'" . $_SESSION['session_member_id'] ."')";
+			'Incomplete')";
 
 		$success = mysql_query($sql, $this -> database_link);
 		
@@ -420,8 +417,7 @@ class Task_Data_Interface {
 			`recurrance_period` = ".$recurrance_period." AND 
 			`allowed_variance` = ".$variance." AND 
 			`recurrance_end_time` = '".$recurrance_end_date."' AND 
-			`estimated_time` = ".$estimated_time." AND 
-			`member_id` = ".$_SESSION['session_member_id'];
+			`estimated_time` = ".$estimated_time;
 		
 		$result = mysql_query($sql, $this -> database_link);
 		
@@ -478,7 +474,7 @@ class Task_Data_Interface {
 			`estimated_time`=".$estimated_time.",
 			`recurrance_end_time`='".$recurrance_end_date."',
 			`status`='".$status."'
-			WHERE `task_schedule_id`=" . $task_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+			WHERE `task_schedule_id`=" . $task_target_id . "";
 
 		$success = mysql_query($sql, $this -> database_link);
 		
@@ -508,7 +504,7 @@ class Task_Data_Interface {
 	{
 		$return_json = array('success' => 'false', );
 
-		$sql = "DELETE FROM `task_targets` WHERE `task_schedule_id` = " . $task_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+		$sql = "DELETE FROM `task_targets` WHERE `task_schedule_id` = " . $task_target_id . "";
 
 		$success = mysql_query($sql, $this -> database_link);
 
@@ -719,7 +715,7 @@ class Task_Data_Interface {
 			`task_targets`.`recurrance_end_time` AS `recurrance_end_time`,
 			`task_targets`.`recurrance_child_id` AS `recurrance_child_id`
 			FROM `task_targets`
-			WHERE `task_targets`.`task_schedule_id` = ".$task_target_id." AND `task_targets`.`member_id`='" . $_SESSION['session_member_id'] ."'
+			WHERE `task_targets`.`task_schedule_id` = ".$task_target_id."
 			ORDER BY `task_targets`.`scheduled_time` DESC";
 			
 		$result = mysql_query($sql, $this -> database_link);
@@ -772,8 +768,7 @@ class Task_Data_Interface {
 						`recurrance_end_time`,
 						`estimated_time`,
 						`recurrance_child_id`,
-						`status`,
-						`member_id`) VALUES (
+						`status`) VALUES (
 						'" . $task_id . "',
 						'" . $recurring_timestring . "',
 						" . $task_entry_recurring . ",
@@ -783,8 +778,7 @@ class Task_Data_Interface {
 						'" . $recurring_timestring . "',
 						'" . $estimated_time . "',
 						" . $task_schedule_id . ",
-						'Incomplete',
-						'" . $_SESSION['session_member_id'] ."')";
+						'Incomplete')";
 					
 					$result = mysql_query($sql, $this -> database_link);
 					
@@ -835,7 +829,7 @@ class Task_Data_Interface {
 			`task_targets`.`recurrance_end_time` AS `recurrance_end_time`,
 			`task_targets`.`recurrance_child_id` AS `recurrance_child_id`
 			FROM `task_targets`
-			WHERE `task_targets`.`recurrance_child_id` = ".$task_target_id." AND `task_targets`.`member_id`='" . $_SESSION['session_member_id'] ."'
+			WHERE `task_targets`.`recurrance_child_id` = ".$task_target_id."
 			ORDER BY `task_targets`.`scheduled_time` ASC";
 			
 			$result = mysql_query($sql, $this -> database_link);
@@ -890,8 +884,7 @@ class Task_Data_Interface {
 							`estimated_time` = '" . $new_estimated_time . "',
 							`recurrance_child_id` = " . $task_target_id . "
 							WHERE 
-							`task_schedule_id` = " . $task_schedule_id . " AND
-							`member_id` = '" . $_SESSION['session_member_id'] ."'";
+							`task_schedule_id` = " . $task_schedule_id . "";
 						
 						$success = mysql_query($sql, $this -> database_link);
 						
@@ -906,8 +899,7 @@ class Task_Data_Interface {
 					else {
 						
 						$sql = "DELETE FROM `task_targets` WHERE 
-							`task_schedule_id` = " . $task_schedule_id . " AND
-							`member_id` = '" . $_SESSION['session_member_id'] ."'";
+							`task_schedule_id` = " . $task_schedule_id . "";
 						
 						$success = mysql_query($sql, $this -> database_link);
 						
@@ -935,8 +927,7 @@ class Task_Data_Interface {
 							`recurrance_end_time`,
 							`estimated_time`,
 							`recurrance_child_id`,
-							`status`,
-							`member_id`) VALUES (
+							`status`) VALUES (
 							'" . $new_task_id . "',
 							'" . $recurring_timestring . "',
 							" . $new_recurring . ",
@@ -946,8 +937,7 @@ class Task_Data_Interface {
 							'" . $new_recurrance_end_date . "',
 							'" . $new_estimated_time . "',
 							" . $task_target_id . ",
-							'Incomplete',
-							'" . $_SESSION['session_member_id'] ."')";
+							'Incomplete')";
 						
 						$result = mysql_query($sql, $this -> database_link);
 						
@@ -975,7 +965,7 @@ class Task_Data_Interface {
 	public function Delete_Recurring_Children($task_target_id)
 	{
 		
-		$sql = "DELETE FROM `task_targets` WHERE `recurrance_child_id` = " . $task_target_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+		$sql = "DELETE FROM `task_targets` WHERE `recurrance_child_id` = " . $task_target_id . "";
 		$result = mysql_query($sql, $this -> database_link);
 	}
 }

@@ -357,54 +357,46 @@ function Event_Scheduler() {
 			});
 			
 			
-			//alert(JSON.stringify(overlap_entry));
-			
-			
 			for(var j = 0; j < overlap_entry.entries.length; j++)
 			{
-				
-				//alert(JSON.stringify(overlap_entry.entries[j].row));
 				
 				if(((i + 1) == overlap_table.length) || (shifted_target_start_timestamp < next_overlap_entry.start_time))
 				{
 					
 					var new_row = Copy_JSON_Data(overlap_entry.entries[j].row);
 					
-					//if(scheduled_targets.indexOf(new_row.task_schedule_id) < 0)
-					{
-						var scheduled_time = Cast_Server_Datetime_to_Date(new_row.scheduled_time);
+					var scheduled_time = Cast_Server_Datetime_to_Date(new_row.scheduled_time);
+				
+					var early_start_timestamp = self.Generate_End_Date(scheduled_time, -new_row.variance, 0);
+					var late_start_timestamp = self.Generate_End_Date(scheduled_time, new_row.variance, 0);
 					
-						var early_start_timestamp = self.Generate_End_Date(scheduled_time, -new_row.variance, 0);
-						var late_start_timestamp = self.Generate_End_Date(scheduled_time, new_row.variance, 0);
-						
-						var start_timestamp = early_start_timestamp;
-						
-						if(start_timestamp < shifted_target_start_timestamp)
-						{
-							start_timestamp = shifted_target_start_timestamp;
-						}
-						
-						if(start_timestamp > late_start_timestamp)
-						{
-							new_row.status = 'Late';
-						}
-						
-						var start_string = Cast_Date_to_Server_Datetime(start_timestamp);
-						
-						new_row.scheduled_time = start_string;
-						
-						new_event = self.Create_Event_From_Task_Target_Row(new_row);
-						
-						scheduled_targets.push(new_row.task_schedule_id);
-						new_events.push(new_event);
-						
-						var end_timestamp = self.Generate_End_Date(start_timestamp, new_row.estimated_time, 0);
-						shifted_target_start_timestamp = end_timestamp;
+					var start_timestamp = early_start_timestamp;
+					
+					if(start_timestamp < shifted_target_start_timestamp)
+					{
+						start_timestamp = shifted_target_start_timestamp;
 					}
+					
+					if(start_timestamp > late_start_timestamp)
+					{
+						new_row.status = 'Late';
+					}
+					
+					var start_string = Cast_Date_to_Server_Datetime(start_timestamp);
+					
+					new_row.scheduled_time = start_string;
+					
+					new_event = self.Create_Event_From_Task_Target_Row(new_row);
+					
+					scheduled_targets.push(new_row.task_schedule_id);
+					new_events.push(new_event);
+					
+					var end_timestamp = self.Generate_End_Date(start_timestamp, new_row.estimated_time, 0);
+					shifted_target_start_timestamp = end_timestamp;
+					
 				}
 				else
 				{
-					//alert("Length " + overlap_entry.entries.length + " splicing at " + j);
 					
 					overlap_entry.entries.splice(0,j);
 					next_overlap_entry.entries = next_overlap_entry.entries.concat(overlap_entry.entries);

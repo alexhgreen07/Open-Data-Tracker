@@ -348,6 +348,7 @@ class Task_Data_Interface {
 			"recurrance_type" => "task_targets.recurrance_type",
 			"variance" => "task_targets.allowed_variance",
 			"estimated_time" => "task_targets.estimated_time",
+			"recurrance_period" => "task_targets.recurrance_period",
 			"recurrance_end_time" => "task_targets.recurrance_end_time",
 			"recurrance_child_id" => "task_targets.recurrance_child_id",
 			"status" => "task_targets.status",

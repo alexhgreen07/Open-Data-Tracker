@@ -83,6 +83,8 @@ class Data_Interface {
 		$return_json['settings'] = $settings;
 		$return_json['reports'] = $reports['reports'];
 		
+		$_SESSION['last_return_json'] = $return_json;
+		
 		return $return_json;
 		
 	}
@@ -91,14 +93,12 @@ class Data_Interface {
 		
 		$return_json = array('success' => 'false', 'data' => '', );
 		
+		$old_return_json = $_SESSION['last_return_json'];
 		$new_return_json = $this->Refresh_All_Data();
 		
-		if(isset($_SESSION['last_return_json']))
+		if($old_return_json)
 		{
-			//TODO: Generate diff between new JSON and old JSON
-			
-			$old_return_json = $_SESSION['last_return_json'];
-			
+		
 			$return_json['data']['Categories'] = 
 				$this->Diff_Table(
 					$old_return_json['data']['Categories'], 
@@ -152,7 +152,6 @@ class Data_Interface {
 					'report_id');
 		}
 		
-		$_SESSION['last_return_json'] = $new_return_json;
 		$return_json['success'] = 'true';
 		
 		return $return_json;

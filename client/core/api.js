@@ -25,8 +25,14 @@ function Server_API() {
 				args,
 				function(jsonRpcObj){
 					
-					
-					callback(jsonRpcObj);
+					try
+					{
+						callback(jsonRpcObj);
+					}
+					catch(err)
+					{
+						alert(err.message);
+					}
 					
 					self.is_busy_callback(false);
 					
@@ -108,11 +114,25 @@ function Server_API() {
 					self.reports = jsonRpcObj.result.reports;
 					self.settings = jsonRpcObj.result.settings;
 					
-					//convert all data to the local timezone
-					self.Convert_Data_To_Local_Timezone();
+					try
+					{
+						//convert all data to the local timezone
+						self.Convert_Data_To_Local_Timezone();
+					}
+					catch(err)
+					{
+						alert(err.message);
+					}
 					
-					//call the data changed callback since the data was refreshed.
-					self.data_changed_callback();
+					try
+					{
+						//call the data changed callback since the data was refreshed.
+						self.data_changed_callback();
+					}
+					catch(err)
+					{
+						alert(err.message);
+					}
 					
 					self.has_refreshed = true;
 					

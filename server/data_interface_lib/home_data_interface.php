@@ -214,13 +214,13 @@ class Home_Data_Interface {
 		
 		$data = Select_By_Member($join,$columns,"1","ORDER BY setting_entry_id");
 		
+		$return_json['setting_entries'] = $data;
+		
 		if(!$data)
 		{
 			$return_json['success'] = 'false';
 			return $return_json;
 		}
-		
-		$return_json['setting_entries'] = $data;
 		
 		$return_json['success'] = 'true';
 		

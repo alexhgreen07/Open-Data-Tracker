@@ -149,6 +149,8 @@ function Event_Scheduler() {
 			return (a.start_time - b.start_time);
 		});
 		
+		var events_copy = Copy_JSON_Data(events);
+		
 		for(var i = 0; i < overlap_table.length; i++)
 		{
 			
@@ -156,9 +158,11 @@ function Event_Scheduler() {
 			
 			var next_overlap_entry = overlap_table[i + 1];
 			
-			for(var j = 0; j < events.length; j++)
+			var found_entries = [];
+			
+			for(var j = 0; j < events_copy.length; j++)
 			{
-				var current_entry = events[j];
+				var current_entry = events_copy[j];
 			
 				var current_timestamp = Cast_Server_Datetime_to_Date(current_entry.row.scheduled_time);
 				var early_start_timestamp = self.Generate_End_Date(current_timestamp, -current_entry.row.variance, 0);
@@ -169,11 +173,23 @@ function Event_Scheduler() {
 				{
 					//valid event within the overlap period
 					current_overlap_entry.entries.push(current_entry);
+					
+					//remove these after the loop
+					found_entries.push(current_entry);
 				}
 				else if(early_start_timestamp > next_overlap_entry.start_time)
 				{
 					//we are past the overlap interval.
 					break;
+				}
+			}
+			
+			for(var j = 0; j < found_entries.length; j++)
+			{
+				var index = events_copy.indexOf(found_entries[j]);
+				
+				if (index > -1) {
+				    events_copy.splice(index, 1);
 				}
 			}
 		
@@ -340,14 +356,21 @@ function Event_Scheduler() {
 				
 			});
 			
+			
+			//alert(JSON.stringify(overlap_entry));
+			
+			
 			for(var j = 0; j < overlap_entry.entries.length; j++)
 			{
+				
+				//alert(JSON.stringify(overlap_entry.entries[j].row));
+				
 				if(((i + 1) == overlap_table.length) || (shifted_target_start_timestamp < next_overlap_entry.start_time))
 				{
 					
 					var new_row = Copy_JSON_Data(overlap_entry.entries[j].row);
 					
-					if(scheduled_targets.indexOf(new_row.task_schedule_id) < 0)
+					//if(scheduled_targets.indexOf(new_row.task_schedule_id) < 0)
 					{
 						var scheduled_time = Cast_Server_Datetime_to_Date(new_row.scheduled_time);
 					
@@ -381,8 +404,10 @@ function Event_Scheduler() {
 				}
 				else
 				{
+					//alert("Length " + overlap_entry.entries.length + " splicing at " + j);
+					
 					overlap_entry.entries.splice(0,j);
-					next_overlap_entry = next_overlap_entry.entries.concat(overlap_entry.entries);
+					next_overlap_entry.entries = next_overlap_entry.entries.concat(overlap_entry.entries);
 					
 					break;
 				}

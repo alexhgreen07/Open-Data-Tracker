@@ -3,6 +3,9 @@ function Event_Scheduler() {
 
 	var self = this;
 	
+	self.config = {
+		switch_efficiency : 0.9};
+	
 	this.Create_Event_From_Task_Target_Row = function(row)
 	{
 		var should_render_event = true;
@@ -293,7 +296,9 @@ function Event_Scheduler() {
 				
 				new_events.push(new_event);
 				
-				var end_timestamp = self.Generate_End_Date(start_timestamp, new_row.estimated_time, 0);
+				time_block = new_row.estimated_time * (1 / self.config.switch_efficiency);
+				
+				var end_timestamp = self.Generate_End_Date(start_timestamp, time_block, 0);
 				shifted_target_start_timestamp = end_timestamp;
 				
 			}

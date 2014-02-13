@@ -224,7 +224,7 @@ function main() {
 						app.last_refresh = Date.now();
 					
 						//refresh the data form the server, then refresh UI data
-						app.api.Refresh_Data(app.Refresh_Data);
+						app.api.Refresh_Data(function(){});
 					}
 					
 					

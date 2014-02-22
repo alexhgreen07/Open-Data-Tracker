@@ -422,7 +422,7 @@ function Entry_Tab() {
 		$('#' + self.cancel_button_div.id).fadeIn();
 		
 		name_select_id = self.category_tab.new_category_form.add_new_category_parent_select.id;
-		document.getElementById(name_select_id).value = self.current_selected_info.row.category_id;
+		document.getElementById(name_select_id).value = self.current_selected_info.row["Category ID"];
 		self.category_tab.Refresh(self.data);
 		
 		//execute the click event
@@ -440,7 +440,7 @@ function Entry_Tab() {
 		$('#' + self.cancel_button_div.id).fadeIn();
 		
 		name_select_id = self.category_tab.edit_category_form.edit_category_select.id;
-		document.getElementById(name_select_id).value = self.current_selected_info.row.category_id;
+		document.getElementById(name_select_id).value = self.current_selected_info.row["Category ID"];
 		self.category_tab.Refresh(self.data);
 		
 		//execute the click event

@@ -237,7 +237,7 @@ function Tree_View(div_id, data) {
 	{
 		
 		return_array = [];
-		categories_table = data.categories;
+		categories_table = data["Categories"];
 		
 		node.hasChildren = true;
 		
@@ -252,10 +252,10 @@ function Tree_View(div_id, data) {
 		
 			var current_row = categories_table[i];
 			
-			if(current_row["parent_category_id"] == node.category_id)
+			if(current_row["Parent Category ID"] == node.category_id)
 			{
 				random_id = self.Generate_Random_ID('categories', current_row);
-				var new_tree_row = new TreeNode(random_id, current_row["name"], false);
+				var new_tree_row = new TreeNode(random_id, current_row["Name"], false);
 				
 				self.tree_view_id_lookup[random_id] = 
 					{
@@ -264,7 +264,7 @@ function Tree_View(div_id, data) {
 						"row" : current_row
 					};
 				
-				new_tree_row.category_id = current_row["category_id"];
+				new_tree_row.category_id = current_row["Category ID"];
 				
 				node.hasChildren = true;
 				

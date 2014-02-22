@@ -41,6 +41,7 @@ class Data_Interface {
 		$return_json = array('success' => 'false', 'data' => '', );
 		
 		$return_json['data'] = array();
+		$return_json['schema'] = array();
 	
 		$categories = $this->homedatainteface->Get_Categories();
 		$items = $this->itemdatainterface->Get_Items();
@@ -58,10 +59,11 @@ class Data_Interface {
 		$task_entries_schema = $this->taskdatainterface->Get_Task_Log_Schema();
 		$task_targets_schema = $this->taskdatainterface->Get_Task_Targets_Schema();
 		
+		$settings = $this->homedatainteface->Get_Settings();
 		$reports = $this->reportdatainterface->Get_Saved_Reports();
 		
 		//load all data in the return json arrays
-		$return_json['data']['categories'] = $categories['data'];
+		$return_json['data']['Categories'] = $categories['data'];
 		$return_json['data']['items'] = $items['data'];
 		$return_json['data']['item_entries'] = $item_entries['data'];
 		$return_json['data']['item_targets'] = $item_targets['data'];
@@ -70,7 +72,7 @@ class Data_Interface {
 		$return_json['data']['task_targets'] = $task_targets['data'];
 		
 		//load all data schemas in the return json arrays
-		$return_json['schema']['categories'] = $categories_schema['schema'];
+		$return_json['schema']['Categories'] = $categories_schema['schema'];
 		$return_json['schema']['items'] = $items_schema['schema'];
 		$return_json['schema']['item_entries'] = $item_entries_schema['schema'];
 		$return_json['schema']['item_targets'] = $item_targets_schema['schema'];
@@ -78,10 +80,127 @@ class Data_Interface {
 		$return_json['schema']['task_entries'] = $task_entries_schema['schema'];
 		$return_json['schema']['task_targets'] = $task_targets_schema['schema'];
 		
+		$return_json['settings'] = $settings;
 		$return_json['reports'] = $reports['reports'];
+		
+		$_SESSION['last_return_json'] = $return_json;
 		
 		return $return_json;
 		
+	}
+
+	public function Refresh_From_Session_Diff(){
+		
+		$return_json = array('success' => 'false', 'data' => '', );
+		
+		$old_return_json = $_SESSION['last_return_json'];
+		$new_return_json = $this->Refresh_All_Data();
+		
+		if($old_return_json)
+		{
+		
+			$return_json['data']['Categories'] = 
+				$this->Diff_Table(
+					$old_return_json['data']['Categories'], 
+					$new_return_json['data']['Categories'], 
+					'Category ID');
+			$return_json['data']['items'] = 
+				$this->Diff_Table(
+					$old_return_json['data']['items'], 
+					$new_return_json['data']['items'], 
+					'item_id');
+			$return_json['data']['item_entries'] = 
+				$this->Diff_Table(
+					$old_return_json['data']['item_entries'], 
+					$new_return_json['data']['item_entries'], 
+					'item_log_id');
+			$return_json['data']['item_targets'] = 
+				$this->Diff_Table(
+					$old_return_json['data']['item_targets'], 
+					$new_return_json['data']['item_targets'], 
+					'item_target_id');
+			$return_json['data']['tasks'] = 
+				$this->Diff_Table(
+					$old_return_json['data']['tasks'], 
+					$new_return_json['data']['tasks'], 
+					'task_id');
+			$return_json['data']['task_entries'] = 
+				$this->Diff_Table(
+					$old_return_json['data']['task_entries'], 
+					$new_return_json['data']['task_entries'], 
+					'task_log_id');
+			$return_json['data']['task_targets'] = 
+				$this->Diff_Table(
+					$old_return_json['data']['task_targets'], 
+					$new_return_json['data']['task_targets'], 
+					'task_schedule_id');
+			
+			$return_json['settings']['settings'] = 
+				$this->Diff_Table(
+					$old_return_json['settings']['settings'], 
+					$new_return_json['settings']['settings'], 
+					'Setting ID');
+			$return_json['settings']['setting_entries'] = 
+				$this->Diff_Table(
+					$old_return_json['settings']['setting_entries'], 
+					$new_return_json['settings']['setting_entries'], 
+					'Setting Entry ID');
+			$return_json['reports'] = 
+				$this->Diff_Table(
+					$old_return_json['reports'], 
+					$new_return_json['reports'], 
+					'report_id');
+		}
+		
+		$return_json['success'] = 'true';
+		
+		return $return_json;
+	}
+	
+	public function Diff_Table($old_table, $new_table, $primary_column)
+	{
+		//assumes table is already sorted by primary column
+		$diff_table = array();
+		
+		$old_cnt = 0;
+		$new_cnt = 0;
+		
+		while(($old_cnt < count($old_table)) || ($new_cnt < count($new_table)))
+		{
+			$old_row = $old_table[$old_cnt];
+			$new_row = $new_table[$new_cnt];
+			
+			if(($old_cnt >= count($old_table)) || ($old_row[$primary_column] < $new_row[$primary_column]))
+			{
+				
+				$diff_table[] = array('operation' => 'insert','row' => $new_row);
+				$new_cnt++;
+				
+				
+			}
+			else if(($new_cnt >= count($new_table)) || ($old_row[$primary_column] > $new_row[$primary_column]))
+			{
+				
+				$diff_table[] = array('operation' => 'remove','row' => $old_row);
+				$old_cnt++;
+			}
+			else {
+				
+				$old_row_string = json_encode($old_row);
+				$new_row_string = json_encode($new_row);
+				
+				//check the JSON encoded row
+				if($old_row_string !== $new_row_string)
+				{
+					$diff_table[] = array('operation' => 'update','row' => $new_row);
+				}
+				
+				$old_cnt++;
+				$new_cnt++;
+			}
+		}
+		
+		return $diff_table;
 	}
 
 }

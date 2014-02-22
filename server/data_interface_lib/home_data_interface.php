@@ -13,7 +13,7 @@ class Home_Data_Interface {
 
 	//this will store the open database link
 	private $database_link;
-
+	
 	/** \fn public function Home_Data_Interface($new_database_link)
      * \brief This is the constructor for the class.
      * \param new_database_link This is the link to the database which the class will be interacting with.
@@ -31,11 +31,11 @@ class Home_Data_Interface {
 		$return_json = array();
 		
 		$return_json['schema'] = array(
-			'category_id' => 'int',
-			'name' => 'string',
-			'description' => 'string',
-			'parent_category_id' => 'int',
-			'category_path' => 'string'
+			'Category ID' => 'int',
+			'Name' => 'string',
+			'Description' => 'string',
+			'Parent Category ID' => 'int',
+			'Category Path' => 'string'
 		);
 		
 		return $return_json;
@@ -48,45 +48,24 @@ class Home_Data_Interface {
 	public function Get_Categories()
 	{
 		$return_json = array('success' => 'false', );
-
-		$sql_query = "SELECT 
-			`category_id`, 
-			`name`, 
-			`description`, 
-			`parent_category_id`,
-			`category_path` 
-			FROM `categories` WHERE `member_id` = '" . $_SESSION['session_member_id'] ."' ORDER BY `category_path`";
-		$result = mysql_query($sql_query, $this -> database_link);
-
-		if ($result) {
-			$return_json['success'] = 'true';
-			
-			$return_json['data'] = array();
-			
-			$num = mysql_numrows($result);
-
-			$i = 0;
-			while ($i < $num) {
-
-				$category_id = mysql_result($result, $i, "category_id");
-				$name = mysql_result($result, $i, "name");
-				$description = mysql_result($result, $i, 'description');
-				$parent_category_id = mysql_result($result, $i, 'parent_category_id');
-				$category_path = mysql_result($result, $i, 'category_path');
-				
-				$return_json['data'][$i] = 
-					array(
-					'category_id' => $category_id, 
-					'name' => $name, 
-					'description' => $description, 
-					'parent_category_id' => $parent_category_id,
-					'category_path' => $category_path);
-
-				$i++;
-			}
-		} else {
+		
+		$columns = array(
+			'Category ID' => 'category_id',
+			'Name' => 'name',
+			'Description' => 'description',
+			'Parent Category ID' => 'parent_category_id',
+			'Category Path' => 'category_path');
+		
+		$data = Select_By_Member("categories",$columns,"1","ORDER BY `category_id`");
+		
+		if(!$data)
+		{
 			$return_json['success'] = 'false';
+			return $return_json;
 		}
+		
+		$return_json['data'] = $data;
+		$return_json['success'] = 'true';
 		
 		return $return_json;
 		
@@ -206,6 +185,102 @@ class Home_Data_Interface {
 		return $return_json;
 	}
 	
-	 
+	public function Get_Settings()
+	{
+		$return_json = array('success' => 'false', );
+		
+		$columns = array(
+			'Setting ID' => 'setting_id',
+			'Name' => 'name',
+			'Type' => 'type');
+		
+		$data = Select("settings",$columns,"1","ORDER BY setting_id");
+		
+		if (!$data) {
+			
+			$return_json['success'] = 'false';
+			return $return_json;
+		}
+		
+		$return_json['settings'] = $data;
+		
+		$join = "setting_entries JOIN settings ON setting_entries.setting_id = settings.setting_id";
+		$columns = array(
+			"Name" => "name",
+			"Type" => "type",
+			"Setting ID" => "setting_entries.setting_id",
+			"Setting Entry ID" => "setting_entry_id",
+			"Value" => "value");
+		
+		$data = Select_By_Member($join,$columns,"1","ORDER BY setting_entry_id");
+		
+		$return_json['setting_entries'] = $data;
+		
+		if(!$data)
+		{
+			$return_json['success'] = 'false';
+			return $return_json;
+		}
+		
+		$return_json['success'] = 'true';
+		
+		return $return_json;
+	}
+	
+	public function Update_Settings($settings)
+	{
+		$return_json = array('success' => 'false', );
+		
+		//$new_settings = json_decode($settings);
+		
+		foreach($settings  as $setting_id => $value)
+		{
+			
+			$sql = "SELECT * 
+				FROM `setting_entries` 
+				JOIN `settings` 
+				ON `setting_entries`.`setting_id` = `settings`.`setting_id`
+				WHERE `setting_entries`.`setting_id` = " . $setting_id ." 
+				AND `setting_entries`.`member_id` = " . $_SESSION['session_member_id'] ."";
+				
+			$result = mysql_query($sql, $this -> database_link);
+			
+			$num = mysql_numrows($result);
+			
+			if($num > 0)
+			{
+				$sql = "UPDATE `setting_entries` 
+					SET `value`='".$value."' 
+					WHERE `setting_entry_id` = " . $setting_id . "";
+					
+				$result = mysql_query($sql, $this -> database_link);
+				
+				if (!$result) 
+				{
+					$return_json['debug'] = $sql;
+					return $return_json;
+				}
+			}
+			else {
+				
+				$sql = "INSERT INTO `setting_entries` (`setting_id`,`value`,`member_id`) 
+					VALUES (".$setting_id.",'".$value."'," . $_SESSION['session_member_id'] .")";
+					
+				$result = mysql_query($sql, $this -> database_link);
+				
+				if (!$result) 
+				{
+					$return_json['debug'] = $sql;
+					return $return_json;
+				}
+			}
+			
+		}
+		
+		$return_json['success'] = 'true';
+		
+		return $return_json;
+	}
+	
 }
 ?>

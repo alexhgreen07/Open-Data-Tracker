@@ -24,21 +24,21 @@ function Category_Form(){
 
 		Refresh_Select_HTML_From_Table(
 			self.new_category_form.add_new_category_parent_select.id,
-			data.categories,
-			"category_id",
-			"category_path");
+			data['Categories'],
+			"Category ID",
+			"Category Path");
 		
 		Refresh_Select_HTML_From_Table(
 			self.edit_category_form.edit_category_select.id,
-			data.categories,
-			"category_id",
-			"category_path");
+			data['Categories'],
+			"Category ID",
+			"Category Path");
 		
 		Refresh_Select_HTML_From_Table(
 			self.edit_category_form.edit_category_parent_select.id,
-			data.categories,
-			"category_id",
-			"category_path");
+			data['Categories'],
+			"Category ID",
+			"Category Path");
 		
 		this.view_categories_forms.Refresh(data);
 		this.edit_category_form.Refresh(data);

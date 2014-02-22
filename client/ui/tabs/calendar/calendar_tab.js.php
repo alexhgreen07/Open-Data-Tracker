@@ -46,6 +46,9 @@ include_once(dirname(__FILE__)."/../../../../externals/fullcalendar/src/outro.js
 require_once(dirname(__FILE__).'/../../accordian.js.php');
 
 //main file
+include_once(dirname(__FILE__).'/events/scheduler.js.php');
+
+//main file
 include_once(dirname(__FILE__).'/calendar_tab.js');
 
 

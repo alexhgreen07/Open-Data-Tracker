@@ -2,10 +2,7 @@
 
 require_once ('config.php');
 require_once ('auth.php');
-
-//the current version of the database
-define('current_version_id', '4');
-define('current_version_string', '0.0.5');
+require_once ('database_updater.php');
 
 function Connect_To_DB()
 {
@@ -24,17 +21,109 @@ function Connect_To_DB()
 	return $link;
 }
 
-function Insert_Version($version_id, $version_string)
+function Insert($table, $value_lookup)
 {
+	$sql = "INSERT INTO `" . $table . "`";
 	
-	$sql = "INSERT INTO `version` (`version_id`, `version_string`) VALUES (";
-	$sql .= "'" . $version_id . "'";
-	$sql .= ",";
-	$sql .= "'" . $version_string . "'";
-	$sql .= ");";
+	$columns = array();
+	$values = array();
+	
+	foreach($value_lookup as $column => $value)
+	{
+		$columns[] = "`".$column."`";
+		$values[] = "'" . $value . "'";
+	}
+	
+	$sql .= " (" . implode(", ", $columns) . ")";
+	$sql .= " VALUES (" . implode(", ", $values) . ")";
+	
+	$result = mysql_query($sql);
+	
+	return $result;
+}
+
+function Update($table, $value_lookup, $where)
+{
+	$sql = "UPDATE `" . $table . "` ";
+	
+	$set_columns = array();
+	
+	foreach($value_lookup as $column => $value)
+	{
+		$set_columns[] = "`" . $column . "` = '" . $value . "'";
+	}
+	
+	$sql .= "SET " . implode(",",$set_columns);
+	
+	$sql .= " WHERE (" . $where . ")";
+	
+	$result = mysql_query($sql);
+	
+	return $result;
+}
+
+function Delete($table, $where)
+{
+	$sql = "DELETE FROM `".$table."` WHERE (" . $where . ")";
+	
+	$result = mysql_query($sql);
+	
+	return $result;
+}
+
+function Select($table, $columns, $where, $extra)
+{
+	$sql = "SELECT ";
+	
+	foreach($columns as $key => $column)
+	{
+		$columns[$key] = $column . " AS `" . $key . "`";
+	}
+	
+	$sql .= implode(", ",$columns);
+	
+	$sql .= " FROM " . $table . "";
+	$sql .= " WHERE (" . $where . ")";
+	$sql .= " " . $extra;
+	
+	//echo $sql;
 	
 	//execute query
 	$result = mysql_query($sql);
+	
+	if(!$result)
+	{
+		return $result;
+	}
+	
+	$num = mysql_numrows($result);
+
+	$data = array();
+	
+	$i = 0;
+	while ($i < $num) {
+		
+		$data[$i] = array();
+		
+		foreach($columns as $key => $column)
+		{
+			$value = mysql_result($result, $i, $key);
+			
+			$data[$i][$key] = $value;
+		}
+		
+		$i++;
+	}
+	
+	return $data;
+}
+
+function Select_By_Member($table, $columns, $where, $extra)
+{
+	$where = "(" . $where . ") AND `member_id` = '" . $_SESSION['session_member_id'] . "'";
+	$data = Select($table,$columns,$where,$extra);
+	
+	return $data;
 }
 
 function Create_Database_Tables()
@@ -272,6 +361,35 @@ function Create_Database_Tables()
 			throw new Exception('Database failure.');
 		}
 		
+		$sql = "CREATE TABLE `life_management`.`settings` (
+			`setting_id` INT NOT NULL AUTO_INCREMENT ,
+			`name` TEXT NOT NULL ,
+			`type` TEXT NOT NULL ,
+			PRIMARY KEY ( `setting_id` )
+			) ENGINE = MYISAM";
+		$result = mysql_query($sql);
+		
+		if(!$result)
+		{
+			throw new Exception('Database failure.');
+		}
+		
+		$sql = "CREATE TABLE `life_management`.`setting_entries` (
+			`setting_entry_id` INT NOT NULL AUTO_INCREMENT ,
+			`setting_id` INT NOT NULL ,
+			`value` TEXT NOT NULL ,
+			`member_id` INT NOT NULL ,
+			PRIMARY KEY ( `setting_entry_id` )
+			) ENGINE = MYISAM";
+		$result = mysql_query($sql);
+		
+		if(!$result)
+		{
+			throw new Exception('Database failure.');
+		}
+		
+		Insert_Default_Settings();
+		
 		//insert the current version
 		Insert_Version(current_version_id,current_version_string);
 		
@@ -285,155 +403,5 @@ function Create_Database_Tables()
 }
 
 
-function Update_Database()
-{
-	$updates_lookup_table = array(
-			0 => 'Update_From_0_To_1',
-			1 => 'Update_From_1_To_2',
-			2 => 'Update_From_2_To_3',
-			3 => 'Update_From_3_To_4',
-		);
-	
-	$sql = "SELECT * FROM `version` WHERE `version_id` >= " . current_version_id . " ORDER BY `version_id` ASC";
-	$result = mysql_query($sql);
-	$num = mysql_numrows($result);
-
-	if($num == 0)
-	{
-		//update to next versions
-		$sql = "SELECT MAX(`version_id`) AS `version_id` FROM `version` WHERE `version_id` < " . current_version_id . " ORDER BY `version_id` ASC";
-		$result = mysql_query($sql);
-		$num = mysql_numrows($result);
-		
-		while ($num > 0) {
-			
-			$version_id_to_update = mysql_result($result, 0, "version_id");
-			
-			$update_function = $updates_lookup_table[$version_id_to_update];
-			
-			//execute update
-			$update_function();
-			
-			$result = mysql_query($sql);
-			$num = mysql_numrows($result);
-		}
-
-	}
-}
-
-//-----------------------------------------------------------------
-
-function Update_From_0_To_1()
-{
-	$version_id = 1;
-	$version_string = "0.0.2";
-	
-	//execute updates from previous version
-	$sql = "ALTER TABLE `items` ADD `member_id` int(11);";
-	$result = mysql_query($sql);
-	
-	$sql = "ALTER TABLE `item_log` ADD `member_id` int(11);";
-	$result = mysql_query($sql);
-	
-	$sql = "ALTER TABLE `item_targets` ADD `member_id` int(11);";
-	$result = mysql_query($sql);
-	
-	$sql = "ALTER TABLE `tasks` ADD `member_id` int(11);";
-	$result = mysql_query($sql);
-	
-	$sql = "ALTER TABLE `task_log` ADD `member_id` int(11);";
-	$result = mysql_query($sql);
-	
-	$sql = "ALTER TABLE `task_targets` ADD `member_id` int(11);";
-	$result = mysql_query($sql);
-	
-	Insert_Version($version_id,$version_string);
-}
-
-function Update_From_1_To_2()
-{
-	$version_id = 2;
-	$version_string = "0.0.3";
-	
-	//execute updates from previous version
-	$sql = "CREATE TABLE IF NOT EXISTS `reports` (
-	  `report_id` int(11) NOT NULL AUTO_INCREMENT,
-	  `report_name` text NOT NULL,
-	  `table_name` text NOT NULL,
-	  `summary_type` text NOT NULL,
-	  `filter_fields` text NOT NULL,
-	  `row_fields` text NOT NULL,
-	  `summary_fields` text NOT NULL,
-	  `graph_type` text NOT NULL,
-	  `graph_x` text NOT NULL,
-	  `graph_y` text NOT NULL,
-	  `member_id` int(11) NOT NULL,
-	  PRIMARY KEY (`report_id`)
-	) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;";
-	$result = mysql_query($sql);
-	
-	Insert_Version($version_id,$version_string);
-}
-
-function Update_From_2_To_3()
-{
-	$version_id = 3;
-	$version_string = "0.0.4";
-	
-	$sql = "ALTER TABLE `task_targets` DROP `scheduled`";
-	$result = mysql_query($sql);
-	
-	$sql = "ALTER TABLE `task_targets` ADD `recurrance_child_id` INT NOT NULL";
-	$result = mysql_query($sql);
-	
-	$sql = "ALTER TABLE `task_targets` ADD `allowed_variance` DOUBLE NOT NULL";
-	$result = mysql_query($sql);
-	
-	$sql = "ALTER TABLE `task_targets` ADD `estimated_time` DOUBLE NOT NULL";
-	$result = mysql_query($sql);
-	
-	$sql = "ALTER TABLE `task_targets` ADD `status` TEXT NOT NULL ";
-	$result = mysql_query($sql);
-	
-	$sql = "ALTER TABLE `tasks` DROP `estimated_time`";
-	$result = mysql_query($sql);
-	
-	$sql = "UPDATE `task_log` SET `status`='Stopped' WHERE `status`='Completed'";
-	$result = mysql_query($sql);
-	
-	$sql = "UPDATE `task_targets` SET `status`='Incomplete'";
-	$result = mysql_query($sql);
-	
-	Insert_Version($version_id,$version_string);
-}
-
-function Update_From_3_To_4()
-{
-	$version_id = 4;
-	$version_string = "0.0.5";
-	
-	$sql = "ALTER TABLE `item_log` ADD `item_target_id` INT NOT NULL ";
-	$result = mysql_query($sql);
-	
-	$sql = "ALTER TABLE `item_targets` ADD `recurring_child_id` INT NOT NULL ";
-	$result = mysql_query($sql);
-	
-	$sql = "ALTER TABLE `item_targets` ADD `recurrance_end_time` DATETIME NOT NULL ";
-	$result = mysql_query($sql);
-	
-	$sql = "ALTER TABLE `item_targets` ADD `allowed_variance` DOUBLE NOT NULL ";
-	$result = mysql_query($sql);
-	
-	$sql = "ALTER TABLE `item_targets` ADD `recurrance_period` DOUBLE NOT NULL ";
-	$result = mysql_query($sql);
-	
-	$sql = "ALTER TABLE `item_targets` ADD `status` TEXT NOT NULL ";
-	$result = mysql_query($sql);
-	
-	$sql = "UPDATE `item_targets` SET `status` = 'Incomplete' ";
-	$result = mysql_query($sql);
-	
-	Insert_Version($version_id,$version_string);
-}
 
 ?>

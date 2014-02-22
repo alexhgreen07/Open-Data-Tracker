@@ -19,8 +19,8 @@ function Edit_Task_Form(){
 		Refresh_Select_HTML_From_Table(
 			this.task_edit_category_select.id,
 			data['Categories'],
-			"category_id",
-			"category_path");
+			"Category ID",
+			"Category Path");
 		
 		self.Task_Edit_Select_Change();
 		

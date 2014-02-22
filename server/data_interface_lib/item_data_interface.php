@@ -122,18 +122,23 @@ class Item_Data_Interface {
 		
 	}
 
-	public function Insert_New_Item($name, $unit, $description) {
+	public function Insert_New_Item($name, $unit, $description, $category_id) {
 
 		$return_json = array('success' => 'false', );
 
 		$name = mysql_real_escape_string($name);
 		$unit = mysql_real_escape_string($unit);
 		$description = mysql_real_escape_string($description);
+		$category_id = mysql_real_escape_string($category_id);
 		
 		if ($name != "") {
 	
-			$sql_insert = "INSERT INTO `items`(`date_created`,`name`, `unit`, `description`, `member_id`) VALUES (
-				UTC_TIMESTAMP(), '" . $name . "', '" . $unit . "', '" . $description . "','" . $_SESSION['session_member_id'] ."')";
+			$sql_insert = "INSERT INTO `items`(`date_created`,`name`, `unit`, `description`, `category_id`, `member_id`) VALUES (
+				UTC_TIMESTAMP(), '" . $name . "', 
+				'" . $unit . "', 
+				'" . $description . "',
+				'" . $category_id ."',
+				'" . $_SESSION['session_member_id'] ."')";
 	
 			$success = mysql_query($sql_insert, $this -> database_link);
 	
@@ -148,17 +153,23 @@ class Item_Data_Interface {
 		return $return_json;
 	}
 
-	public function Edit_Item($item_id, $name, $unit, $description) {
+	public function Edit_Item($item_id, $name, $unit, $description, $category_id) {
 		
 		$return_json = array('success' => 'false', );
 
 		$name = mysql_real_escape_string($name);
 		$unit = mysql_real_escape_string($unit);
 		$description = mysql_real_escape_string($description);
+		$category_id = mysql_real_escape_string($category_id);
 		
 		if ($name != "") {
 
-			$sql_insert = "UPDATE `items` SET `name`='".$name."',`description`='".$description."',`unit`='".$unit."' WHERE `item_id`=" . $item_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
+			$sql_insert = "UPDATE `items` SET 
+				`name`='".$name."',
+				`description`='".$description."',
+				`unit`='".$unit."',
+				`category_id`='".$category_id."'  
+				WHERE `item_id`=" . $item_id . " AND `member_id`='" . $_SESSION['session_member_id'] ."'";
 
 			$success = mysql_query($sql_insert, $this -> database_link);
 

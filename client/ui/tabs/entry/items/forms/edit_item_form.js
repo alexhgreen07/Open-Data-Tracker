@@ -36,6 +36,7 @@ function Edit_Item_Form(){
 			params[1] = document.getElementById(self.edit_item_name.id).value;
 			params[2] = document.getElementById(self.edit_item_unit.id).value;
 			params[3] = document.getElementById(self.item_edit_description.id).value;
+			params[4] = document.getElementById(self.item_edit_category_select.id).value;
 			
 			app.api.Item_Data_Interface.Edit_Item(params, function(jsonRpcObj) {
 			
@@ -82,12 +83,14 @@ function Edit_Item_Form(){
 			document.getElementById(self.edit_item_name.id).value = selected_item.item_name;
 			document.getElementById(self.item_edit_description.id).value = selected_item.item_description;
 			document.getElementById(self.edit_item_unit.id).value = selected_item.item_unit;
+			document.getElementById(self.item_edit_category_select.id).value = selected_item.category_id;
 		}
 		else
 		{
 			document.getElementById(self.edit_item_name.id).value = '';
 			document.getElementById(self.item_edit_description.id).value = '';
 			document.getElementById(self.edit_item_unit.id).value = '';
+			document.getElementById(self.item_edit_category_select.id).value = 0;
 		}
 		
 	};

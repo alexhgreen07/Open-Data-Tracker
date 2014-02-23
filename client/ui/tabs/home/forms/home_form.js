@@ -266,7 +266,7 @@ function Home_Form(home_div_id) {
 			
 			$('#' + row_ids[i]).click(function(){
 				
-				self.event_click_callback('task_entries', this.row);
+				self.event_click_callback('item_entries', this.row);
 				
 			});
 		}

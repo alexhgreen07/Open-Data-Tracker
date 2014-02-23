@@ -80,7 +80,7 @@ function Entry_Tab() {
 		}
 		else if(table == 'item_entries')
 		{
-			//TODO: implement
+			self.Node_Entry_Button_Click();
 		}
 		
 	};
@@ -149,7 +149,7 @@ function Entry_Tab() {
 			//execute the click event
 			self.tasks_tab.Show_Form('timecard_task_entry_div');
 		}
-		else if(self.current_selected_info.table == 'items')
+		else if(self.current_selected_info.table == 'items' || self.current_selected_info.table == 'item_entries')
 		{
 			name_select_id = self.items_tab.quick_item_entry_form.quick_item_name_select.id;
 			document.getElementById(name_select_id).value = self.current_selected_info.row.item_id;

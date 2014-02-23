@@ -257,13 +257,12 @@ function Event_Scheduler() {
 			var a_timestamp = Cast_Server_Datetime_to_Date(a.row.scheduled_time);
 		    var b_timestamp = Cast_Server_Datetime_to_Date(b.row.scheduled_time);
 			
-			var a_late_start_timestamp = self.Generate_End_Date(a_timestamp, a.row.variance, 0);
-			var b_late_start_timestamp = self.Generate_End_Date(b_timestamp, b.row.variance, 0);
+			var a_late_start_timestamp = self.Generate_End_Date(a_timestamp, a.row.variance + a.row.estimated_time, 0);
+			var b_late_start_timestamp = self.Generate_End_Date(b_timestamp, b.row.variance + b.row.estimated_time, 0);
 			
 			return (a_late_start_timestamp - b_late_start_timestamp);
 			
 		});
-		
 		
 		for(var j = 0; j < overlap_entry.entries.length; j++)
 		{
@@ -284,7 +283,7 @@ function Event_Scheduler() {
 				{
 					start_timestamp = shifted_target_start_timestamp;
 				}
-				
+		
 				if(start_timestamp > late_start_timestamp)
 				{
 					new_row.status = 'Late';
@@ -300,8 +299,11 @@ function Event_Scheduler() {
 				
 				time_block = new_row.estimated_time * (1 / self.config.switch_efficiency);
 				
+				//alert(new_row.estimated_time);
+				
 				var end_timestamp = self.Generate_End_Date(start_timestamp, time_block, 0);
 				shifted_target_start_timestamp = end_timestamp;
+				
 				
 			}
 			else
@@ -315,6 +317,9 @@ function Event_Scheduler() {
 			
 			
 		}
+		
+				
+		//alert(j + '/' + overlap_entry.entries.length);
 		
 		return_value.new_events = new_events;
 		return_value.shifted_target_start_timestamp = shifted_target_start_timestamp;
@@ -379,6 +384,30 @@ function Event_Scheduler() {
 				
 				//make the date far in the future
 				next_overlap_entry.start_time = next_overlap_entry.start_time * 1.5;
+			}
+			else
+			{
+				
+				var overlap_hours = 0;
+				
+				//join any overlapping entries
+				for(var j = 0; j < overlap_entry.entries.length; j++)
+				{
+					overlap_hours += overlap_entry.entries[j].row.estimated_time * (1 / self.config.switch_efficiency);
+					
+					var overlap_end_time = self.Generate_End_Date(overlap_entry.start_time, overlap_hours, 0);
+					
+					if(overlap_end_time > next_overlap_entry.start_time)
+					{
+						
+						overlap_entry.entries = overlap_entry.entries.concat(next_overlap_entry.entries);
+						
+						overlap_table.splice(i + 1,1);
+						
+						next_overlap_entry = overlap_table[i + 1];
+					}
+				}
+				
 			}
 			
 			scheduled_overlap_targets = self.Schedule_Overlap_Entry(overlap_entry,next_overlap_entry,shifted_target_start_timestamp);

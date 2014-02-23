@@ -935,7 +935,7 @@ class Task_Data_Interface {
 							'" . $new_recurrance_type . "',
 							" . $new_recurrance_period . ",
 							" . $new_variance . ",
-							'" . $new_recurrance_end_date . "',
+							'" . $recurring_timestring . "',
 							'" . $new_estimated_time . "',
 							" . $task_target_id . ",
 							'Incomplete')";

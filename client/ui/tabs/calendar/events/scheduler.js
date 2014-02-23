@@ -128,7 +128,8 @@ function Event_Scheduler() {
 		//add all early and late start time to overlap table array
 		for(var i = 0; i < events.length; i++)
 		{
-			var current_entry = self.new_events[i].entry;
+			
+			var current_entry = events[i];
 			
 			var current_timestamp = Cast_Server_Datetime_to_Date(current_entry.row.scheduled_time);
 			var early_start_timestamp = self.Generate_End_Date(current_timestamp, -current_entry.row.variance, 0);
@@ -145,6 +146,7 @@ function Event_Scheduler() {
 				var late_overlap_entry = {start_time: late_start_timestamp, entries: []};
 				overlap_table.push(late_overlap_entry);
 			}
+			
 			
 		}
 		
@@ -346,6 +348,7 @@ function Event_Scheduler() {
 			}
 			
 			shifted_targets.push(new_entry);
+		
 		}
 		
 		//sort the shifted targets

@@ -62,7 +62,7 @@ function Calendar_Tab() {
 			
 			$('#' + self.calendar_div.id).fullCalendar({
 				header: {
-					left: 'month,agendaWeek,agendaDay',
+					left: 'month,' + self.week_view_type + ',' + self.day_view_type,
 					center: 'today',
 					right: 'prev,next'
 				}, 
@@ -178,6 +178,25 @@ function Calendar_Tab() {
 		}
 	};
 	
+	this.Calendar_View_Type_Radio_Change = function()
+	{
+		
+		if(document.getElementById(self.radio_button_agenda.id).checked)
+		{
+			self.day_view_type = 'agendaDay';
+			self.week_view_type = 'agendaWeek';
+		}
+		else
+		{
+			self.day_view_type = 'basicDay';
+			self.week_view_type = 'basicWeek';
+		}
+		
+		$('#' + self.calendar_div.id).fullCalendar('changeView', self.day_view_type );
+		self.Refresh(self.data);
+		
+	};
+	
 	/** @method Render
 	 * @desc This function will render the tab in the div that it was initialized with.
 	 * */
@@ -193,14 +212,40 @@ function Calendar_Tab() {
 		var calendar_accordian = new Accordian(home_div_id, tabs_array);
 		calendar_accordian.Render();
 		
+		self.calendar_options_form = document.createElement("form");
+		self.calendar_options_form.id = home_div_id + "_calendar_options_form";
+		
+		self.calendar_options_form.innerHTML += "Settings:<br><br>";
+		
+		self.radio_button_agenda = document.createElement('input');
+		self.radio_button_agenda.id = home_div_id + '_radio_button_agenda';
+		self.radio_button_agenda.type = 'radio';
+		self.radio_button_agenda.value = 'agenda';
+		self.radio_button_agenda.className = 'radio_input';
+		self.radio_button_agenda.name = 'calendar_view';
+		self.calendar_options_form.appendChild(self.radio_button_agenda);
+		self.calendar_options_form.innerHTML += "Agenda View";
+		
+		self.radio_button_basic = document.createElement('input');
+		self.radio_button_basic.id = home_div_id + '_radio_button_basic';
+		self.radio_button_basic.type = 'radio';
+		self.radio_button_basic.value = 'basic';
+		self.radio_button_basic.className = 'radio_input';
+		self.radio_button_basic.name = 'calendar_view';
+		self.calendar_options_form.appendChild(self.radio_button_basic);
+		self.calendar_options_form.innerHTML += "Basic View";
+		
+		self.calendar_options_form.innerHTML += "<br><hr>";
+		
+		document.getElementById(accordian_div).appendChild(self.calendar_options_form);
+		
 		self.calendar_div = document.createElement("div");
 		self.calendar_div.id = home_div_id + '_calendar_div';
 		document.getElementById(accordian_div).appendChild(self.calendar_div);
 		
-		
 		$('#' + self.calendar_div.id).fullCalendar({
 			header: {
-				left: 'month,agendaWeek,agendaDay',
+				left: 'month,' + self.week_view_type + ',' + self.day_view_type,
 				center: 'today',
 				right: 'prev,next'
 			},
@@ -210,6 +255,21 @@ function Calendar_Tab() {
    		$('#' + self.calendar_div.id).fullCalendar('render');
    		$('#' + self.calendar_div.id).fullCalendar('today');
    		$('#' + self.calendar_div.id).fullCalendar('changeView', self.day_view_type );
+		
+		document.getElementById(self.radio_button_agenda.id).checked = true;
+		
+		$('#' + self.radio_button_agenda.id).change(function(){
+			
+			self.Calendar_View_Type_Radio_Change();
+			
+		});
+		
+		$('#' + self.radio_button_basic.id).change(function(){
+			
+			self.Calendar_View_Type_Radio_Change();
+			
+		});
+		
 		
 	};
 }

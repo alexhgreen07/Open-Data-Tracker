@@ -49,7 +49,7 @@ function Main_Application() {
 		
 	};
 	
-	this.Calendar_Event_Click_Callback = function(table, row)
+	this.Select_Event_Click_Callback = function(table, row)
 	{
 		//activate the entry tab
 		$('#' + self.main_tabs_div).tabs({ active: 1 });
@@ -151,7 +151,11 @@ function Main_Application() {
 		
 		this.report_tab_object.Render('report_tab_div');
 		
-		this.calendar_tab_object.event_click_callback = this.Calendar_Event_Click_Callback;
+		
+		this.home_tab_object.home_form.event_click_callback = this.Select_Event_Click_Callback;
+		
+		this.calendar_tab_object.event_click_callback = this.Select_Event_Click_Callback;
+		
 	};
 	
 	/** @method Render

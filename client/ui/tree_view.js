@@ -145,7 +145,7 @@ function Tree_View(div_id, data) {
 				}
 				else if(table == 'item_entries')
 				{
-					if(self.tree_view_id_lookup[key].row.item_entry_id == row.item_entry_id)
+					if(self.tree_view_id_lookup[key].row.item_entry_id == row.item_log_id)
 					{
 						found_key = key;
 						break;

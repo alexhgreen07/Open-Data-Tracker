@@ -285,15 +285,15 @@ class Task_Data_Interface {
 			JOIN tasks ON tasks.task_id = task_log.task_id
 			LEFT JOIN task_targets ON task_targets.task_schedule_id = task_log.task_target_id";
 		$columns = array(
-			"name" => "tasks.name",
+			"name" => "IFNULL(tasks.name,'')",
 			"task_log_id" => "task_log.task_log_id",
-			"task_id" => "tasks.task_id",
+			"task_id" => "IFNULL(tasks.task_id,0)",
 			"start_time" => "task_log.start_time",
 			"hours" => "task_log.hours",
 			"status" => "task_log.status",
 			"note" => "task_log.note",
 			"task_target_id" => "task_log.task_target_id",
-			"target_status" => "task_targets.status");
+			"target_status" => "IFNULL(task_targets.status,'')");
 		$extra = "ORDER BY task_log.task_log_id";
 		$data = Select_By_Member($join,$columns,"1",$extra);
 		
@@ -353,7 +353,7 @@ class Task_Data_Interface {
 			"recurrance_child_id" => "task_targets.recurrance_child_id",
 			"status" => "task_targets.status",
 			"name" => "tasks.name",
-			"hours" => "SUM(task_log.hours)");
+			"hours" => "IFNULL(SUM(task_log.hours),0)");
 		$extra = "GROUP BY task_targets.task_schedule_id
 			ORDER BY task_targets.task_schedule_id";
 		$data = Select_By_Member($join,$columns,"1",$extra);
@@ -935,7 +935,7 @@ class Task_Data_Interface {
 							'" . $new_recurrance_type . "',
 							" . $new_recurrance_period . ",
 							" . $new_variance . ",
-							'" . $new_recurrance_end_date . "',
+							'" . $recurring_timestring . "',
 							'" . $new_estimated_time . "',
 							" . $task_target_id . ",
 							'Incomplete')";

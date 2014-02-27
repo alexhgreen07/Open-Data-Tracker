@@ -122,14 +122,14 @@ function Item_Tab() {
 		Refresh_Select_HTML_From_Table(
 			this.new_item_form.item_category_select.id,
 			data['Categories'],
-			"category_id",
-			"category_path");
+			"Category ID",
+			"Category Path");
 		
 		Refresh_Select_HTML_From_Table(
 			this.edit_item_form.item_edit_category_select.id,
 			data['Categories'],
-			"category_id",
-			"category_path");
+			"Category ID",
+			"Category Path");
 	};
 	
 	this.Show_Form = function(div_id){

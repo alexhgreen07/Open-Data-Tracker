@@ -14,6 +14,7 @@ function New_Item_Form(){
 		var name_string = $("#" + self.item_name.id).val();
 		var note_string = $("#" + self.item_description.id).val();
 		var unit_string = $("#" + self.item_new_unit.id).val();
+		var category_id = $("#" + self.item_category_select.id).val();
 
 		if (name_string != '') {
 
@@ -22,6 +23,7 @@ function New_Item_Form(){
 			params[0] = name_string;
 			params[1] = unit_string;
 			params[2] = note_string;
+			params[3] = category_id;
 
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Insert_New_Item(params, function(jsonRpcObj) {

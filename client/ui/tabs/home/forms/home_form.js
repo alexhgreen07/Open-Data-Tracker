@@ -3,6 +3,9 @@
  */
 function Home_Form(home_div_id) {
 	
+	var self = this;
+	
+	this.event_click_callback = function(table, row){};
 	
 	this.Refresh = function(data){
 		
@@ -114,9 +117,11 @@ function Home_Form(home_div_id) {
 		});
 		
 		//create the running tasks table
-		running_tasks_table = '';
+		running_tasks_table = document.createElement('table');
 		
-		running_tasks_table += '<table><tr><th>Name</th><th>Start Time</th></tr>';
+		running_tasks_table.innerHTML += '<tr><th>Name</th><th>Start Time</th></tr>';
+		
+		var row_ids = [];
 		
 		for(var i = 0; i < running_tasks.length; i++)
 		{
@@ -132,20 +137,41 @@ function Home_Form(home_div_id) {
    				scheduled_interval = "in " + scheduled_interval;
    			}
 			
-			running_tasks_table += '<tr>' + 
+			running_tasks_row = document.createElement('tr');
+			running_tasks_row.id = 'running_tasks_' + running_tasks[i].task_log_id;
+			
+			running_tasks_row.innerHTML += 
 				'<td>' + running_tasks[i].name + '</td>' + 
-				'<td>' + scheduled_interval + '</td>' + 
-				'</tr>';
+				'<td>' + scheduled_interval + '</td>';
+			
+			running_tasks_table.appendChild(running_tasks_row);
+			
+			row_ids.push(running_tasks_row.id);
 		}
 		
-		running_tasks_table += '</table><hr>';
+		running_tasks_div.appendChild(running_tasks_table);
+		running_tasks_div.innerHTML += '<hr>';
 		
-		running_tasks_div.innerHTML += running_tasks_table;
+		//assign events
+		for(var i = 0; i < row_ids.length; i++)
+		{
+			document.getElementById(row_ids[i]).row = running_tasks[i];
+			
+			$('#' + row_ids[i]).css('cursor','pointer');
+			
+			$('#' + row_ids[i]).click(function(){
+				
+				self.event_click_callback('task_entries', this.row);
+				
+			});
+		}
+		
+		var row_ids = [];
 		
 		//create the upcoming task targets table
-		upcoming_tasks_table = '';
+		upcoming_tasks_table = document.createElement('table');
 		
-		upcoming_tasks_table += '<table><tr><th>Name</th><th>Time To Target</th><th>Estimated Time</th></tr>';
+		upcoming_tasks_table.innerHTML += '<tr><th>Name</th><th>Time To Target</th><th>Estimated Time</th></tr>';
 		
 		for(var i = 0; i < upcoming_tasks.length; i++)
 		{
@@ -162,21 +188,42 @@ function Home_Form(home_div_id) {
    			}
    			estimated_time_string = Get_String_From_Time_Interval(0,Math.round(upcoming_tasks[i].estimated_time * 60 * 60 * 1000));
 			
-			upcoming_tasks_table += '<tr>' + 
+			upcoming_tasks_row = document.createElement('tr');
+			upcoming_tasks_row.id = 'upcoming_tasks_' + upcoming_tasks[i].task_schedule_id;
+			
+			upcoming_tasks_row.innerHTML += 
 				'<td>' + upcoming_tasks[i].name + '</td>' + 
 				'<td>' + scheduled_interval + '</td>' + 
-				'<td>' + estimated_time_string + '</td>' + 
-				'</tr>';
+				'<td>' + estimated_time_string + '</td>';
+				
+			upcoming_tasks_table.appendChild(upcoming_tasks_row);
+			
+			row_ids.push(upcoming_tasks_row.id);
 		}
 		
-		upcoming_tasks_table += '</table><hr>';
+		upcoming_tasks_div.appendChild(upcoming_tasks_table);
+		upcoming_tasks_div.innerHTML += '<hr>';
 		
-		upcoming_tasks_div.innerHTML += upcoming_tasks_table;
+		//assign events
+		for(var i = 0; i < row_ids.length; i++)
+		{
+			document.getElementById(row_ids[i]).row = upcoming_tasks[i];
+			
+			$('#' + row_ids[i]).css('cursor','pointer');
+			
+			$('#' + row_ids[i]).click(function(){
+				
+				self.event_click_callback('task_targets', this.row);
+				
+			});
+		}
+		
+		var row_ids = [];
 		
 		//create the recent items table
-		recent_items_table = '';
+		recent_items_table = document.createElement('table');
 		
-		recent_items_table += '<table><tr><th>Name</th><th>Entry Time</th><th>Value</th></tr>';
+		recent_items_table.innerHTML += '<tr><th>Name</th><th>Entry Time</th><th>Value</th></tr>';
 		
 		for(var i = 0; i < recent_items.length; i++)
 		{
@@ -193,16 +240,36 @@ function Home_Form(home_div_id) {
    				scheduled_interval = "in " + scheduled_interval;
    			}
 			
-			recent_items_table += '<tr>' + 
+			recent_item_row = document.createElement('tr');
+			recent_item_row.id = 'recent_items_' + recent_items[i].item_log_id;
+			
+			recent_item_row.innerHTML += '<tr>' + 
 				'<td>' + recent_items[i].name + '</td>' + 
 				'<td>' + scheduled_interval + '</td>' + 
 				'<td>' + recent_items[i].value + '</td>' + 
 				'</tr>';
+			
+			recent_items_table.appendChild(recent_item_row);
+			
+			row_ids.push(recent_item_row.id);
 		}
 		
-		recent_items_table += '</table><hr>';
+		recent_items_div.appendChild(recent_items_table);
+		recent_items_div.innerHTML += '<hr>';
 		
-		recent_items_div.innerHTML += recent_items_table;
+		//assign events
+		for(var i = 0; i < row_ids.length; i++)
+		{
+			document.getElementById(row_ids[i]).row = recent_items[i];
+			
+			$('#' + row_ids[i]).css('cursor','pointer');
+			
+			$('#' + row_ids[i]).click(function(){
+				
+				self.event_click_callback('item_entries', this.row);
+				
+			});
+		}
 		
 	};
 	

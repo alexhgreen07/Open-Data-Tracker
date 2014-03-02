@@ -110,6 +110,10 @@ function Tree_View(div_id, data) {
 			self.tree.updateNode(id,[],true);
 		}
 		
+		
+		$('.resnyanskiy-tree > ul.container li > span.icon').css( "background-color" , "red");
+		$('.resnyanskiy-tree > ul.container li > span.icon').css( "border-radius" , "10px");
+		
 	};
 	
 	self.Unselect_Node = function(){
@@ -262,7 +266,7 @@ function Tree_View(div_id, data) {
 			
 			if(current_row["Parent Category ID"] == node.category_id)
 			{
-				random_id = self.Generate_Hashed_ID('categories', current_row);
+				random_id = self.Generate_Hashed_ID('categories', current_row["Category ID"]);
 				var new_tree_row = new TreeNode(random_id, current_row["Name"], false);
 				
 				self.tree_view_id_lookup[random_id] = 
@@ -293,7 +297,7 @@ function Tree_View(div_id, data) {
 	self.Remove_Category_Tree_Node_Children = function(data, node)
 	{
 		
-		
+		//TODO: implement
 		
 	};
 	
@@ -301,7 +305,7 @@ function Tree_View(div_id, data) {
 	{
 		processed_categories = [];
 		
-		random_id = self.Generate_Hashed_ID('categories', {});
+		random_id = self.Generate_Hashed_ID('categories', 0);
 		var primary_node = new TreeNode(random_id, "Categories", true);
 		
 		self.tree_view_id_lookup[random_id] = 
@@ -330,7 +334,7 @@ function Tree_View(div_id, data) {
 			{
 				node.hasChildren = true;
 				
-				random_id = self.Generate_Hashed_ID('task_entries', current_entry_row);
+				random_id = self.Generate_Hashed_ID('task_entries', current_entry_row['task_log_id']);
 				var new_tree_row = new TreeNode(random_id, current_entry_row["start_time"], false);
 				
 				self.tree_view_id_lookup[random_id] = 
@@ -346,6 +350,11 @@ function Tree_View(div_id, data) {
 		
 	};
 	
+	self.Remove_Task_Entries_Tree_Node_Children = function(node, task_id, task_target_id)
+	{
+		//TODO: implement
+	};
+	
 	self.Create_Task_Target_Recurring_Tree_Node_Children = function(data, node, schedule_id)
 	{
 		task_targets = data.task_targets;
@@ -359,7 +368,7 @@ function Tree_View(div_id, data) {
 			{
 				node.hasChildren = true;
 				
-				random_id = self.Generate_Hashed_ID('task_targets',current_target_row);
+				random_id = self.Generate_Hashed_ID('task_targets',current_target_row['task_schedule_id']);
 				var new_tree_row = new TreeNode(random_id, current_target_row["scheduled_time"], false);
 				
 				self.tree_view_id_lookup[random_id] = 
@@ -382,6 +391,11 @@ function Tree_View(div_id, data) {
 		}
 	};
 	
+	self.Remove_Task_Target_Recurring_Tree_Node_Children = function(node, schedule_id)
+	{
+		//TODO: implement
+	};
+	
 	self.Create_Task_Tree_Node_Children = function(data, node, category_filter)
 	{
 		return_array = [];
@@ -395,7 +409,7 @@ function Tree_View(div_id, data) {
 			
 			if(current_item_row["category_id"] == category_filter)
 			{
-				random_id = self.Generate_Hashed_ID('tasks',current_item_row);
+				random_id = self.Generate_Hashed_ID('tasks',current_item_row['task_id']);
 				
 				var new_item_row = new TreeNode(random_id, current_item_row["name"], false);
 				
@@ -406,7 +420,7 @@ function Tree_View(div_id, data) {
 					"row" : current_item_row
 				};
 				
-				random_id = self.Generate_Hashed_ID('task_targets',current_item_row);
+				random_id = self.Generate_Hashed_ID('task_targets_folder',current_item_row['task_schedule_id']);
 				var new_item_row_targets = new TreeNode(random_id, "Targets", false);
 				
 				self.tree_view_id_lookup[random_id] = 
@@ -416,7 +430,7 @@ function Tree_View(div_id, data) {
 						"row" : {}
 					};
 				
-				random_id = self.Generate_Hashed_ID('task_entries',current_item_row);
+				random_id = self.Generate_Hashed_ID('task_entries_folder',current_item_row['task_log_id']);
 				var new_item_row_entries = new TreeNode(random_id, "Entries", false);
 				
 				self.tree_view_id_lookup[random_id] = 
@@ -439,7 +453,7 @@ function Tree_View(div_id, data) {
 					{
 						new_item_row_targets.hasChildren = true;
 						
-						random_id = self.Generate_Hashed_ID('task_targets',current_target_row);
+						random_id = self.Generate_Hashed_ID('task_targets',current_target_row['task_schedule_id']);
 						
 						var new_tree_row = new TreeNode(random_id, current_target_row["scheduled_time"], false);
 						
@@ -493,13 +507,18 @@ function Tree_View(div_id, data) {
 		
 	};
 	
+	self.Remove_Task_Tree_Node_Children = function()
+	{
+		//TODO: implement
+	};
+	
 	self.Create_Task_Tree_Nodes = function(data, category_filter)
 	{
 		
 		return_array = [];
 		processed_categories = [];
 		
-		random_id = self.Generate_Hashed_ID('tasks',{category_id: category_filter});
+		random_id = self.Generate_Hashed_ID('category_tasks',category_filter);
 		
 		var primary_node = new TreeNode(random_id, "Tasks", false);
 		
@@ -521,6 +540,11 @@ function Tree_View(div_id, data) {
 		
 	};
 	
+	self.Remove_Task_Tree_Nodes = function(category_filter)
+	{
+		//TODO: implement
+	};
+	
 	self.Create_Item_Entries_Tree_Node_Children = function(data, node, item_id, item_target_id)
 	{
 		item_entries = data.item_entries;
@@ -533,7 +557,7 @@ function Tree_View(div_id, data) {
 			{
 				node.hasChildren = true;
 				
-				random_id = self.Generate_Hashed_ID('item_entries',current_entry_row);
+				random_id = self.Generate_Hashed_ID('item_entries',current_entry_row['item_log_id']);
 				
 				var new_tree_row = new TreeNode(random_id, current_entry_row["time"], false);
 				
@@ -549,6 +573,11 @@ function Tree_View(div_id, data) {
 		}
 	};
 	
+	self.Remove_Item_Entries_Tree_Node_Children = function()
+	{
+		//TODO: implement
+	};
+	
 	self.Create_Item_Target_Recurring_Tree_Node_Children = function(data, node, schedule_id)
 	{
 		item_targets = data.item_targets;
@@ -562,7 +591,7 @@ function Tree_View(div_id, data) {
 			{
 				node.hasChildren = true;
 				
-				random_id = self.Generate_Hashed_ID('item_targets',current_target_row);
+				random_id = self.Generate_Hashed_ID('item_targets',current_target_row['item_target_id']);
 				
 				var new_tree_row = new TreeNode(random_id, current_target_row["start_time"], false);
 				
@@ -586,6 +615,11 @@ function Tree_View(div_id, data) {
 		}
 	};
 	
+	self.Remove_Item_Target_Recurring_Tree_Node_Children = function()
+	{
+		//TODO: implement
+	};
+	
 	self.Create_Item_Tree_Node_Children = function(data,node,category_filter)
 	{
 		
@@ -600,7 +634,7 @@ function Tree_View(div_id, data) {
 			if(current_item_row["category_id"] == category_filter)
 			{
 				
-				random_id = self.Generate_Hashed_ID('items',current_item_row);
+				random_id = self.Generate_Hashed_ID('items',current_item_row['item_id']);
 				
 				var new_item_row = new TreeNode(random_id, current_item_row["item_name"], false);
 				
@@ -611,7 +645,7 @@ function Tree_View(div_id, data) {
 					"row" : current_item_row
 				};
 				
-				random_id = self.Generate_Hashed_ID('item_targets',current_item_row);
+				random_id = self.Generate_Hashed_ID('item_targets',current_item_row['item_target_id']);
 				var new_item_row_targets = new TreeNode(random_id, "Targets", false);
 				
 				self.tree_view_id_lookup[random_id] = 
@@ -621,7 +655,7 @@ function Tree_View(div_id, data) {
 						"row" : {}
 					};
 				
-				random_id = self.Generate_Hashed_ID('item_entries',current_item_row);
+				random_id = self.Generate_Hashed_ID('item_entries',current_item_row['item_log_id']);
 				var new_item_row_entries = new TreeNode(random_id, "Entries", false);
 				
 				self.tree_view_id_lookup[random_id] = 
@@ -643,7 +677,7 @@ function Tree_View(div_id, data) {
 					{
 						new_item_row_targets.hasChildren = true;
 						
-						random_id = self.Generate_Hashed_ID('item_targets',current_target_row);
+						random_id = self.Generate_Hashed_ID('item_targets',current_target_row['item_target_id']);
 						
 						var new_tree_row = new TreeNode(random_id, current_target_row["start_time"], false);
 						
@@ -697,13 +731,18 @@ function Tree_View(div_id, data) {
 		
 	};
 	
+	self.Remove_Item_Tree_Node_Children = function()
+	{
+		//TODO: implement
+	};
+	
 	self.Create_Item_Tree_Nodes = function(data, category_filter)
 	{
 		
 		return_array = [];
 		processed_categories = [];
 		
-		random_id = self.Generate_Hashed_ID('items',{category_id: category_filter});
+		random_id = self.Generate_Hashed_ID('category_items',category_filter);
 		
 		var primary_node = new TreeNode(random_id, "Items", false);
 		
@@ -725,9 +764,15 @@ function Tree_View(div_id, data) {
 		
 	};
 	
-	self.Generate_Hashed_ID = function(table, row)
+	self.Remove_Item_Tree_Nodes = function(){
+		
+		//TODO: implement
+		
+	};
+	
+	self.Generate_Hashed_ID = function(table, index)
 	{
-		var str = table + JSON.stringify(row);
+		var str = table + index;
 		var hash = 0;
 		
 	    if (str.length == 0) return hash;

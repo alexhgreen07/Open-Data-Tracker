@@ -430,7 +430,7 @@ function Tree_View(div_id, data) {
 						"row" : {}
 					};
 				
-				random_id = self.Generate_Hashed_ID('task_entries_folder',current_item_row['task_log_id']);
+				random_id = self.Generate_Hashed_ID('task_entries_folder',current_item_row['task_schedule_id']);
 				var new_item_row_entries = new TreeNode(random_id, "Entries", false);
 				
 				self.tree_view_id_lookup[random_id] = 

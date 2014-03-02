@@ -273,6 +273,12 @@ function Home_Form(home_div_id) {
 		
 	};
 	
+	this.Refresh_From_Diff = function(diff){
+		
+		//TODO: implement
+		
+	};
+	
 	/** @method Summary_Data_Refresh_Click_Event
 	 * @desc This is the summary data refresh button click event handler.
 	 * @param {function} refresh_callback The callback to call after the refresh of data has completed.

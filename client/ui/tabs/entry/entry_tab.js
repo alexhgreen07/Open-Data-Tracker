@@ -31,6 +31,35 @@ function Entry_Tab() {
 		self.tasks_tab.Refresh(self.data);
 	};
 	
+	this.Refresh_From_Diff = function(diff, data)
+	{
+		
+		//TODO: implement
+		self.data = data;
+		
+		self.tree_view.Refresh_From_Diff(diff, self.data);
+		
+		if(diff['data']['Categories'].length > 0)
+		{
+			self.category_tab.Refresh(self.data);
+		}
+		
+		if((diff['data']['items'].length > 0) ||
+			(diff['data']['item_entries'].length > 0) ||
+			(diff['data']['item_targets'].length > 0))
+		{
+			self.items_tab.Refresh(self.data);
+		}
+		
+		if((diff['data']['tasks'].length > 0) ||
+			(diff['data']['task_entries'].length > 0) ||
+			(diff['data']['task_targets'].length > 0))
+		{
+			self.tasks_tab.Refresh(self.data);
+		}
+		
+	};
+	
 	this.Select_Entry = function(table, row)
 	{
 		

@@ -89,6 +89,13 @@ function Report_Tab() {
 		
 	};
 	
+	this.Refresh_From_Diff = function(diff, data, schema, reports){
+		
+		//TODO: Implement
+		self.Refresh(data, schema, reports);
+		
+	};
+	
 	this.Refresh_Summaries_Form = function(data){
 		
 		var inner_html = '';

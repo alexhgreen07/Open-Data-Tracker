@@ -29,6 +29,19 @@ function Home_Tab() {
 		this.home_form.Refresh(data);
 		this.settings_form.Refresh(settings);
 	};
+	
+	this.Refresh_From_Diff = function(diff, data, settings)
+	{
+		//TODO: Implement
+		this.home_form.Refresh(data);
+		
+		if((diff['settings']['settings'].length > 0) ||
+			(diff['settings']['setting_entries'].length > 0))
+		{
+			this.settings_form.Refresh(settings);
+		}
+		
+	};
 
 	/** @method Render
 	 * @desc This function will render the tab in the div that it was initialized with.

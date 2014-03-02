@@ -41,12 +41,68 @@ function Main_Application() {
 	 * */
 	this.Refresh_Data = function() {
 		
+		var times = [];
+		
+		var start = new Date();
+		
 		//refresh all data in all forms
 		self.home_tab_object.Refresh(self.api.data, self.api.settings);
+
+		var end = new Date();
+		times.push('home_tab_object: ' + (end - start) / 1000);
+		var start = new Date();
+		
 		self.entry_tab_object.Refresh(self.api.data);
+		
+		var end = new Date();
+		times.push('entry_tab_object: ' + (end - start) / 1000);
+		var start = new Date();
+		
 		self.calendar_tab_object.Refresh(self.api.data);
+		
+		var end = new Date();
+		times.push('calendar_tab_object: ' + (end - start) / 1000);
+		var start = new Date();
+		
 		self.report_tab_object.Refresh(self.api.data, self.api.schema, self.api.reports);
 		
+		var end = new Date();
+		times.push('report_tab_object: ' + (end - start) / 1000);
+		
+		//alert(JSON.stringify(times));
+	};
+	
+	this.Refresh_From_Diff = function(diff) {
+		
+		var times = [];
+		
+		var start = new Date();
+		
+		//TODO: implement
+		self.home_tab_object.Refresh_From_Diff(diff, self.api.data, self.api.settings);
+		
+		var end = new Date();
+		times.push('home_tab_object: ' + (end - start) / 1000);
+		var start = new Date();
+		
+		self.entry_tab_object.Refresh_From_Diff(diff, self.api.data);
+		
+		var end = new Date();
+		times.push('entry_tab_object: ' + (end - start) / 1000);
+		var start = new Date();
+		
+		self.calendar_tab_object.Refresh_From_Diff(diff, self.api.data);
+		
+		var end = new Date();
+		times.push('calendar_tab_object: ' + (end - start) / 1000);
+		var start = new Date();
+		
+		self.report_tab_object.Refresh(self.api.data, self.api.schema, self.api.reports);
+		
+		var end = new Date();
+		times.push('report_tab_object: ' + (end - start) / 1000);
+		
+		//alert(JSON.stringify(times));
 	};
 	
 	this.Select_Event_Click_Callback = function(table, row)
@@ -91,7 +147,8 @@ function Main_Application() {
 		var self = this;
 		
 		self.api.is_busy_callback = self.Is_Busy_Callback;
-		self.api.data_changed_callback = self.Refresh_Data;
+		self.api.data_refresh_callback = self.Refresh_Data;
+		self.api.data_diff_callback = self.Refresh_From_Diff;
 		
 		self.api.Connect(url, function () {
 			

@@ -31,59 +31,64 @@ function Calendar_Tab() {
 	 * */
 	this.Refresh = function(data) {
 		
-		//if(JSON.stringify(self.data) !== JSON.stringify(data))
+		self.data = data;
+	
+		document.getElementById(self.calendar_div.id).innerHTML = '';
+		
+		self.new_events = [];
+	    
+	    for(var i = 0; i < data.task_targets.length; i++)
+	    {
+	    	var new_event = self.scheduler.Create_Event_From_Task_Target_Row(data.task_targets[i]);
+	    	
+	    	self.new_events.push(new_event);
+	    }
+	    
+	    for(var i = 0; i < data.task_entries.length; i++)
+	    {
+	    	
+	    	var new_event = self.scheduler.Create_Event_From_Task_Entry_Row(data.task_entries[i]);
+	    	
+	    	self.new_events.push(new_event);
+	    }
+		
+		var previous_name = $('#' + self.calendar_div.id).fullCalendar('getView').name;
+		var previous_date = $('#' + self.calendar_div.id).fullCalendar('getDate');
+		
+		self.new_events = self.scheduler.Run_Scheduling_Algorithm(self.new_events);
+		
+		$('#' + self.calendar_div.id).fullCalendar({
+			header: {
+				left: 'month,' + self.week_view_type + ',' + self.day_view_type,
+				center: 'today',
+				right: 'prev,next'
+			}, 
+			editable: false,
+			selectable: false,
+			droppable: false,
+			events: self.new_events,
+			eventClick: self.Event_Click,
+			dayClick: self.Day_Click,
+			eventAfterAllRender: self.Calendar_Render_Complete,
+		});
+		
+		$('#' + self.calendar_div.id).fullCalendar('changeView', previous_name);
+		$('#' + self.calendar_div.id).fullCalendar('gotoDate',previous_date);
+		
+	};
+	
+	this.Refresh_From_Diff = function(diff, data){
+		
+		//TODO: Implement
+		
+		for(table in diff['data'])
 		{
-		
-			self.data = data;
-		
-			document.getElementById(self.calendar_div.id).innerHTML = '';
-			
-			self.new_events = [];
-		    
-		    for(var i = 0; i < data.task_targets.length; i++)
-		    {
-		    	var new_event = self.scheduler.Create_Event_From_Task_Target_Row(data.task_targets[i]);
-		    	
-		    	self.new_events.push(new_event);
-		    }
-		    
-		    for(var i = 0; i < data.task_entries.length; i++)
-		    {
-		    	
-		    	var new_event = self.scheduler.Create_Event_From_Task_Entry_Row(data.task_entries[i]);
-		    	
-		    	self.new_events.push(new_event);
-		    }
-			
-			var previous_name = $('#' + self.calendar_div.id).fullCalendar('getView').name;
-			var previous_date = $('#' + self.calendar_div.id).fullCalendar('getDate');
-			
-			self.new_events = self.scheduler.Run_Scheduling_Algorithm(self.new_events);
-			
-			$('#' + self.calendar_div.id).fullCalendar({
-				header: {
-					left: 'month,' + self.week_view_type + ',' + self.day_view_type,
-					center: 'today',
-					right: 'prev,next'
-				}, 
-				editable: false,
-				selectable: false,
-				droppable: false,
-				events: self.new_events,
-				eventClick: self.Event_Click,
-				dayClick: self.Day_Click,
-				eventAfterAllRender: self.Calendar_Render_Complete,
-			});
-			
-			$('#' + self.calendar_div.id).fullCalendar('changeView', previous_name);
-			$('#' + self.calendar_div.id).fullCalendar('gotoDate',previous_date);
-			
+			if(diff['data'][table].length > 0)
+			{
+				self.Refresh(data);
+				break;
+			}
 		}
-		//else
-		{
-			//self.Update_Started_Tasks();
-		}
-		
 		
 	};
 	

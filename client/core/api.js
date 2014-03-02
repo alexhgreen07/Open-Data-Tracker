@@ -12,7 +12,8 @@ function Server_API() {
 	this.rpc = null;
 	
 	this.is_busy_callback = function(is_busy){};
-	this.data_changed_callback = function(){};
+	this.data_refresh_callback = function(){};
+	this.data_diff_callback = function(){};
 	
 	this.Build_Method = function(method, source_object){
 		
@@ -96,10 +97,10 @@ function Server_API() {
 		
 		if(self.has_refreshed)
 		{
-			self.Refresh_Data_From_Diff(function(){
+			self.Refresh_Data_From_Diff(function(diff){
 				
 				//call the data changed callback since the data was refreshed.
-				self.data_changed_callback();
+				self.data_diff_callback(diff);
 				
 				callback();
 			});
@@ -127,7 +128,7 @@ function Server_API() {
 					try
 					{
 						//call the data changed callback since the data was refreshed.
-						self.data_changed_callback();
+						self.data_refresh_callback();
 					}
 					catch(err)
 					{
@@ -202,7 +203,7 @@ function Server_API() {
 					new_patch.reports,
 					'report_id');
 				
-				callback();
+				callback(new_patch);
 				
 			});
 		

@@ -84,6 +84,7 @@ class Data_Interface {
 		$return_json['reports'] = $reports['reports'];
 		
 		$_SESSION['last_return_json'] = $return_json;
+		$this->Save_Session_Data($return_json);
 		
 		return $return_json;
 		
@@ -94,63 +95,66 @@ class Data_Interface {
 		$return_json = array('success' => 'false', 'data' => '', );
 		
 		$old_return_json = $_SESSION['last_return_json'];
+		
+		if(!$old_return_json)
+		{
+			$old_return_json = $this->Get_Session_Data();
+		}
+		
 		$new_return_json = $this->Refresh_All_Data();
 		
-		if($old_return_json)
-		{
+		$return_json['data']['Categories'] = 
+			$this->Diff_Table(
+				$old_return_json['data']['Categories'], 
+				$new_return_json['data']['Categories'], 
+				'Category ID');
+		$return_json['data']['items'] = 
+			$this->Diff_Table(
+				$old_return_json['data']['items'], 
+				$new_return_json['data']['items'], 
+				'item_id');
+		$return_json['data']['item_entries'] = 
+			$this->Diff_Table(
+				$old_return_json['data']['item_entries'], 
+				$new_return_json['data']['item_entries'], 
+				'item_log_id');
+		$return_json['data']['item_targets'] = 
+			$this->Diff_Table(
+				$old_return_json['data']['item_targets'], 
+				$new_return_json['data']['item_targets'], 
+				'item_target_id');
+		$return_json['data']['tasks'] = 
+			$this->Diff_Table(
+				$old_return_json['data']['tasks'], 
+				$new_return_json['data']['tasks'], 
+				'task_id');
+		$return_json['data']['task_entries'] = 
+			$this->Diff_Table(
+				$old_return_json['data']['task_entries'], 
+				$new_return_json['data']['task_entries'], 
+				'task_log_id');
+		$return_json['data']['task_targets'] = 
+			$this->Diff_Table(
+				$old_return_json['data']['task_targets'], 
+				$new_return_json['data']['task_targets'], 
+				'task_schedule_id');
 		
-			$return_json['data']['Categories'] = 
-				$this->Diff_Table(
-					$old_return_json['data']['Categories'], 
-					$new_return_json['data']['Categories'], 
-					'Category ID');
-			$return_json['data']['items'] = 
-				$this->Diff_Table(
-					$old_return_json['data']['items'], 
-					$new_return_json['data']['items'], 
-					'item_id');
-			$return_json['data']['item_entries'] = 
-				$this->Diff_Table(
-					$old_return_json['data']['item_entries'], 
-					$new_return_json['data']['item_entries'], 
-					'item_log_id');
-			$return_json['data']['item_targets'] = 
-				$this->Diff_Table(
-					$old_return_json['data']['item_targets'], 
-					$new_return_json['data']['item_targets'], 
-					'item_target_id');
-			$return_json['data']['tasks'] = 
-				$this->Diff_Table(
-					$old_return_json['data']['tasks'], 
-					$new_return_json['data']['tasks'], 
-					'task_id');
-			$return_json['data']['task_entries'] = 
-				$this->Diff_Table(
-					$old_return_json['data']['task_entries'], 
-					$new_return_json['data']['task_entries'], 
-					'task_log_id');
-			$return_json['data']['task_targets'] = 
-				$this->Diff_Table(
-					$old_return_json['data']['task_targets'], 
-					$new_return_json['data']['task_targets'], 
-					'task_schedule_id');
-			
-			$return_json['settings']['settings'] = 
-				$this->Diff_Table(
-					$old_return_json['settings']['settings'], 
-					$new_return_json['settings']['settings'], 
-					'Setting ID');
-			$return_json['settings']['setting_entries'] = 
-				$this->Diff_Table(
-					$old_return_json['settings']['setting_entries'], 
-					$new_return_json['settings']['setting_entries'], 
-					'Setting Entry ID');
-			$return_json['reports'] = 
-				$this->Diff_Table(
-					$old_return_json['reports'], 
-					$new_return_json['reports'], 
-					'report_id');
-		}
+		$return_json['settings']['settings'] = 
+			$this->Diff_Table(
+				$old_return_json['settings']['settings'], 
+				$new_return_json['settings']['settings'], 
+				'Setting ID');
+		$return_json['settings']['setting_entries'] = 
+			$this->Diff_Table(
+				$old_return_json['settings']['setting_entries'], 
+				$new_return_json['settings']['setting_entries'], 
+				'Setting Entry ID');
+		$return_json['reports'] = 
+			$this->Diff_Table(
+				$old_return_json['reports'], 
+				$new_return_json['reports'], 
+				'report_id');
+		
 		
 		$return_json['success'] = 'true';
 		
@@ -201,6 +205,36 @@ class Data_Interface {
 		}
 		
 		return $diff_table;
+	}
+
+	public function Get_Session_Data()
+	{
+		$data = Select_By_Member('sessions','session_data',"session_id = '".$_COOKIE['session_longterm_id']."'","");
+		
+		if(!$data)
+		{
+			$return_json['success'] = 'false';
+			return $return_json;
+		}
+		
+		$session_data = $data[0]['session_data'];
+		
+		return $session_data;
+	}
+	
+	public function Save_Session_Data($data)
+	{
+		$encoded_data = json_encode($data);
+		$encoded_data = mysql_real_escape_string($encoded_data);
+		
+		$sql = "UPDATE sessions 
+			SET session_data = '".$encoded_data."' 
+			WHERE session_id = '".$_COOKIE['session_longterm_id']."'";
+		
+		$success = mysql_query($sql, $this -> database_link);
+		
+		return $success;
+		
 	}
 
 }

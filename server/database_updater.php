@@ -52,6 +52,7 @@ function Update_Database()
 			3 => 'Update_From_3_To_4',
 			4 => 'Update_From_4_To_5',
 			5 => 'Update_From_5_To_6',
+			6 => 'Update_From_6_To_7',
 		);
 	
 	$sql = "SELECT MAX(`version_id`) AS `version_id` FROM `version`";
@@ -236,6 +237,17 @@ function Update_From_5_To_6()
 	$result = mysql_query($sql);
 	
 	$sql = "ALTER TABLE `task_log` DROP `member_id`";
+	$result = mysql_query($sql);
+	
+	Insert_Version($version_id,$version_string);
+}
+
+function Update_From_6_To_7()
+{
+	$version_id = 7;
+	$version_string = "0.0.8";		
+	
+	$sql = "ALTER TABLE `sessions` ADD `session_data` LONGTEXT NOT NULL ";
 	$result = mysql_query($sql);
 	
 	Insert_Version($version_id,$version_string);

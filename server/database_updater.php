@@ -4,8 +4,8 @@ require_once ('config.php');
 require_once ('auth.php');
 
 //the current version of the database
-define('current_version_id', '6');
-define('current_version_string', '0.0.7');
+define('current_version_id', '7');
+define('current_version_string', '0.0.8');
 
 function Insert_Version($version_id, $version_string)
 {

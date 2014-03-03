@@ -98,34 +98,46 @@ th {
     margin: 0em; 
 }
 
+#entry_tab_div_tree_view_disp_div {
+	border:solid;
+	border-width:1px;
+	height:10em;
+	overflow:auto;
+}
+
 /*override js.tree*/
 .resnyanskiy-tree > ul.container li span {
 	background-image: url("../externals/js.tree/images/resnyanskiy-tree-icons.png");
-	border-radius: 10px;
 }
 
 .resnyanskiy-tree > ul.container li span.task {
 	background-color: red;
+	border-radius: 10px;
 }
 
 .resnyanskiy-tree > ul.container li span.task_target {
 	background-color: green;
+	border-radius: 10px;
 }
 
 .resnyanskiy-tree > ul.container li span.task_entry {
 	background-color: orange;
+	border-radius: 10px;
 }
 
 .resnyanskiy-tree > ul.container li span.item {
 	background-color: blue;
+	border-radius: 10px;
 }
 
 .resnyanskiy-tree > ul.container li span.item_target {
 	background-color: pink;
+	border-radius: 10px;
 }
 
 .resnyanskiy-tree > ul.container li span.item_entry {
 	background-color: yellow;
+	border-radius: 10px;
 }
 
 .resnyanskiy-tree > ul.container li a {

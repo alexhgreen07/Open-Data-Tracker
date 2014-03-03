@@ -68,7 +68,7 @@ function Entry_Tab() {
 		
 		self.tree_view.Expand_All_Node_Parents(table,row);
 		
-		if(table == 'categories')
+		if(table == 'Categories')
 		{
 			//TODO: implement
 		}
@@ -118,7 +118,7 @@ function Entry_Tab() {
 		
 		info_div = document.getElementById(self.selected_info_div.id);
 		
-		info_div.innerHTML = '';
+		info_div.innerHTML = '<hr>';
 		
 		for(var key in info.row)
 		{
@@ -129,7 +129,7 @@ function Entry_Tab() {
 		
 		self.Hide_All();
 		
-		if(info.table == 'categories')
+		if(info.table == 'Categories')
 		{
 			$('#' + self.category_buttons_div.id).fadeIn();
 		}

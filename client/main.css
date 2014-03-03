@@ -101,6 +101,31 @@ th {
 /*override js.tree*/
 .resnyanskiy-tree > ul.container li span {
 	background-image: url("../externals/js.tree/images/resnyanskiy-tree-icons.png");
+	border-radius: 10px;
+}
+
+.resnyanskiy-tree > ul.container li span.task {
+	background-color: red;
+}
+
+.resnyanskiy-tree > ul.container li span.task_target {
+	background-color: green;
+}
+
+.resnyanskiy-tree > ul.container li span.task_entry {
+	background-color: orange;
+}
+
+.resnyanskiy-tree > ul.container li span.item {
+	background-color: blue;
+}
+
+.resnyanskiy-tree > ul.container li span.item_target {
+	background-color: pink;
+}
+
+.resnyanskiy-tree > ul.container li span.item_entry {
+	background-color: yellow;
 }
 
 .resnyanskiy-tree > ul.container li a {

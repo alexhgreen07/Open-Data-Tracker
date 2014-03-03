@@ -80,7 +80,8 @@ function Tree_View(div_id, data) {
 		//re-initialize the lookup
 		self.tree_view_id_lookup = [];
 		
-		self.tree_nodes = self.Create_Category_Tree_Nodes(self.data);
+		//self.tree_nodes = self.Create_Category_Tree_Nodes(self.data);
+		self.tree_nodes = self.Create_Tree(self.data);
 		
 		self.tree = new Resnyanskiy.Tree(document.getElementById(self.tree_view_div),[self.tree_nodes]);
 		self.last_selected_id = 0;
@@ -110,9 +111,45 @@ function Tree_View(div_id, data) {
 			self.tree.updateNode(id,[],true);
 		}
 		
+		for(var key in self.tree_view_id_lookup)
+		{
+			var current_lookup = self.tree_view_id_lookup[key];
+			var element_id = 'li-' + key;
+			
+			//alert(element_id);
+			
+			if(document.getElementById(element_id))
+			{	
+				if(current_lookup.table == 'tasks')
+				{
+					$('#' + element_id).children("span.icon").addClass('task');
+				}
+				else if(current_lookup.table == 'task_targets')
+				{
+					$('#' + element_id).children("span.icon").addClass('task_target');
+				}
+				else if(current_lookup.table == 'task_entries')
+				{
+					$('#' + element_id).children("span.icon").addClass('task_entry');
+				}
+				else if(current_lookup.table == 'items')
+				{
+					$('#' + element_id).children("span.icon").addClass('item');
+				}
+				else if(current_lookup.table == 'item_targets')
+				{
+					$('#' + element_id).children("span.icon").addClass('item_target');
+				}
+				else if(current_lookup.table == 'item_entries')
+				{
+					$('#' + element_id).children("span.icon").addClass('item_entry');
+				}
+				
+			}
+			
+		}
 		
-		$('.resnyanskiy-tree > ul.container li > span.icon').css( "background-color" , "red");
-		$('.resnyanskiy-tree > ul.container li > span.icon').css( "border-radius" , "10px");
+		
 		
 	};
 	
@@ -132,67 +169,19 @@ function Tree_View(div_id, data) {
 	self.Get_ID_From_Table_Row = function(table,row)
 	{
 		
+		var primary_id_lookup = {
+			'items' : 'item_id',
+			'item_targets' : 'item_target_id',
+			'item_entries' : 'iten_entry_id',
+			'tasks' : 'task_id',
+			'task_targets' : 'task_schedule_id',
+			'task_entries' : 'task_log_id'
+		};
+		
 		var found_key = -1;
 		
-		for(var key in self.tree_view_id_lookup)
-		{
-			if(self.tree_view_id_lookup[key].table == table)
-			{
-				
-				if(table == 'items')
-				{
-					if(self.tree_view_id_lookup[key].row.item_id == row.item_id)
-					{
-						found_key = key;
-						break;
-					}
-				}
-				else if(table == 'item_targets')
-				{
-					if(self.tree_view_id_lookup[key].row.item_target_id == row.item_target_id)
-					{
-						found_key = key;
-						break;
-					}
-				}
-				else if(table == 'item_entries')
-				{
-					if(self.tree_view_id_lookup[key].row.item_entry_id == row.item_log_id)
-					{
-						found_key = key;
-						break;
-					}
-				}
-				else if(table == 'tasks')
-				{
-					if(self.tree_view_id_lookup[key].row.task_id == row.task_id)
-					{
-						found_key = key;
-						break;
-					}
-				}
-				else if(table == 'task_targets')
-				{
-					
-					if(self.tree_view_id_lookup[key].row.task_schedule_id == row.task_schedule_id)
-					{
-						found_key = key;
-						break;
-					}
-				}
-				else if(table == 'task_entries')
-				{
-					if(self.tree_view_id_lookup[key].row.task_log_id == row.task_log_id)
-					{
-						
-						found_key = key;
-						break;
-					}
-				}
-				
-				
-			}
-		}
+		var primary_id = row[primary_id_lookup[table]];
+		var found_key = self.Generate_Hashed_ID(table, primary_id);
 		
 		return found_key;
 	};
@@ -238,12 +227,262 @@ function Tree_View(div_id, data) {
 		
 	};
 	
-	self.Apply_Filter = function(layer_name, is_enabled)	{
+	self.Create_Category_Node_Lookup_Entry = function(table, row)
+	{
 		
-		layer_is_enabled[layer_name] = is_enabled;
+		var random_id = self.Generate_Hashed_ID(table, row["Category ID"]);
+		var parent_id = self.Generate_Hashed_ID("Categories", row["Parent Category ID"]);
 		
+		var new_tree_row = new TreeNode(random_id, row["Name"], false);
+		
+		lookup_entry = 
+			{
+				"node_id" : random_id,
+				"node" : new_tree_row,
+				"parent_id" : parent_id,
+				"table" : table,
+				"row" : row
+			};
+		
+		return lookup_entry;
+	};
+	
+	self.Create_Item_Node_Lookup_Entry = function(table, row)
+	{
+		var random_id = self.Generate_Hashed_ID(table, row["item_id"]);
+		var parent_id = self.Generate_Hashed_ID("Categories", row["category_id"]);
+		
+		var new_tree_row = new TreeNode(random_id, row["item_name"], false);
+		
+		lookup_entry = 
+			{
+				"node_id" : random_id,
+				"node" : new_tree_row,
+				"parent_id" : parent_id,
+				"table" : table,
+				"row" : row
+			};
+		
+		return lookup_entry;
+	};
+	
+	self.Create_Item_Target_Node_Lookup_Entry = function(table, row)
+	{
+		var random_id = self.Generate_Hashed_ID(table, row["item_target_id"]);
+		
+		if(row['recurring_child_id'] == 0)
+		{
+			var parent_id = self.Generate_Hashed_ID("items", row["item_id"]);
+		}
+		else
+		{
+			//recurring child
+			var parent_id = self.Generate_Hashed_ID("item_targets", row['recurring_child_id']);
+		}
+		
+		var new_tree_row = new TreeNode(random_id, row["start_time"], false);
+		
+		lookup_entry = 
+			{
+				"node_id" : random_id,
+				"node" : new_tree_row,
+				"parent_id" : parent_id,
+				"table" : table,
+				"row" : row
+			};
+		
+		return lookup_entry;
+	};
+	
+	self.Create_Item_Entry_Node_Lookup_Entry = function(table,row)
+	{
+		var random_id = self.Generate_Hashed_ID(table, row["item_log_id"]);
+		
+		if(row['item_target_id'] == 0)
+		{
+			var parent_id = self.Generate_Hashed_ID("items", row["item_id"]);
+		}
+		else
+		{
+			//recurring child
+			var parent_id = self.Generate_Hashed_ID("item_targets", row['item_target_id']);
+		}
+		
+		var new_tree_row = new TreeNode(random_id, row["time"], false);
+		
+		lookup_entry = 
+			{
+				"node_id" : random_id,
+				"node" : new_tree_row,
+				"parent_id" : parent_id,
+				"table" : table,
+				"row" : row
+			};
+		
+		return lookup_entry;
+	};
+	
+	self.Create_Task_Node_Lookup_Entry = function(table,row)
+	{
+		var random_id = self.Generate_Hashed_ID(table, row["task_id"]);
+		var parent_id = self.Generate_Hashed_ID("Categories", row["category_id"]);
+		
+		var new_tree_row = new TreeNode(random_id, row["name"], false);
+		
+		lookup_entry = 
+			{
+				"node_id" : random_id,
+				"node" : new_tree_row,
+				"parent_id" : parent_id,
+				"table" : table,
+				"row" : row
+			};
+		
+		return lookup_entry;
+	};
+	
+	self.Create_Task_Target_Node_Lookup_Entry = function(table,row)
+	{
+		var random_id = self.Generate_Hashed_ID(table, row["task_schedule_id"]);
+		
+		if(row['recurrance_child_id'] == 0)
+		{
+			var parent_id = self.Generate_Hashed_ID("tasks", row["task_id"]);
+		}
+		else
+		{
+			//recurring child
+			var parent_id = self.Generate_Hashed_ID("task_targets", row['recurrance_child_id']);
+		}
+		
+		var new_tree_row = new TreeNode(random_id, row["scheduled_time"], false);
+		
+		lookup_entry = 
+			{
+				"node_id" : random_id,
+				"node" : new_tree_row,
+				"parent_id" : parent_id,
+				"table" : table,
+				"row" : row
+			};
+		
+		return lookup_entry;
+	};
+	
+	self.Create_Task_Entry_Node_Lookup_Entry = function(table,row)
+	{
+		var random_id = self.Generate_Hashed_ID(table, row["task_log_id"]);
+		
+		if(row['task_target_id'] == 0)
+		{
+			var parent_id = self.Generate_Hashed_ID("tasks", row["task_id"]);
+		}
+		else
+		{
+			//recurring child
+			var parent_id = self.Generate_Hashed_ID("task_targets", row['task_target_id']);
+		}
+		
+		var new_tree_row = new TreeNode(random_id, row["start_time"], false);
+		
+		lookup_entry = 
+			{
+				"node_id" : random_id,
+				"node" : new_tree_row,
+				"parent_id" : parent_id,
+				"table" : table,
+				"row" : row
+			};
+		
+		return lookup_entry;
+	};
+	
+	self.Create_Tree_Node_Lookup_Entry = function(table, row)
+	{
+		var tree_map = {
+			'Categories' : self.Create_Category_Node_Lookup_Entry,
+			'items' : self.Create_Item_Node_Lookup_Entry,
+			'item_targets' : self.Create_Item_Target_Node_Lookup_Entry,
+			'item_entries' : self.Create_Item_Entry_Node_Lookup_Entry,
+			'tasks' : self.Create_Task_Node_Lookup_Entry,
+			'task_targets' : self.Create_Task_Target_Node_Lookup_Entry,
+			'task_entries' : self.Create_Task_Entry_Node_Lookup_Entry,
+		};
+		
+		//TODO: implement for all table types
+		lookup_entry = tree_map[table](table,row);
+		
+		return lookup_entry;
+	};
+	
+	self.Create_Tree = function(data)
+	{
+		self.tree_view_id_lookup = {};
+		
+		//add the root node
+		var root_id = self.Generate_Hashed_ID("Categories", 0);
+		var new_tree_row = new TreeNode(root_id, "All", true);
+		self.tree_view_id_lookup[root_id] = {
+			node : new_tree_row,
+			parent_id : 0
+			};
+		
+		//add all nodes to lookup
+		for(table_key in data)
+		{
+			table = data[table_key];
+			
+			for(row_key in table)
+			{
+				row = table[row_key];
+				
+				var new_lookup_entry = self.Create_Tree_Node_Lookup_Entry(table_key,row);
+				
+				self.tree_view_id_lookup[new_lookup_entry.node_id] = new_lookup_entry;
+			}
+		}
+		
+		//iterate through lookup and add all children
+		for(lookup_key in self.tree_view_id_lookup)
+		{
+			
+			var current_lookup = self.tree_view_id_lookup[lookup_key];
+			
+			if(current_lookup.parent_id !== 0)
+			{
+				
+				if(current_lookup.parent_id in self.tree_view_id_lookup)
+				{
+					var parent_lookup = self.tree_view_id_lookup[current_lookup.parent_id];
+			
+					parent_lookup.node.addItem(current_lookup.node);
+					parent_lookup.node.isBranch = true;
+				}
+				else
+				{
+					alert('Error finding parent: ' + current_lookup.parent_id + '. ' + JSON.stringify(current_lookup));
+				}
+				
+				
+			}
+			
+		}
+		
+		return self.tree_view_id_lookup[root_id].node;
+	};
+	
+	
+	self.Insert_Tree_Node = function(node)
+	{
 		
 	};
+	
+	self.Remove_Tree_Node = function(node)
+	{
+		
+	};
+	
+	/*
 	
 	self.Create_Category_Tree_Node_Children = function(data, node)
 	{
@@ -769,6 +1008,8 @@ function Tree_View(div_id, data) {
 		//TODO: implement
 		
 	};
+	
+	*/
 	
 	self.Generate_Hashed_ID = function(table, index)
 	{

@@ -39,7 +39,7 @@ function Tree_View(div_id, data) {
 		}
 		else
 		{
-			self.tree.updateNode(self.tree_nodes.id,[],true);
+			self.Set_Tree_Node_Expanded(self.tree_nodes.id,true);
 			self.Select_Node(self.tree_nodes.id);
 		}
 		
@@ -47,14 +47,79 @@ function Tree_View(div_id, data) {
 	
 	self.Refresh_From_Diff = function(diff, new_data)
 	{
+		self.data = new_data;
 		
-		for(table in diff['data'])
+		var should_restore_value = false;
+		
+		if(self.tree_view_id_lookup.length > 0)
 		{
-			if(diff['data'][table].length > 0)
+			
+			should_restore_value = true;
+		}
+		
+		for(table_key in diff['data'])
+		{
+			var table = diff['data'][table_key];
+			
+			//apply diff to tree_view_id_lookup
+			for(row_key in table)
 			{
-				self.Refresh(new_data);
-				break;
+				var diff_row = table[row_key];
+				var row = diff_row['row'];
+				var random_id = self.Get_ID_From_Table_Row(table_key,row);
+				
+				if(diff_row.operation == 'insert')
+				{
+					//add new entry
+					var new_lookup_entry = self.Create_Tree_Node_Lookup_Entry(table_key,row);
+					self.tree_view_id_lookup[new_lookup_entry.node_id] = new_lookup_entry;
+				}
+				else if(diff_row.operation == 'remove')
+				{
+					//remove old entry
+					var old_entry = self.tree_view_id_lookup[random_id];
+					self.Remove_Tree_Node(old_entry);
+					self.tree_view_id_lookup = self.tree_view_id_lookup.splice(random_id);
+				}
+				else if(diff_row.operation == 'update')
+				{
+					//remove old entry
+					var old_entry = self.tree_view_id_lookup[random_id];
+					self.Remove_Tree_Node(old_entry);
+					self.tree_view_id_lookup = self.tree_view_id_lookup.splice(random_id);
+					
+					//add new entry
+					var new_lookup_entry = self.Create_Tree_Node_Lookup_Entry(table_key,row);
+					self.tree_view_id_lookup[new_lookup_entry.node_id] = new_lookup_entry;
+				}
 			}
+			
+			//apply rest of diff to treeview
+			for(row_key in table)
+			{
+				var diff_row = table[row_key];
+				var row = diff_row['row'];
+				var random_id = self.Get_ID_From_Table_Row(table_key,row);
+				
+				var new_lookup_entry = self.tree_view_id_lookup[random_id];
+				
+				if(diff_row.operation == 'insert' || diff_row.operation == 'update')
+				{
+					self.Insert_Tree_Node(new_lookup_entry);
+				}
+			}
+		}
+		
+		if(self.last_selected_id in self.tree_view_id_lookup)
+		{
+			//toggle node to refresh
+			self.Select_Node(self.last_selected_id);
+			self.Select_Node(self.last_selected_id);
+		}
+		else
+		{
+			self.Set_Tree_Node_Expanded(self.tree_nodes.id,true);
+			self.Select_Node(self.tree_nodes.id);
 		}
 		
 	};
@@ -108,15 +173,14 @@ function Tree_View(div_id, data) {
 		else
 		{
 			//expand/collapse the children
-			self.tree.updateNode(id,[],true);
+			self.Toggle_Tree_Node_Expanded(id);
 		}
 		
+		//add colours to the treeview according to type
 		for(var key in self.tree_view_id_lookup)
 		{
 			var current_lookup = self.tree_view_id_lookup[key];
 			var element_id = 'li-' + key;
-			
-			//alert(element_id);
 			
 			if(document.getElementById(element_id))
 			{	
@@ -153,6 +217,43 @@ function Tree_View(div_id, data) {
 		
 	};
 	
+	self.Set_Tree_Node_Expanded = function(id, expanded)
+	{
+		if(id in self.tree_view_id_lookup)
+		{
+			var lookup_entry = self.tree_view_id_lookup[id];
+			
+			if(lookup_entry.is_expanded != expanded)
+			{
+				//toggle expanded
+				self.tree.updateNode(id,[],true);
+				lookup_entry.is_expanded = expanded;
+			}
+		}
+		else
+		{
+			alert('Set_Tree_Node_Expanded: Tree node not in list.');
+		}
+		
+	};
+	
+	self.Toggle_Tree_Node_Expanded = function(id)
+	{
+		if(id in self.tree_view_id_lookup)
+		{
+			var lookup_entry = self.tree_view_id_lookup[id];
+			
+			//toggle expanded
+			self.tree.updateNode(id,[],true);
+			lookup_entry.is_expanded = !lookup_entry.is_expanded;
+			
+		}
+		else
+		{
+			alert('Toggle_Tree_Node_Expanded: Tree node not in list.');
+		}
+	};
+	
 	self.Unselect_Node = function(){
 		
 		if (document.getElementById('li-' + self.last_selected_id)) {
@@ -170,9 +271,10 @@ function Tree_View(div_id, data) {
 	{
 		
 		var primary_id_lookup = {
+			'Categories' : 'Category ID',
 			'items' : 'item_id',
 			'item_targets' : 'item_target_id',
-			'item_entries' : 'iten_entry_id',
+			'item_entries' : 'item_log_id',
 			'tasks' : 'task_id',
 			'task_targets' : 'task_schedule_id',
 			'task_entries' : 'task_log_id'
@@ -188,8 +290,6 @@ function Tree_View(div_id, data) {
 	
 	self.Expand_All_Node_Parents = function(table, row)
 	{
-		
-		self.Force_Tree_Refresh();
 		
 		var parents = [];
 		
@@ -211,7 +311,7 @@ function Tree_View(div_id, data) {
 			{
 				var index = parents.length - i - 1;
 				
-				self.tree.updateNode(parents[index],[],true);
+				self.Set_Tree_Node_Expanded(parents[index],true);
 				
 				
 			}
@@ -220,7 +320,7 @@ function Tree_View(div_id, data) {
 		}
 		else
 		{
-			self.tree.updateNode(self.tree_nodes.id,[],true);
+			self.Set_Tree_Node_Expanded(self.tree_nodes.id,true);
 			self.Select_Node(self.tree_nodes.id);
 		}
 		
@@ -230,7 +330,7 @@ function Tree_View(div_id, data) {
 	self.Create_Category_Node_Lookup_Entry = function(table, row)
 	{
 		
-		var random_id = self.Generate_Hashed_ID(table, row["Category ID"]);
+		var random_id = self.Get_ID_From_Table_Row(table,row);
 		var parent_id = self.Generate_Hashed_ID("Categories", row["Parent Category ID"]);
 		
 		var new_tree_row = new TreeNode(random_id, row["Name"], false);
@@ -249,7 +349,7 @@ function Tree_View(div_id, data) {
 	
 	self.Create_Item_Node_Lookup_Entry = function(table, row)
 	{
-		var random_id = self.Generate_Hashed_ID(table, row["item_id"]);
+		var random_id = self.Get_ID_From_Table_Row(table,row);
 		var parent_id = self.Generate_Hashed_ID("Categories", row["category_id"]);
 		
 		var new_tree_row = new TreeNode(random_id, row["item_name"], false);
@@ -268,7 +368,7 @@ function Tree_View(div_id, data) {
 	
 	self.Create_Item_Target_Node_Lookup_Entry = function(table, row)
 	{
-		var random_id = self.Generate_Hashed_ID(table, row["item_target_id"]);
+		var random_id = self.Get_ID_From_Table_Row(table,row);
 		
 		if(row['recurring_child_id'] == 0)
 		{
@@ -296,7 +396,7 @@ function Tree_View(div_id, data) {
 	
 	self.Create_Item_Entry_Node_Lookup_Entry = function(table,row)
 	{
-		var random_id = self.Generate_Hashed_ID(table, row["item_log_id"]);
+		var random_id = self.Get_ID_From_Table_Row(table,row);
 		
 		if(row['item_target_id'] == 0)
 		{
@@ -324,7 +424,7 @@ function Tree_View(div_id, data) {
 	
 	self.Create_Task_Node_Lookup_Entry = function(table,row)
 	{
-		var random_id = self.Generate_Hashed_ID(table, row["task_id"]);
+		var random_id = self.Get_ID_From_Table_Row(table,row);
 		var parent_id = self.Generate_Hashed_ID("Categories", row["category_id"]);
 		
 		var new_tree_row = new TreeNode(random_id, row["name"], false);
@@ -343,7 +443,7 @@ function Tree_View(div_id, data) {
 	
 	self.Create_Task_Target_Node_Lookup_Entry = function(table,row)
 	{
-		var random_id = self.Generate_Hashed_ID(table, row["task_schedule_id"]);
+		var random_id = self.Get_ID_From_Table_Row(table,row);
 		
 		if(row['recurrance_child_id'] == 0)
 		{
@@ -371,7 +471,7 @@ function Tree_View(div_id, data) {
 	
 	self.Create_Task_Entry_Node_Lookup_Entry = function(table,row)
 	{
-		var random_id = self.Generate_Hashed_ID(table, row["task_log_id"]);
+		var random_id = self.Get_ID_From_Table_Row(table,row);
 		
 		if(row['task_target_id'] == 0)
 		{
@@ -412,6 +512,8 @@ function Tree_View(div_id, data) {
 		//TODO: implement for all table types
 		lookup_entry = tree_map[table](table,row);
 		
+		lookup_entry.is_expanded = false;
+		
 		return lookup_entry;
 	};
 	
@@ -419,7 +521,7 @@ function Tree_View(div_id, data) {
 	{
 		self.tree_view_id_lookup = {};
 		
-		//add the root node
+		//add the root node (non-child category parent)
 		var root_id = self.Generate_Hashed_ID("Categories", 0);
 		var new_tree_row = new TreeNode(root_id, "All", true);
 		self.tree_view_id_lookup[root_id] = {
@@ -448,21 +550,11 @@ function Tree_View(div_id, data) {
 			
 			var current_lookup = self.tree_view_id_lookup[lookup_key];
 			
+			//ensure we don't add the root node with no parent
 			if(current_lookup.parent_id !== 0)
 			{
 				
-				if(current_lookup.parent_id in self.tree_view_id_lookup)
-				{
-					var parent_lookup = self.tree_view_id_lookup[current_lookup.parent_id];
-			
-					parent_lookup.node.addItem(current_lookup.node);
-					parent_lookup.node.isBranch = true;
-				}
-				else
-				{
-					alert('Error finding parent: ' + current_lookup.parent_id + '. ' + JSON.stringify(current_lookup));
-				}
-				
+				self.Insert_Tree_Node(current_lookup);
 				
 			}
 			
@@ -472,14 +564,34 @@ function Tree_View(div_id, data) {
 	};
 	
 	
-	self.Insert_Tree_Node = function(node)
+	self.Insert_Tree_Node = function(lookup_entry)
 	{
-		
+		if(lookup_entry.parent_id in self.tree_view_id_lookup)
+		{
+			var parent_lookup = self.tree_view_id_lookup[lookup_entry.parent_id];
+	
+			parent_lookup.node.addItem(lookup_entry.node);
+			parent_lookup.node.isBranch = true;
+		}
+		else
+		{
+			alert('Error finding parent: ' + lookup_entry.parent_id + '. ' + JSON.stringify(lookup_entry));
+		}
 	};
 	
-	self.Remove_Tree_Node = function(node)
+	self.Remove_Tree_Node = function(lookup_entry)
 	{
-		
+		if(lookup_entry.parent_id in self.tree_view_id_lookup)
+		{
+			var parent_lookup = self.tree_view_id_lookup[lookup_entry.parent_id];
+			
+			parent_lookup.node.removeItem(current_lookup.node_id);
+			
+			if(!parent_lookup.node.hasItems())
+			{
+				parent_lookup.node.isBranch = false;
+			}
+		}
 	};
 	
 	/*

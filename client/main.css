@@ -101,7 +101,7 @@ th {
 #entry_tab_div_tree_view_disp_div {
 	border:solid;
 	border-width:1px;
-	height:10em;
+	max-height:15em;
 	overflow:auto;
 }
 

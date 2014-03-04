@@ -32,10 +32,13 @@ function Edit_Item_Entry_Form(){
 		self.Item_Entry_Select_Change();
 	};
 	
-	this.Refresh_From_Diff = function(diff)
+	this.Refresh_From_Diff = function(diff, data)
 	{
 		
 		var self = this;
+		
+		this.item_log_data = data.item_entries;
+		this.items_list = data.items;
 		
 		Refresh_Select_HTML_From_Table_Diff(
 			self.edit_item_entry_select.id,

@@ -64,20 +64,20 @@ function Item_Tab() {
 		this.edit_item_entry_form.Refresh(data);
 		this.new_item_form.Refresh(data);
 		this.edit_item_form.Refresh(data);
-		this.edit_item_target_form.Refresh(data);
 		this.new_item_target_form.Refresh(data);
+		this.edit_item_target_form.Refresh(data);
 		
 	};
 	
-	this.Refresh_From_Diff = function(diff){
+	this.Refresh_From_Diff = function(diff, data){
 		
-		this.quick_item_entry_form.Refresh_From_Diff(diff);
-		this.new_item_entry_form.Refresh_From_Diff(diff);
-		this.edit_item_entry_form.Refresh_From_Diff(diff);
-		this.new_item_form.Refresh_From_Diff(diff);
-		this.edit_item_form.Refresh_From_Diff(diff);
-		this.edit_item_target_form.Refresh_From_Diff(diff);
-		this.new_item_target_form.Refresh_From_Diff(diff);
+		this.quick_item_entry_form.Refresh_From_Diff(diff, data);
+		this.new_item_entry_form.Refresh_From_Diff(diff, data);
+		this.edit_item_entry_form.Refresh_From_Diff(diff, data);
+		this.new_item_form.Refresh_From_Diff(diff, data);
+		this.edit_item_form.Refresh_From_Diff(diff, data);
+		this.new_item_target_form.Refresh_From_Diff(diff, data);
+		this.edit_item_target_form.Refresh_From_Diff(diff, data);
 	};
 
 	this.Show_Form = function(div_id){

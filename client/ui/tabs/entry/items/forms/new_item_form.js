@@ -15,7 +15,7 @@ function New_Item_Form(){
 		
 	};
 	
-	this.Refresh_From_Diff = function(diff)
+	this.Refresh_From_Diff = function(diff, data)
 	{
 		
 		Refresh_Select_HTML_From_Table_Diff(

@@ -24,9 +24,11 @@ function Edit_Item_Form(){
 		self.Item_Select_Change();
 	};
 	
-	this.Refresh_From_Diff = function(diff)
+	this.Refresh_From_Diff = function(diff, data)
 	{
 		var self = this;
+		
+		this.items_list = data.items;
 		
 		Refresh_Select_HTML_From_Table_Diff(
 			self.item_edit_select.id,

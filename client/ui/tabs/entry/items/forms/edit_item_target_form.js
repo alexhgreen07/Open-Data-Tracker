@@ -24,7 +24,9 @@ function Edit_Item_Target_Form(){
 		this.Selected_Item_Target_Change();
 	};
 	
-	this.Refresh_From_Diff = function(diff){
+	this.Refresh_From_Diff = function(diff, data){
+		
+		self.data = data;
 		
 		Refresh_Select_HTML_From_Table_Diff(
 			self.edit_item_target_name_select.id,

@@ -98,15 +98,19 @@ function Tree_View(div_id, data) {
 			for(row_key in table)
 			{
 				var diff_row = table[row_key];
-				var row = diff_row['row'];
-				var random_id = self.Get_ID_From_Table_Row(table_key,row);
 				
-				var new_lookup_entry = self.tree_view_id_lookup[random_id];
-				
-				if(diff_row.operation == 'insert' || diff_row.operation == 'update')
+				if(diff_row.operation !== 'remove')
 				{
+					
+					var row = diff_row['row'];
+					var random_id = self.Get_ID_From_Table_Row(table_key,row);
+					
+					var new_lookup_entry = self.tree_view_id_lookup[random_id];
+					
 					self.Insert_Tree_Node(new_lookup_entry);
+					
 				}
+				
 			}
 		}
 		

@@ -20,6 +20,21 @@ function New_Item_Entry_Form(){
 		
 	};
 	
+	this.Refresh_From_Diff = function(diff){
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			this.new_item_name_select.id,
+			diff.data.items,
+			"item_id",
+			"item_name");
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			this.new_item_target_select.id,
+			diff.data.item_targets,
+			"item_target_id",
+			"name");
+	};
+	
 	/** @method Add_Item_Entry_Click
 	 * @desc This is the event function for the add item entry button click.
 	 * */

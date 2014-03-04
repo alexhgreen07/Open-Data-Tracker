@@ -4,6 +4,28 @@
 function New_Item_Form(){
 	
 	
+	this.Refresh = function(data)
+	{
+		
+		Refresh_Select_HTML_From_Table(
+			this.item_category_select.id,
+			data['Categories'],
+			"Category ID",
+			"Category Path");
+		
+	};
+	
+	this.Refresh_From_Diff = function(diff)
+	{
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			this.item_category_select.id,
+			diff.data['Categories'],
+			"Category ID",
+			"Category Path");
+		
+	};
+	
 	/** @method Add_New_Item_Click
 	 * @desc This is the event function for the add new item button click.
 	 * */

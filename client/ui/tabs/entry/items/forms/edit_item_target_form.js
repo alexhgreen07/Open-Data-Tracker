@@ -9,7 +9,37 @@ function Edit_Item_Target_Form(){
 		
 		self.data = data;
 		
+		Refresh_Select_HTML_From_Table(
+			self.edit_item_target_name_select.id,
+			data.items,
+			"item_id",
+			"item_name");
+		
+		Refresh_Select_HTML_From_Table(
+			self.edit_item_target_id_select.id,
+			data.item_targets,
+			"item_target_id",
+			"name");
+		
 		this.Selected_Item_Target_Change();
+	};
+	
+	this.Refresh_From_Diff = function(diff){
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			self.edit_item_target_name_select.id,
+			diff.data.items,
+			"item_id",
+			"item_name");
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			self.edit_item_target_id_select.id,
+			diff.data.item_targets,
+			"item_target_id",
+			"name");
+		
+		this.Selected_Item_Target_Change();
+		
 	};
 	
 	this.Selected_Item_Target_Change = function(){

@@ -15,7 +15,33 @@ function Edit_Item_Form(){
 			"item_id",
 			"item_name");
 		
+		Refresh_Select_HTML_From_Table(
+			self.item_edit_category_select.id,
+			data['Categories'],
+			"Category ID",
+			"Category Path");
+		
 		self.Item_Select_Change();
+	};
+	
+	this.Refresh_From_Diff = function(diff)
+	{
+		var self = this;
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			self.item_edit_select.id,
+			diff.data.items,
+			"item_id",
+			"item_name");
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			self.item_edit_category_select.id,
+			diff.data['Categories'],
+			"Category ID",
+			"Category Path");
+		
+		self.Item_Select_Change();
+		
 	};
 	
 	/** @method Edit_Item_Click

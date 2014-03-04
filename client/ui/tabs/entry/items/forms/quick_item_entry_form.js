@@ -20,6 +20,23 @@ function Quick_Item_Entry_Form(){
 		
 	};
 	
+	this.Refresh_From_Diff = function(diff)
+	{
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			this.quick_item_name_select.id,
+			diff.data.items,
+			"item_id",
+			"item_name");
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			this.quick_item_target_select.id,
+			diff.data.item_targets,
+			"item_target_id",
+			"name");
+		
+	};
+	
 	/** @method Add_Quick_Item_Entry_Click
 	 * @desc This is the event function for the item quick item entry button click.
 	 * */

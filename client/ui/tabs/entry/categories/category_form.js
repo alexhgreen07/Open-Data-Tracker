@@ -21,7 +21,9 @@ function Category_Form(){
 	this.view_categories_forms = new View_Category_Form();
 	
 	this.Refresh = function(data){
-
+		
+		self.data = data;
+		
 		Refresh_Select_HTML_From_Table(
 			self.new_category_form.add_new_category_parent_select.id,
 			data['Categories'],
@@ -42,6 +44,32 @@ function Category_Form(){
 		
 		this.view_categories_forms.Refresh(data);
 		this.edit_category_form.Refresh(data);
+	};
+	
+	this.Refresh_From_Diff = function(diff)
+	{
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			self.new_category_form.add_new_category_parent_select.id,
+			diff.data['Categories'],
+			"Category ID",
+			"Category Path");
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			self.edit_category_form.edit_category_select.id,
+			diff.data['Categories'],
+			"Category ID",
+			"Category Path");
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			self.edit_category_form.edit_category_parent_select.id,
+			diff.data['Categories'],
+			"Category ID",
+			"Category Path");
+		
+		this.view_categories_forms.Refresh(self.data);
+		this.edit_category_form.Refresh(self.data);
+		
 	};
 	
 	this.Show_Form = function(div_id){

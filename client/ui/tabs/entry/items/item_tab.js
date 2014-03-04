@@ -59,79 +59,27 @@ function Item_Tab() {
 	 * */
 	this.Refresh = function(data) {
 		
-		this.Refresh_Items(data);
-		this.Refresh_Item_Entries(data);
-		this.Refresh_Item_Targets(data);
-		this.Refresh_Item_Categories(data);
-
-	};
-	
-	/** @method Refresh_Items
-	 * @desc This function refreshes the items HTML select objects.
-	 * */
-	this.Refresh_Items = function(data) {
-		var self = this;
-		
-		this.items_list = data.items;
-
-		Refresh_Select_HTML_From_Table(
-			self.new_item_target_form.new_item_target_name_select.id,
-			data.items,
-			"item_id",
-			"item_name");
-		
-		Refresh_Select_HTML_From_Table(
-			self.edit_item_target_form.edit_item_target_name_select.id,
-			data.items,
-			"item_id",
-			"item_name");
-		
-		
 		this.quick_item_entry_form.Refresh(data);
 		this.new_item_entry_form.Refresh(data);
 		this.edit_item_entry_form.Refresh(data);
+		this.new_item_form.Refresh(data);
 		this.edit_item_form.Refresh(data);
-		this.view_items_form.Refresh(data);
-
-	};
-	
-	this.Refresh_Item_Entries = function(data){
-		
-		
-		this.edit_item_entry_form.Refresh(data);
-		this.view_item_entries_form.Refresh(data);
-		
-	};
-	
-	this.Refresh_Item_Targets = function(data){
-		
-		var self = this;
-		
-		Refresh_Select_HTML_From_Table(
-			this.edit_item_target_form.edit_item_target_id_select.id,
-			data.item_targets,
-			"item_target_id",
-			"name");
-		
 		this.edit_item_target_form.Refresh(data);
+		this.new_item_target_form.Refresh(data);
 		
 	};
 	
-	this.Refresh_Item_Categories = function(data){
+	this.Refresh_From_Diff = function(diff){
 		
-		Refresh_Select_HTML_From_Table(
-			this.new_item_form.item_category_select.id,
-			data['Categories'],
-			"Category ID",
-			"Category Path");
-		
-		Refresh_Select_HTML_From_Table(
-			this.edit_item_form.item_edit_category_select.id,
-			data['Categories'],
-			"Category ID",
-			"Category Path");
+		this.quick_item_entry_form.Refresh_From_Diff(diff);
+		this.new_item_entry_form.Refresh_From_Diff(diff);
+		this.edit_item_entry_form.Refresh_From_Diff(diff);
+		this.new_item_form.Refresh_From_Diff(diff);
+		this.edit_item_form.Refresh_From_Diff(diff);
+		this.edit_item_target_form.Refresh_From_Diff(diff);
+		this.new_item_target_form.Refresh_From_Diff(diff);
 	};
-	
+
 	this.Show_Form = function(div_id){
 		
 		for(var i = 0; i < this.div_ids.length; i++)

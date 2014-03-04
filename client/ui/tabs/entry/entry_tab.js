@@ -39,10 +39,7 @@ function Entry_Tab() {
 		
 		self.tree_view.Refresh_From_Diff(diff, self.data);
 		
-		if(diff['data']['Categories'].length > 0)
-		{
-			self.category_tab.Refresh(self.data);
-		}
+		self.category_tab.Refresh_From_Diff(diff);
 		
 		if((diff['data']['items'].length > 0) ||
 			(diff['data']['item_entries'].length > 0) ||

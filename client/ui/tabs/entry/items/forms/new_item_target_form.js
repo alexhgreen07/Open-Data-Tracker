@@ -7,6 +7,22 @@ function New_Item_Target_Form(){
 	
 	this.Refresh = function(data){
 		
+		Refresh_Select_HTML_From_Table(
+			self.new_item_target_name_select.id,
+			data.items,
+			"item_id",
+			"item_name");
+		
+		
+	};
+	
+	this.Refresh_From_Diff = function(diff){
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			self.new_item_target_name_select.id,
+			diff.data.items,
+			"item_id",
+			"item_name");
 		
 	};
 	

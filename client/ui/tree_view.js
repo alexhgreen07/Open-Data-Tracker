@@ -297,9 +297,6 @@ function Tree_View(div_id, data) {
 	
 	self.Expand_All_Node_Parents = function(table, row)
 	{
-		self.Select_Node(self.tree_nodes.id);
-		self.Set_Tree_Node_Expanded(self.tree_nodes.id,false);
-		self.Set_Tree_Node_Expanded(self.tree_nodes.id,true);
 		
 		var parents = [];
 		

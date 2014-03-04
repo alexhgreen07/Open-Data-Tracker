@@ -70,7 +70,7 @@ function Tree_View(div_id, data) {
 				var row = diff_row['row'];
 				var random_id = self.Get_ID_From_Table_Row(table_key,row);
 				
-				if(diff_row.operation == 'remove')
+				if(diff_row.operation == 'remove' || diff_row.operation == 'update')
 				{
 					//remove old entry
 					var old_entry = self.tree_view_id_lookup[random_id];
@@ -86,20 +86,8 @@ function Tree_View(div_id, data) {
 				var row = diff_row['row'];
 				var random_id = self.Get_ID_From_Table_Row(table_key,row);
 				
-				if(diff_row.operation == 'insert')
+				if(diff_row.operation == 'insert' || diff_row.operation == 'update')
 				{
-					//add new entry
-					var new_lookup_entry = self.Create_Tree_Node_Lookup_Entry(table_key,row);
-					self.tree_view_id_lookup[new_lookup_entry.node_id] = new_lookup_entry;
-				}
-				
-				else if(diff_row.operation == 'update')
-				{
-					//remove old entry
-					var old_entry = self.tree_view_id_lookup[random_id];
-					self.Remove_Tree_Node(old_entry);
-					delete self.tree_view_id_lookup[random_id];
-					
 					//add new entry
 					var new_lookup_entry = self.Create_Tree_Node_Lookup_Entry(table_key,row);
 					self.tree_view_id_lookup[new_lookup_entry.node_id] = new_lookup_entry;
@@ -309,6 +297,9 @@ function Tree_View(div_id, data) {
 	
 	self.Expand_All_Node_Parents = function(table, row)
 	{
+		self.Select_Node(self.tree_nodes.id);
+		self.Set_Tree_Node_Expanded(self.tree_nodes.id,false);
+		self.Set_Tree_Node_Expanded(self.tree_nodes.id,true);
 		
 		var parents = [];
 		

@@ -49,6 +49,8 @@ function Tree_View(div_id, data) {
 	{
 		self.data = new_data;
 		
+		var has_updated = false;
+		
 		var should_restore_value = false;
 		
 		//alert(JSON.stringify(diff));
@@ -63,70 +65,80 @@ function Tree_View(div_id, data) {
 		{
 			var table = diff['data'][table_key];
 			
-			//execute removals diff to tree_view_id_lookup
-			for(row_key in table)
+			if(table.length > 0)
 			{
-				var diff_row = table[row_key];
-				var row = diff_row['row'];
-				var random_id = self.Get_ID_From_Table_Row(table_key,row);
+				has_updated = true;
 				
-				if(diff_row.operation == 'remove' || diff_row.operation == 'update')
+				//execute removals diff to tree_view_id_lookup
+				for(row_key in table)
 				{
-					//remove old entry
-					var old_entry = self.tree_view_id_lookup[random_id];
-					self.Remove_Tree_Node(old_entry);
-					delete self.tree_view_id_lookup[random_id];
-				}
-			}
-			
-			//apply diff to tree_view_id_lookup
-			for(row_key in table)
-			{
-				var diff_row = table[row_key];
-				var row = diff_row['row'];
-				var random_id = self.Get_ID_From_Table_Row(table_key,row);
-				
-				if(diff_row.operation == 'insert' || diff_row.operation == 'update')
-				{
-					//add new entry
-					var new_lookup_entry = self.Create_Tree_Node_Lookup_Entry(table_key,row);
-					self.tree_view_id_lookup[new_lookup_entry.node_id] = new_lookup_entry;
-				}
-			}
-			
-			//apply rest of diff to treeview
-			for(row_key in table)
-			{
-				var diff_row = table[row_key];
-				
-				if(diff_row.operation !== 'remove')
-				{
-					
+					var diff_row = table[row_key];
 					var row = diff_row['row'];
 					var random_id = self.Get_ID_From_Table_Row(table_key,row);
 					
-					var new_lookup_entry = self.tree_view_id_lookup[random_id];
-					
-					//alert(diff_row.operation);
-					
-					self.Insert_Tree_Node(new_lookup_entry);
-					
+					if(diff_row.operation == 'remove' || diff_row.operation == 'update')
+					{
+						//remove old entry
+						var old_entry = self.tree_view_id_lookup[random_id];
+						self.Remove_Tree_Node(old_entry);
+						delete self.tree_view_id_lookup[random_id];
+					}
 				}
 				
+				//apply diff to tree_view_id_lookup
+				for(row_key in table)
+				{
+					var diff_row = table[row_key];
+					var row = diff_row['row'];
+					var random_id = self.Get_ID_From_Table_Row(table_key,row);
+					
+					if(diff_row.operation == 'insert' || diff_row.operation == 'update')
+					{
+						//add new entry
+						var new_lookup_entry = self.Create_Tree_Node_Lookup_Entry(table_key,row);
+						self.tree_view_id_lookup[new_lookup_entry.node_id] = new_lookup_entry;
+					}
+				}
+				
+				//apply rest of diff to treeview
+				for(row_key in table)
+				{
+					var diff_row = table[row_key];
+					
+					if(diff_row.operation !== 'remove')
+					{
+						
+						var row = diff_row['row'];
+						var random_id = self.Get_ID_From_Table_Row(table_key,row);
+						
+						var new_lookup_entry = self.tree_view_id_lookup[random_id];
+						
+						//alert(diff_row.operation);
+						
+						self.Insert_Tree_Node(new_lookup_entry);
+						
+					}
+					
+				}
 			}
+			
+			
 		}
 		
-		if(self.last_selected_id in self.tree_view_id_lookup)
+		if(has_updated)
 		{
-			//toggle node to refresh
-			self.Select_Node(self.last_selected_id);
-			self.Select_Node(self.last_selected_id);
-		}
-		else
-		{
-			self.Set_Tree_Node_Expanded(self.tree_nodes.id,false);
-			self.Set_Tree_Node_Expanded(self.tree_nodes.id,true);
-			self.Select_Node(self.tree_nodes.id);
+			if(self.last_selected_id in self.tree_view_id_lookup)
+			{
+				//toggle node to refresh
+				self.Select_Node(self.last_selected_id);
+				self.Select_Node(self.last_selected_id);
+			}
+			else
+			{
+				self.Set_Tree_Node_Expanded(self.tree_nodes.id,false);
+				self.Set_Tree_Node_Expanded(self.tree_nodes.id,true);
+				self.Select_Node(self.tree_nodes.id);
+			}
 		}
 		
 	};

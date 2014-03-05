@@ -67,7 +67,6 @@ function Category_Form(){
 			"Category ID",
 			"Category Path");
 		
-		this.view_categories_forms.Refresh(self.data);
 		this.edit_category_form.Refresh(self.data);
 		
 	};

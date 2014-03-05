@@ -3,34 +3,19 @@
  */
 function Edit_Task_Entry_Form(){
 	
-	this.Refresh = function(data){
-		
-		this.Refresh_Task_Select(data);
-		this.Refresh_Task_Entry_Select(data);
-		
-		this.Task_Edit_Entry_Select_Change();
-	};
+	var self = this;
 	
-	this.Refresh_Task_Select = function(data){
-		
-		var self = this;
+	this.Refresh = function(data){
 		
 		//ensure the task info array is saved
 		self.task_info_json_array = data.tasks;
-
+		self.task_log = data.task_entries;
+		
 		Refresh_Select_HTML_From_Table(
 			self.edit_task_entry_task_name_select.id,
 			data.tasks,
 			"name",
 			"name");
-		
-	};
-	
-	this.Refresh_Task_Entry_Select = function(data){
-		
-		var self = this;
-		
-		self.task_log = data.task_entries;
 		
 		Refresh_Select_HTML_From_Table(
 			self.edit_task_entry_select.id,
@@ -44,6 +29,38 @@ function Edit_Task_Entry_Form(){
 			"task_schedule_id",
 			"name");
 		
+		
+		this.Task_Edit_Entry_Select_Change();
+	};
+	
+	this.Refresh_From_Diff = function(diff, data)
+	{
+		
+		//ensure the task info array is saved
+		self.task_info_json_array = data.tasks;
+		self.task_log = data.task_entries;
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			self.edit_task_entry_task_name_select.id,
+			diff.data.tasks,
+			"name",
+			"name");
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			self.edit_task_entry_select.id,
+			diff.data.task_entries,
+			"task_log_id",
+			"start_time");
+
+		Refresh_Select_HTML_From_Table_Diff(
+			self.task_target_select.id,
+			diff.data.task_targets,
+			"task_schedule_id",
+			"name");
+		
+		
+		this.Task_Edit_Entry_Select_Change();
+		
 	};
 	
 	/** @method Task_Edit_Entry_Submit_Click
@@ -51,7 +68,6 @@ function Edit_Task_Entry_Form(){
 	 * */
 	this.Task_Edit_Entry_Submit_Click = function()
 	{
-		var self = this;
 		var params = new Array();
 
 		//retrieve the selected item from the info array
@@ -104,8 +120,6 @@ function Edit_Task_Entry_Form(){
 	 * */
 	this.Task_Edit_Entry_Delete_Click = function()
 	{
-		var self = this;
-		
 		var value = document.getElementById(self.edit_task_entry_select.id).value;
 		
 		if(value != 0)
@@ -157,8 +171,6 @@ function Edit_Task_Entry_Form(){
 	 * */
 	this.Task_Edit_Entry_Select_Change = function()
 	{
-		var self = this;
-		
 		//alert('Select item entry changed!');
 		
 		var selected_index = document.getElementById(self.edit_task_entry_select.id).selectedIndex;
@@ -193,8 +205,6 @@ function Edit_Task_Entry_Form(){
 	 * @param {String} form_div_id The div ID to render the form in. 
 	 * */
 	this.Render = function(form_div_id) {
-
-		var self = this;
 
 		//create the top form
 		this.data_form_edit_entry = document.createElement("form");

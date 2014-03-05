@@ -43,12 +43,8 @@ function Entry_Tab() {
 		
 		self.items_tab.Refresh_From_Diff(diff, data);
 		
-		if((diff['data']['tasks'].length > 0) ||
-			(diff['data']['task_entries'].length > 0) ||
-			(diff['data']['task_targets'].length > 0))
-		{
-			self.tasks_tab.Refresh(self.data);
-		}
+		self.tasks_tab.Refresh_From_Diff(diff, data);
+		
 		
 	};
 	

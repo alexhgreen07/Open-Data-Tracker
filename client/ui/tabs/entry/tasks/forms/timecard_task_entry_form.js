@@ -8,13 +8,47 @@ function Timecard_Task_Entry_Form(){
 		var self = this;
 		self.data = data;
 		
-		self.Refresh_Task_Name_Select(data);
+		Refresh_Select_HTML_From_Table(
+			self.task_name_select.id,
+			data.tasks,
+			"task_id",
+			"name");
 		
-		self.Refresh_Task_Targets(data);
+		Refresh_Select_HTML_From_Table(
+			self.task_target_select.id,
+			data.task_targets,
+			"task_schedule_id",
+			"name");
 		
-		self.Refresh_Task_Started_Entries(data);
+		Refresh_Select_HTML_From_Table(
+			self.task_target_select.id,
+			data.task_entries,
+			"task_log_id",
+			"name");
 		
-		self.On_Task_Entry_Select_Change_Event();
+	};
+	
+	this.Refresh_From_Diff = function(diff, data)
+	{
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			self.task_name_select.id,
+			diff.data.tasks,
+			"task_id",
+			"name");
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			self.task_target_select.id,
+			diff.data.task_targets,
+			"task_schedule_id",
+			"name");
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			self.task_target_select.id,
+			diff.data.task_entries,
+			"task_log_id",
+			"name");
+		
 	};
 	
 	this.Refresh_Task_Name_Select = function(data){
@@ -573,7 +607,7 @@ function Timecard_Task_Entry_Form(){
 		$('#' + this.task_entries_started_select.id).change(function(event) {
 
 			//execute the click event
-			self.On_Task_Entry_Select_Change_Event();
+			//self.On_Task_Entry_Select_Change_Event();
 		});
 		
 				

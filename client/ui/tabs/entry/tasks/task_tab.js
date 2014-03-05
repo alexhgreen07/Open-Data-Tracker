@@ -92,6 +92,28 @@ function Task_Tab() {
 		
 	};
 	
+	this.Refresh_From_Diff = function(diff, data)
+	{
+		
+		var self = this;
+		
+		//ensure the task info array is saved
+		self.task_info_json_array = data.tasks;
+		
+		this.timecard_task_entry_form.Refresh_From_Diff(diff, data);
+		/*
+		this.new_task_entry_form.Refresh_From_Diff(diff, data);
+		this.edit_task_entry_form.Refresh_From_Diff(diff, data);
+		this.view_task_entries_form.Refresh_From_Diff(diff, data);
+		this.new_task_form.Refresh_From_Diff(diff, data);
+		this.edit_task_form.Refresh_From_Diff(diff, data);
+		this.view_tasks_form.Refresh_From_Diff(diff, data);
+		this.new_task_target_form.Refresh_From_Diff(diff, data);
+		this.edit_task_target_form.Refresh_From_Diff(diff, data);
+		this.view_task_targets_form.Refresh_From_Diff(diff, data);
+		*/
+	};
+	
 	this.Show_Form = function(div_id){
 		
 		for(var i = 0; i < this.div_ids.length; i++)

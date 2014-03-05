@@ -3,9 +3,10 @@
  */
 function Timecard_Task_Entry_Form(){
 	
+	var self = this;
+	
 	this.Refresh = function(data){
 		
-		var self = this;
 		self.data = data;
 		
 		Refresh_Select_HTML_From_Table(
@@ -53,8 +54,6 @@ function Timecard_Task_Entry_Form(){
 	
 	this.Refresh_Task_Name_Select = function(data){
 		
-		var self = this;
-		
 		//ensure the task info array is saved
 		self.task_info_json_array = data.tasks;
 		
@@ -99,8 +98,6 @@ function Timecard_Task_Entry_Form(){
 	};
 	
 	this.Refresh_Task_Targets = function(data){
-		
-		var self = this;
 		
 		var previous_value = document.getElementById(self.task_target_select.id).value;
 		var is_previous_value_present = false;
@@ -152,9 +149,6 @@ function Timecard_Task_Entry_Form(){
 	};
 	
 	this.Refresh_Task_Started_Entries = function(data){
-		
-		var self = this;
-		
 		
 		//create a list of options for the select
 		var new_inner_html = '';
@@ -238,8 +232,6 @@ function Timecard_Task_Entry_Form(){
 	
 	this.On_Task_Target_Select_Change_Event = function() {
 		
-		var self = this;
-		
 		for (var i = 0; i < self.data.task_targets.length; i++) {
 		
 			if(self.data.task_targets[i].task_schedule_id == document.getElementById(self.task_target_select.id).value)
@@ -255,8 +247,6 @@ function Timecard_Task_Entry_Form(){
 	};
 	
 	this.On_Task_Entry_Select_Change_Event = function() {
-		
-		var self = this;
 		
 		if(document.getElementById(self.task_entries_started_select.id).value != 0)
 		{
@@ -348,8 +338,6 @@ function Timecard_Task_Entry_Form(){
 	 * @param {function} refresh_callback The callback to call after the data operation has completed.
 	 * */
 	this.Start_Stop_Task = function(is_complete) {
-		
-		var self = this;
 		
 		if(this.task_start_stop_button.value == 'Stop')
 		{
@@ -452,7 +440,6 @@ function Timecard_Task_Entry_Form(){
 	 * @desc This function is the start/stop button click event handler.
 	 * */
 	this.On_Start_Stop_Click_Event = function() {
-		var self = this;
 
 		this.Start_Stop_Task(false);
 	};
@@ -464,7 +451,6 @@ function Timecard_Task_Entry_Form(){
 	this.On_Complete_Click_Event = function() {
 		var task_name = $('#' + this.task_name_select.id).val();
 		var task_start_stop = this.task_start_stop_button.value;
-		var self = this;
 
 		//stop the task before marking it complete
 		if (task_start_stop == 'Stop') {
@@ -477,7 +463,6 @@ function Timecard_Task_Entry_Form(){
 	 * @desc This function will refresh the start/stop task timer UI elements. It is setup to be called every 1 second.
 	 * */
 	this.Refresh_Timer_Display = function() {
-		var self = this;
 		var new_html = '';
 
 		if (self.task_start_stop_button.value == 'Stop') {
@@ -504,8 +489,6 @@ function Timecard_Task_Entry_Form(){
 	 * @param {String} form_div_id The div ID to render the form in. 
 	 * */
 	this.Render = function(form_div_id) {
-
-		var self = this;
 
 		//create the top form
 		this.data_form_timecard_entry = document.createElement("form");

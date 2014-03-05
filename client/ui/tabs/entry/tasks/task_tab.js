@@ -101,8 +101,8 @@ function Task_Tab() {
 		self.task_info_json_array = data.tasks;
 		
 		this.timecard_task_entry_form.Refresh_From_Diff(diff, data);
-		/*
 		this.new_task_entry_form.Refresh_From_Diff(diff, data);
+		/*
 		this.edit_task_entry_form.Refresh_From_Diff(diff, data);
 		this.view_task_entries_form.Refresh_From_Diff(diff, data);
 		this.new_task_form.Refresh_From_Diff(diff, data);

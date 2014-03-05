@@ -24,6 +24,28 @@ function New_Task_Entry_Form(){
 		
 	};
 	
+	this.Refresh_From_Diff = function(diff, data)
+	{
+		
+		var self = this;
+		
+		//ensure the task info array is saved
+		self.task_info_json_array = data.tasks;
+
+		Refresh_Select_HTML_From_Table_Diff(
+			self.add_task_entry_task_name_select.id,
+			diff.data.tasks,
+			"task_id",
+			"name");
+
+		Refresh_Select_HTML_From_Table_Diff(
+			self.task_target_select.id,
+			diff.data.task_targets,
+			"task_schedule_id",
+			"name");
+		
+	};
+	
 	/** @method Insert_Task_Entry
 	 * @desc This function inserts a task entry from the insert entry form.
 	 * @param {bool} is_completed If 'True' the task entry should be marked complete. Otherwise the entry will not be marked complete.

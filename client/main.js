@@ -43,6 +43,7 @@ function Main_Application() {
 		
 		var times = [];
 		
+		var total_start = new Date();
 		var start = new Date();
 		
 		//refresh all data in all forms
@@ -70,12 +71,15 @@ function Main_Application() {
 		times.push('report_tab_object: ' + (end - start) / 1000);
 		
 		//alert(JSON.stringify(times));
+		console.log('Full refresh: ' + JSON.stringify(times));
+		console.log('Total: ' + (end - total_start) / 1000);
 	};
 	
 	this.Refresh_From_Diff = function(diff) {
 		
 		var times = [];
 		
+		var total_start = new Date();
 		var start = new Date();
 		
 		//TODO: implement
@@ -103,6 +107,8 @@ function Main_Application() {
 		times.push('report_tab_object: ' + (end - start) / 1000);
 		
 		//alert(JSON.stringify(times));
+		console.log('Diff refresh: ' + JSON.stringify(times));
+		console.log('Total: ' + (end - total_start) / 1000);
 	};
 	
 	this.Select_Event_Click_Callback = function(table, row)

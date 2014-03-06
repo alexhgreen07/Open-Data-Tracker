@@ -41,6 +41,18 @@ function Event_Scheduler() {
 		return new_event;
 	};
 	
+	this.Create_Event_From_Task_Target_Diff_Row = function(diff_row)
+	{
+		var new_event = this.Create_Event_From_Task_Target_Row(diff_row.row);
+		
+		var new_diff_event = {
+			operation: diff_row.operation,
+			event_row: new_event,
+		};
+		
+		return new_diff_event;
+	};
+	
 	this.Create_Event_From_Task_Entry_Row = function(row){
 		
 		var name = row.name;
@@ -85,6 +97,18 @@ function Event_Scheduler() {
 		
 	};
 	
+	this.Create_Event_From_Task_Entry_Diff_Row = function(row)
+	{
+		var new_event = this.Create_Event_From_Task_Entry_Row(diff_row.row);
+		
+		var new_diff_event = {
+			operation: diff_row.operation,
+			event_row: new_event,
+		};
+		
+		return new_diff_event;
+	};
+	
 	this.Generate_End_Date = function(start_timestamp, hours, minimum_time)
 	{
 		var adjusted_hours = hours;
@@ -103,6 +127,7 @@ function Event_Scheduler() {
 	
 	self.Create_Free_Block_Table = function(events)
 	{
+		self.events = events;
 		self.scheduled_events = [];
 		
 		//first entry has duration of 100 years
@@ -114,7 +139,7 @@ function Event_Scheduler() {
 			];
 		
 		//sort the events targets by late end time
-		events.sort(function(a,b){
+		self.events.sort(function(a,b){
 			
 			var a_timestamp = Cast_Server_Datetime_to_Date(a.entry.row.scheduled_time);
 		    var b_timestamp = Cast_Server_Datetime_to_Date(b.entry.row.scheduled_time);
@@ -135,9 +160,9 @@ function Event_Scheduler() {
 			
 		});
 		
-		for(key in events)
+		for(key in self.events)
 		{
-			event_row =  events[key];
+			event_row =  self.events[key];
 			
 			self.Insert_Event_Into_Free_Blocks(event_row);
 		}
@@ -163,7 +188,6 @@ function Event_Scheduler() {
 		for(key in self.free_block_table)
 		{
 			
-			//alert('attempting to schedule event at key ' + key);
 			
 			block = self.free_block_table[key];
 			block_end_time = self.Generate_End_Date(block.start_time,block.duration,0);
@@ -204,14 +228,11 @@ function Event_Scheduler() {
 						//insert new split block
 						self.free_block_table.splice(key + 1, 0, new_block);
 						
-						block_found = true;
-						break;
 					}
 					else 
 					{
-						//alert(block.start_time + ' <= ' + early_start_timestamp);
 						
-						//schedule event
+						//schedule event at start of block
 						event_row.start = block.start_time;
 						real_end_date = self.Generate_End_Date(event_row.start, row.estimated_time, 0);
 						adjusted_end_date = self.Generate_End_Date(event_row.start, row.estimated_time / self.config.switch_efficiency, 0);
@@ -227,11 +248,10 @@ function Event_Scheduler() {
 						block.duration -= row.estimated_time;
 						block.start_time = adjusted_end_date;
 						
-						block_found = true;
-						break;
-						
-						
 					}
+					
+					block_found = true;
+					break;
 				}
 				
 				
@@ -248,24 +268,44 @@ function Event_Scheduler() {
 		
 	};
 	
-	self.Update_Event_In_Free_Blocks = function(event)
+	self.Update_Event_In_Free_Blocks = function(event_row)
 	{
-		self.Remove_Event_From_Free_Blocks(event);
-		self.Insert_Event_Into_Free_Blocks(event);
+		self.Remove_Event_From_Free_Blocks(event_row);
+		self.Insert_Event_Into_Free_Blocks(event_row);
 	};
 	
-	self.Remove_Event_From_Free_Blocks = function(event)
+	self.Remove_Event_From_Free_Blocks = function(event_row)
 	{
+		var row = event_row.entry.row;
 		
-	};
-	
-	self.Shift_Event_Overlaps = function(event)
-	{
+		var start_timestamp = Cast_Server_Datetime_to_Date(row.scheduled_time);
+    	
+		var early_start_timestamp = self.Generate_End_Date(start_timestamp, -row.variance, 0);
+		var early_end_timestamp = self.Generate_End_Date(early_start_timestamp, row.estimated_time, 0);
+		var late_start_timestamp = self.Generate_End_Date(start_timestamp, row.variance, 0);
+		var late_end_timestamp = self.Generate_End_Date(late_start_timestamp, row.estimated_time, 0);
 		
+		//find the first available valid block
+		for(key in self.free_block_table)
+		{
+			
+			
+			block = self.free_block_table[key];
+			block_end_time = self.Generate_End_Date(block.start_time,block.duration,0);
+			
+			//found the free block
+			if(block_end_time == event_row.start)
+			{
+				
+			}
+		}
 	};
 	
-	self.Schedule_Incomplete_Task_Targets = function(incomplete_targets, started_targets)
+	self.Schedule_Incomplete_Task_Targets = function()
 	{
+		incomplete_targets = self.incomplete_targets;
+		started_targets = self.started_targets;
+		
 		var new_events = [];
 		
 		var now = new Date();
@@ -311,20 +351,44 @@ function Event_Scheduler() {
 		return new_events;
 	};
 	
-	self.Run_Scheduling_Algorithm = function(events)
+	self.Reschedule_Incomplete_Task_Targets = function()
 	{
-		self.new_events = events;
+		//TODO: implement
 		
-		var new_events = [];
+		return new_events;
+	};
+	
+	self.Generate_Event_Schedule = function(data)
+	{
+		self.data = data;
+		
+		var all_events = [];
+	    
+	    for(var i = 0; i < data.task_targets.length; i++)
+	    {
+	    	var new_event = self.Create_Event_From_Task_Target_Row(data.task_targets[i]);
+	    	
+	    	all_events.push(new_event);
+	    }
+	    
+	    for(var i = 0; i < data.task_entries.length; i++)
+	    {
+	    	
+	    	var new_event = self.Create_Event_From_Task_Entry_Row(data.task_entries[i]);
+	    	
+	    	all_events.push(new_event);
+	    }
+		
+		self.new_events = [];
 		var started_targets = [];
 		var incomplete_targets = [];
 		
 		//get all events and organize
-		for(var i = 0; i < self.new_events.length; i++)
+		for(var i = 0; i < all_events.length; i++)
 		{
 			var new_event = {};
 			
-			current_entry = self.new_events[i].entry;
+			current_entry = all_events[i].entry;
 			
 			if(current_entry.table === 'task_targets')
 			{
@@ -339,7 +403,7 @@ function Event_Scheduler() {
 		    	{
 		    		new_event = self.Create_Event_From_Task_Target_Row(current_entry.row);
 		    		
-		    		new_events.push(new_event);
+		    		self.new_events.push(new_event);
 		    	}
 		    	
 		    	
@@ -358,26 +422,52 @@ function Event_Scheduler() {
 				
 				new_event = self.Create_Event_From_Task_Entry_Row(current_entry.row);
 				
-				new_events.push(new_event);
+				self.new_events.push(new_event);
 			}
 			
 			
 		}
 		
-		scheduled_incomplete_targets = self.Schedule_Incomplete_Task_Targets(incomplete_targets, started_targets);
+		self.incomplete_targets = incomplete_targets;
+		self.started_targets = started_targets;
 		
-		new_events = new_events.concat(scheduled_incomplete_targets);
+		scheduled_incomplete_targets = self.Schedule_Incomplete_Task_Targets();
 		
-		self.new_events = new_events;
+		self.new_events = self.new_events.concat(scheduled_incomplete_targets);
 		
 		return self.new_events;
 	};
 	
-	self.Update_Scheduler_From_Diff = function(diff){
+	self.Generate_Event_Schedule_Diff = function(diff, data){
 		
+		var all_event_diffs = [];
+		var event_diff = [];
 		
+		for(var i = 0; i < diff.data.task_targets.length; i++)
+	    {
+	    	var new_diff_event = self.Create_Event_From_Task_Target_Diff_Row(diff.data.task_targets[i]);
+	    	
+	    	all_event_diffs.push(new_diff_event);
+	    }
+	    
+	    for(var i = 0; i < diff.data.task_entries.length; i++)
+	    {
+	    	
+	    	var new_diff_event = self.Create_Event_From_Task_Entry_Diff_Row(diff.data.task_entries[i]);
+	    	
+	    	all_event_diffs.push(new_diff_event);
+	    }
+	    
+	    for(var key in all_event_diffs)
+	    {
+	    	//TODO: re-generate diff according to table and other fields
+	    }
+	    
+	    rescheduled_incomplete_target_diff = self.Reschedule_Incomplete_Task_Targets();
+	    
+	    event_diff = event_diff.concat(rescheduled_incomplete_target_diff);
 		
-		return self.new_events;
+		return event_diff;
 	};
 
 }

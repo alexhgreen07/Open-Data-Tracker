@@ -35,27 +35,10 @@ function Calendar_Tab() {
 	
 		document.getElementById(self.calendar_div.id).innerHTML = '';
 		
-		self.new_events = [];
-	    
-	    for(var i = 0; i < data.task_targets.length; i++)
-	    {
-	    	var new_event = self.scheduler.Create_Event_From_Task_Target_Row(data.task_targets[i]);
-	    	
-	    	self.new_events.push(new_event);
-	    }
-	    
-	    for(var i = 0; i < data.task_entries.length; i++)
-	    {
-	    	
-	    	var new_event = self.scheduler.Create_Event_From_Task_Entry_Row(data.task_entries[i]);
-	    	
-	    	self.new_events.push(new_event);
-	    }
-		
 		var previous_name = $('#' + self.calendar_div.id).fullCalendar('getView').name;
 		var previous_date = $('#' + self.calendar_div.id).fullCalendar('getDate');
 		
-		self.new_events = self.scheduler.Run_Scheduling_Algorithm(self.new_events);
+		self.new_events = self.scheduler.Generate_Event_Schedule(data);
 		
 		$('#' + self.calendar_div.id).fullCalendar({
 			header: {
@@ -79,16 +62,61 @@ function Calendar_Tab() {
 	
 	this.Refresh_From_Diff = function(diff, data){
 		
-		//TODO: Implement
+		self.data = data;
 		
-		for(table in diff['data'])
+		self.event_diff = self.scheduler.Generate_Event_Schedule_Diff(diff, data);
+		
+		var events_to_insert = [];
+		var events_to_remove = [];
+		
+		for(var key in self.event_diff)
 		{
-			if(diff['data'][table].length > 0)
+			
+			var diff_row = self.event_diff[key];
+			
+			if(diff_row.operation == 'insert')
 			{
-				self.Refresh(data);
-				break;
+				events_to_insert.push(diff_row.event_row);
 			}
+			else if(diff_row.operation == 'update')
+			{
+				$('#' + self.calendar_div.id).fullCalendar('updateEvent',diff_row.event_row);
+			}
+			else if(diff_row.operation == 'remove')
+			{
+				events_to_remove.push(diff_row.event_row);
+			}
+			
 		}
+		
+		//remove all required events
+		$('#' + self.calendar_div.id).fullCalendar('removeEvents',function(calEvent){
+			
+			var return_value = false;
+			
+			for(var key in events_to_remove)
+			{
+				var event_to_remove = events_to_remove[key];
+				
+				//check for match
+				if(calEvent == event_to_remove)
+				{
+					//event found, remove from array and return true
+					
+					events_to_remove.splice(key,1);
+					
+					return_value = true;
+					
+					break;
+				}
+			}
+			
+	        return return_value;
+	        
+	    });
+		
+		$('#' + self.calendar_div.id).fullCalendar('addEventSource',events_to_insert);
+		
 		
 	};
 	

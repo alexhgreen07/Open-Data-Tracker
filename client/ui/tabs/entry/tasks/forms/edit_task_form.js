@@ -26,6 +26,28 @@ function Edit_Task_Form(){
 		
 	};
 	
+	this.Refresh_From_Diff = function(diff, data)
+	{
+		
+		//ensure the task info array is saved
+		self.task_info_json_array = data.tasks;
+
+		Refresh_Select_HTML_From_Table_Diff(
+			self.task_entry_task_edit_name_select.id,
+			diff.data.tasks,
+			"task_id",
+			"name");
+			
+		Refresh_Select_HTML_From_Table_Diff(
+			this.task_edit_category_select.id,
+			diff.data['Categories'],
+			"Category ID",
+			"Category Path");
+		
+		self.Task_Edit_Select_Change();
+		
+	};
+	
 	/** @method Task_Edit_Submit_Click
 	 * @desc This is the edit task submit button click event handler.
 	 * */

@@ -18,6 +18,22 @@ function New_Task_Target_Form(){
 		
 	};
 	
+	this.Refresh_From_Diff = function(diff, data)
+	{
+		
+		var self = this;
+		
+		//ensure the task info array is saved
+		self.task_info_json_array = data.tasks;
+
+		Refresh_Select_HTML_From_Table_Diff(
+			self.task_target_new_name_select.id,
+			diff.data.tasks,
+			"task_id",
+			"name");
+		
+	};
+	
 	/** @method Task_Target_New_Submit_Click
 	 * @desc This is the new task target submit button click event handler.
 	 * */

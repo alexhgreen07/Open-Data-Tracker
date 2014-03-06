@@ -3,17 +3,9 @@
  */
 function Edit_Task_Target_Form(){
 	
-	this.Refresh = function(data){
-		
-		this.Refresh_Task_Targets_Select(data);
-		this.Refresh_Tasks_Select(data);
-		
-		this.Task_Target_Edit_Select_Change();
-	};
+	var self = this;
 	
-	this.Refresh_Task_Targets_Select = function(data){
-		
-		var self = this;
+	this.Refresh = function(data){
 		
 		//ensure the task info array is saved
 		self.task_targets_log = data.task_targets;
@@ -23,12 +15,6 @@ function Edit_Task_Target_Form(){
 			data.task_targets,
 			"task_schedule_id",
 			"name");
-
-	};
-	
-	this.Refresh_Tasks_Select = function(data){
-		
-		var self = this;
 		
 		//ensure the task info array is saved
 		self.task_info_json_array = data.tasks;
@@ -39,6 +25,32 @@ function Edit_Task_Target_Form(){
 			"name",
 			"name");
 		
+		this.Task_Target_Edit_Select_Change();
+	};
+	
+	this.Refresh_From_Diff = function(diff, data)
+	{
+		
+		//ensure the task info array is saved
+		self.task_targets_log = data.task_targets;
+
+		Refresh_Select_HTML_From_Table_Diff(
+			self.task_edit_target_select.id,
+			diff.data.task_targets,
+			"task_schedule_id",
+			"name");
+		
+		//ensure the task info array is saved
+		self.task_info_json_array = data.tasks;
+
+		Refresh_Select_HTML_From_Table_Diff(
+			self.task_target_edit_name_select.id,
+			diff.data.tasks,
+			"name",
+			"name");
+		
+		this.Task_Target_Edit_Select_Change();
+		
 	};
 	
 	/** @method Task_Target_Edit_Submit_Click
@@ -46,7 +58,6 @@ function Edit_Task_Target_Form(){
 	 * */
 	this.Task_Target_Edit_Submit_Click = function()
 	{
-		var self = this;
 		
 		var index_to_edit = document.getElementById(this.task_edit_target_select.id).selectedIndex;
 		var selected_index = document.getElementById(this.task_target_edit_name_select.id).selectedIndex;

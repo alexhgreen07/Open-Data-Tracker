@@ -14,6 +14,17 @@ function New_Task_Form(){
 		
 	};
 	
+	this.Refresh_From_Diff = function(diff, data)
+	{
+		
+		Refresh_Select_HTML_From_Table_Diff(
+			this.task_category_select.id,
+			diff.data['Categories'],
+			"Category ID",
+			"Category Path");
+		
+	};
+	
 	/** @method Task_New_Submit_Click
 	 * @desc This function is the new task submit button click event handler.
 	 * */

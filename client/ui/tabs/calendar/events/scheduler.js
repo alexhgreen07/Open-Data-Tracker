@@ -303,25 +303,22 @@ function Event_Scheduler() {
 	
 	self.Schedule_Incomplete_Task_Targets = function()
 	{
-		incomplete_targets = self.incomplete_targets;
-		started_targets = self.started_targets;
-		
 		var new_events = [];
 		
 		var now = new Date();
 		var shifted_targets = [];
 		var late_targets = [];
 		
-		for(var i = 0; i < incomplete_targets.length; i++)
+		for(var i = 0; i < self.incomplete_targets.length; i++)
 		{
-			var new_event = Copy_JSON_Data(incomplete_targets[i]);
+			var new_event = Copy_JSON_Data(self.incomplete_targets[i]);
 			
 			new_event.entry.row.estimated_time -= new_event.entry.row.hours;
 			
-			if(new_event.entry.row.task_schedule_id in started_targets)
+			if(new_event.entry.row.task_schedule_id in self.started_targets)
 			{
 				//subtract started task hours
-				new_event.entry.row.estimated_time -= started_targets[new_event.entry.row.task_schedule_id];
+				new_event.entry.row.estimated_time -= self.started_targets[new_event.entry.row.task_schedule_id];
 			}
 			
 			if(new_event.entry.row.estimated_time < 0)
@@ -353,6 +350,8 @@ function Event_Scheduler() {
 	
 	self.Reschedule_Incomplete_Task_Targets = function()
 	{
+		var new_events = [];
+		
 		//TODO: implement
 		
 		return new_events;

@@ -17,6 +17,8 @@ include_once(dirname(__FILE__).'/../../externals/json-rpc2php/jsonRPC2php.client
 
 include_once(dirname(__FILE__).'/json_rpc_queue.js.php');
 
+include_once(dirname(__FILE__).'/logger.js');
+
 include_once(dirname(__FILE__).'/types.js');
 
 //main file

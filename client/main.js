@@ -71,8 +71,8 @@ function Main_Application() {
 		times.push('report_tab_object: ' + (end - start) / 1000);
 		
 		//alert(JSON.stringify(times));
-		console.log('Full refresh: ' + JSON.stringify(times));
-		console.log('Total: ' + (end - total_start) / 1000);
+		Info('Full refresh: ' + JSON.stringify(times));
+		Info('Total: ' + (end - total_start) / 1000);
 	};
 	
 	this.Refresh_From_Diff = function(diff) {
@@ -107,8 +107,8 @@ function Main_Application() {
 		times.push('report_tab_object: ' + (end - start) / 1000);
 		
 		//alert(JSON.stringify(times));
-		console.log('Diff refresh: ' + JSON.stringify(times));
-		console.log('Total: ' + (end - total_start) / 1000);
+		Info('Diff refresh: ' + JSON.stringify(times));
+		Info('Total: ' + (end - total_start) / 1000);
 	};
 	
 	this.Select_Event_Click_Callback = function(table, row)
@@ -269,7 +269,10 @@ var rpc;
  * @desc This is the main function of the application and initializes all javascript objects.
  * */
 function main() {
-
+	
+	//set log level to most verbose
+	Set_Log_Level(INFO);
+	
 	$(document).ready(function(){
 		
 		FastClick.attach(document.body);
@@ -281,12 +284,14 @@ function main() {
 			
 			rpc = app.api.rpc;
 			
+			refresh_period = 10;
+			
 			app.last_refresh = Date.now();
 			
 			//setup timer based refresh for 60s
 			var myVar=setInterval(function(){
 					
-					if((Date.now() - app.last_refresh) / 1000 > 60)
+					if((Date.now() - app.last_refresh) / 1000 > refresh_period)
 					{
 						app.last_refresh = Date.now();
 					

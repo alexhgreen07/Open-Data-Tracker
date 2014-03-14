@@ -3,7 +3,7 @@ var mysql = require('mysql');
 var config = require('./config.js');
 
 module.exports = {
-	Connect_To_DB: function(){
+	Connect: function(){
 		
 		var self = this;
 		
@@ -23,6 +23,18 @@ module.exports = {
 		
 		console.log('Connection complete.');
 		
+	},
+	Close: function(){
+		
+		console.log('Closing connection.');
+		
+		self.connection.end();
+		
+	},
+	Select: function(table, columns, where, extra){
+		
+		var self = this;
+		
 		console.log('Attempting query.');
 		
 		self.connection.query('SELECT report_name AS solution FROM reports', function(err, rows, fields) {
@@ -37,9 +49,21 @@ module.exports = {
 		  
 		});
 		
-		console.log('Closing connection.');
-		
-		  
-		self.connection.end();
 	},
+	Insert: function(table, value_lookup){
+		
+		var self = this;
+		
+	},
+	Update: function(table, value_lookup, where){
+		
+		var self = this;
+		
+	},
+	Delete: function(table, where){
+		
+		var self = this;
+		
+	},
+	
 };

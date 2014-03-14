@@ -1,5 +1,8 @@
 var qs = require('querystring');
 
+var config = require('./config.js');
+var database = require('./database.js');
+
 module.exports = {
 	counter: 0,
 	Process_RPC: function (post)
@@ -16,6 +19,7 @@ module.exports = {
 		}
 		
 		console.log(JSON.stringify(post_object));
+		database.Connect_To_DB();
 		
 		if(post_object.method == 'rpc.listMethods')
 		{

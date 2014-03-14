@@ -4,6 +4,8 @@ var path = require("path");
 var fs = require("fs");
 var qs = require('querystring');
 
+var api = require('./server/api.js');
+
 var port = process.argv[2] || 8888;
 
 
@@ -16,7 +18,6 @@ http.createServer(function(request, response) {
   
   if(uri == '/server/api.php')
   {
-	  	var api = require('./server/api.js');
 
   		api.API(request,response);
   	

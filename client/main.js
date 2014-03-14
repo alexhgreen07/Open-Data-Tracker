@@ -182,6 +182,8 @@ function Main_Application() {
 		//append the main tab div
 		document.body.innerHTML += '<div id="' + self.main_tabs_div + '"></div>';
 
+		document.body.innerHTML += '<a href="logout.php">Logout</a>';
+		
 		this.tabs_array[0] = new Array();
 		this.tabs_array[0][0] = "Home";
 		this.tabs_array[0][1] = "<div id='home_tab_div'></div>";
@@ -213,7 +215,6 @@ function Main_Application() {
 		this.calendar_tab_object.Render('calendar_tab_div');
 		
 		this.report_tab_object.Render('report_tab_div');
-		
 		
 		this.home_tab_object.home_form.event_click_callback = this.Select_Event_Click_Callback;
 		

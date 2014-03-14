@@ -38,7 +38,14 @@ function Calendar_Tab() {
 		var previous_name = $('#' + self.calendar_div.id).fullCalendar('getView').name;
 		var previous_date = $('#' + self.calendar_div.id).fullCalendar('getDate');
 		
+		var times = [];
+		var start = new Date();
+		
 		self.new_events = self.scheduler.Generate_Event_Schedule(data);
+		
+		var end = new Date();
+		times.push('Generate_Event_Schedule: ' + (end - start) / 1000);
+		var start = new Date();
 		
 		$('#' + self.calendar_div.id).fullCalendar({
 			header: {
@@ -54,6 +61,10 @@ function Calendar_Tab() {
 			dayClick: self.Day_Click,
 			eventAfterAllRender: self.Calendar_Render_Complete,
 		});
+		
+		var end = new Date();
+		times.push('fullCalendar: ' + (end - start) / 1000);
+		Info('Diff refresh: ' + JSON.stringify(times));
 		
 		$('#' + self.calendar_div.id).fullCalendar('changeView', previous_name);
 		$('#' + self.calendar_div.id).fullCalendar('gotoDate',previous_date);

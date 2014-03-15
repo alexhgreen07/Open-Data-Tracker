@@ -2,15 +2,13 @@ var qs = require('querystring');
 
 var config = require('./config.js');
 var database = require('./database.js');
-var rpc = require('./rpc.js');
-
-database.Connect();
+var rpc = require('./rpc_server.js');
 
 module.exports = {
 	counter: 0,
 	registered_objects: {},
 	methods: {},
-	Process_Request: function (request, response)
+	Process: function (request, response)
 	{
 		var self = this;
 		
@@ -28,11 +26,15 @@ module.exports = {
 				
 				self.response = response;
 				
-				rpc.Process_RPC(post, function(return_string)
+				database.Connect();
+				
+				rpc.Process(post, function(return_string)
 				{
 					self.response.writeHead(200, {"Content-Type": "text/plain"});
 				  	self.response.write(return_string);
 				  	self.response.end();
+				  	
+				  	database.Close();
 				});
 				
 	        });

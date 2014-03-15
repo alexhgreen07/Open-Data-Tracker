@@ -61,7 +61,7 @@ http.createServer(function(request, response) {
 
 	if (uri == '/server/api.php') {
 		
-		api.Process_Request(request, response);
+		api.Process(request, response);
 		
 	} else {
 		

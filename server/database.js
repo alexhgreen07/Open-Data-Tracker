@@ -26,6 +26,8 @@ module.exports = {
 	},
 	Close: function(){
 		
+		var self = this;
+		
 		console.log('Closing connection.');
 		
 		self.connection.end();

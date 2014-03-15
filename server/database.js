@@ -61,11 +61,6 @@ module.exports = {
 				throw err;
 			}
 			
-			for (key in rows) {
-				
-				console.log('rows[' + key + '].task_log_id = ', rows[key].task_log_id);
-			}
-			
 			callback(rows);
 		});
 		

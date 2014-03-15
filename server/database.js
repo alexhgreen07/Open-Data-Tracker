@@ -31,22 +31,42 @@ module.exports = {
 		self.connection.end();
 		
 	},
-	Select: function(table, columns, where, extra){
+	Select: function(table, columns, where, extra, callback){
 		
 		var self = this;
 		
 		console.log('Attempting query.');
 		
-		self.connection.query('SELECT report_name AS solution FROM reports', function(err, rows, fields) {
-		  if (err) throw err;
-			
-			for(key in rows)
+		sql = 'SELECT ';
+		
+		var columns_to_join = [];
+		
+		for(key in columns)
+		{
+			columns_to_join.push(columns[key] + " AS `" + key + '`');
+		}
+		
+		sql += columns_to_join.join(', ');
+		
+		sql += ' FROM ' + table + "";
+		sql += ' WHERE (' + where + ')';
+		sql += ' ' + extra	;
+		
+		console.log(sql);
+		
+		self.connection.query(sql, function(err, rows, fields) {
+
+			if (err)
 			{
-				console.log('The solution is: ', rows[key].solution);
+				throw err;
 			}
 			
-		  
-		  
+			for (key in rows) {
+				
+				console.log('rows[' + key + '].task_log_id = ', rows[key].task_log_id);
+			}
+			
+			callback(rows);
 		});
 		
 	},

@@ -9,8 +9,8 @@ module.exports = {
 	counter: 0,
 	Process_RPC: function (post)
 	{
-		var return_string = '';
 		var self = this;
+		var return_string = '';
 		
 		self.counter += 1;
 		
@@ -22,7 +22,17 @@ module.exports = {
 		
 		console.log(JSON.stringify(post_object));
 		
-		database.Select('','', '', '');
+		database.Select(
+			'task_log',
+			{'task_log_id':'task_log_id'}, 
+			'1', 
+			'', 
+			function(table){
+			
+			
+			
+			}
+		);
 		
 		if(post_object.method == 'rpc.listMethods')
 		{
@@ -44,10 +54,12 @@ module.exports = {
 		var self = this;
 		
 		if (request.method == 'POST') {
+			
 	        var body = '';
 	        request.on('data', function (data) {
 	            body += data;
 	        });
+	        
 	        request.on('end', function () {
 	
 	            var POST = qs.parse(body);
@@ -60,6 +72,7 @@ module.exports = {
 			  	response.end();
 				
 	        });
+	        
 	    }
 		
 		

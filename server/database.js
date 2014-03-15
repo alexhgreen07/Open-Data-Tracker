@@ -61,17 +61,17 @@ module.exports = {
 		});
 		
 	},
-	Insert: function(table, value_lookup){
+	Insert: function(table, value_lookup, callback){
 		
 		var self = this;
 		
 	},
-	Update: function(table, value_lookup, where){
+	Update: function(table, value_lookup, where, callback){
 		
 		var self = this;
 		
 	},
-	Delete: function(table, where){
+	Delete: function(table, where, callback){
 		
 		var self = this;
 		

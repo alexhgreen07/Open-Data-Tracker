@@ -22,7 +22,7 @@ module.exports = {
 		
 		if(method_name == 'rpc.listMethods')
 		{
-			self.counter += 1;
+			self.counter = 1;
 			
 			self.List_Methods({}, function(object){
 					

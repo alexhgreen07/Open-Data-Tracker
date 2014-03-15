@@ -1,6 +1,5 @@
 var qs = require('querystring');
 
-var config = require('./config.js');
 var database = require('./database.js');
 var rpc = require('./rpc_server.js');
 

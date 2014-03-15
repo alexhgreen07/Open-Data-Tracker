@@ -24,7 +24,7 @@ module.exports = {
 		{
 			self.counter += 1;
 			
-			self.List_Methods(function(object){
+			self.List_Methods({}, function(object){
 					
 					return_object = {};
 					return_object.jsonrpc = "2.0";
@@ -48,7 +48,9 @@ module.exports = {
 			
 			if(typeof(rpc_method) === "function")
 			{
-				rpc_method(function(object){
+				params = post_object.params;
+				
+				rpc_method(params, function(object){
 					
 					return_object = {};
 					return_object.jsonrpc = "2.0";
@@ -81,32 +83,21 @@ module.exports = {
 		}
 		
 	},
-	List_Methods: function(callback){
+	List_Methods: function(params, callback){
 		
 		var self = this;
 		
 		callback(self.registered_objects);
 	},
-	Function_Name: function (method) {
-		
-		var name = method.toString();
-		
-		name = name.substr('function '.length);
-		name = name.substr(0, name.indexOf('('));
-		
-		return name;
-	},
-	Register_Method: function(method, parent_string){
+	Register_Method: function(method, name){
 		
 		var self = this;
 		
-		var name = self.Function_Name(method);
+		console.log('Registering: ' + name);
 		
 		self.methods[name] = method;
 		
-		parent_string += "." + name;
-		
-		return parent_string;
+		return name;
 	},
 	Register_Object: function(object, name){
 		
@@ -114,17 +105,14 @@ module.exports = {
 		
 		self.registered_objects[name] = [];
 		
-		console.log('Registering ' + name + ': ' + JSON.stringify(object));
-		
 		for(var key in object)
 		{
 			
-			console.log(key + ': ' + JSON.stringify(object[key]));
-			
 			if(typeof(object[key]) === 'function')
 			{
-				self.registered_objects[name].push(name);
-				self.Register_Method(object[key], name);
+				
+				self.registered_objects[name].push(key);
+				self.Register_Method(object[key], name + "." + key);
 			}
 			else if(typeof(object[key]) === 'object')
 			{

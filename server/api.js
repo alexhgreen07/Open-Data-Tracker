@@ -4,6 +4,10 @@ var config = require('./config.js');
 var database = require('./database.js');
 var rpc = require('./rpc_server.js');
 
+var data_interface = require('./data_interface.js');
+
+rpc.Register_Object(data_interface, 'Data_Interface');
+
 module.exports = {
 	counter: 0,
 	registered_objects: {},

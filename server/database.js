@@ -15,20 +15,14 @@ module.exports = {
 			  port : config.database_port,
 		};
 		
-		console.log('Attempting MYSQL connection with : ' + JSON.stringify(connection_info));
-		
 		self.connection = mysql.createConnection(connection_info);
 		
 		self.connection.connect();
-		
-		console.log('Connection complete.');
 		
 	},
 	Close: function(){
 		
 		var self = this;
-		
-		console.log('Closing connection.');
 		
 		self.connection.end();
 		

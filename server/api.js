@@ -55,7 +55,9 @@ module.exports = {
 		
 		if(!(session_id in self.sessions))
 		{
-			self.sessions[session_id] = {session_id: session_id};
+			self.sessions[session_id] = {
+				session_id: session_id,
+				is_authorized: false};
 		}
 		
 		return self.sessions[session_id];
@@ -95,6 +97,8 @@ module.exports = {
 						});
 					self.response.write(return_string);
 				  	self.response.end();
+				  	
+				  	console.log(JSON.stringify(current_session));
 				  	
 				  	database.Close();
 				});

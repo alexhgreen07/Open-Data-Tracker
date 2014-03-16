@@ -35,9 +35,29 @@ function Main_Application() {
 	 * */
 	this.report_tab_object = new Report_Tab();
 	
+	this.login_tab_object = new Login_Tab();
+	
+	this.register_tab_object = new Register_Tab();
+	
 	this.busy_count = 0;
 	
 	this.is_logged_in = false;
+	
+	this.Initialize = function(){
+		
+		self.Render();
+		self.Connect('server/api.php', function() {
+			
+			rpc = app.api.rpc;
+			
+			if(self.is_logged_in)
+			{
+				app.api.Refresh_Data(function(){});
+				self.Start_Auto_Refresh();
+			}
+		});
+		
+	};
 	
 	/** @method Refresh_Data
 	 * @desc This should be called to refresh data in all forms.
@@ -204,7 +224,8 @@ function Main_Application() {
 	
 		//append the main tab div
 		document.body.innerHTML += '<div id="' + self.main_tabs_div + '"></div>';
-
+		
+		this.tabs_array = [];
 		this.tabs_array.push(["Login", "<div id='login_tab_div'></div>"]);
 		this.tabs_array.push(["Register", "<div id='register_tab_div'></div>"]);
 
@@ -212,8 +233,17 @@ function Main_Application() {
 		this.main_tab_nav = new Tabs(self.main_tabs_div, this.tabs_array);
 		this.main_tab_nav.Render();
 		
+		this.login_tab_object.Render('login_tab_div');
+		this.register_tab_object.Render('register_tab_div');
+		
 		$('#' + self.loader_div.id).hide();
 		
+		self.login_tab_object.login_success = function(){
+			
+			self.is_logged_in = true;
+			
+			self.Initialize();
+		};
 	};
 	
 	/** @method Render_Main_Tabs
@@ -237,7 +267,8 @@ function Main_Application() {
 	
 		//append the main tab div
 		document.body.innerHTML += '<div id="' + self.main_tabs_div + '"></div>';
-
+		
+		this.tabs_array = [];
 		this.tabs_array.push(["Home", "<div id='home_tab_div'></div>"]);
 		this.tabs_array.push(["Entry", "<div id='entry_tab_div'></div>"]);
 		this.tabs_array.push(["Calendar", "<div id='calendar_tab_div'></div>"]);
@@ -274,13 +305,15 @@ function Main_Application() {
 	this.Render = function()
 	{
 		//main tabs
-		if(this.is_logged_in)
+		if(self.is_logged_in)
 		{
-			this.Render_Main_Tabs();
+			console.log('Rendering main tabs');
+			self.Render_Main_Tabs();
 		}
 		else
 		{
-			this.Render_Login_Tabs();
+			console.log('Rendering login tabs');
+			self.Render_Login_Tabs();
 		}
 		
 	};
@@ -333,13 +366,8 @@ function main() {
 		
 		app = new Main_Application();
 		
-		app.Render();
-		app.Connect('server/api.php', function() {
-			
-			rpc = app.api.rpc;
-			
-			
-		});
+		app.Initialize();
+		
 		
 	});
 

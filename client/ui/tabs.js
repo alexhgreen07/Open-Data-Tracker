@@ -39,8 +39,6 @@ function Tabs(tab_div_id, tab_array) {
 		        self.activate_callback();
 		   },
 		});
-		
-		$('#' + this.div_id).tabs("option", "active", 1);
 
 	};
 }

@@ -27,13 +27,12 @@ module.exports = {
 			
 			if(method_name == 'rpc.listMethods')
 			{
-				self.counter = 1;
 				
 				self.List_Methods({}, session, function(object){
 						
 						return_object = {};
 						return_object.jsonrpc = "2.0";
-						return_object.id = self.counter;
+						return_object.id = post_object.id;
 						return_object.error = null;
 						return_object.result = object;
 						
@@ -59,7 +58,7 @@ module.exports = {
 						
 						return_object = {};
 						return_object.jsonrpc = "2.0";
-						return_object.id = self.counter;
+						return_object.id = post_object.id;
 						return_object.error = null;
 						return_object.result = object;
 						

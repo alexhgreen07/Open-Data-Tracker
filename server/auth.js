@@ -97,7 +97,7 @@ module.exports = {
 				else
 				{
 					session.is_authorized = true;
-					session.member_id = login;
+					session.member_id = table[0].member_id;
 					
 					callback(true);
 				}

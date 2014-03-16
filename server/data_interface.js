@@ -1,5 +1,8 @@
 var database = require('./database.js');
 
+var home_data_interface = require('./data_interface_lib/home_data_interface.js');
+var item_data_interface = require('./data_interface_lib/item_data_interface.js');
+
 module.exports = {
 	Refresh_All_Data: function(params, session, callback){
 		
@@ -29,7 +32,61 @@ module.exports = {
 		
 		return_object.reports = [];
 		
-		callback(return_object);
+		var counter = 0;
+		
+		var counter_callback = function()
+		{
+			counter -= 1;
+			if(counter == 0)
+			{
+				callback(return_object);
+			}
+		};
+		
+		var queries = {};
+		
+		queries["Categories"] = {
+			method: home_data_interface.Get_Categories,
+			callback: function(object){
+				
+				return_object.data["Categories"] = object;
+				counter_callback();
+				
+			}};
+			
+		queries["item_entries"] = {
+			method: item_data_interface.Get_Item_Log,
+			callback: function(object){
+				
+				return_object.data["item_entries"] = object;
+				counter_callback();
+				
+			}};
+			
+		queries["items"] = {
+			method: item_data_interface.Get_Items,
+			callback: function(object){
+				
+				return_object.data["items"] = object;
+				counter_callback();
+				
+			}};
+			
+		queries["item_targets"] = {
+			method: item_data_interface.Get_Item_Targets,
+			callback: function(object){
+				
+				return_object.data["item_targets"] = object;
+				counter_callback();
+				
+			}};
+		
+		for(var key in queries){ counter++; }
+		
+		for(var key in queries)
+		{
+			queries[key].method({}, session,queries[key].callback);
+		}
 		
 	},
 	Refresh_From_Session_Diff: function(params, session, callback){

@@ -51,6 +51,7 @@ module.exports = {
 		{
 			//64-bit random number
 			session_id = Math.round(Math.random() * 0xFFFFFFFF).toString(16);
+			session_id += Math.round(Math.random() * 0xFFFFFFFF).toString(16);
 		}
 		
 		if(!(session_id in self.sessions))

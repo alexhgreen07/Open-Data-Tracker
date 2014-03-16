@@ -15,6 +15,7 @@ function Main_Application() {
 	 * @type Array
 	 * */
 	this.tabs_array = new Array();
+	this.login_tabs_array = new Array();
 	/** This is the main tab navigation object.
 	 * @type Tabs
 	 * */
@@ -35,6 +36,8 @@ function Main_Application() {
 	this.report_tab_object = new Report_Tab();
 	
 	this.busy_count = 0;
+	
+	this.is_logged_in = false;
 	
 	/** @method Refresh_Data
 	 * @desc This should be called to refresh data in all forms.
@@ -144,6 +147,27 @@ function Main_Application() {
 		
 	};
 	
+	this.Start_Auto_Refresh = function(){
+		
+		refresh_period = 10;
+		
+		app.last_refresh = Date.now();
+		
+		//setup timer based refresh for 60s
+		var myVar=setInterval(function(){
+				
+				if((Date.now() - app.last_refresh) / 1000 > refresh_period)
+				{
+					app.last_refresh = Date.now();
+				
+					//refresh the data form the server, then refresh UI data
+					app.api.Refresh_Data(function(){});
+				}
+				
+			},1000);
+		
+	};
+	
 	/** @method Connect
 	 * @desc Connects to the specified server.
 	 * @param 
@@ -163,15 +187,14 @@ function Main_Application() {
 		});
 	};
 	
-	/** @method Render_Main_Tabs
-	 * @desc This function renders the main navigation tab object
-	 * and all sub-tab objects.
-	 * */
-	this.Render_Main_Tabs = function() {
-
+	this.Render_Login_Tabs = function(){
+		
 		var self = this;
 		self.main_tabs_div = "main_tab_navigation_div";
-	
+		
+		//clear all previous content
+		document.body.innerHTML = "";
+		
 		//create the loader image div
 		self.loader_div = document.createElement("div");
 		self.loader_div.id = "loader_div";
@@ -182,24 +205,44 @@ function Main_Application() {
 		//append the main tab div
 		document.body.innerHTML += '<div id="' + self.main_tabs_div + '"></div>';
 
-		document.body.innerHTML += '<a href="logout.php">Logout</a>';
-		
-		this.tabs_array[0] = new Array();
-		this.tabs_array[0][0] = "Home";
-		this.tabs_array[0][1] = "<div id='home_tab_div'></div>";
-		
-		this.tabs_array[1] = new Array();
-		this.tabs_array[1][0] = "Entry";
-		this.tabs_array[1][1] = "<div id='entry_tab_div'></div>";
-		
-		this.tabs_array[2] = new Array();
-		this.tabs_array[2][0] = "Calendar";
-		this.tabs_array[2][1] = "<div id='calendar_tab_div'></div>";
-		
-		this.tabs_array[3] = new Array();
-		this.tabs_array[3][0] = "Reports";
-		this.tabs_array[3][1] = "<div id='report_tab_div'></div>";
+		this.tabs_array.push(["Login", "<div id='login_tab_div'></div>"]);
+		this.tabs_array.push(["Register", "<div id='register_tab_div'></div>"]);
 
+		//render the tabs
+		this.main_tab_nav = new Tabs(self.main_tabs_div, this.tabs_array);
+		this.main_tab_nav.Render();
+		
+		$('#' + self.loader_div.id).hide();
+		
+	};
+	
+	/** @method Render_Main_Tabs
+	 * @desc This function renders the main navigation tab object
+	 * and all sub-tab objects.
+	 * */
+	this.Render_Main_Tabs = function() {
+
+		var self = this;
+		self.main_tabs_div = "main_tab_navigation_div";
+		
+		//clear all previous content
+		document.body.innerHTML = "";
+		
+		//create the loader image div
+		self.loader_div = document.createElement("div");
+		self.loader_div.id = "loader_div";
+		self.loader_div.className = "loader_div";
+		self.loader_div.innerHTML = '<img class="loader_img" src="ajax-loader.gif"/></div>';
+		document.body.appendChild(this.loader_div);
+	
+		//append the main tab div
+		document.body.innerHTML += '<div id="' + self.main_tabs_div + '"></div>';
+
+		this.tabs_array.push(["Home", "<div id='home_tab_div'></div>"]);
+		this.tabs_array.push(["Entry", "<div id='entry_tab_div'></div>"]);
+		this.tabs_array.push(["Calendar", "<div id='calendar_tab_div'></div>"]);
+		this.tabs_array.push(["Reports", "<div id='report_tab_div'></div>"]);
+		
 		//render the tabs
 		this.main_tab_nav = new Tabs(self.main_tabs_div, this.tabs_array);
 		this.main_tab_nav.Render();
@@ -220,6 +263,8 @@ function Main_Application() {
 		
 		this.calendar_tab_object.event_click_callback = this.Select_Event_Click_Callback;
 		
+		$('#' + self.loader_div.id).hide();
+		
 	};
 	
 	/** @method Render
@@ -229,7 +274,15 @@ function Main_Application() {
 	this.Render = function()
 	{
 		//main tabs
-		this.Render_Main_Tabs();
+		if(this.is_logged_in)
+		{
+			this.Render_Main_Tabs();
+		}
+		else
+		{
+			this.Render_Login_Tabs();
+		}
+		
 	};
 
 	/** @method Load_Script
@@ -284,25 +337,6 @@ function main() {
 		app.Connect('server/api.php', function() {
 			
 			rpc = app.api.rpc;
-			
-			refresh_period = 10;
-			
-			app.last_refresh = Date.now();
-			
-			//setup timer based refresh for 60s
-			var myVar=setInterval(function(){
-					
-					if((Date.now() - app.last_refresh) / 1000 > refresh_period)
-					{
-						app.last_refresh = Date.now();
-					
-						//refresh the data form the server, then refresh UI data
-						app.api.Refresh_Data(function(){});
-					}
-					
-					
-					
-				},1000);
 			
 			
 		});

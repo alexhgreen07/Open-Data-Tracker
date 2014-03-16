@@ -29,8 +29,6 @@ function Tabs(tab_div_id, tab_array) {
 			new_inner_html += '<div id="' + this.div_id + '-tab-' + i + '">' + this.tabs[i][1] + '</div>';
 		}
 
-		new_inner_html += "</ul>";
-
 		var div_tab = document.getElementById(this.div_id);
 
 		div_tab.innerHTML = new_inner_html;
@@ -39,8 +37,10 @@ function Tabs(tab_div_id, tab_array) {
 		$("#" + this.div_id).tabs({
 			activate: function(event, ui) {
 		        self.activate_callback();
-		    }
+		   },
 		});
+		
+		$('#' + this.div_id).tabs("option", "active", 1);
 
 	};
 }

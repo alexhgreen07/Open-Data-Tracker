@@ -79,13 +79,7 @@ function Server_API() {
 			
 			self.Add_Object_Methods(self.rpc, self);
 			
-			self.Refresh_Data(function(){
-				
-				callback();
-				
-			});
-			
-			
+			callback();
 	
 		});
 		

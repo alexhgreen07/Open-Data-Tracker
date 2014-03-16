@@ -1,7 +1,7 @@
 var database = require('./database.js');
 
 module.exports = {
-	Refresh_All_Data: function(params, callback){
+	Refresh_All_Data: function(params, session, callback){
 		
 		var return_object = {};
 		
@@ -32,7 +32,7 @@ module.exports = {
 		callback(return_object);
 		
 	},
-	Refresh_From_Session_Diff: function(params, callback){
+	Refresh_From_Session_Diff: function(params, session, callback){
 		
 		var return_object = {};
 		
@@ -54,7 +54,7 @@ module.exports = {
 		callback(return_object);
 		
 	},
-	Diff_Table: function(params, callback)
+	Diff_Table: function(params, session, callback)
 	{
 		//get the parameters
 		old_table = params.old_table;
@@ -63,12 +63,12 @@ module.exports = {
 		
 		callback({});
 	},
-	Get_Session_Data: function(params, callback){
+	Get_Session_Data: function(params, session, callback){
 		
 		callback({});
 		
 	},
-	Save_Session_Data: function(params, callback)
+	Save_Session_Data: function(params, session, callback)
 	{
 		//get the parameters
 		data = params.data;

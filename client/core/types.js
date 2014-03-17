@@ -22,35 +22,14 @@ function Cast_String_To_Type(type, value)
 
 function Cast_Server_Datetime_to_Date(server_datetime_string)
 {
-	var time_array = server_datetime_string.split(/[- :]/);
 	
-	year = time_array[0];
-	month = time_array[1] - 1;
-	day = time_array[2];
-	hours = time_array[3];
-	minutes = time_array[4];
-	seconds = time_array[5];
-	milliseconds = 0;
-	
-	return_value = new Date(year, month, day, hours, minutes, seconds, milliseconds);
-	
-	return return_value;
+	return new Date(server_datetime_string);
 }
 
 function Cast_Date_to_Server_Datetime(date_object)
 {
-	var time_string = "";
 	
-	time_string = 
-		date_object.getFullYear() + '-' + 
-		padDigits(date_object.getMonth() + 1,2) + '-' + 
-		padDigits(date_object.getDate(),2) + 
-		' ' + 
-		padDigits(date_object.getHours(),2) + ':' + 
-		padDigits(date_object.getMinutes(),2) + ':' + 
-		padDigits(date_object.getSeconds(),2);
-	
-	return time_string;
+	return date_object.toISOString();
 }
 
 function Copy_JSON_Data(data)

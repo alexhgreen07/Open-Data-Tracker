@@ -262,7 +262,7 @@ function Event_Scheduler() {
 		
 		if(!block_found)
 		{
-			alert('error!');
+			alert('No free blocks found. Scheduler error.');
 		}
 		
 		

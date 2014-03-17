@@ -99,8 +99,6 @@ module.exports = {
 					self.response.write(return_string);
 				  	self.response.end();
 				  	
-				  	console.log(JSON.stringify(current_session));
-				  	
 				  	database.Close();
 				});
 	        });

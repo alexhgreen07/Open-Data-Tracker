@@ -48,13 +48,31 @@ function Main_Application() {
 		self.Render();
 		self.Connect('server/api.php', function() {
 			
-			rpc = app.api.rpc;
+			rpc = self.api.rpc;
 			
-			if(self.is_logged_in)
-			{
-				app.api.Refresh_Data(function(){});
-				self.Start_Auto_Refresh();
-			}
+			self.api.Authorize.Is_Authorized_Session({},function(jsonRpcObj){
+				
+				if (jsonRpcObj.result) {
+
+					self.is_logged_in = true;
+
+				} else {
+					
+					self.is_logged_in = false;
+					
+				}
+				
+				if(self.is_logged_in)
+				{
+					
+					self.Render();
+				
+					self.api.Refresh_Data(function(){});
+					self.Start_Auto_Refresh();
+				}
+			});
+			
+			
 		});
 		
 	};
@@ -181,7 +199,7 @@ function Main_Application() {
 					app.last_refresh = Date.now();
 				
 					//refresh the data form the server, then refresh UI data
-					app.api.Refresh_Data(function(){});
+					self.api.Refresh_Data(function(){});
 				}
 				
 			},1000);

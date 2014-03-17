@@ -67,7 +67,7 @@ th {
 	position: fixed; 
 	top: 0px;
 	width:100%;
-	z-index:1;
+	z-index:99;
 	text-align: center;
 }
 .loader_img

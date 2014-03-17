@@ -2,6 +2,7 @@ var database = require('./database.js');
 
 var home_data_interface = require('./data_interface_lib/home_data_interface.js');
 var item_data_interface = require('./data_interface_lib/item_data_interface.js');
+var task_data_interface = require('./data_interface_lib/task_data_interface.js');
 
 module.exports = {
 	Refresh_All_Data: function(params, session, callback){
@@ -43,45 +44,135 @@ module.exports = {
 			}
 		};
 		
-		var queries = {};
+		var queries = [];
 		
-		queries["Categories"] = {
+		queries.push({
 			method: home_data_interface.Get_Categories,
 			callback: function(object){
 				
 				return_object.data["Categories"] = object;
 				counter_callback();
 				
-			}};
+			}});
 			
-		queries["item_entries"] = {
+		queries.push({
 			method: item_data_interface.Get_Item_Log,
 			callback: function(object){
 				
 				return_object.data["item_entries"] = object;
 				counter_callback();
 				
-			}};
+			}});
 			
-		queries["items"] = {
+		queries.push({
 			method: item_data_interface.Get_Items,
 			callback: function(object){
 				
 				return_object.data["items"] = object;
 				counter_callback();
 				
-			}};
+			}});
 			
-		queries["item_targets"] = {
+		queries.push({
 			method: item_data_interface.Get_Item_Targets,
 			callback: function(object){
 				
 				return_object.data["item_targets"] = object;
 				counter_callback();
 				
-			}};
+			}});
 		
-		for(var key in queries){ counter++; }
+		queries.push({
+			method: task_data_interface.Get_Tasks,
+			callback: function(object){
+				
+				return_object.data["tasks"] = object;
+				counter_callback();
+				
+			}});
+		
+		queries.push({
+			method: task_data_interface.Get_Task_Log,
+			callback: function(object){
+				
+				return_object.data["task_entries"] = object;
+				counter_callback();
+				
+			}});
+		
+		queries.push({
+			method: task_data_interface.Get_Task_Targets,
+			callback: function(object){
+				
+				return_object.data["task_targets"] = object;
+				counter_callback();
+				
+			}});
+		
+		queries.push({
+			method: home_data_interface.Get_Categories_Schema,
+			callback: function(object){
+				
+				return_object.schema["Categories"] = object;
+				counter_callback();
+				
+			}});
+			
+		queries.push({
+			method: item_data_interface.Get_Item_Log_Schema,
+			callback: function(object){
+				
+				return_object.schema["item_entries"] = object;
+				counter_callback();
+				
+			}});
+			
+		queries.push({
+			method: item_data_interface.Get_Items_Schema,
+			callback: function(object){
+				
+				return_object.schema["items"] = object;
+				counter_callback();
+				
+			}});
+			
+		queries.push({
+			method: item_data_interface.Get_Item_Targets_Schema,
+			callback: function(object){
+				
+				return_object.schema["item_targets"] = object;
+				counter_callback();
+				
+			}});
+		
+		queries.push({
+			method: task_data_interface.Get_Tasks_Schema,
+			callback: function(object){
+				
+				return_object.schema["tasks"] = object;
+				counter_callback();
+				
+			}});
+		
+		queries.push({
+			method: task_data_interface.Get_Task_Log_Schema,
+			callback: function(object){
+				
+				return_object.schema["task_entries"] = object;
+				counter_callback();
+				
+			}});
+		
+		queries.push({
+			method: task_data_interface.Get_Task_Targets_Schema,
+			callback: function(object){
+				
+				return_object.schema["task_targets"] = object;
+				counter_callback();
+				
+			}});
+		
+		counter = queries.length;
 		
 		for(var key in queries)
 		{

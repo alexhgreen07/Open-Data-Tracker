@@ -10,19 +10,19 @@ function New_Category_Form(){
 	 * */
 	this.Category_Insert_Submit_Click_Event = function(refresh_callback){
 		
-		var params = new Array();
-		params.push(document.getElementById(this.add_new_category_name.id).value);
-		params.push(document.getElementById(this.add_new_category_description.id).value);
-		params.push(document.getElementById(this.add_new_category_parent_select.id).value);
-
 		var self = this;
-
 		
+		var params = {
+			name: document.getElementById(this.add_new_category_name.id).value,
+			description: document.getElementById(this.add_new_category_description.id).value,
+			parent_category_id: document.getElementById(this.add_new_category_parent_select.id).value,
+		};
+
 		//execute the RPC callback for retrieving the item log
-		rpc.Home_Data_Interface.Insert_Category(params, function(jsonRpcObj) {
+		app.api.Home_Data_Interface.Insert_Category(params, function(jsonRpcObj) {
 
 
-			if (jsonRpcObj.result.success == 'true') {
+			if (jsonRpcObj.result.success) {
 
 				alert('New category added.');
 					

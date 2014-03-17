@@ -35,6 +35,13 @@ module.exports = {
 	},
 	Insert_Category: function(params, session, callback){
 		
+		var value_lookup = params;
+		value_lookup.member_id = session.member_id;
+		
+		database.Insert('categories',value_lookup,function(object){
+			callback(object);
+		});
+		
 	},
 	Update_Category: function(params, session, callback){
 		

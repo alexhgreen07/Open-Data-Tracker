@@ -5,6 +5,12 @@ var rpc = require('./rpc_server.js');
 var auth = require('./auth.js');
 
 var data_interface = require('./data_interface.js');
+var home_data_interface = require('./data_interface_lib/home_data_interface.js');
+var item_data_interface = require('./data_interface_lib/item_data_interface.js');
+var task_data_interface = require('./data_interface_lib/task_data_interface.js');
+
+//allocate classes to register
+var data_interface_obj = new data_interface.Data_Interface();
 
 module.exports = {
 	counter: 0,
@@ -86,7 +92,8 @@ module.exports = {
 				
 				if(current_session.is_authorized)
 				{
-					rpc_server.Register_Object(data_interface, 'Data_Interface');
+					rpc_server.Register_Object(data_interface_obj, 'Data_Interface');
+					rpc_server.Register_Object(home_data_interface, 'Home_Data_Interface');
 				}
 
 				rpc_server.Process(post, current_session, function(return_string)

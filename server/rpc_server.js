@@ -120,8 +120,8 @@ module.exports = {
 				}
 				else if(typeof(object[key]) === 'object')
 				{
-					//self.registered_objects[name][key] = {};
-					//self.Register_Object(object[key],name + "." + key);
+					self.registered_objects[name].push(key);
+					self.Register_Object(object[key],name + "." + key);
 				}
 				
 			}

@@ -65,16 +65,89 @@ module.exports = {
 		
 		var self = this;
 		
+		sql = "INSERT INTO `" + table + "`";
+		
+		columns = [];
+		values = [];
+		
+		for(var key in value_lookup)
+		{
+			columns.push('`' + key + '`');
+			values.push("'" + value_lookup[key] + "'");
+		}
+		
+		sql += ' (' + columns.join(', ') + ')';
+		sql += ' VALUES (' + values.join(', ') + ')';
+		
+		console.log(sql);
+		
+		self.connection.query(sql, function(err, rows, fields) {
+
+			if (err)
+			{
+				throw err;
+			}
+			
+			var return_object = {success: true};
+			
+			callback(return_object);
+		});
 	},
 	Update: function(table, value_lookup, where, callback){
 		
 		var self = this;
+		
+		sql = "UPDATE `" + table + '` ';
+		
+		set_columns = [];
+		
+		for(var key in value_lookup)
+		{
+			set_columns.push("`" + key + "` = '" + value_lookup[key] + "'");
+		}
+		
+		sql += "SET " + set_columns.join(',');
+		
+		sql += ' WHERE (' + where + ')';
+		
+		console.log(sql);
+		
+		self.connection.query(sql, function(err, rows, fields) {
+
+			if (err)
+			{
+				throw err;
+			}
+			
+			var return_object = {success: true};
+			
+			callback(return_object);
+			
+			callback(rows);
+		});
 		
 	},
 	Delete: function(table, where, callback){
 		
 		var self = this;
 		
+		sql = "DELETE FROM `" + table + "` WHERE (" + where + ")";
+		
+		console.log(sql);
+		
+		self.connection.query(sql, function(err, rows, fields) {
+
+			if (err)
+			{
+				throw err;
+			}
+			
+			var return_object = {success: true};
+			
+			callback(return_object);
+			
+			callback(rows);
+		});
 	},
 	
 };

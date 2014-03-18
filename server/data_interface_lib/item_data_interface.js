@@ -1,4 +1,3 @@
-var database = require('./../database.js');
 
 module.exports = {
 	Insert_Item_Entry: function(params, session, callback){
@@ -55,7 +54,7 @@ module.exports = {
 			"name" : "items.name",
 			"unit" : "items.unit"};
 		
-		database.Select(
+		session.database.Select(
 			join, 
 			columns, 
 			"member_id = " + session.member_id,
@@ -88,7 +87,7 @@ module.exports = {
 			"date_created" : "date_created",
 			"category_id" : "category_id"};
 		
-		database.Select(
+		session.database.Select(
 			'items', 
 			columns, 
 			"member_id = " + session.member_id,
@@ -139,7 +138,7 @@ module.exports = {
 			"status" : "item_targets.status",
 			"name" : "items.name"};
 		
-		database.Select(
+		session.database.Select(
 			join, 
 			columns, 
 			"member_id = " + session.member_id,

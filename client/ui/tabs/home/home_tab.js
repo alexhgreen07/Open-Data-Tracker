@@ -24,16 +24,16 @@ function Home_Tab() {
 	 * @desc This function retrieves the home data from the server.
 	 * @param {function} data The callback to call after the refresh of data has completed.
 	 * */
-	this.Refresh = function(data,settings) {
+	this.Refresh = function(data,settings,home_report) {
 		
-		this.home_form.Refresh(data);
+		this.home_form.Refresh(data,home_report);
 		this.settings_form.Refresh(settings);
 	};
 	
-	this.Refresh_From_Diff = function(diff, data, settings)
+	this.Refresh_From_Diff = function(diff, data, settings,home_report)
 	{
 		//TODO: Implement
-		this.home_form.Refresh(data);
+		this.home_form.Refresh(data,home_report);
 		
 		if((diff['settings']['settings'].length > 0) ||
 			(diff['settings']['setting_entries'].length > 0))

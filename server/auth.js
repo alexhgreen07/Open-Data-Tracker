@@ -1,4 +1,3 @@
-var database = require('./database.js');
 
 function Is_Cookie_Authorized(params, session, callback)
 {
@@ -67,7 +66,7 @@ module.exports = {
 			'passwd': new_password,
 		};
 		
-		database.Insert('members', values, function(result){
+		session.database.Insert('members', values, function(result){
 			
 			callback(values);
 			
@@ -83,7 +82,7 @@ module.exports = {
 			'login': 'login', 
 			'passwd': 'passwd'};
 		
-		database.Select(
+		session.database.Select(
 			'members', 
 			columns, 
 			"login = '" + login + "' AND passwd = MD5('" + password + "')",

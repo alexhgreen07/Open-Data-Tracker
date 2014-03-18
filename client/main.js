@@ -88,7 +88,7 @@ function Main_Application() {
 		var start = new Date();
 		
 		//refresh all data in all forms
-		self.home_tab_object.Refresh(self.api.data, self.api.settings);
+		self.home_tab_object.Refresh(self.api.data, self.api.settings,self.api.home_report);
 
 		var end = new Date();
 		times.push('home_tab_object: ' + (end - start) / 1000);
@@ -124,7 +124,7 @@ function Main_Application() {
 		var start = new Date();
 		
 		//TODO: implement
-		self.home_tab_object.Refresh_From_Diff(diff, self.api.data, self.api.settings);
+		self.home_tab_object.Refresh(self.api.data, self.api.settings,self.api.home_report);
 		
 		var end = new Date();
 		times.push('home_tab_object: ' + (end - start) / 1000);

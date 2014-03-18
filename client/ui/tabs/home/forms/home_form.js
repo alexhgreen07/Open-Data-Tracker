@@ -7,7 +7,7 @@ function Home_Form(home_div_id) {
 	
 	this.event_click_callback = function(table, row){};
 	
-	this.Refresh = function(data){
+	this.Refresh = function(data, home_report){
 		
 		running_tasks_div = document.getElementById(this.running_tasks_div.id);
 		upcoming_tasks_div = document.getElementById(this.upcoming_tasks_div.id);
@@ -17,104 +17,9 @@ function Home_Form(home_div_id) {
 		upcoming_tasks_div.innerHTML = '';
 		recent_items_div.innerHTML = '';
 		
-		running_tasks = [];
-		upcoming_tasks = [];
-		recent_items = [];
-		
-		//load the running tasks array
-		for (var i = 0; i < data.task_entries.length; i++) {
-			
-			if(data.task_entries[i].status == "Started")
-			{
-				running_tasks.push(data.task_entries[i]);
-			}
-			
-		}
-		
-		//load the recent items array
-		for (var i = 0; i < data.item_entries.length; i++) {
-			
-			recent_items.push(data.item_entries[i]);
-			
-		}
-		
-		
-		//load the task targets array
-		for (var i = 0; i < data.task_targets.length; i++) {
-			
-			if(data.task_targets[i].status == "Incomplete")
-			{
-				upcoming_tasks.push(data.task_targets[i]);
-			}
-			
-		}
-		
-		//execute sort according to 'scheduled_time'
-		upcoming_tasks.sort(function(a,b){
-
-			datetime_a = Cast_Server_Datetime_to_Date(a.scheduled_time);
-			datetime_b = Cast_Server_Datetime_to_Date(b.scheduled_time);
-			
-			if ( datetime_b < datetime_a )
-			  return -1;
-			if ( datetime_b > datetime_a )
-			  return 1;
-			return 0;
-			
-		});
-		
-		//execute sort according to 'time'
-		recent_items.sort(function(a,b){
-			
-			datetime_a = Cast_Server_Datetime_to_Date(a.time);
-			datetime_b = Cast_Server_Datetime_to_Date(b.time);
-			
-			if ( datetime_b > datetime_a )
-			  return -1;
-			if ( datetime_b < datetime_a )
-			  return 1;
-			return 0;
-			
-		});
-		
-		while(upcoming_tasks.length > 5){
-			
-			upcoming_tasks.shift();
-		}
-		
-		//execute sort according to 'scheduled_time'
-		upcoming_tasks.sort(function(a,b){
-
-			datetime_a = Cast_Server_Datetime_to_Date(a.scheduled_time);
-			datetime_b = Cast_Server_Datetime_to_Date(b.scheduled_time);
-			
-			if ( datetime_b > datetime_a )
-			  return -1;
-			if ( datetime_b < datetime_a )
-			  return 1;
-			return 0;
-			
-		});
-		
-		while(recent_items.length > 5){
-			
-			recent_items.shift();
-			
-		}
-		
-		//execute sort according to 'time'
-		recent_items.sort(function(a,b){
-			
-			datetime_a = Cast_Server_Datetime_to_Date(a.time);
-			datetime_b = Cast_Server_Datetime_to_Date(b.time);
-			
-			if ( datetime_b < datetime_a )
-			  return -1;
-			if ( datetime_b > datetime_a )
-			  return 1;
-			return 0;
-			
-		});
+		running_tasks = home_report.running_tasks;
+		upcoming_tasks = home_report.upcoming_tasks;
+		recent_items = home_report.recent_items;
 		
 		//create the running tasks table
 		running_tasks_table = document.createElement('table');

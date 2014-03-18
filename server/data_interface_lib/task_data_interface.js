@@ -1,4 +1,3 @@
-var database = require('./../database.js');
 
 module.exports = {
 	Insert_Task_Entry: function(params, session, callback)
@@ -62,7 +61,7 @@ module.exports = {
 			"category_id" : "tasks.category_id",
 			"status" : "tasks.status"};
 		
-		database.Select(
+		session.database.Select(
 			'tasks', 
 			columns, 
 			"member_id = " + session.member_id,
@@ -105,7 +104,7 @@ module.exports = {
 			"task_target_id" : "task_log.task_target_id",
 			"target_status" : "IFNULL(task_targets.status,'')"};
 		
-		database.Select(
+		session.database.Select(
 			join, 
 			columns, 
 			"member_id = " + session.member_id,
@@ -157,7 +156,7 @@ module.exports = {
 			"name" : "tasks.name",
 			"hours" : "IFNULL(SUM(task_log.hours),0)"};
 		
-		database.Select(
+		session.database.Select(
 			join, 
 			columns, 
 			"member_id = " + session.member_id,

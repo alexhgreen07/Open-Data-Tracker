@@ -1,5 +1,3 @@
-var database = require('./database.js');
-
 var home_data_interface = require('./data_interface_lib/home_data_interface.js');
 var item_data_interface = require('./data_interface_lib/item_data_interface.js');
 var task_data_interface = require('./data_interface_lib/task_data_interface.js');
@@ -42,7 +40,18 @@ module.exports = {
 				counter -= 1;
 				if(counter == 0)
 				{
-					callback(return_object);
+					var params = {};
+					
+					params.data = return_object.data;
+					
+					home_data_interface.Get_Homepage_Report(params, session, function(object){
+						
+						return_object["home_report"] = object;
+						
+						callback(return_object);
+						
+					});
+					
 				}
 			};
 			

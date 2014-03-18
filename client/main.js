@@ -187,7 +187,7 @@ function Main_Application() {
 	
 	this.Start_Auto_Refresh = function(){
 		
-		refresh_period = 10;
+		refresh_period = 60;
 		
 		app.last_refresh = Date.now();
 		

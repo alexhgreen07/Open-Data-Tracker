@@ -23,24 +23,21 @@ function Edit_Category_Form(){
 		
 		if(selected_category_index != 0)
 		{
-			
 		
-		
-			var params = new Array();
-			params.push(selected_category_index);
-			params.push(document.getElementById(this.edit_category_name.id).value);
-			params.push(document.getElementById(this.edit_category_description.id).value);
-			params.push(document.getElementById(this.edit_category_parent_select.id).value);
-
-	
 			var self = this;
-	
 			
+			var params = {
+				category_id: selected_category_index,
+				name: document.getElementById(self.edit_category_name.id).value,
+				description: document.getElementById(self.edit_category_description.id).value,
+				parent_category_id: document.getElementById(self.edit_category_parent_select.id).value,
+			};
+	
 			//execute the RPC callback for retrieving the item log
 			rpc.Home_Data_Interface.Update_Category(params, function(jsonRpcObj) {
 	
 	
-				if (jsonRpcObj.result.success == 'true') {
+				if (jsonRpcObj.result.success) {
 	
 					alert('Category successfully updated.');
 						
@@ -81,17 +78,17 @@ function Edit_Category_Form(){
 			if (r==true)
 			{
 			
-				var params = new Array();
-				params.push(selected_category_index);
+				var params = {
+					category_id: selected_category_index
+				};
 		
 				var self = this;
-		
 				
 				//execute the RPC callback for retrieving the item log
 				rpc.Home_Data_Interface.Delete_Category(params, function(jsonRpcObj) {
 		
 		
-					if (jsonRpcObj.result.success == 'true') {
+					if (jsonRpcObj.result.success) {
 		
 						alert('Category deleted.');
 							

@@ -45,8 +45,28 @@ module.exports = {
 	},
 	Update_Category: function(params, session, callback){
 		
+		var value_lookup = params;
+		
+		category_id = value_lookup.category_id;
+		
+		delete value_lookup.category_id;
+		
+		var where = 'category_id = ' + category_id;
+		where += ' AND member_id = ' + session.member_id;
+		
+		database.Update('categories',value_lookup,where,function(object){
+			callback(object);
+		});
+		
 	},
 	Delete_Category: function(params, session, callback){
+		
+		var where = 'category_id = ' + params.category_id;
+		where += ' AND member_id = ' + session.member_id;
+		
+		database.Delete('categories',where,function(object){
+			callback(object);
+		});
 		
 	},
 	Get_Settings: function(params, session, callback){

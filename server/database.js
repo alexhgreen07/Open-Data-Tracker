@@ -123,7 +123,6 @@ module.exports = {
 			
 			callback(return_object);
 			
-			callback(rows);
 		});
 		
 	},
@@ -146,7 +145,6 @@ module.exports = {
 			
 			callback(return_object);
 			
-			callback(rows);
 		});
 	},
 	

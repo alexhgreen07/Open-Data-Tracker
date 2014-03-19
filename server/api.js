@@ -38,8 +38,8 @@ module.exports = {
 		};
 		self.Parse_Cookies = function(request) {
 			
-			var list = {},
-			    rc = request.headers.cookie;
+			var list = {};
+			var rc = request.headers.cookie;
 			
 			rc && rc.split(';').forEach(function( cookie ) {
 			    var parts = cookie.split('=');
@@ -47,6 +47,23 @@ module.exports = {
 			    });
 			
 		    return list;
+		};
+		self.Encode_Cookies = function(cookies){
+			
+			var encoded_cookies = [];
+			var expiry = "Thu, 18 Dec 2020 12:00:00 GMT";
+			
+			for(var key in cookies)
+			{
+				var cookie_string = '';
+				cookie_string += key + '=' + cookies[key] + ';';
+				cookie_string += 'expires=' + expiry + ';';
+				cookie_string += 'path=/';
+				
+				encoded_cookies.push(cookie_string);
+			}
+			
+			return encoded_cookies;
 		};
 		self.Get_Current_Session = function(cookies){
 			
@@ -60,9 +77,15 @@ module.exports = {
 			}
 			else
 			{
-				//64-bit random number
-				session_id = Math.round(Math.random() * 0xFFFFFFFF).toString(16);
-				session_id += Math.round(Math.random() * 0xFFFFFFFF).toString(16);
+				
+				var bits32 = 0xFFFFFFFF;
+				
+				//256-bit random number
+				for(var i = 0; i < 8; i++)
+				{
+					session_id += Math.round(Math.random() * bits32).toString(16);
+				}
+				
 			}
 			
 			if(!(session_id in sessions))
@@ -81,15 +104,15 @@ module.exports = {
 			
 			if (request.method == 'POST') {
 				
-				var cookies = self.Parse_Cookies(request);
-				
-				var current_session = self.Get_Current_Session(cookies);
-				
 		        self.Parse_Post(request, function(post){
 		        	
 					self.response = response;
 					
-					request_connection = new database.Database();
+					self.cookies = self.Parse_Cookies(request);
+					
+					var current_session = self.Get_Current_Session(self.cookies);
+					
+					var request_connection = new database.Database();
 					request_connection.Connect();
 					
 					current_session.database = request_connection;
@@ -102,19 +125,34 @@ module.exports = {
 					{
 						rpc_server.Register_Object(data_interface_obj, 'Data_Interface');
 						rpc_server.Register_Object(home_data_interface, 'Home_Data_Interface');
+						
 					}
 	
 					rpc_server.Process(post, current_session, function(return_string)
 					{
-						self.response.writeHead(200, 
-							{
-								"Content-Type": "text/plain",
-								"Set-Cookie": "node_session_id=" + current_session.session_id,
-							});
-						self.response.write(return_string);
-					  	self.response.end();
-					  	
-					  	request_connection.Close();
+						
+						self.cookies['node_session_id'] = current_session.session_id;
+						
+						//check session authorization
+						auth.Is_Authorized_Session({},current_session,function(object){
+							
+							//send authorization status to client
+							self.cookies['is_authorized'] = object;
+							
+							var encoded_cookies = self.Encode_Cookies(self.cookies);
+						
+							self.response.writeHead(200, 
+								{
+									"Content-Type": "text/plain",
+									"Set-Cookie": encoded_cookies,
+								});
+							self.response.write(return_string);
+						  	self.response.end();
+						  	
+						  	request_connection.Close();
+							
+						});
+						
 					});
 		        });
 		        

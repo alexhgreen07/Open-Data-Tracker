@@ -46,8 +46,6 @@ module.exports = {
 			{
 				rpc_method = self.methods[method_name];
 			
-				console.log(method_name + ":" + typeof(rpc_method));
-				
 				self.counter += 1;
 				
 				if(typeof(rpc_method) === "function")
@@ -96,8 +94,6 @@ module.exports = {
 		self.Register_Method = function(method, name){
 			
 			var self = this;
-			
-			console.log('Registering: ' + name);
 			
 			self.methods[name] = method;
 			

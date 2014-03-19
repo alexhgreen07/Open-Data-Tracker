@@ -43,35 +43,32 @@ function Main_Application() {
 	
 	this.is_logged_in = false;
 	
+	this.Parse_Cookies = function(rc) {
+		
+		var list = {};
+		
+		rc && rc.split(';').forEach(function( cookie ) {
+		    var parts = cookie.split('=');
+		    list[parts.shift().trim()] = unescape(parts.join('='));
+		    });
+		
+	    return list;
+	};
+	
 	this.Initialize = function(){
 		
-		self.Render();
 		self.Connect('server/api.php', function() {
-			
+		
 			rpc = self.api.rpc;
+				
+			self.Render();
 			
-			self.api.Authorize.Is_Authorized_Session({},function(jsonRpcObj){
-				
-				if (jsonRpcObj.result) {
-
-					self.is_logged_in = true;
-
-				} else {
-					
-					self.is_logged_in = false;
-					
-				}
-				
-				if(self.is_logged_in)
-				{
-					
-					self.Render();
-				
-					self.api.Refresh_Data(function(){});
-					self.Start_Auto_Refresh();
-				}
-			});
+			if(self.is_logged_in)
+			{
 			
+				self.api.Refresh_Data(function(){});
+				self.Start_Auto_Refresh();
+			}
 			
 		});
 		
@@ -322,6 +319,18 @@ function Main_Application() {
 	 * */
 	this.Render = function()
 	{
+		
+		var cookies = self.Parse_Cookies(document.cookie);
+		
+		if(cookies['is_authorized'] == 'true')
+		{
+			self.is_logged_in = true;
+		}
+		else
+		{
+			self.is_logged_in = false;
+		}
+		
 		//main tabs
 		if(self.is_logged_in)
 		{

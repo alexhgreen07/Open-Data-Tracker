@@ -31,6 +31,7 @@ function Home_Form(home_div_id) {
 		for(var i = 0; i < running_tasks.length; i++)
 		{
 			var datetime = Cast_Server_Datetime_to_Date(running_tasks[i].start_time);
+			datetime = Convert_UTC_Date_To_Local_Timezone(datetime);
    			var now = new Date();
    			scheduled_interval = Get_String_From_Time_Interval(now, datetime);
    			if(now > datetime)
@@ -81,6 +82,7 @@ function Home_Form(home_div_id) {
 		for(var i = 0; i < upcoming_tasks.length; i++)
 		{
 			var datetime = Cast_Server_Datetime_to_Date(upcoming_tasks[i].scheduled_time);
+   			datetime = Convert_UTC_Date_To_Local_Timezone(datetime);
    			var now = new Date();
    			scheduled_interval = Get_String_From_Time_Interval(now, datetime);
    			if(now > datetime)
@@ -133,6 +135,7 @@ function Home_Form(home_div_id) {
 		for(var i = 0; i < recent_items.length; i++)
 		{
 			var datetime = Cast_Server_Datetime_to_Date(recent_items[i].time);
+   			datetime = Convert_UTC_Date_To_Local_Timezone(datetime);
    			var now = new Date();
    			scheduled_interval = Get_String_From_Time_Interval(now, datetime);
 			

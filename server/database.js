@@ -152,8 +152,7 @@ module.exports = {
 		self.Date_To_MYSQL_String = function(date)
 		{
 			
-			var myDate = new Date();
-			var myDate_string = myDate.toISOString();
+			var myDate_string = date.toISOString();
 			var myDate_string = myDate_string.replace("T"," ");
 			var myDate_string = myDate_string.substring(0, myDate_string.length - 5);
 			

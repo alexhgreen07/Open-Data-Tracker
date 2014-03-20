@@ -3,6 +3,7 @@ module.exports = {
 	Insert_Item_Entry: function(params, session, callback){
 		
 		var value_lookup = params;
+		value_lookup.time = session.database.Date_To_MYSQL_String(new Date(value_lookup.time));
 		
 		session.database.Insert('item_log',value_lookup,function(object){
 			callback(object);
@@ -12,6 +13,7 @@ module.exports = {
 	Update_Item_Entry: function(params, session, callback){
 		
 		var value_lookup = params;
+		value_lookup.time = session.database.Date_To_MYSQL_String(new Date(value_lookup.time));
 		
 		item_log_id = value_lookup.item_log_id;
 		

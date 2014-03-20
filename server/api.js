@@ -126,7 +126,7 @@ module.exports = {
 						rpc_server.Register_Object(data_interface_obj, 'Data_Interface');
 						rpc_server.Register_Object(home_data_interface, 'Home_Data_Interface');
 						rpc_server.Register_Object(item_data_interface, 'Item_Data_Interface');
-						
+						rpc_server.Register_Object(task_data_interface, 'Task_Data_Interface');
 					}
 	
 					rpc_server.Process(post, current_session, function(return_string)

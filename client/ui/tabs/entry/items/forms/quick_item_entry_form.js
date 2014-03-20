@@ -53,19 +53,19 @@ function Quick_Item_Entry_Form(){
 		//check that the string is numeric
 		if (!isNaN(Number(value_string)) && value_string != '') {
 			
-			var current_utc_date = Convert_Local_Date_To_UTC_Timezone(new Date());
+			var current_utc_date = new Date();
 
-			var params = new Array();
-			params[0] = Cast_Date_to_Server_Datetime(current_utc_date);
-			params[1] = value_string;
-			params[2] = app.api.data.items[item_select_index - 1].item_id;
-			params[3] = note_string;
-			params[4] = target_id;
-
+			var params = {};
+			params.time = Cast_Date_to_Server_Datetime(current_utc_date);
+			params.value = value_string;
+			params.item_id = app.api.data.items[item_select_index - 1].item_id;
+			params.note = note_string;
+			params.item_target_id = target_id;
+			
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Insert_Item_Entry(params, function(jsonRpcObj) {
 
-				if (jsonRpcObj.result.success == 'true') {
+				if (jsonRpcObj.result.success) {
 					
 					alert('New item entry added!');
 

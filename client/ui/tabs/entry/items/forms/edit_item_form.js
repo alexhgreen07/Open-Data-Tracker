@@ -59,16 +59,16 @@ function Edit_Item_Form(){
 		{
 			var selected_item = self.items_list[selected_index - 1];
 			
-			var params = new Array();
-			params[0] = selected_item.item_id;
-			params[1] = document.getElementById(self.edit_item_name.id).value;
-			params[2] = document.getElementById(self.edit_item_unit.id).value;
-			params[3] = document.getElementById(self.item_edit_description.id).value;
-			params[4] = document.getElementById(self.item_edit_category_select.id).value;
+			var params = {};
+			params.name = document.getElementById(self.edit_item_name.id).value;
+			params.unit = document.getElementById(self.edit_item_unit.id).value;
+			params.description = document.getElementById(self.item_edit_description.id).value;
+			params.category_id = document.getElementById(self.item_edit_category_select.id).value;
+			params.item_id = selected_item.item_id;
 			
 			app.api.Item_Data_Interface.Edit_Item(params, function(jsonRpcObj) {
 			
-				if(jsonRpcObj.result.success == 'true'){
+				if(jsonRpcObj.result.success){
 					
 					alert('Item successfully edited.');
 					
@@ -142,12 +142,12 @@ function Edit_Item_Form(){
 			{
 				var value = self.items_list[selected_index - 1].item_id;
 			
-				var params = new Array();
-				params[0] = value;
+				var params = {};
+				params.item_id = value;
 				
 				app.api.Item_Data_Interface.Delete_Item(params, function(jsonRpcObj) {
 				
-					if(jsonRpcObj.result.success == 'true'){
+					if(jsonRpcObj.result.success){
 						
 						alert('Item deleted: ' + value);
 						

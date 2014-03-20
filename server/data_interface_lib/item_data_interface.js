@@ -2,29 +2,105 @@
 module.exports = {
 	Insert_Item_Entry: function(params, session, callback){
 		
+		var value_lookup = params;
+		
+		session.database.Insert('item_log',value_lookup,function(object){
+			callback(object);
+		});
+		
 	},
 	Update_Item_Entry: function(params, session, callback){
+		
+		var value_lookup = params;
+		
+		item_log_id = value_lookup.item_log_id;
+		
+		delete value_lookup.item_log_id;
+		
+		var where = 'item_log_id = ' + item_log_id;
+		
+		session.database.Update('item_log',value_lookup,where,function(object){
+			callback(object);
+		});
 		
 	},
 	Delete_Item_Entry: function(params, session, callback){
 		
+		var where = 'item_log_id = ' + params.item_log_id;
+		
+		session.database.Delete('item_log',where,function(object){
+			callback(object);
+		});
+		
 	},
 	Insert_New_Item: function(params, session, callback){
+		
+		var value_lookup = params;
+		value_lookup.member_id = session.member_id;
+		value_lookup.date_created = session.database.Date_To_MYSQL_String(new Date());
+		
+		session.database.Insert('items',value_lookup,function(object){
+			callback(object);
+		});
 		
 	},
 	Edit_Item: function(params, session, callback){
 		
+		var value_lookup = params;
+		
+		item_id = value_lookup.item_id;
+		
+		delete value_lookup.item_id;
+		
+		var where = 'item_id = ' + item_id;
+		where += ' AND member_id = ' + session.member_id;
+		
+		session.database.Update('items',value_lookup,where,function(object){
+			callback(object);
+		});
+		
 	},
 	Delete_Item: function(params, session, callback){
+		
+		var where = 'item_id = ' + params.item_id;
+		where += ' AND member_id = ' + session.member_id;
+		
+		session.database.Delete('items',where,function(object){
+			callback(object);
+		});
 		
 	},
 	Insert_Item_Target: function(params, session, callback){
 		
+		var value_lookup = params;
+		
+		session.database.Insert('item_targets',value_lookup,function(object){
+			callback(object);
+		});
 	},
 	Update_Item_Target: function(params, session, callback){
 		
+		var value_lookup = params;
+		
+		item_target_id = value_lookup.item_target_id;
+		
+		delete value_lookup.item_target_id;
+		
+		var where = 'item_target_id = ' + item_target_id;
+		
+		session.database.Update('item_targets',value_lookup,where,function(object){
+			callback(object);
+		});
+		
 	},
 	Delete_Item_Target: function(params, session, callback){
+		
+		var where = 'item_target_id = ' + params.item_target_id;
+		where += ' AND member_id = ' + session.member_id;
+		
+		session.database.Delete('item_targets',where,function(object){
+			callback(object);
+		});
 		
 	},
 	Get_Item_Log_Schema: function(params, session, callback){

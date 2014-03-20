@@ -41,16 +41,16 @@ function New_Item_Form(){
 		if (name_string != '') {
 
 
-			var params = new Array();
-			params[0] = name_string;
-			params[1] = unit_string;
-			params[2] = note_string;
-			params[3] = category_id;
+			var params = {};
+			params.name = name_string;
+			params.unit = unit_string;
+			params.description = note_string;
+			params.category_id = category_id;
 
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Insert_New_Item(params, function(jsonRpcObj) {
 
-				if (jsonRpcObj.result.success == 'true') {
+				if (jsonRpcObj.result.success) {
 					alert('New item added!');
 				} else {
 					alert('Item failed to add.');

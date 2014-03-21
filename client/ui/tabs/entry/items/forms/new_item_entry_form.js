@@ -53,7 +53,7 @@ function New_Item_Entry_Form(){
 		if (!isNaN(Number(value_string)) && value_string != '') {
 
 			var params = {};
-			params.time = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(time_string);
+			params.time = time_string;
 			params.value = value_string;
 			params.item_id = app.api.data.items[item_select_index - 1].item_id;
 			params.note = note_string;

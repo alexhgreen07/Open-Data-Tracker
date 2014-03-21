@@ -79,21 +79,20 @@ function Edit_Item_Entry_Form(){
 			
 			var selected_item_entry = self.item_log_data[selected_index - 1];
 			
-			var time_string = 
-				Cast_Local_Server_Datetime_To_UTC_Server_Datetime(document.getElementById(self.item_edit_time.id).value);
+			var time_string = document.getElementById(self.item_edit_time.id).value;
 			
-			var params = new Array();
-			params.push(item_entry_id);
-			params.push(time_string);
-			params.push(document.getElementById(self.item_edit_value.id).value);
-			params.push(document.getElementById(self.edit_item_name_select.id).value);
-			params.push(document.getElementById(self.item_edit_note.id).value);
-			params.push(document.getElementById(self.edit_item_target_select.id).value);
+			var params = {};
+			params.item_log_id = item_entry_id;
+			params.time = time_string;
+			params.value = document.getElementById(self.item_edit_value.id).value;
+			params.item_id = document.getElementById(self.edit_item_name_select.id).value;
+			params.note = document.getElementById(self.item_edit_note.id).value;
+			params.item_target_id = document.getElementById(self.edit_item_target_select.id).value;
 			
 			//execute the RPC callback for retrieving the item log
 			app.api.Item_Data_Interface.Update_Item_Entry(params, function(jsonRpcObj) {
 				
-				if (jsonRpcObj.result.success == 'true') {
+				if (jsonRpcObj.result.success) {
 					
 					
 					alert('Item entry updated!');
@@ -134,12 +133,12 @@ function Edit_Item_Entry_Form(){
 			
 			if (r==true)
 			{
-				var params = new Array();
-				params[0] = value;
+				var params = {};
+				params.item_log_id = value;
 				
 				app.api.Item_Data_Interface.Delete_Item_Entry(params, function(jsonRpcObj) {
 				
-					if(jsonRpcObj.result.success == 'true'){
+					if(jsonRpcObj.result.success){
 						
 						alert('Index deleted: ' + value);
 						
@@ -184,7 +183,8 @@ function Edit_Item_Entry_Form(){
 		{
 			var selected_item_entry = self.item_log_data[selected_index - 1];
 			
-			document.getElementById(self.item_edit_time.id).value = selected_item_entry.time;
+			$('#' + self.item_edit_time.id).datetimepicker('setDate',new Date(selected_item_entry.time));
+			//document.getElementById(self.item_edit_time.id).value = new Date(selected_item_entry.time);
 			document.getElementById(self.item_edit_value.id).value = selected_item_entry.value;
 			document.getElementById(self.edit_item_name_select.id).value = selected_item_entry.item_id;
 			document.getElementById(self.item_edit_note.id).value = selected_item_entry.note;

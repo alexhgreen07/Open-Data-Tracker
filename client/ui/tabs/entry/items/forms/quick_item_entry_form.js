@@ -56,7 +56,7 @@ function Quick_Item_Entry_Form(){
 			var current_utc_date = new Date();
 
 			var params = {};
-			params.time = Cast_Date_to_Server_Datetime(current_utc_date);
+			params.time = current_utc_date;
 			params.value = value_string;
 			params.item_id = app.api.data.items[item_select_index - 1].item_id;
 			params.note = note_string;

@@ -1,4 +1,8 @@
-define(['./events/scheduler'],function(scheduler){
+define([
+        'jquery.ui',
+        './events/scheduler',
+        ],
+        function($,scheduler){
 	return {
 		/** This is the home tab class which holds all UI objects for general data.
 		 * @constructor Home_Tab

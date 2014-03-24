@@ -7,6 +7,8 @@ require.config({
     	'jsonrpc' : 'externals/jsonrpc',
     	'jsonrpc_lib' : 'externals/json-rpc2php/jsonRPC2php.client',
     	'fastclick' : 'externals/fastclick/lib/fastclick',
+    	'resnyanskiy.js.tree' : 'externals/js.tree/resnyanskiy.js.tree',
+    	'js.tree' : 'externals/js.tree',
         'jquery' : jquery_path,
         'jquery.ui' : 'externals/jquery.ui',
         'jquery.ui.core' : jquery_ui_path + '/jquery.ui.core',
@@ -32,6 +34,7 @@ require.config({
     },
 	shim : {
 		'jsonrpc' : ['jsonrpc_lib'],
+		'js.tree' : ['resnyanskiy.js.tree'],
 		'jquery.ui.core' : ['jquery'],
 		'jquery.ui.widget' : ['jquery.ui.core'],
 		'jquery.ui.mouse' : ['jquery.ui.widget'],

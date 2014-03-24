@@ -1,4 +1,9 @@
-define([],function(){
+define([
+        '../../tree_view',
+        './categories/category_form',
+        './items/item_tab',
+        './tasks/task_tab',
+        ],function(tree_view, category_form, item_tab, task_tab){
 	return {
 		/** This is the task tab object which holds all UI objects for task data interaction.
 		 * @constructor Task_Tab
@@ -719,16 +724,16 @@ define([],function(){
 				
 				document.getElementById(accordian_div).appendChild(self.form);
 				
-				self.tree_view = new Tree_View(self.tree_view_disp_div.id);
+				self.tree_view = new tree_view.Tree_View(self.tree_view_disp_div.id);
 				self.tree_view.Render();
 				
-				self.category_tab = new Category_Form();
+				self.category_tab = new category_form.Category_Form();
 				self.category_tab.Render(self.tree_category_div.id);
 				
-				self.items_tab = new Item_Tab();
+				self.items_tab = new item_tab.Item_Tab();
 				self.items_tab.Render(self.tree_items_div.id);
 				
-				self.tasks_tab = new Task_Tab();
+				self.tasks_tab = new task_tab.Task_Tab();
 				self.tasks_tab.Render(self.tree_tasks_div.id);
 				
 				self.tree_view.node_click_callback = self.Node_Click_Callback;

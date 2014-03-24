@@ -1,4 +1,9 @@
-define(['./forms/home_form','./forms/settings_form'],function(home_form, settings_form){
+define([
+        '../../accordian',
+        './forms/home_form',
+        './forms/settings_form',
+        ],
+        function(accordian, home_form, settings_form){
 	return {
 		/** This is the home tab class which holds all UI objects for general data.
 		 * @constructor Home_Tab

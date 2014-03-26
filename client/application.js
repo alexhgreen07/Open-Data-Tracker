@@ -1,5 +1,5 @@
 define([
-    './core/api',
+    './rpc/api',
     './ui/tabs',
 	'./ui/tabs/home/home_tab',
 	'./ui/tabs/entry/entry_tab',

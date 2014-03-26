@@ -1,4 +1,8 @@
-define(['jsonrpc','./json_rpc_queue'],function(jsonrpc, json_rpc_queue){
+define([
+        'jsonrpc',
+        './json_rpc_queue',
+        'core/datetimes',
+        ],function(jsonrpc, json_rpc_queue, datetimes){
 	
 	return {
 		/** Represents the main api to the server.
@@ -48,7 +52,6 @@ define(['jsonrpc','./json_rpc_queue'],function(jsonrpc, json_rpc_queue){
 			
 			this.Add_Object_Methods = function(source_object, destination_object)
 			{
-				var self = this;
 				//iterate through all the members of the object
 			    for(var member in source_object) {
 			    	
@@ -73,7 +76,6 @@ define(['jsonrpc','./json_rpc_queue'],function(jsonrpc, json_rpc_queue){
 			
 			this.Connect = function(url, callback){
 				
-				var self = this;
 				self.has_refreshed = false;
 				
 				self.rpc = new jsonrpc.jsonrpcphp(url, function() {
@@ -87,8 +89,6 @@ define(['jsonrpc','./json_rpc_queue'],function(jsonrpc, json_rpc_queue){
 			};
 			
 			this.Refresh_Data = function(callback) {
-				
-				var self = this;
 				
 				if(self.has_refreshed)
 				{
@@ -143,8 +143,6 @@ define(['jsonrpc','./json_rpc_queue'],function(jsonrpc, json_rpc_queue){
 			
 			this.Refresh_Data_From_Diff = function(callback)
 			{
-				
-				var self = this;
 				
 				self.Data_Interface.Refresh_From_Session_Diff([],
 					function(jsonRpcObj){
@@ -252,8 +250,6 @@ define(['jsonrpc','./json_rpc_queue'],function(jsonrpc, json_rpc_queue){
 			
 			this.Convert_Data_To_Local_Timezone = function(){
 				
-				var self = this;
-				
 				for(var key in self.data)
 				{
 					self.Convert_Table_To_Local_Timezone(self.data[key],self.schema[key]);
@@ -272,11 +268,11 @@ define(['jsonrpc','./json_rpc_queue'],function(jsonrpc, json_rpc_queue){
 						if(schema[column] == "date")
 						{
 							//convert UTC datetime to local timezone
-							var utc_date = Cast_Server_Datetime_to_Date(table[i][column]);
-							var local_date = Convert_UTC_Date_To_Local_Timezone(utc_date);
+							var utc_date = datetimes.Cast_Server_Datetime_to_Date(table[i][column]);
+							var local_date = datetimes.Convert_UTC_Date_To_Local_Timezone(utc_date);
 							
 							//reset the date string in the column
-							table[i][column] = Cast_Date_to_Server_Datetime(local_date);
+							table[i][column] = datetimes.Cast_Date_to_Server_Datetime(local_date);
 						}
 					}
 					

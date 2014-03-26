@@ -1,4 +1,6 @@
-define([],function(){
+define([
+        'core/datetimes',
+        ],function(datetimes){
 	return {
 		/** This is the home form class which holds all UI objects for the homepage form.
 		 * @constructor Home_Form
@@ -32,10 +34,10 @@ define([],function(){
 				
 				for(var i = 0; i < running_tasks.length; i++)
 				{
-					var datetime = Cast_Server_Datetime_to_Date(running_tasks[i].start_time);
-					datetime = Convert_UTC_Date_To_Local_Timezone(datetime);
+					var datetime = datetimes.Cast_Server_Datetime_to_Date(running_tasks[i].start_time);
+					datetime = datetimes.Convert_UTC_Date_To_Local_Timezone(datetime);
 		   			var now = new Date();
-		   			scheduled_interval = Get_String_From_Time_Interval(now, datetime);
+		   			scheduled_interval = datetimes.Get_String_From_Time_Interval(now, datetime);
 		   			if(now > datetime)
 		   			{
 		   				scheduled_interval = scheduled_interval + " ago";
@@ -83,10 +85,10 @@ define([],function(){
 				
 				for(var i = 0; i < upcoming_tasks.length; i++)
 				{
-					var datetime = Cast_Server_Datetime_to_Date(upcoming_tasks[i].scheduled_time);
-		   			datetime = Convert_UTC_Date_To_Local_Timezone(datetime);
+					var datetime = datetimes.Cast_Server_Datetime_to_Date(upcoming_tasks[i].scheduled_time);
+		   			datetime = datetimes.Convert_UTC_Date_To_Local_Timezone(datetime);
 		   			var now = new Date();
-		   			scheduled_interval = Get_String_From_Time_Interval(now, datetime);
+		   			scheduled_interval = datetimes.Get_String_From_Time_Interval(now, datetime);
 		   			if(now > datetime)
 		   			{
 		   				scheduled_interval = scheduled_interval + " ago";
@@ -95,7 +97,7 @@ define([],function(){
 		   			{
 		   				scheduled_interval = "in " + scheduled_interval;
 		   			}
-		   			estimated_time_string = Get_String_From_Time_Interval(0,Math.round(upcoming_tasks[i].estimated_time * 60 * 60 * 1000));
+		   			estimated_time_string = datetimes.Get_String_From_Time_Interval(0,Math.round(upcoming_tasks[i].estimated_time * 60 * 60 * 1000));
 					
 					upcoming_tasks_row = document.createElement('tr');
 					upcoming_tasks_row.id = 'upcoming_tasks_' + upcoming_tasks[i].task_schedule_id;
@@ -136,10 +138,10 @@ define([],function(){
 				
 				for(var i = 0; i < recent_items.length; i++)
 				{
-					var datetime = Cast_Server_Datetime_to_Date(recent_items[i].time);
-		   			datetime = Convert_UTC_Date_To_Local_Timezone(datetime);
+					var datetime = datetimes.Cast_Server_Datetime_to_Date(recent_items[i].time);
+		   			datetime = datetimes.Convert_UTC_Date_To_Local_Timezone(datetime);
 		   			var now = new Date();
-		   			scheduled_interval = Get_String_From_Time_Interval(now, datetime);
+		   			scheduled_interval = datetimes.Get_String_From_Time_Interval(now, datetime);
 					
 					if(now > datetime)
 		   			{

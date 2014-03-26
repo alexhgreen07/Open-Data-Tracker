@@ -1,18 +1,12 @@
 var jquery_ui_modules = [
 	'jquery',
-	'jquery.ui.button',
-	'jquery.ui.tabs',
-	'jquery.ui.accordion',
-	'jquery.ui.slider',
-	'jquery.ui.datepicker',
-	'jquery.ui.dialog',
-	'jquery.ui.menu',
-	'jquery.ui.tooltip',
+	'jquery.ui.lib',
 ];
 
 var jquery_ui_plugins = [
 	'jquery.ui.touch-punch',
 	'jquery.ui.timepicker-addon',
+	'jquery.ui.fullcalendar',
 ];
 
 var modules = jquery_ui_modules.concat(jquery_ui_plugins);

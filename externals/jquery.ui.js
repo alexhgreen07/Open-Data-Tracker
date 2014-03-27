@@ -7,6 +7,7 @@ var jquery_ui_plugins = [
 	'jquery.ui.touch-punch',
 	'jquery.ui.timepicker-addon',
 	'jquery.ui.fullcalendar',
+	'jquery.ui.pivot',
 ];
 
 var modules = jquery_ui_modules.concat(jquery_ui_plugins);

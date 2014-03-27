@@ -1,69 +1,73 @@
-function Year_Row_Converter(name){
+define([
+        'jquery.ui',
+        'core/datetimes',
+        ],function($, datetimes){
+	
+	function Year_Row_Converter(name){
+			
+			var self = this;
+			this.date_column = name;
+			
+			this.Convert = function(row)
+			{
+				server_date = datetimes.Cast_Server_Datetime_to_Date(row[self.date_column]);
+			
+				return server_date.getFullYear(); 
+			};
+			
+	}
+	
+	function Month_Row_Converter(name){
 		
 		var self = this;
 		this.date_column = name;
 		
 		this.Convert = function(row)
 		{
-			server_date = Cast_Server_Datetime_to_Date(row[self.date_column]);
-		
-			return server_date.getFullYear(); 
+			server_date = datetimes.Cast_Server_Datetime_to_Date(row[self.date_column]);
+			
+			return_string = pivot.utils().padLeft(server_date.getMonth() + 1,2,'0');
+			
+			return return_string;
 		};
 		
-}
-
-function Month_Row_Converter(name){
+	}
 	
-	var self = this;
-	this.date_column = name;
-	
-	this.Convert = function(row)
-	{
-		server_date = Cast_Server_Datetime_to_Date(row[self.date_column]);
+	function Week_Row_Converter(name){
 		
-		return_string = pivot.utils().padLeft(server_date.getMonth() + 1,2,'0');
+		var self = this;
+		this.date_column = name;
 		
-		return return_string;
-	};
-	
-}
-
-function Week_Row_Converter(name){
-	
-	var self = this;
-	this.date_column = name;
-	
-	this.Convert = function(row)
-	{
-		server_date = Cast_Server_Datetime_to_Date(row[self.date_column]);
+		this.Convert = function(row)
+		{
+			server_date = datetimes.Cast_Server_Datetime_to_Date(row[self.date_column]);
+			
+			var onejan = new Date(server_date.getFullYear(),0,1);
+			week_number = Math.ceil((((server_date - onejan) / 86400000) + onejan.getDay()+1)/7);
+			
+			return_string = pivot.utils().padLeft(week_number,2,'0');
+			
+			return return_string; 
+		};
 		
-		var onejan = new Date(server_date.getFullYear(),0,1);
-		week_number = Math.ceil((((server_date - onejan) / 86400000) + onejan.getDay()+1)/7);
-		
-		return_string = pivot.utils().padLeft(week_number,2,'0');
-		
-		return return_string; 
-	};
+	}
 	
-}
-
-function Day_Row_Converter(name){
-	
-	var self = this;
-	this.date_column = name;
-	
-	this.Convert = function(row)
-	{
-		server_date = Cast_Server_Datetime_to_Date(row[self.date_column]);
+	function Day_Row_Converter(name){
 		
-		return_string = pivot.utils().padLeft(server_date.getDate(),2,'0');
+		var self = this;
+		this.date_column = name;
 		
-		return return_string; 
-	};
+		this.Convert = function(row)
+		{
+			server_date = datetimes.Cast_Server_Datetime_to_Date(row[self.date_column]);
+			
+			return_string = pivot.utils().padLeft(server_date.getDate(),2,'0');
+			
+			return return_string; 
+		};
+		
+	}
 	
-}
-
-define([],function(){
 	return {
 		/** This is the report tab object which holds all UI objects for detailed data interaction.
 		 * @constructor Report_Tab

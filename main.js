@@ -13,6 +13,8 @@ require.config({
         'jquery.ui.touch-punch' : 'externals/jquery-ui-touch-punch/jquery.ui.touch-punch.min',
         'jquery.ui.timepicker-addon': 'externals/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon',
         'jquery.ui.fullcalendar': 'externals/fullcalendar/build/out/fullcalendar.min',
+        'jquery.pivot': 'externals/pivot/pivot',
+        'jquery.ui.pivot': 'externals/pivot/jquery_pivot',
     },
 	shim : {
 		//require shim
@@ -23,6 +25,8 @@ require.config({
 		'jquery.ui.touch-punch' : ['jquery.ui.lib'],
 		'jquery.ui.timepicker-addon' : ['jquery.ui.lib'],
 		'jquery.ui.fullcalendar': ['jquery.ui.lib'],
+		'jquery.pivot': ['jquery.ui.lib'],
+		'jquery.ui.pivot': ['jquery.pivot'],
 	},
 	
 });

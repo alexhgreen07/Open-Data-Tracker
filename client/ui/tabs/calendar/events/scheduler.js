@@ -1,4 +1,7 @@
-define([],function(){
+define([
+        'core/types',
+        'core/datetimes',
+        ],function(types, datetimes){
 	return {
 		Event_Scheduler: function() {
 
@@ -14,10 +17,10 @@ define([],function(){
 				var name = row.name;
 		    	var start_string = row.scheduled_time;
 		    	
-		    	var start_timestamp = Cast_Server_Datetime_to_Date(start_string);
+		    	var start_timestamp = datetimes.Cast_Server_Datetime_to_Date(start_string);
 		    	var end_timestamp = self.Generate_End_Date(start_timestamp, row.estimated_time);
 		    	
-		    	var end_string = Cast_Date_to_Server_Datetime(end_timestamp);
+		    	var end_string = datetimes.Cast_Date_to_Server_Datetime(end_timestamp);
 		    	
 		    	var color = '#00FF00';
 		    	
@@ -59,7 +62,7 @@ define([],function(){
 				var name = row.name;
 		    	var start_string = row.start_time;
 		    	
-		    	var start_timestamp = Cast_Server_Datetime_to_Date(start_string);
+		    	var start_timestamp = datetimes.Cast_Server_Datetime_to_Date(start_string);
 		    	
 		    	var color = '#00FFFF';
 		    	if(row.status == 'Started')
@@ -83,7 +86,7 @@ define([],function(){
 		    		color = '#00FF00';
 		    	}
 		    	
-		    	var end_string = Cast_Date_to_Server_Datetime(end_timestamp);
+		    	var end_string = datetimes.Cast_Date_to_Server_Datetime(end_timestamp);
 		    	
 		    	var new_event = {
 		    		title  : name,
@@ -142,8 +145,8 @@ define([],function(){
 				//sort the events targets by late end time
 				self.events.sort(function(a,b){
 					
-					var a_timestamp = Cast_Server_Datetime_to_Date(a.entry.row.scheduled_time);
-				    var b_timestamp = Cast_Server_Datetime_to_Date(b.entry.row.scheduled_time);
+					var a_timestamp = datetimes.Cast_Server_Datetime_to_Date(a.entry.row.scheduled_time);
+				    var b_timestamp = datetimes.Cast_Server_Datetime_to_Date(b.entry.row.scheduled_time);
 					
 					time_block_a = 
 						Number(a.entry.row.variance) 
@@ -176,7 +179,7 @@ define([],function(){
 				
 				var row = event_row.entry.row;
 				
-				var start_timestamp = Cast_Server_Datetime_to_Date(row.scheduled_time);
+				var start_timestamp = datetimes.Cast_Server_Datetime_to_Date(row.scheduled_time);
 		    	
 				var early_start_timestamp = self.Generate_End_Date(start_timestamp, -row.variance, 0);
 				var early_end_timestamp = self.Generate_End_Date(early_start_timestamp, row.estimated_time, 0);
@@ -279,7 +282,7 @@ define([],function(){
 			{
 				var row = event_row.entry.row;
 				
-				var start_timestamp = Cast_Server_Datetime_to_Date(row.scheduled_time);
+				var start_timestamp = datetimes.Cast_Server_Datetime_to_Date(row.scheduled_time);
 		    	
 				var early_start_timestamp = self.Generate_End_Date(start_timestamp, -row.variance, 0);
 				var early_end_timestamp = self.Generate_End_Date(early_start_timestamp, row.estimated_time, 0);
@@ -312,7 +315,7 @@ define([],function(){
 				
 				for(var i = 0; i < self.incomplete_targets.length; i++)
 				{
-					var new_event = Copy_JSON_Data(self.incomplete_targets[i]);
+					var new_event = types.Copy_JSON_Data(self.incomplete_targets[i]);
 					
 					new_event.entry.row.estimated_time -= new_event.entry.row.hours;
 					
@@ -334,8 +337,8 @@ define([],function(){
 				//sort the shifted targets
 				shifted_targets.sort(function(a,b){
 					
-					var a_timestamp = Cast_Server_Datetime_to_Date(a.entry.row.scheduled_time);
-				    var b_timestamp = Cast_Server_Datetime_to_Date(b.entry.row.scheduled_time);
+					var a_timestamp = datetimes.Cast_Server_Datetime_to_Date(a.entry.row.scheduled_time);
+				    var b_timestamp = datetimes.Cast_Server_Datetime_to_Date(b.entry.row.scheduled_time);
 					
 					var a_early_start_timestamp = self.Generate_End_Date(a_timestamp, -a.entry.row.variance, 0);
 					var b_early_start_timestamp = self.Generate_End_Date(b_timestamp, -b.entry.row.variance, 0);
@@ -412,7 +415,7 @@ define([],function(){
 					{
 						if(current_entry.row.status == 'Started')
 						{
-							var start_time = Cast_Server_Datetime_to_Date(current_entry.row.start_time);
+							var start_time = datetimes.Cast_Server_Datetime_to_Date(current_entry.row.start_time);
 							var now = new Date();
 							
 							var hours = (now - start_time) / 1000 / 60 / 60;

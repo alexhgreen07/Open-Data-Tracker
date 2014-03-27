@@ -1,8 +1,9 @@
 define([
         'jquery.ui',
+        'client/helpers/ui_helpers',
         './forms/new_category_form',
         './forms/edit_category_form',
-        ],function($, new_category_form, edit_category_form){
+        ],function($, ui_helpers, new_category_form, edit_category_form){
 	return {
 		/** This is the form to interact with category data.
 		 * @constructor Category_Form
@@ -25,19 +26,19 @@ define([
 				
 				self.data = data;
 				
-				Refresh_Select_HTML_From_Table(
+				ui_helpers.Refresh_Select_HTML_From_Table(
 					self.new_category_form.add_new_category_parent_select.id,
 					data['Categories'],
 					"Category ID",
 					"Category Path");
 				
-				Refresh_Select_HTML_From_Table(
+				ui_helpers.Refresh_Select_HTML_From_Table(
 					self.edit_category_form.edit_category_select.id,
 					data['Categories'],
 					"Category ID",
 					"Category Path");
 				
-				Refresh_Select_HTML_From_Table(
+				ui_helpers.Refresh_Select_HTML_From_Table(
 					self.edit_category_form.edit_category_parent_select.id,
 					data['Categories'],
 					"Category ID",
@@ -49,19 +50,19 @@ define([
 			this.Refresh_From_Diff = function(diff)
 			{
 				
-				Refresh_Select_HTML_From_Table_Diff(
+				ui_helpers.Refresh_Select_HTML_From_Table_Diff(
 					self.new_category_form.add_new_category_parent_select.id,
 					diff.data['Categories'],
 					"Category ID",
 					"Category Path");
 				
-				Refresh_Select_HTML_From_Table_Diff(
+				ui_helpers.Refresh_Select_HTML_From_Table_Diff(
 					self.edit_category_form.edit_category_select.id,
 					diff.data['Categories'],
 					"Category ID",
 					"Category Path");
 				
-				Refresh_Select_HTML_From_Table_Diff(
+				ui_helpers.Refresh_Select_HTML_From_Table_Diff(
 					self.edit_category_form.edit_category_parent_select.id,
 					diff.data['Categories'],
 					"Category ID",

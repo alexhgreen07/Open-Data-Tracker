@@ -1,8 +1,9 @@
 define([
         'jquery.ui',
+        'core/logger',
         './events/scheduler',
         ],
-        function($,scheduler){
+        function($,logger,scheduler){
 	return {
 		/** This is the home tab class which holds all UI objects for general data.
 		 * @constructor Home_Tab
@@ -57,7 +58,7 @@ define([
 				
 				var end = new Date();
 				times.push('fullCalendar: ' + (end - start) / 1000);
-				Info('Diff refresh: ' + JSON.stringify(times));
+				logger.Info('Diff refresh: ' + JSON.stringify(times));
 				
 				$('#' + self.calendar_div.id).fullCalendar('changeView', previous_name);
 				$('#' + self.calendar_div.id).fullCalendar('gotoDate',previous_date);

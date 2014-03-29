@@ -83,11 +83,11 @@ define([
 					
 					var selected_item_entry = self.item_log_data[selected_index - 1];
 					
-					var time_string = document.getElementById(self.item_edit_time.id).value;
+					var entry_time = $("#" + self.item_edit_time.id).datetimepicker('getDate');
 					
 					var params = {};
 					params.item_log_id = item_entry_id;
-					params.time = time_string;
+					params.time = entry_time.toISOString();
 					params.value = document.getElementById(self.item_edit_value.id).value;
 					params.item_id = document.getElementById(self.edit_item_name_select.id).value;
 					params.note = document.getElementById(self.item_edit_note.id).value;

@@ -1,6 +1,7 @@
 define([
         'jquery.ui',
-        ],function($){
+        'core/datetimes',
+        ],function($,datetimes){
 	return {
 		/** This is the new item entry form class which holds all UI objects for new item data entry.
 		 * @constructor New_Item_Entry_Form
@@ -47,7 +48,7 @@ define([
 				var self = this;
 
 				//get the value string
-				var time_string = $("#" + self.item_new_time.id).val();
+				var entry_time = $("#" + self.item_new_time.id).datetimepicker('getDate');
 				var value_string = $("#" + self.item_new_value.id).val();
 				var item_select_index = $("#" + self.new_item_name_select.id).prop("selectedIndex");
 				var note_string = $("#" + self.item_new_note.id).val();
@@ -57,7 +58,7 @@ define([
 				if (!isNaN(Number(value_string)) && value_string != '') {
 
 					var params = {};
-					params.time = time_string;
+					params.time = entry_time.toISOString();
 					params.value = value_string;
 					params.item_id = app.api.data.items[item_select_index - 1].item_id;
 					params.note = note_string;

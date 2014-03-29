@@ -35,8 +35,7 @@ define([
 				for(var i = 0; i < running_tasks.length; i++)
 				{
 					var datetime = datetimes.Cast_Server_Datetime_to_Date(running_tasks[i].start_time);
-					datetime = datetimes.Convert_UTC_Date_To_Local_Timezone(datetime);
-		   			var now = new Date();
+					var now = new Date();
 		   			scheduled_interval = datetimes.Get_String_From_Time_Interval(now, datetime);
 		   			if(now > datetime)
 		   			{
@@ -86,7 +85,6 @@ define([
 				for(var i = 0; i < upcoming_tasks.length; i++)
 				{
 					var datetime = datetimes.Cast_Server_Datetime_to_Date(upcoming_tasks[i].scheduled_time);
-		   			datetime = datetimes.Convert_UTC_Date_To_Local_Timezone(datetime);
 		   			var now = new Date();
 		   			scheduled_interval = datetimes.Get_String_From_Time_Interval(now, datetime);
 		   			if(now > datetime)
@@ -139,7 +137,6 @@ define([
 				for(var i = 0; i < recent_items.length; i++)
 				{
 					var datetime = datetimes.Cast_Server_Datetime_to_Date(recent_items[i].time);
-		   			datetime = datetimes.Convert_UTC_Date_To_Local_Timezone(datetime);
 		   			var now = new Date();
 		   			scheduled_interval = datetimes.Get_String_From_Time_Interval(now, datetime);
 					

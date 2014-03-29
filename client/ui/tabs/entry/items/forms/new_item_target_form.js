@@ -32,7 +32,7 @@ define([
 			
 			this.Add_Item_Target_Click = function(){
 				
-				var start_time = $("#" + self.item_target_time.id).val();
+				var start_time = $("#" + self.item_target_time.id).datetimepicker('getDate');
 				var type = $("#" + self.new_item_target_type_select.id).val();
 				var value = $("#" + self.item_target_value.id).val();
 				var item = $("#" + self.new_item_target_name_select.id).val();
@@ -49,7 +49,7 @@ define([
 					recurring = 0;
 				}
 				var recurrance_period = $('#' + self.item_target_recurring_period.id).val();
-				var recurrance_end_date = $('#' + self.item_target_recurring_end_date.id).val();
+				var recurrance_end_date = $('#' + self.item_target_recurring_end_date.id).datetimepicker('getDate');
 				
 				if(value == '')
 				{
@@ -67,7 +67,7 @@ define([
 				{
 					
 					var params = new Array();
-					params[0] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(start_time);
+					params[0] = start_time.toISOString();
 					params[1] = type;
 					params[2] = value;
 					params[3] = item;
@@ -76,7 +76,7 @@ define([
 					params[6] = variance;
 					params[7] = recurring;
 					params[8] = recurrance_period;
-					params[9] = recurrance_end_date;
+					params[9] = recurrance_end_date.toISOString();
 
 					//execute the RPC callback for retrieving the item log
 					app.api.Item_Data_Interface.Insert_Item_Target(params, function(jsonRpcObj) {

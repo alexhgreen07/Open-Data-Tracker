@@ -113,7 +113,7 @@ define([
 			this.Edit_Item_Target_Click = function(){
 				
 				var item_target_id = $("#" + self.edit_item_target_id_select.id).val();
-				var start_time = $("#" + self.item_edit_target_time.id).val();
+				var start_time = $("#" + self.item_edit_target_time.id).datetimepicker('getDate');
 				var type = $("#" + self.edit_item_target_type_select.id).val();
 				var value = $("#" + self.item_edit_target_value.id).val();
 				var item = $("#" + self.edit_item_target_name_select.id).val();
@@ -123,7 +123,7 @@ define([
 				var status = $('#' + self.edit_item_target_status_select.id).val();
 				var recurring = $("#" + self.edit_item_target_recurring_select.id).val();
 				var recurrance_period = $("#" + self.edit_item_target_recurring_period.id).val();
-				var recurrance_end_date = $("#" + self.edit_item_target_recurring_end_date.id).val();
+				var recurrance_end_date = $("#" + self.edit_item_target_recurring_end_date.id).datetimepicker('getDate');
 				
 				if(item_target_id == 0)
 				{
@@ -146,7 +146,7 @@ define([
 					
 					var params = new Array();
 					params[0] = item_target_id;
-					params[1] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(start_time);
+					params[1] = start_time.toISOString();
 					params[2] = type;
 					params[3] = value;
 					params[4] = item;
@@ -156,7 +156,7 @@ define([
 					params[8] = status;
 					params[9] = recurring;
 					params[10] = recurrance_period;
-					params[11] = recurrance_end_date;
+					params[11] = recurrance_end_date.toISOString();
 
 					//execute the RPC callback for retrieving the item log
 					app.api.Item_Data_Interface.Update_Item_Target(params, function(jsonRpcObj) {

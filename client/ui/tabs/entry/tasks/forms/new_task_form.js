@@ -33,18 +33,18 @@ define([
 			 * @desc This function is the new task submit button click event handler.
 			 * */
 			this.Task_New_Submit_Click = function() {
-				var params = new Array();
-				params[0] = $("#" + this.task_name.id).val();
-				params[1] = $("#" + this.task_description.id).val();
-				params[2] = $("#" + this.task_note.id).val();
-				params[3] = $("#" + this.task_category_select.id).val();
+				var params = {};
+				params["name"] = $("#" + this.task_name.id).val();
+				params["description"] = $("#" + this.task_description.id).val();
+				params["note"] = $("#" + this.task_note.id).val();
+				params["category_id"] = $("#" + this.task_category_select.id).val();
 
 				var self = this;
 
 				//execute the RPC callback for retrieving the item log
 				app.api.Task_Data_Interface.Insert_Task(params, function(jsonRpcObj) {
 
-					if (jsonRpcObj.result.success == 'true') {
+					if (jsonRpcObj.result.success) {
 
 						alert('New task added.');
 

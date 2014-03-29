@@ -72,7 +72,6 @@ define([
 			 * */
 			this.Task_Edit_Entry_Submit_Click = function()
 			{
-				var params = new Array();
 
 				//retrieve the selected item from the info array
 				var selected_index = document.getElementById(this.edit_task_entry_task_name_select.id).selectedIndex;
@@ -81,25 +80,26 @@ define([
 					
 					var selected_task_entry_id = document.getElementById(this.edit_task_entry_select.id).value;
 					var selected_task = this.task_info_json_array[selected_index - 1];
-					var task_time = document.getElementById(this.task_entry_edit_start_time.id).value;
+					var task_time = $('#' + this.task_entry_edit_start_time.id).datetimepicker('getDate');
 					var duration = document.getElementById(this.task_entry_edit_duration.id).value;
 					var task_note = document.getElementById(this.task_entry_edit_note.id).value;
 					var task_status = document.getElementById(this.edit_task_entry_task_status_select.id).value;
 					var target_id = document.getElementById(this.task_target_select.id).value;
+
+					var params = {};
 				
-					params[0] = selected_task_entry_id;
-					params[1] = selected_task.task_id;
-					params[2] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(task_time);
-					params[3] = duration;
-					params[4] = task_status;
-					params[5] = task_note;
-					params[6] = target_id;
-					params[7] = 0;
+					params["task_log_id"] = selected_task_entry_id;
+					params["task_id"] = selected_task.task_id;
+					params["start_time"] = task_time.toISOString();
+					params["hours"] = duration;
+					params["status"] = task_status;
+					params["note"] = task_note;
+					params["task_target_id"] = target_id;
 
 					//execute the RPC callback for retrieving the item log
 					app.api.Task_Data_Interface.Update_Task_Entry(params, function(jsonRpcObj) {
 
-						if (jsonRpcObj.result.success == 'true') {
+						if (jsonRpcObj.result.success) {
 
 							alert('Task entry submitted.');
 
@@ -133,12 +133,12 @@ define([
 					
 					if (r==true)
 					{
-						var params = new Array();
-						params[0] = value;
+						var params = {};
+						params["task_log_id"] = value;
 						
 						app.api.Task_Data_Interface.Delete_Task_Entry(params, function(jsonRpcObj) {
 						
-							if(jsonRpcObj.result.success == 'true'){
+							if(jsonRpcObj.result.success){
 								
 								alert('Index deleted: ' + value);
 								
@@ -184,7 +184,7 @@ define([
 					var selected_task_entry = self.task_log[selected_index - 1];
 					
 					document.getElementById(self.edit_task_entry_task_name_select.id).value = selected_task_entry.name;
-					document.getElementById(self.task_entry_edit_start_time.id).value = selected_task_entry.start_time;
+					$('#' + self.task_entry_edit_start_time.id).datetimepicker("setDate", new Date(selected_task_entry.start_time));
 					document.getElementById(self.edit_task_entry_task_status_select.id).value = selected_task_entry.status;
 					document.getElementById(self.task_entry_edit_duration.id).value = selected_task_entry.hours;
 					document.getElementById(self.task_entry_edit_note.id).value = selected_task_entry.note;
@@ -194,7 +194,7 @@ define([
 				else
 				{
 					document.getElementById(self.edit_task_entry_task_name_select.id).value = '-';
-					document.getElementById(self.task_entry_edit_start_time.id).value = '';
+					$('#' + self.task_entry_edit_start_time.id).datetimepicker("setDate", new Date());
 					document.getElementById(self.edit_task_entry_task_status_select.id).value = 'Stopped';
 					document.getElementById(self.task_entry_edit_duration.id).value = '';
 					document.getElementById(self.task_entry_edit_note.id).value = '';

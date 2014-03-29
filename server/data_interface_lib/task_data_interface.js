@@ -2,27 +2,68 @@ define([],function(){
 	return {
 		Insert_Task_Entry: function(params, session, callback)
 		{
-			//TODO: implement
+			var value_lookup = params;
+			value_lookup.start_time = session.database.Date_To_MYSQL_String(new Date(value_lookup.start_time));
+			
+			session.database.Insert('task_log',value_lookup,function(object){
+				callback(object);
+			});
 		},
 		Update_Task_Entry: function(params, session, callback)
 		{
-			//TODO: implement
+			var value_lookup = params;
+			value_lookup.start_time = session.database.Date_To_MYSQL_String(new Date(value_lookup.start_time));
+			
+			task_log_id = value_lookup.task_log_id;
+			
+			delete value_lookup.task_log_id;
+			
+			var where = 'task_log_id = ' + task_log_id;
+			
+			session.database.Update('task_log',value_lookup,where,function(object){
+				callback(object);
+			});
 		},
 		Delete_Task_Entry: function(params, session, callback)
 		{
-			//TODO: implement
+			var where = 'task_log_id = ' + params.task_log_id;
+			
+			session.database.Delete('task_log',where,function(object){
+				callback(object);
+			});
 		},
 		Insert_Task: function(params, session, callback)
 		{
-			//TODO: implement
-		},
-		Delete_Task: function(params, session, callback)
-		{
-			//TODO: implement
+			var value_lookup = params;
+			value_lookup.date_created = session.database.Date_To_MYSQL_String(new Date());
+			value_lookup.status = "Active";
+			value_lookup.member_id = session.member_id;
+			
+			session.database.Insert('tasks',value_lookup,function(object){
+				callback(object);
+			});
 		},
 		Update_Task: function(params, session, callback)
 		{
-			//TODO: implement
+			var value_lookup = params;
+			
+			task_id = value_lookup.task_id;
+			
+			delete value_lookup.task_id;
+			
+			var where = 'task_id = ' + task_id + ' AND member_id = ' + session.member_id;
+			
+			session.database.Update('tasks',value_lookup,where,function(object){
+				callback(object);
+			});
+		},
+		Delete_Task: function(params, session, callback)
+		{
+			var where = 'task_id = ' + params.task_id + ' AND member_id = ' + session.member_id;
+			
+			session.database.Delete('tasks',where,function(object){
+				callback(object);
+			});
 		},
 		Insert_Task_Target: function(params, session, callback)
 		{

@@ -64,17 +64,17 @@ define([
 				{
 					var selected_task = this.task_info_json_array[selected_index - 1];
 					
-					var params = new Array();
-					params[0] = selected_task.task_id;
-					params[1] = document.getElementById(this.task_edit_name.id).value;
-					params[2] = document.getElementById(this.task_edit_category_select.id).value;
-					params[3] = document.getElementById(this.task_edit_description.id).value;
-					params[4] = document.getElementById(this.task_edit_note.id).value;
-					params[5] = document.getElementById(this.task_edit_status.id).value;
+					var params = {};
+					params["task_id"] = selected_task.task_id;
+					params["name"] = document.getElementById(this.task_edit_name.id).value;
+					params["category_id"] = document.getElementById(this.task_edit_category_select.id).value;
+					params["description"] = document.getElementById(this.task_edit_description.id).value;
+					params["note"] = document.getElementById(this.task_edit_note.id).value;
+					params["status"] = document.getElementById(this.task_edit_status.id).value;
 					
 					app.api.Task_Data_Interface.Update_Task(params, function(jsonRpcObj) {
 					
-						if(jsonRpcObj.result.success == 'true'){
+						if(jsonRpcObj.result.success){
 							
 							alert('Task updated successfully.');
 							
@@ -121,12 +121,12 @@ define([
 						
 						var selected_task = this.task_info_json_array[selected_index - 1];
 						
-						var params = new Array();
-						params[0] = selected_task.task_id;
+						var params = {};
+						params["task_id"] = selected_task.task_id;
 						
 						app.api.Task_Data_Interface.Delete_Task(params, function(jsonRpcObj) {
 						
-							if(jsonRpcObj.result.success == 'true'){
+							if(jsonRpcObj.result.success){
 								
 								alert('Index deleted: ' + selected_task.task_id);
 								

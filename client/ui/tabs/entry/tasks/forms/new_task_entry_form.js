@@ -1,6 +1,7 @@
 define([
         'jquery.ui',
-        ],function($){
+        'core/datetimes',
+        ],function($,datetimes){
 	return {
 		/** This is the new task entry form to entering task entry data.
 		 * @constructor New_Task_Entry_Form
@@ -56,31 +57,32 @@ define([
 			 * */
 			this.Insert_Task_Entry = function(is_completed) {
 				var self = this;
-				var params = new Array();
 
 				//retrieve the selected item from the info array
 				var selected_index = document.getElementById(this.add_task_entry_task_name_select.id).selectedIndex;
 
 				if (selected_index > 0) {
 
+					var params = {};
+
 					var selected_task = this.task_info_json_array[selected_index - 1];
-					var task_time = $('#' + this.task_entry_start_time.id).val();
+					var task_time = $('#' + this.task_entry_start_time.id).datetimepicker('getDate');
 					var duration = $('#' + this.task_entry_duration.id).val();
 					var task_note = $('#' + this.task_entry_note.id).val();
 					var task_status = $('#' + this.add_task_entry_task_status_select.id).val();
 					var target_id = document.getElementById(this.task_target_select.id).value;
-
-					params[0] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(task_time);
-					params[1] = selected_task.task_id;
-					params[2] = duration;
-					params[3] = task_status;
-					params[4] = task_note;
-					params[5] = target_id;
+					
+					params["start_time"] = task_time.toISOString();
+					params["task_id"] = selected_task.task_id;
+					params["hours"] = duration;
+					params["status"] = task_status;
+					params["note"] = task_note;
+					params["task_target_id"] = target_id;
 
 					//execute the RPC callback for retrieving the item log
 					app.api.Task_Data_Interface.Insert_Task_Entry(params, function(jsonRpcObj) {
 
-						if (jsonRpcObj.result.success == 'true') {
+						if (jsonRpcObj.result.success) {
 
 							$('#' + self.task_entry_duration.id).val('0');
 							$('#' + self.task_entry_note.id).val('');
@@ -92,7 +94,6 @@ define([
 							});
 
 						} else {
-							alert(jsonRpcObj.result.debug);
 							alert('Failed to insert task entry.');
 						}
 

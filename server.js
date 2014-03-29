@@ -35,30 +35,42 @@ function   (http,url,path,fs,qs,api) {
 			}
 			else
 			{
+				
 				if (fs.statSync(filename).isDirectory()) {
-		
+					
 					filename += '/index.html';
 		
 				}
-		
-				fs.readFile(filename, "binary", function(err, file) {
-		
-					if (err) {
-		
-						response.writeHead(500, {"Content-Type":"text/plain"});
-						response.write(err + "\n");
-		
-					}
-					else
-					{
-						response.writeHead(200);
-						response.write(file, "binary");
-						
-					}
-					
+				
+				if(filename.indexOf("/server/") != -1)
+				{
+					//do not allow any access to server files
+					response.writeHead(500, {"Content-Type":"text/plain"});
+					response.write("Access denied.\n");
 					response.end();
-		
-				});
+				}
+				else
+				{
+					fs.readFile(filename, "binary", function(err, file) {
+			
+						if (err) {
+			
+							response.writeHead(500, {"Content-Type":"text/plain"});
+							response.write(err + "\n");
+			
+						}
+						else
+						{
+							response.writeHead(200);
+							response.write(file, "binary");
+							
+						}
+						
+						response.end();
+			
+					});
+				}
+			
 			}
 
 		});

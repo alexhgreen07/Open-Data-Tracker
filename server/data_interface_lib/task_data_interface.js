@@ -2,39 +2,39 @@ define([],function(){
 	return {
 		Insert_Task_Entry: function(params, session, callback)
 		{
-			
+			//TODO: implement
 		},
 		Update_Task_Entry: function(params, session, callback)
 		{
-			
+			//TODO: implement
 		},
 		Delete_Task_Entry: function(params, session, callback)
 		{
-			
+			//TODO: implement
 		},
 		Insert_Task: function(params, session, callback)
 		{
-			
+			//TODO: implement
 		},
 		Delete_Task: function(params, session, callback)
 		{
-			
+			//TODO: implement
 		},
 		Update_Task: function(params, session, callback)
 		{
-			
+			//TODO: implement
 		},
 		Insert_Task_Target: function(params, session, callback)
 		{
-			
+			//TODO: implement
 		},
 		Update_Task_Target: function(params, session, callback)
 		{
-			
+			//TODO: implement
 		},
 		Delete_Task_Target: function(params, session, callback)
 		{
-			
+			//TODO: implement
 		},
 		Get_Tasks_Schema: function(params, session, callback)
 		{
@@ -170,19 +170,19 @@ define([],function(){
 		},
 		Break_Recuring_Child: function(params, session, callback)
 		{
-			
+			//TODO: implement
 		},
 		Insert_Recurring_Children: function(params, session, callback)
 		{
-			
+			//TODO: implement
 		},
 		Update_Recurring_Children: function(params, session, callback)
 		{
-			
+			//TODO: implement
 		},
 		Delete_Recurring_Children: function(params, session, callback)
 		{
-			
+			//TODO: implement
 		},
 	};
 });

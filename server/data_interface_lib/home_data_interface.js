@@ -70,8 +70,12 @@ define([],function(){
 		},
 		Get_Settings: function(params, session, callback){
 			
+			//TODO: implement
+			
 		},
 		Update_Settings: function(params, session, callback){
+			
+			//TODO: implement
 			
 		},
 		Get_Homepage_Report: function(params, session, callback){

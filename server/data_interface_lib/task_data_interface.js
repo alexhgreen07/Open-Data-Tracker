@@ -67,7 +67,13 @@ define([],function(){
 		},
 		Insert_Task_Target: function(params, session, callback)
 		{
-			//TODO: implement
+			var value_lookup = params;
+			value_lookup.scheduled_time = session.database.Date_To_MYSQL_String(new Date(value_lookup.scheduled_time));
+			value_lookup.recurrance_end_time = session.database.Date_To_MYSQL_String(new Date(value_lookup.recurrance_end_time));
+			
+			session.database.Insert('task_targets',value_lookup,function(object){
+				callback(object);
+			});
 		},
 		Update_Task_Target: function(params, session, callback)
 		{

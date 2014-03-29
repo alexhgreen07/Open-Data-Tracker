@@ -44,7 +44,6 @@ define([
 			this.Task_Target_New_Submit_Click = function()
 			{
 				var self = this;
-				var params = new Array();
 
 				//retrieve the selected item from the info array
 				var selected_index = document.getElementById(this.task_target_new_name_select.id).selectedIndex;
@@ -52,33 +51,37 @@ define([
 				if (selected_index > 0) {
 
 					var selected_task = this.task_info_json_array[selected_index - 1];
-					var scheduled_time = document.getElementById(self.task_scheduled_target_date.id).value;
+					//var scheduled_time = document.getElementById(self.task_scheduled_target_date.id).value;
+					var scheduled_time = $('#' + self.task_scheduled_target_date.id).datetimepicker('getDate');
 					var recurring = document.getElementById(self.task_recurring_target_select.id).value;
 					var recurrance_type = document.getElementById(self.task_recurring_target_select_type.id).value;
 					var recurrance_period = document.getElementById(self.task_reccurance_target_period.id).value;
 					var variance = document.getElementById(self.task_scheduled_variance.id).value;
 					var estimated_time = document.getElementById(self.task_target_estimated_time.id).value;
-					var end_date = document.getElementById(self.task_recurring_end_date.id).value;
+					//var end_date = document.getElementById(self.task_recurring_end_date.id).value;
+					var end_date = $('#' + self.task_recurring_end_date.id).datetimepicker('getDate');
+
+					var params = {};
 					
 					//load all function parameters
-					params[0] = selected_task.task_id;
-					params[1] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(scheduled_time);
+					params["task_id"] = selected_task.task_id;
+					params["scheduled_time"] = scheduled_time.toISOString();
 					if(recurring == 'True')
 					{
-						params[2] = 1;
+						params["recurring"] = 1;
 					}else{
-						params[2] = 0;
+						params["recurring"] = 0;
 					}
-					params[3] = recurrance_type;
-					params[4] = recurrance_period;
-					params[5] = variance;
-					params[6] = estimated_time;
-					params[7] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(end_date);
+					params["recurrance_type"] = recurrance_type;
+					params["recurrance_period"] = recurrance_period;
+					params["allowed_variance"] = variance;
+					params["estimated_time"] = estimated_time;
+					params["recurrance_end_time"] = end_date.toISOString();
 
 					//execute the RPC callback for retrieving the item log
 					app.api.Task_Data_Interface.Insert_Task_Target(params, function(jsonRpcObj) {
 
-						if (jsonRpcObj.result.success == 'true') {
+						if (jsonRpcObj.result.success) {
 
 							alert('Task target inserted successfully.');
 							

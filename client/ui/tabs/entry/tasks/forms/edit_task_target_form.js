@@ -67,7 +67,7 @@ define([
 				var selected_index = document.getElementById(this.task_target_edit_name_select.id).selectedIndex;
 				var selected_task = this.task_info_json_array[selected_index - 1];
 				var new_task_id = selected_task.task_id;
-				var new_scheduled_time = document.getElementById(this.task_edit_scheduled_target_date.id).value;
+				var new_scheduled_time = $('#' + this.task_edit_scheduled_target_date.id).datetimepicker('getDate');
 				var new_recurring = 0;
 				if(document.getElementById(this.task_edit_recurring_target_select.id).value == "True")
 				{
@@ -80,27 +80,27 @@ define([
 				var new_recurrance_period = document.getElementById(this.task_edit_reccurance_target_period.id).value;
 				var variance = document.getElementById(this.task_target_edit_scheduled_variance.id).value;
 				var estimated_time = document.getElementById(this.task_target_edit_estimated_time.id).value;
-				var recurring_end_time = document.getElementById(this.task_target_edit_recurring_end_date.id).value;
+				var recurring_end_time = $('#' + this.task_target_edit_recurring_end_date.id).datetimepicker('getDate');
 				var status = document.getElementById(this.task_edit_target_status.id).value;
 				
 				if(index_to_edit != 0)
 				{
 					
-					var params = new Array();
-					params.push(self.task_targets_log[index_to_edit - 1].task_schedule_id);
-					params.push(new_task_id);
-					params.push(Cast_Local_Server_Datetime_To_UTC_Server_Datetime(new_scheduled_time));
-					params.push(new_recurring);
-					params.push(new_recurrance_type);
-					params.push(new_recurrance_period);
-					params.push(variance);
-					params.push(estimated_time);
-					params.push(Cast_Local_Server_Datetime_To_UTC_Server_Datetime(recurring_end_time));
-					params.push(status);
+					var params = {};
+					params["task_schedule_id"] = self.task_targets_log[index_to_edit - 1].task_schedule_id;
+					params["task_id"] = new_task_id;
+					params["scheduled_time"] = new_scheduled_time.toISOString();
+					params["recurring"] = new_recurring;
+					params["recurrance_type"] = new_recurrance_type;
+					params["recurrance_period"] = new_recurrance_period;
+					params["allowed_variance"] = variance;
+					params["estimated_time"] = estimated_time;
+					params["recurrance_end_time"] = recurring_end_time.toISOString();
+					params["status"] = status;
 					
 					app.api.Task_Data_Interface.Update_Task_Target(params, function(jsonRpcObj) {
 					
-						if(jsonRpcObj.result.success == 'true'){
+						if(jsonRpcObj.result.success){
 							
 							alert('Index updated successfully.');
 
@@ -185,12 +185,12 @@ define([
 					if (r==true)
 					{
 						
-						var params = new Array();
-						params[0] = index_to_delete;
+						var params = {};
+						params["task_schedule_id"] = index_to_delete;
 						
 						app.api.Task_Data_Interface.Delete_Task_Target(params, function(jsonRpcObj) {
 						
-							if(jsonRpcObj.result.success == 'true'){
+							if(jsonRpcObj.result.success){
 								
 								alert('Index deleted: ' + index_to_delete);
 								
@@ -240,7 +240,8 @@ define([
 					
 					document.getElementById(this.task_target_edit_name_select.id).value = selected_target.name;
 					
-					document.getElementById(this.task_edit_scheduled_target_date.id).value = selected_target.scheduled_time;
+					$('#' + this.task_edit_scheduled_target_date.id).datetimepicker("setDate", new Date(selected_target.scheduled_time));
+					
 					if(selected_target.recurring == 1)
 					{
 						document.getElementById(this.task_edit_recurring_target_select.id).value = "True";
@@ -253,7 +254,7 @@ define([
 					document.getElementById(this.task_edit_reccurance_target_period.id).value = selected_target.recurrance_period;
 					document.getElementById(this.task_target_edit_scheduled_variance.id).value = selected_target.variance;
 					document.getElementById(this.task_target_edit_estimated_time.id).value = selected_target.estimated_time;
-					document.getElementById(this.task_target_edit_recurring_end_date.id).value = selected_target.recurrance_end_time;
+					$('#' + this.task_target_edit_recurring_end_date.id).datetimepicker("setDate", new Date(selected_target.recurrance_end_time));
 					document.getElementById(this.task_edit_target_status.id).value = selected_target.status;
 					
 					if(selected_target.recurrance_child_id == 0)

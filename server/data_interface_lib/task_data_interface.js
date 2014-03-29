@@ -77,11 +77,27 @@ define([],function(){
 		},
 		Update_Task_Target: function(params, session, callback)
 		{
-			//TODO: implement
+			var value_lookup = params;
+			value_lookup.scheduled_time = session.database.Date_To_MYSQL_String(new Date(value_lookup.scheduled_time));
+			value_lookup.recurrance_end_time = session.database.Date_To_MYSQL_String(new Date(value_lookup.recurrance_end_time));
+			
+			task_schedule_id = value_lookup.task_schedule_id;
+			
+			delete value_lookup.task_schedule_id;
+			
+			var where = 'task_schedule_id = ' + task_schedule_id;
+			
+			session.database.Update('task_targets',value_lookup,where,function(object){
+				callback(object);
+			});
 		},
 		Delete_Task_Target: function(params, session, callback)
 		{
-			//TODO: implement
+			var where = 'task_schedule_id = ' + params.task_schedule_id;
+			
+			session.database.Delete('task_targets',where,function(object){
+				callback(object);
+			});
 		},
 		Get_Tasks_Schema: function(params, session, callback)
 		{

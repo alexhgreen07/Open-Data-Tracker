@@ -268,11 +268,10 @@ define([
 						if(schema[column] == "date")
 						{
 							//convert UTC datetime to local timezone
-							var utc_date = datetimes.Cast_Server_Datetime_to_Date(table[i][column]);
-							var local_date = datetimes.Convert_UTC_Date_To_Local_Timezone(utc_date);
+							var local_date = datetimes.Cast_Server_Datetime_to_Date(table[i][column]);
 							
 							//reset the date string in the column
-							table[i][column] = datetimes.Cast_Date_to_Server_Datetime(local_date);
+							table[i][column] = local_date;
 						}
 					}
 					

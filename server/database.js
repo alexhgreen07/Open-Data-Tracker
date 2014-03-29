@@ -16,6 +16,7 @@ define([
 					  user     : config.database_user,
 					  password : config.database_password,
 					  port : config.database_port,
+					  timezone : "Z",
 				};
 				
 				self.connection = mysql.createConnection(connection_info);

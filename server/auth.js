@@ -1,124 +1,69 @@
-
-function Is_Cookie_Authorized(params, session, callback)
-{
-	session = params.session_id;
-	
-	callback(false);
-}
-
-function Is_Session_Authorized(params, session, callback)
-{
-	session = params.session_id;
-	
-	callback(false);
-}
-
-function Is_Authorized(params, session, callback)
-{
-	var self = this;
-	
-	//check session authorization
-	self.Is_Session_Authorized(params, function(object)
-	{
-		if(object)
+define([],function(){
+	return {
+		Register_New_User: function(params, session, callback)
 		{
-			callback(object);
-		}
-		else
-		{
-			//check cookie authorization
-			self.Is_Cookie_Authorized(params, function(object){
+			new_login = params.new_login;
+			new_password = params.new_password;
+			
+			values = {
+				'login': new_login,
+				'passwd': new_password,
+			};
+			
+			session.database.Insert('members', values, function(result){
 				
-				if(object)
-				{
-					callback(object);
-				}
-				else
-				{
-					callback(false);
-				}
+				callback(values);
 				
 			});
-		}
-		
-		
-	});
-}
-
-function Start_Authorized_Session(params, session, callback)
-{
-	
-}
-
-function Update_Authorization_Cookie(params, session, callback)
-{
-	
-}
-
-module.exports = {
-	Register_New_User: function(params, session, callback)
-	{
-		new_login = params.new_login;
-		new_password = params.new_password;
-		
-		values = {
-			'login': new_login,
-			'passwd': new_password,
-		};
-		
-		session.database.Insert('members', values, function(result){
+		},
+		Start_Authorized_Session: function(params, session, callback)
+		{
+			var login = params.login;
+			var password = params.password;
 			
-			callback(values);
+			var columns = {
+				'member_id': 'member_id',
+				'login': 'login', 
+				'passwd': 'passwd'};
 			
-		});
-	},
-	Start_Authorized_Session: function(params, session, callback)
-	{
-		var login = params.login;
-		var password = params.password;
-		
-		var columns = {
-			'member_id': 'member_id',
-			'login': 'login', 
-			'passwd': 'passwd'};
-		
-		session.database.Select(
-			'members', 
-			columns, 
-			"login = '" + login + "' AND passwd = MD5('" + password + "')",
-			'',
-			function(table){
-				
-				if(table.length == 0)
-				{
-					callback(false);
-				}
-				else
-				{
-					session.is_authorized = true;
-					session.member_id = table[0].member_id;
+			session.database.Select(
+				'members', 
+				columns, 
+				"login = '" + login + "' AND passwd = MD5('" + password + "')",
+				'',
+				function(table){
 					
-					callback(true);
-				}
-				
-			});
-	},
-	Is_Authorized_Session: function(params, session, callback)
-	{
-		
-		if(session.is_authorized)
+					if(table.length == 0)
+					{
+						callback(false);
+					}
+					else
+					{
+						session.is_authorized = true;
+						session.member_id = table[0].member_id;
+						
+						callback(true);
+					}
+					
+				});
+		},
+		Is_Authorized_Session: function(params, session, callback)
 		{
-			callback(true);
-		}
-		else
+			
+			if(session.is_authorized)
+			{
+				callback(true);
+			}
+			else
+			{
+				callback(false);
+			}
+			
+		},
+		End_Authorized_Session: function(params, session, callback)
 		{
-			callback(false);
-		}
+			session.is_authorized = false;
+		},
 		
-	},
-	End_Authorized_Session: function(params, session, callback)
-	{
-		session.is_authorized = false;
-	},
-	
-};
+	};
+});

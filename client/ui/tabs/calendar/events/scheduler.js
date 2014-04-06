@@ -63,7 +63,7 @@ define([
 		    	var start_string = row.start_time;
 		    	
 		    	var start_timestamp = datetimes.Cast_Server_Datetime_to_Date(start_string);
-		    	
+
 		    	var color = '#00FFFF';
 		    	if(row.status == 'Started')
 		    	{
@@ -101,7 +101,7 @@ define([
 				
 			};
 			
-			this.Create_Event_From_Task_Entry_Diff_Row = function(row)
+			this.Create_Event_From_Task_Entry_Diff_Row = function(diff_row)
 			{
 				var new_event = this.Create_Event_From_Task_Entry_Row(diff_row.row);
 				

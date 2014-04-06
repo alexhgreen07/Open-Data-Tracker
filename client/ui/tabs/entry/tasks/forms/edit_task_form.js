@@ -129,6 +129,7 @@ define([
 							if(jsonRpcObj.result.success){
 								
 								alert('Index deleted: ' + selected_task.task_id);
+								document.getElementById(self.task_entry_task_edit_name_select.id).selectedIndex = 0;
 								
 								app.api.Refresh_Data(function() {
 									//self.refresh_item_log_callback();

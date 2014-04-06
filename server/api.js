@@ -80,6 +80,8 @@ define([
 					
 					var bits32 = 0xFFFFFFFF;
 					
+					session_id = '';
+					
 					//256-bit random number
 					for(var i = 0; i < 8; i++)
 					{
@@ -121,40 +123,46 @@ define([
 						
 						rpc_server.Register_Object(auth, 'Authorize');
 						
-						if(current_session.is_authorized)
-						{
-							rpc_server.Register_Object(data_interface_obj, 'Data_Interface');
-							rpc_server.Register_Object(home_data_interface, 'Home_Data_Interface');
-							rpc_server.Register_Object(item_data_interface, 'Item_Data_Interface');
-							rpc_server.Register_Object(task_data_interface, 'Task_Data_Interface');
-						}
-		
-						rpc_server.Process(post, current_session, function(return_string)
-						{
+						auth.Is_Authorized_Session({},current_session,function(object){
 							
-							self.cookies['node_session_id'] = current_session.session_id;
-							
-							//check session authorization
-							auth.Is_Authorized_Session({},current_session,function(object){
+							if(object)
+							{
+								rpc_server.Register_Object(data_interface_obj, 'Data_Interface');
+								rpc_server.Register_Object(home_data_interface, 'Home_Data_Interface');
+								rpc_server.Register_Object(item_data_interface, 'Item_Data_Interface');
+								rpc_server.Register_Object(task_data_interface, 'Task_Data_Interface');
+							}
+			
+							rpc_server.Process(post, current_session, function(return_string)
+							{
 								
-								//send authorization status to client
-								self.cookies['is_authorized'] = object;
+								self.cookies['node_session_id'] = current_session.session_id;
 								
-								var encoded_cookies = self.Encode_Cookies(self.cookies);
-							
-								self.response.writeHead(200, 
-									{
-										"Content-Type": "text/plain",
-										"Set-Cookie": encoded_cookies,
-									});
-								self.response.write(return_string);
-							  	self.response.end();
-							  	
-							  	request_connection.Close();
+								//check session authorization
+								auth.Is_Authorized_Session({},current_session,function(object){
+									
+									//send authorization status to client
+									self.cookies['is_authorized'] = object;
+									
+									var encoded_cookies = self.Encode_Cookies(self.cookies);
+								
+									self.response.writeHead(200, 
+										{
+											"Content-Type": "text/plain",
+											"Set-Cookie": encoded_cookies,
+										});
+									self.response.write(return_string);
+								  	self.response.end();
+								  	
+								  	request_connection.Close();
+									
+								});
 								
 							});
 							
 						});
+						
+						
 			        });
 			        
 			    }

@@ -136,7 +136,7 @@ define([],function(){
 				join, 
 				columns, 
 				"member_id = " + session.member_id,
-				'ORDER BY item_log_id',
+				'ORDER BY item_log_id ASC',
 				function(table){
 					
 					callback(table);
@@ -169,7 +169,7 @@ define([],function(){
 				'items', 
 				columns, 
 				"member_id = " + session.member_id,
-				'ORDER BY item_id',
+				'ORDER BY item_id ASC',
 				function(table){
 					
 					callback(table);
@@ -220,7 +220,7 @@ define([],function(){
 				join, 
 				columns, 
 				"member_id = " + session.member_id,
-				'ORDER BY item_target_id',
+				'ORDER BY item_target_id ASC',
 				function(table){
 					
 					callback(table);

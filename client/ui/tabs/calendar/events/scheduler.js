@@ -20,8 +20,6 @@ define([
 		    	var start_timestamp = datetimes.Cast_Server_Datetime_to_Date(start_string);
 		    	var end_timestamp = self.Generate_End_Date(start_timestamp, row.estimated_time);
 		    	
-		    	var end_string = datetimes.Cast_Date_to_Server_Datetime(end_timestamp);
-		    	
 		    	var color = '#00FF00';
 		    	
 		    	if(row.status == 'Incomplete')
@@ -35,8 +33,8 @@ define([
 		    	
 		    	var new_event = {
 		    		title  : name,
-		            start  : start_string,
-		            end    : end_string,
+		            start  : start_timestamp,
+		            end    : end_timestamp,
 		            allDay : false,
 		            color: color,
 		            entry: {table: 'task_targets', row: row},
@@ -86,12 +84,10 @@ define([
 		    		color = '#00FF00';
 		    	}
 		    	
-		    	var end_string = datetimes.Cast_Date_to_Server_Datetime(end_timestamp);
-		    	
 		    	var new_event = {
 		    		title  : name,
-		            start  : start_string,
-		            end    : end_string,
+		            start  : start_timestamp,
+		            end    : end_timestamp,
 		            allDay : false,
 		            color: color,
 		            entry: {table: 'task_entries', row: row},

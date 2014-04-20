@@ -151,6 +151,12 @@ define([
 					
 				});
 			};
+			self.Query = function(query_string, callback)
+			{
+				self.connection.query(query_string, function(err, rows, fields) {
+					callback({success: true})
+				});
+			};
 			self.Date_To_MYSQL_String = function(date)
 			{
 				

@@ -62,7 +62,6 @@ define([
 	
 	function Install_Database(params, session, callback)
 	{
-		//TODO: implement
 		var queries = [
            "CREATE TABLE IF NOT EXISTS `categories` ( \
 			  `category_id` int(11) NOT NULL AUTO_INCREMENT, \
@@ -228,6 +227,8 @@ define([
 	function Update_Database(params, session, callback)
 	{
 		//TODO: implement
+		
+		callback(false);
 	}
 	
 	return {

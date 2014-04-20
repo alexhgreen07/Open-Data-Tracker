@@ -13,16 +13,20 @@ function Authorize_Session_Database(params, session, callback)
 	});
 }
 
-define([],function(){
+define([
+        'crypto',
+        ],function(crypto){
 	
 	function Register_New_User(params, session, callback)
 	{
 		new_login = params.new_login;
 		new_password = params.new_password;
 		
+		hashed_password = crypto.createHash('md5').update(new_password).digest('hex');
+		
 		values = {
 			'login': new_login,
-			'passwd': new_password,
+			'passwd': hashed_password,
 		};
 		
 		session.database.Insert('members', values, function(result){

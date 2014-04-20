@@ -159,6 +159,7 @@ define([
 					
 					if (err)
 					{
+						console.log('Query error: ' + err);
 						//callback(err);
 					}
 					

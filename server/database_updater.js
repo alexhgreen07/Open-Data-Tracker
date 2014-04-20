@@ -270,7 +270,6 @@ define([
 	
 	function Update_Database(params, session, callback)
 	{
-		//TODO: implement
 		var updates_lookup_table = {
 			0 : Update_From_0_To_1,
 			1 : Update_From_1_To_2,
@@ -284,7 +283,7 @@ define([
 		
 		sql = "SELECT MAX(`version_id`) AS `version_id` FROM `version`";
 		session.database.Query(sql, function(table){
-
+			
 			if(table && table.length && table.length > 0)
 			{
 				var current_version = table[0]['version_id'];
@@ -303,7 +302,7 @@ define([
 				
 				for(var key in updates_lookup_table)
 				{
-					if(current_version_id >= current_version)
+					if(current_version_id > current_version)
 					{
 						updateFunctions.push(updates_lookup_table[key]);
 					}
@@ -311,11 +310,19 @@ define([
 				
 				resultsCallbackCount = updateFunctions.length;
 				
-				//execute all require update functions
-				for(var key in updateFunctions)
+				if(resultsCallbackCount > 0)
 				{
-					updateFunctions[key](params, session, AllQueriesComplete)
+					//execute all require update functions
+					for(var key in updateFunctions)
+					{
+						updateFunctions[key](params, session, AllQueriesComplete)
+					}
 				}
+				else
+				{
+					callback(true);
+				}
+				
 				
 			}
 			else

@@ -153,6 +153,8 @@ define([
 			};
 			self.Query = function(query_string, callback)
 			{
+				console.log(sql);
+				
 				self.connection.query(query_string, function(err, rows, fields) {
 					callback({success: true})
 				});

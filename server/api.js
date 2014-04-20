@@ -1,13 +1,14 @@
 define([
         'querystring',
         './database.js',
+        './database_updater.js',
         './rpc_server.js',
         './auth.js',
         './data_interface.js',
         './data_interface_lib/home_data_interface.js',
         './data_interface_lib/item_data_interface.js',
         './data_interface_lib/task_data_interface.js',
-        ],function(qs,database,rpc,auth,data_interface,home_data_interface,item_data_interface,task_data_interface){
+        ],function(qs,database,database_updater,rpc,auth,data_interface,home_data_interface,item_data_interface,task_data_interface){
 	
 	//allocate classes to register
 	var data_interface_obj = new data_interface.Data_Interface();
@@ -119,49 +120,53 @@ define([
 						
 						current_session.database = request_connection;
 						
-						var rpc_server = new rpc.Server();
-						
-						rpc_server.Register_Object(auth, 'Authorize');
-						
-						auth.Is_Authorized_Session({},current_session,function(object){
+						//ensure database is installed
+						database_updater.Update_Database({},current_session,function(){
 							
-							if(object)
-							{
-								rpc_server.Register_Object(data_interface_obj, 'Data_Interface');
-								rpc_server.Register_Object(home_data_interface, 'Home_Data_Interface');
-								rpc_server.Register_Object(item_data_interface, 'Item_Data_Interface');
-								rpc_server.Register_Object(task_data_interface, 'Task_Data_Interface');
-							}
-			
-							rpc_server.Process(post, current_session, function(return_string)
-							{
+							var rpc_server = new rpc.Server();
+							
+							rpc_server.Register_Object(auth, 'Authorize');
+							
+							auth.Is_Authorized_Session({},current_session,function(object){
 								
-								self.cookies['node_session_id'] = current_session.session_id;
-								
-								//check session authorization
-								auth.Is_Authorized_Session({},current_session,function(object){
+								if(object)
+								{
+									rpc_server.Register_Object(data_interface_obj, 'Data_Interface');
+									rpc_server.Register_Object(home_data_interface, 'Home_Data_Interface');
+									rpc_server.Register_Object(item_data_interface, 'Item_Data_Interface');
+									rpc_server.Register_Object(task_data_interface, 'Task_Data_Interface');
+								}
+				
+								rpc_server.Process(post, current_session, function(return_string)
+								{
 									
-									//send authorization status to client
-									self.cookies['is_authorized'] = object;
+									self.cookies['node_session_id'] = current_session.session_id;
 									
-									var encoded_cookies = self.Encode_Cookies(self.cookies);
-								
-									self.response.writeHead(200, 
-										{
-											"Content-Type": "text/plain",
-											"Set-Cookie": encoded_cookies,
-										});
-									self.response.write(return_string);
-								  	self.response.end();
-								  	
-								  	request_connection.Close();
+									//check session authorization
+									auth.Is_Authorized_Session({},current_session,function(object){
+										
+										//send authorization status to client
+										self.cookies['is_authorized'] = object;
+										
+										var encoded_cookies = self.Encode_Cookies(self.cookies);
+									
+										self.response.writeHead(200, 
+											{
+												"Content-Type": "text/plain",
+												"Set-Cookie": encoded_cookies,
+											});
+										self.response.write(return_string);
+									  	self.response.end();
+									  	
+									  	request_connection.Close();
+										
+									});
 									
 								});
 								
 							});
 							
 						});
-						
 						
 			        });
 			        

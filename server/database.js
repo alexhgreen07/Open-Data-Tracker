@@ -156,7 +156,15 @@ define([
 				console.log(sql);
 				
 				self.connection.query(query_string, function(err, rows, fields) {
-					callback({success: true})
+					
+					if (err)
+					{
+						throw err;
+					}
+					
+					var return_object = rows;
+					
+					callback(return_object)
 				});
 			};
 			self.Date_To_MYSQL_String = function(date)

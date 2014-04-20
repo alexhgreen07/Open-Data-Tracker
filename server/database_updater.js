@@ -1,10 +1,54 @@
-current_version_id = '7';
+current_version_id = 7;
 current_version_string = '0.0.8';
 
 define([
         	'./database.js',
         ],function(database){
 	
+	//*****************Updater functions*********************
+	function Update_From_0_To_1(params, session, callback)
+	{
+		//TODO: implement
+		callback(false);
+	}
+
+	function Update_From_1_To_2(params, session, callback)
+	{
+		//TODO: implement
+		callback(false);
+	}
+
+	function Update_From_2_To_3(params, session, callback)
+	{
+		//TODO: implement
+		callback(false);
+	}
+
+	function Update_From_3_To_4(params, session, callback)
+	{
+		//TODO: implement
+		callback(false);
+	}
+
+	function Update_From_4_To_5(params, session, callback)
+	{
+		//TODO: implement
+		callback(false);
+	}
+
+	function Update_From_5_To_6(params, session, callback)
+	{
+		//TODO: implement
+		callback(false);
+	}
+
+	function Update_From_6_To_7(params, session, callback)
+	{
+		//TODO: implement
+		callback(false);
+	}
+	
+	//*****************Other functions*********************
 	function Insert_Version(params, session, callback)
 	{
 		values = {
@@ -227,8 +271,67 @@ define([
 	function Update_Database(params, session, callback)
 	{
 		//TODO: implement
+		var updates_lookup_table = {
+			0 : Update_From_0_To_1,
+			1 : Update_From_1_To_2,
+			2 : Update_From_2_To_3,
+			3 : Update_From_3_To_4,
+			4 : Update_From_4_To_5,
+			5 : Update_From_5_To_6,
+			6 : Update_From_6_To_7,
+		};
 		
-		callback(false);
+		try
+		{
+			sql = "SELECT MAX(`version_id`) AS `version_id` FROM `version`";
+			session.database.Query(sql, function(table){
+				
+				if(table.length > 0)
+				{
+					var current_version = table[0]['version_id'];
+					var resultsCallbackCount = 0;
+					var updateFunctions = [];
+					
+					function AllQueriesComplete(result)
+					{
+						resultsCallbackCount--;
+						
+						if(resultsCallbackCount == 0)
+						{
+							callback(result);
+						}
+					}
+					
+					for(var key in updates_lookup_table)
+					{
+						if(current_version_id >= current_version)
+						{
+							updateFunctions.push(updates_lookup_table[key]);
+						}
+					}
+					
+					resultsCallbackCount = updateFunctions.length;
+					
+					//execute all require update functions
+					for(var key in updateFunctions)
+					{
+						updateFunctions[key](params, session, AllQueriesComplete)
+					}
+					
+				}
+				else
+				{
+					//TODO: process error
+				}
+				
+			});
+		}
+		catch(err)
+		{
+			//TODO: process error
+			throw err;
+		}
+		
 	}
 	
 	return {

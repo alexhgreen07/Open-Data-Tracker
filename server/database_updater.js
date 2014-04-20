@@ -9,42 +9,56 @@ define([
 	function Update_From_0_To_1(params, session, callback)
 	{
 		//TODO: implement
+		console.log("Updating database from v0 to v1");
+		
 		callback(false);
 	}
 
 	function Update_From_1_To_2(params, session, callback)
 	{
 		//TODO: implement
+		console.log("Updating database from v1 to v2");
+		
 		callback(false);
 	}
 
 	function Update_From_2_To_3(params, session, callback)
 	{
 		//TODO: implement
+		console.log("Updating database from v2 to v3");
+		
 		callback(false);
 	}
 
 	function Update_From_3_To_4(params, session, callback)
 	{
 		//TODO: implement
+		console.log("Updating database from v3 to v4");
+		
 		callback(false);
 	}
 
 	function Update_From_4_To_5(params, session, callback)
 	{
 		//TODO: implement
+		console.log("Updating database from v4 to v5");
+		
 		callback(false);
 	}
 
 	function Update_From_5_To_6(params, session, callback)
 	{
 		//TODO: implement
+		console.log("Updating database from v5 to v6");
+		
 		callback(false);
 	}
 
 	function Update_From_6_To_7(params, session, callback)
 	{
 		//TODO: implement
+		console.log("Updating database from v6 to v7");
+		
 		callback(false);
 	}
 	
@@ -236,36 +250,22 @@ define([
 			) ENGINE=MyISAM DEFAULT CHARSET=latin1",
 		];
 		
-		var resultsCallbackCount = 0;
-		
-		//function to check if all queries have completed
-		function AllQueriesComplete(result)
-		{
-			resultsCallbackCount--;
+		session.database.Queries(queries, function(result){
 			
-			if(resultsCallbackCount == 0)
-			{
-				//insert most current version
-				Insert_Version({},session,function(result){
+			//insert most current version
+			Insert_Version({},session,function(result){
+				
+				//insert default settings
+				Insert_Default_Settings({},session,function(result){
+
+					callback(result);
 					
-					//insert default settings
-					Insert_Default_Settings({},session,function(result){
-
-						callback(result);
-						
-					});
-
 				});
-			}
-		}
+
+			});
+			
+		});
 		
-		resultsCallbackCount = queries.length;
-		
-		//start all queries
-		for(var key in queries)
-		{
-			session.database.Query(queries[key], AllQueriesComplete);
-		}
 	}
 	
 	function Update_Database(params, session, callback)
@@ -281,56 +281,57 @@ define([
 			6 : Update_From_6_To_7,
 		};
 		
-		try
-		{
-			sql = "SELECT MAX(`version_id`) AS `version_id` FROM `version`";
-			session.database.Query(sql, function(table){
+		
+		sql = "SELECT MAX(`version_id`) AS `version_id` FROM `version`";
+		session.database.Query(sql, function(table){
+
+			if(table && table.length && table.length > 0)
+			{
+				var current_version = table[0]['version_id'];
+				var resultsCallbackCount = 0;
+				var updateFunctions = [];
 				
-				if(table.length > 0)
+				function AllQueriesComplete(result)
 				{
-					var current_version = table[0]['version_id'];
-					var resultsCallbackCount = 0;
-					var updateFunctions = [];
+					resultsCallbackCount--;
 					
-					function AllQueriesComplete(result)
+					if(resultsCallbackCount == 0)
 					{
-						resultsCallbackCount--;
-						
-						if(resultsCallbackCount == 0)
-						{
-							callback(result);
-						}
+						callback(result);
 					}
-					
-					for(var key in updates_lookup_table)
-					{
-						if(current_version_id >= current_version)
-						{
-							updateFunctions.push(updates_lookup_table[key]);
-						}
-					}
-					
-					resultsCallbackCount = updateFunctions.length;
-					
-					//execute all require update functions
-					for(var key in updateFunctions)
-					{
-						updateFunctions[key](params, session, AllQueriesComplete)
-					}
-					
-				}
-				else
-				{
-					//TODO: process error
 				}
 				
-			});
-		}
-		catch(err)
-		{
-			//TODO: process error
-			throw err;
-		}
+				for(var key in updates_lookup_table)
+				{
+					if(current_version_id >= current_version)
+					{
+						updateFunctions.push(updates_lookup_table[key]);
+					}
+				}
+				
+				resultsCallbackCount = updateFunctions.length;
+				
+				//execute all require update functions
+				for(var key in updateFunctions)
+				{
+					updateFunctions[key](params, session, AllQueriesComplete)
+				}
+				
+			}
+			else
+			{
+				console.log("Installing fresh database.");
+				
+				//Attempt to install database
+				Install_Database(params, session, function(result){
+					
+					callback(result);
+					
+				});
+			}
+			
+		});
+		
 		
 	}
 	

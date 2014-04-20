@@ -159,13 +159,38 @@ define([
 					
 					if (err)
 					{
-						throw err;
+						//callback(err);
 					}
 					
 					var return_object = rows;
 					
-					callback(return_object)
+					callback(return_object);
 				});
+			};
+			self.Queries = function(queries, callback)
+			{
+				var resultsCallbackCount = 0;
+				var results_array = [];
+				
+				//function to check if all queries have completed
+				function AllQueriesComplete(result)
+				{
+					resultsCallbackCount--;
+					results_array.push(result);
+					
+					if(resultsCallbackCount == 0)
+					{
+						callback(results_array);
+					}
+				}
+				
+				resultsCallbackCount = queries.length;
+				
+				//start all queries
+				for(var key in queries)
+				{
+					self.Query(queries[key], AllQueriesComplete);
+				}
 			};
 			self.Date_To_MYSQL_String = function(date)
 			{

@@ -28,3 +28,6 @@
 [submodule "externals/jquery-ui-touch-punch"]
 	path = externals/jquery-ui-touch-punch
 	url = https://github.com/furf/jquery-ui-touch-punch.git
+[submodule "externals/jstree"]
+	path = externals/jstree
+	url = https://github.com/vakata/jstree.git

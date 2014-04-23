@@ -548,7 +548,9 @@ define([
 				var new_tree_row = new jstree.TreeNode(root_id, "All", true);
 				self.tree_view_id_lookup[root_id] = {
 					node : new_tree_row,
-					parent_id : 0
+					parent_id : 0,
+					table: "Categories",
+					row: {"Category ID": 0}
 					};
 				
 				//add all nodes to lookup

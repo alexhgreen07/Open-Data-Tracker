@@ -105,6 +105,53 @@ th {
 	overflow:auto;
 }
 
+/*override jstree*/
+#jstree-dnd.jstree-default .jstree-ok,
+#jstree-dnd.jstree-default .jstree-er {
+  background-image: url("../externals/jstree/dist/themes/default/32px.png");
+  background-repeat: no-repeat;
+  background-color: transparent;
+}
+.jstree-default .jstree-node,
+.jstree-default .jstree-icon {
+  background-image: url("../externals/jstree/dist/themes/default/32px.png");
+  background-repeat: no-repeat;
+  background-color: transparent;
+}
+.jstree-default .jstree-file {
+  background: url("../externals/jstree/dist/themes/default/32px.png") -100px -68px no-repeat;
+}
+.jstree-default .jstree-folder {
+  background: url("../externals/jstree/dist/themes/default/32px.png") -260px -4px no-repeat;
+}
+.jstree-default-small .jstree-node,
+.jstree-default-small .jstree-icon {
+  background-image: url("../externals/jstree/dist/themes/default/32px.png");
+  background-repeat: no-repeat;
+  background-color: transparent;
+}
+.jstree-default-small .jstree-file {
+  background: url("../externals/jstree/dist/themes/default/32px.png") -103px -71px no-repeat;
+}
+.jstree-default-small .jstree-folder {
+  background: url("../externals/jstree/dist/themes/default/32px.png") -263px -7px no-repeat;
+}
+.jstree-default-large .jstree-node,
+.jstree-default-large .jstree-icon {
+  background-image: url("../externals/jstree/dist/themes/default/32px.png");
+  background-repeat: no-repeat;
+  background-color: transparent;
+}
+.jstree-default-large .jstree-file {
+  background: url("../externals/jstree/dist/themes/default/32px.png") -96px -64px no-repeat;
+}
+.jstree-default-large .jstree-folder {
+  background: url("../externals/jstree/dist/themes/default/32px.png") -256px 0px no-repeat;
+}
+.jstree-default .jstree-last {
+  background: transparent;
+}
+
 /*override js.tree*/
 .resnyanskiy-tree > ul.container li span {
 	background-image: url("../externals/js.tree/images/resnyanskiy-tree-icons.png");

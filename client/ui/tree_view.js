@@ -182,7 +182,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				
 				self.last_selected_id = 0;
 				
-				$('#' + self.div_id).on('changed.jstree', function (e, data) {
+				$('#' + self.div_id).on('select_node.jstree', function (e, data) {
 					
 					self.Node_Click_Callback(data.node.id);
 					
@@ -214,6 +214,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					//expand/collapse the children
 					self.Toggle_Tree_Node_Expanded(id);
 				}
+				
 				
 				//add colours to the treeview according to type
 				for(var key in self.tree_view_hash_lookup)

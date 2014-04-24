@@ -1,6 +1,4 @@
-define([
-        'js.tree',
-        ],function(jstree){
+define(['jquery.ui','jquery.ui.jstree'],function($){
 	
 	return {
 		/** This organizes the tabled data into a tree view.
@@ -22,6 +20,7 @@ define([
 			
 			self.Refresh = function(new_data)
 			{
+				/*
 				self.data = new_data;
 					
 				var should_restore_value = false;
@@ -45,11 +44,12 @@ define([
 					self.Set_Tree_Node_Expanded(self.tree_nodes.id,true);
 					self.Select_Node(self.tree_nodes.id);
 				}
-				
+				*/
 			};
 			
 			self.Refresh_From_Diff = function(diff, new_data)
 			{
+				/*
 				self.data = new_data;
 				
 				var has_updated = false;
@@ -143,7 +143,7 @@ define([
 						self.Select_Node(self.tree_nodes.id);
 					}
 				}
-				
+				*/
 			};
 			
 			self.Node_Click_Callback = function(id)
@@ -158,6 +158,7 @@ define([
 			
 			self.Force_Tree_Refresh = function()
 			{
+				/*
 				document.getElementById(self.tree_view_div).innerHTML = "";
 				
 				delete self.tree_view_id_lookup;
@@ -174,10 +175,12 @@ define([
 				self.last_selected_id = 0;
 				
 				self.tree.onNodeClick = self.Node_Click_Callback;
+				*/
 			};
 			
 			self.Select_Node = function(id)
 			{
+				/*
 				if(self.last_selected_id !== id)
 				{
 					
@@ -236,11 +239,12 @@ define([
 				}
 				
 				
-				
+				*/
 			};
 			
 			self.Set_Tree_Node_Expanded = function(id, expanded)
 			{
+				/*
 				if(id in self.tree_view_id_lookup)
 				{
 					var lookup_entry = self.tree_view_id_lookup[id];
@@ -256,11 +260,12 @@ define([
 				{
 					alert('Set_Tree_Node_Expanded: Tree node not in list.');
 				}
-				
+				*/
 			};
 			
 			self.Toggle_Tree_Node_Expanded = function(id)
 			{
+				/*
 				if(id in self.tree_view_id_lookup)
 				{
 					var lookup_entry = self.tree_view_id_lookup[id];
@@ -274,10 +279,12 @@ define([
 				{
 					alert('Toggle_Tree_Node_Expanded: Tree node not in list.');
 				}
+				*/
 			};
 			
 			self.Unselect_Node = function(){
 				
+				/*
 				if (document.getElementById('li-' + self.last_selected_id)) {
 					
 					previous_class_name = document.getElementById('li-' + self.last_selected_id).className;
@@ -287,11 +294,12 @@ define([
 				}
 				
 				self.last_selected_id = 0;
+				*/
 			};
 			
 			self.Get_ID_From_Table_Row = function(table,row)
 			{
-				
+				/*
 				var primary_id_lookup = {
 					'Categories' : 'Category ID',
 					'items' : 'item_id',
@@ -308,11 +316,12 @@ define([
 				var found_key = self.Generate_Hashed_ID(table, primary_id);
 				
 				return found_key;
+				*/
 			};
 			
 			self.Expand_All_Node_Parents = function(table, row)
 			{
-				
+				/*
 				var parents = [];
 				
 				id = self.Get_ID_From_Table_Row(table,row);
@@ -345,13 +354,13 @@ define([
 					self.Set_Tree_Node_Expanded(self.tree_nodes.id,true);
 					self.Select_Node(self.tree_nodes.id);
 				}
-				
+				*/
 				
 			};
 			
 			self.Create_Category_Node_Lookup_Entry = function(table, row)
 			{
-				
+				/*
 				var random_id = self.Get_ID_From_Table_Row(table,row);
 				var parent_id = self.Generate_Hashed_ID("Categories", row["Parent Category ID"]);
 				
@@ -367,10 +376,12 @@ define([
 					};
 				
 				return lookup_entry;
+				*/
 			};
 			
 			self.Create_Item_Node_Lookup_Entry = function(table, row)
 			{
+				/*
 				var random_id = self.Get_ID_From_Table_Row(table,row);
 				var parent_id = self.Generate_Hashed_ID("Categories", row["category_id"]);
 				
@@ -386,10 +397,12 @@ define([
 					};
 				
 				return lookup_entry;
+				*/
 			};
 			
 			self.Create_Item_Target_Node_Lookup_Entry = function(table, row)
 			{
+				/*
 				var random_id = self.Get_ID_From_Table_Row(table,row);
 				
 				if(row['recurring_child_id'] == 0)
@@ -414,10 +427,12 @@ define([
 					};
 				
 				return lookup_entry;
+				*/
 			};
 			
 			self.Create_Item_Entry_Node_Lookup_Entry = function(table,row)
 			{
+				/*
 				var random_id = self.Get_ID_From_Table_Row(table,row);
 				
 				if(row['item_target_id'] == 0)
@@ -442,10 +457,12 @@ define([
 					};
 				
 				return lookup_entry;
+				*/
 			};
 			
 			self.Create_Task_Node_Lookup_Entry = function(table,row)
 			{
+				/*
 				var random_id = self.Get_ID_From_Table_Row(table,row);
 				var parent_id = self.Generate_Hashed_ID("Categories", row["category_id"]);
 				
@@ -461,10 +478,12 @@ define([
 					};
 				
 				return lookup_entry;
+				*/
 			};
 			
 			self.Create_Task_Target_Node_Lookup_Entry = function(table,row)
 			{
+				/*
 				var random_id = self.Get_ID_From_Table_Row(table,row);
 				
 				if(row['recurrance_child_id'] == 0)
@@ -489,10 +508,12 @@ define([
 					};
 				
 				return lookup_entry;
+				*/
 			};
 			
 			self.Create_Task_Entry_Node_Lookup_Entry = function(table,row)
 			{
+				/*
 				var random_id = self.Get_ID_From_Table_Row(table,row);
 				
 				if(row['task_target_id'] == 0)
@@ -517,10 +538,12 @@ define([
 					};
 				
 				return lookup_entry;
+				*/
 			};
 			
 			self.Create_Tree_Node_Lookup_Entry = function(table, row)
 			{
+				/*
 				var tree_map = {
 					'Categories' : self.Create_Category_Node_Lookup_Entry,
 					'items' : self.Create_Item_Node_Lookup_Entry,
@@ -537,10 +560,12 @@ define([
 				lookup_entry.is_expanded = false;
 				
 				return lookup_entry;
+				*/
 			};
 			
 			self.Create_Tree = function(data)
 			{
+				/*
 				self.tree_view_id_lookup = {};
 				
 				//add the root node (non-child category parent)
@@ -585,11 +610,13 @@ define([
 				}
 				
 				return self.tree_view_id_lookup[root_id].node;
+				*/
 			};
 			
 			
 			self.Insert_Tree_Node = function(lookup_entry)
 			{
+				/*
 				if(lookup_entry.parent_id in self.tree_view_id_lookup)
 				{
 					var parent_lookup = self.tree_view_id_lookup[lookup_entry.parent_id];
@@ -601,10 +628,12 @@ define([
 				{
 					alert('Error finding parent: ' + lookup_entry.parent_id + '. ' + JSON.stringify(lookup_entry));
 				}
+				*/
 			};
 			
 			self.Remove_Tree_Node = function(lookup_entry)
 			{
+				/*
 				if(lookup_entry.parent_id in self.tree_view_id_lookup)
 				{
 					var parent_lookup = self.tree_view_id_lookup[lookup_entry.parent_id];
@@ -619,10 +648,12 @@ define([
 				else{
 					alert('Remove_Tree_Node: Parent node not found.');
 				}
+				*/
 			};
 			
 			self.Generate_Hashed_ID = function(table, index)
 			{
+				
 				var str = table + index;
 				var hash = 0;
 				
@@ -643,7 +674,20 @@ define([
 			//render function (div must already exist)
 			self.Render = function() {
 				
-				document.getElementById(self.div_id).innerHTML += '<div id="'+self.tree_view_div+'"></div>';
+				document.getElementById(self.div_id).innerHTML = '<ul id="'+self.tree_view_div+'"></ul>';
+				$('#' + self.div_id).jstree({ 'core' : {
+					'check_callback' : function (operation, node, node_parent, node_position, more) {
+						return true;
+					},
+				    'data' : [
+				              {'id':"category_0",'text':"All"}]
+				       } });
+				var tree = $('#' + self.div_id).jstree(true);
+				
+				var position = 0;
+				var newNode = { state: "open", text: "Category 1", attr : {id: 'category_1'} };
+			    tree.create_node("category_0", newNode, position, false, false);
+			    
 			};
 		}
 	};

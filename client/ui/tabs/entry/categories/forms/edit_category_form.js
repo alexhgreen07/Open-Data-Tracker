@@ -95,7 +95,8 @@ define([
 							if (jsonRpcObj.result.success) {
 				
 								alert('Category deleted.');
-									
+								
+								document.getElementById(this.edit_category_select.id).value = 0;
 								
 								app.api.Refresh_Data(function() {
 									//self.refresh_item_log_callback();

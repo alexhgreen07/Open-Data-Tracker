@@ -168,7 +168,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				//re-initialize the lookup
 				self.tree_view_hash_lookup = [];
 				
-				//TODO: implement jstree 
+				document.getElementById(self.div_id).innerHTML = '<ul id="'+self.tree_view_div+'"></ul>';
 				$('#' + self.div_id).jstree({ 'core' : {
 					'check_callback' : function (operation, node, node_parent, node_position, more) {
 						return true;
@@ -660,7 +660,9 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					var parent_lookup = self.tree_view_hash_lookup[lookup_entry.parent_id];
 					
 					//parent_lookup.node.removeItem(lookup_entry.node_id);
-					self.jstree.delete_node(lookup_entry.node_id);
+					var node_to_delete = self.jstree.get_node(lookup_entry.node_id);
+					self.jstree.delete_node(node_to_delete);
+					//self.jstree.refresh();
 					
 				}
 				else{

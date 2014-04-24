@@ -14,6 +14,7 @@ module.exports = function(grunt) {
 								'externals/jquery-ui/dist/jquery-ui.css',
 								'externals/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css',
 								'externals/js.tree/resnyanskiy.js.tree.css',
+								'externals/jstree/dist/themes/default/style.min.css',
 								'externals/fullcalendar/build/out/fullcalendar.css',
 								'client/main.css', ],
 						dest : 'dist/main.css'

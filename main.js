@@ -5,8 +5,7 @@ require.config({
     	'jsonrpc' : 'externals/jsonrpc',
     	'jsonrpc_lib' : 'externals/json-rpc2php/jsonRPC2php.client',
     	'fastclick' : 'externals/fastclick/lib/fastclick',
-    	'resnyanskiy.js.tree' : 'externals/js.tree/resnyanskiy.js.tree',
-    	'js.tree' : 'externals/js.tree',
+    	'jquery.ui.jstree' : 'externals/jstree/dist/jstree.min',
     	'jquery' : 'externals/jquery-ui/jquery-1.9.0',
         'jquery.ui.lib' : 'externals/jquery-ui/dist/jquery-ui',
         'jquery.ui': 'externals/jquery.ui',
@@ -19,11 +18,11 @@ require.config({
 	shim : {
 		//require shim
 		'jsonrpc' : ['jsonrpc_lib'],
-		'js.tree' : ['resnyanskiy.js.tree'],
 		//jquery shim
 		'jquery.ui.lib' : ['jquery'],
 		'jquery.ui.touch-punch' : ['jquery.ui.lib'],
 		'jquery.ui.timepicker-addon' : ['jquery.ui.lib'],
+		'jquery.ui.jstree' : ['jquery.ui.lib'],
 		'jquery.ui.fullcalendar': ['jquery.ui.lib'],
 		'jquery.pivot': ['jquery.ui.lib'],
 		'jquery.ui.pivot': ['jquery.pivot'],

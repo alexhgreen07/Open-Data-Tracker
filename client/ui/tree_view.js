@@ -15,7 +15,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 			self.tree_view_div = self.div_id + '_treeview_div';
 			self.data = data;
 			self.layer_is_enabled = [];
-			self.tree_view_id_lookup = [];
+			self.tree_view_hash_lookup = [];
 			self.node_click_callback = function(info){};
 			
 			self.Refresh = function(new_data)
@@ -25,10 +25,10 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					
 				var should_restore_value = false;
 				
-				if(self.tree_view_id_lookup.length > 0)
+				if(self.tree_view_hash_lookup.length > 0)
 				{
-					var last_table = self.tree_view_id_lookup[self.last_selected_id].table;
-					var last_row = self.tree_view_id_lookup[self.last_selected_id].row;
+					var last_table = self.tree_view_hash_lookup[self.last_selected_id].table;
+					var last_row = self.tree_view_hash_lookup[self.last_selected_id].row;
 					
 					should_restore_value = true;
 				}
@@ -58,7 +58,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				
 				//alert(JSON.stringify(diff));
 				
-				if(self.tree_view_id_lookup.length > 0)
+				if(self.tree_view_hash_lookup.length > 0)
 				{
 					
 					should_restore_value = true;
@@ -72,7 +72,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					{
 						has_updated = true;
 						
-						//execute removals diff to tree_view_id_lookup
+						//execute removals diff to tree_view_hash_lookup
 						for(row_key in table)
 						{
 							var diff_row = table[row_key];
@@ -82,13 +82,13 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 							if(diff_row.operation == 'remove' || diff_row.operation == 'update')
 							{
 								//remove old entry
-								var old_entry = self.tree_view_id_lookup[random_id];
+								var old_entry = self.tree_view_hash_lookup[random_id];
 								self.Remove_Tree_Node(old_entry);
-								delete self.tree_view_id_lookup[random_id];
+								delete self.tree_view_hash_lookup[random_id];
 							}
 						}
 						
-						//apply diff to tree_view_id_lookup
+						//apply diff to tree_view_hash_lookup
 						for(row_key in table)
 						{
 							var diff_row = table[row_key];
@@ -99,7 +99,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 							{
 								//add new entry
 								var new_lookup_entry = self.Create_Tree_Node_Lookup_Entry(table_key,row);
-								self.tree_view_id_lookup[new_lookup_entry.node_id] = new_lookup_entry;
+								self.tree_view_hash_lookup[new_lookup_entry.node_id] = new_lookup_entry;
 							}
 						}
 						
@@ -114,7 +114,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 								var row = diff_row['row'];
 								var random_id = self.Get_ID_From_Table_Row(table_key,row);
 								
-								var new_lookup_entry = self.tree_view_id_lookup[random_id];
+								var new_lookup_entry = self.tree_view_hash_lookup[random_id];
 								
 								//alert(diff_row.operation);
 								
@@ -130,7 +130,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				
 				if(has_updated)
 				{
-					if(self.last_selected_id in self.tree_view_id_lookup)
+					if(self.last_selected_id in self.tree_view_hash_lookup)
 					{
 						//toggle node to refresh
 						self.Select_Node(self.last_selected_id);
@@ -148,7 +148,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 			
 			self.Node_Click_Callback = function(id)
 			{
-				info = self.tree_view_id_lookup[id];
+				info = self.tree_view_hash_lookup[id];
 					
 				self.Select_Node(id);
 				
@@ -161,12 +161,12 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				/*
 				document.getElementById(self.tree_view_div).innerHTML = "";
 				
-				delete self.tree_view_id_lookup;
+				delete self.tree_view_hash_lookup;
 				delete self.tree_nodes;
 				delete self.tree;
 				
 				//re-initialize the lookup
-				self.tree_view_id_lookup = [];
+				self.tree_view_hash_lookup = [];
 				
 				//self.tree_nodes = self.Create_Category_Tree_Nodes(self.data);
 				self.tree_nodes = self.Create_Tree(self.data);
@@ -202,9 +202,9 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				}
 				
 				//add colours to the treeview according to type
-				for(var key in self.tree_view_id_lookup)
+				for(var key in self.tree_view_hash_lookup)
 				{
-					var current_lookup = self.tree_view_id_lookup[key];
+					var current_lookup = self.tree_view_hash_lookup[key];
 					var element_id = 'li-' + key;
 					
 					if(document.getElementById(element_id))
@@ -245,9 +245,9 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 			self.Set_Tree_Node_Expanded = function(id, expanded)
 			{
 				/*
-				if(id in self.tree_view_id_lookup)
+				if(id in self.tree_view_hash_lookup)
 				{
-					var lookup_entry = self.tree_view_id_lookup[id];
+					var lookup_entry = self.tree_view_hash_lookup[id];
 					
 					if(lookup_entry.is_expanded != expanded)
 					{
@@ -266,9 +266,9 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 			self.Toggle_Tree_Node_Expanded = function(id)
 			{
 				/*
-				if(id in self.tree_view_id_lookup)
+				if(id in self.tree_view_hash_lookup)
 				{
-					var lookup_entry = self.tree_view_id_lookup[id];
+					var lookup_entry = self.tree_view_hash_lookup[id];
 					
 					//toggle expanded
 					self.tree.updateNode(id,[],true);
@@ -328,14 +328,14 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				
 				if(id !== -1)
 				{
-					var current_lookup = self.tree_view_id_lookup[id];
+					var current_lookup = self.tree_view_hash_lookup[id];
 				
 					while(current_lookup.parent_id !== 0)
 					{
 						
 						parents.push(current_lookup.parent_id);
 						
-						current_lookup = self.tree_view_id_lookup[current_lookup.parent_id];
+						current_lookup = self.tree_view_hash_lookup[current_lookup.parent_id];
 					}
 					
 					for(var i = 0; i < parents.length; i++)
@@ -360,49 +360,49 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 			
 			self.Create_Category_Node_Lookup_Entry = function(table, row)
 			{
-				/*
+				
 				var random_id = self.Get_ID_From_Table_Row(table,row);
 				var parent_id = self.Generate_Hashed_ID("Categories", row["Parent Category ID"]);
 				
-				var new_tree_row = new jstree.TreeNode(random_id, row["Name"], false);
+				//var new_tree_row = new jstree.TreeNode(random_id, row["Name"], false);
 				
 				lookup_entry = 
 					{
 						"node_id" : random_id,
-						"node" : new_tree_row,
+						"node" : {},
 						"parent_id" : parent_id,
 						"table" : table,
 						"row" : row
 					};
 				
 				return lookup_entry;
-				*/
+				
 			};
 			
 			self.Create_Item_Node_Lookup_Entry = function(table, row)
 			{
-				/*
+				
 				var random_id = self.Get_ID_From_Table_Row(table,row);
 				var parent_id = self.Generate_Hashed_ID("Categories", row["category_id"]);
 				
-				var new_tree_row = new jstree.TreeNode(random_id, row["item_name"], false);
+				//var new_tree_row = new jstree.TreeNode(random_id, row["item_name"], false);
 				
 				lookup_entry = 
 					{
 						"node_id" : random_id,
-						"node" : new_tree_row,
+						"node" : {},
 						"parent_id" : parent_id,
 						"table" : table,
 						"row" : row
 					};
 				
 				return lookup_entry;
-				*/
+				
 			};
 			
 			self.Create_Item_Target_Node_Lookup_Entry = function(table, row)
 			{
-				/*
+				
 				var random_id = self.Get_ID_From_Table_Row(table,row);
 				
 				if(row['recurring_child_id'] == 0)
@@ -415,7 +415,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					var parent_id = self.Generate_Hashed_ID("item_targets", row['recurring_child_id']);
 				}
 				
-				var new_tree_row = new jstree.TreeNode(random_id, row["start_time"], false);
+				//var new_tree_row = new jstree.TreeNode(random_id, row["start_time"], false);
 				
 				lookup_entry = 
 					{
@@ -427,12 +427,12 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					};
 				
 				return lookup_entry;
-				*/
+				
 			};
 			
 			self.Create_Item_Entry_Node_Lookup_Entry = function(table,row)
 			{
-				/*
+				
 				var random_id = self.Get_ID_From_Table_Row(table,row);
 				
 				if(row['item_target_id'] == 0)
@@ -445,7 +445,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					var parent_id = self.Generate_Hashed_ID("item_targets", row['item_target_id']);
 				}
 				
-				var new_tree_row = new jstree.TreeNode(random_id, row["time"], false);
+				//var new_tree_row = new jstree.TreeNode(random_id, row["time"], false);
 				
 				lookup_entry = 
 					{
@@ -457,33 +457,33 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					};
 				
 				return lookup_entry;
-				*/
+				
 			};
 			
 			self.Create_Task_Node_Lookup_Entry = function(table,row)
 			{
-				/*
+				
 				var random_id = self.Get_ID_From_Table_Row(table,row);
 				var parent_id = self.Generate_Hashed_ID("Categories", row["category_id"]);
 				
-				var new_tree_row = new jstree.TreeNode(random_id, row["name"], false);
+				//var new_tree_row = new jstree.TreeNode(random_id, row["name"], false);
 				
 				lookup_entry = 
 					{
 						"node_id" : random_id,
-						"node" : new_tree_row,
+						"node" : {},
 						"parent_id" : parent_id,
 						"table" : table,
 						"row" : row
 					};
 				
 				return lookup_entry;
-				*/
+				
 			};
 			
 			self.Create_Task_Target_Node_Lookup_Entry = function(table,row)
 			{
-				/*
+				
 				var random_id = self.Get_ID_From_Table_Row(table,row);
 				
 				if(row['recurrance_child_id'] == 0)
@@ -496,24 +496,24 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					var parent_id = self.Generate_Hashed_ID("task_targets", row['recurrance_child_id']);
 				}
 				
-				var new_tree_row = new jstree.TreeNode(random_id, row["scheduled_time"], false);
+				//var new_tree_row = new jstree.TreeNode(random_id, row["scheduled_time"], false);
 				
 				lookup_entry = 
 					{
 						"node_id" : random_id,
-						"node" : new_tree_row,
+						"node" : {},
 						"parent_id" : parent_id,
 						"table" : table,
 						"row" : row
 					};
 				
 				return lookup_entry;
-				*/
+				
 			};
 			
 			self.Create_Task_Entry_Node_Lookup_Entry = function(table,row)
 			{
-				/*
+				
 				var random_id = self.Get_ID_From_Table_Row(table,row);
 				
 				if(row['task_target_id'] == 0)
@@ -526,24 +526,24 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					var parent_id = self.Generate_Hashed_ID("task_targets", row['task_target_id']);
 				}
 				
-				var new_tree_row = new jstree.TreeNode(random_id, row["start_time"], false);
+				//var new_tree_row = new jstree.TreeNode(random_id, row["start_time"], false);
 				
 				lookup_entry = 
 					{
 						"node_id" : random_id,
-						"node" : new_tree_row,
+						"node" : {},
 						"parent_id" : parent_id,
 						"table" : table,
 						"row" : row
 					};
 				
 				return lookup_entry;
-				*/
+				
 			};
 			
 			self.Create_Tree_Node_Lookup_Entry = function(table, row)
 			{
-				/*
+				
 				var tree_map = {
 					'Categories' : self.Create_Category_Node_Lookup_Entry,
 					'items' : self.Create_Item_Node_Lookup_Entry,
@@ -560,18 +560,18 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				lookup_entry.is_expanded = false;
 				
 				return lookup_entry;
-				*/
+				
 			};
 			
 			self.Create_Tree = function(data)
 			{
 				/*
-				self.tree_view_id_lookup = {};
+				self.tree_view_hash_lookup = {};
 				
 				//add the root node (non-child category parent)
 				var root_id = self.Generate_Hashed_ID("Categories", 0);
 				var new_tree_row = new jstree.TreeNode(root_id, "All", true);
-				self.tree_view_id_lookup[root_id] = {
+				self.tree_view_hash_lookup[root_id] = {
 					node : new_tree_row,
 					parent_id : 0,
 					table: "Categories",
@@ -589,15 +589,15 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 						
 						var new_lookup_entry = self.Create_Tree_Node_Lookup_Entry(table_key,row);
 						
-						self.tree_view_id_lookup[new_lookup_entry.node_id] = new_lookup_entry;
+						self.tree_view_hash_lookup[new_lookup_entry.node_id] = new_lookup_entry;
 					}
 				}
 				
 				//iterate through lookup and add all children
-				for(lookup_key in self.tree_view_id_lookup)
+				for(lookup_key in self.tree_view_hash_lookup)
 				{
 					
-					var current_lookup = self.tree_view_id_lookup[lookup_key];
+					var current_lookup = self.tree_view_hash_lookup[lookup_key];
 					
 					//ensure we don't add the root node with no parent
 					if(current_lookup.parent_id !== 0)
@@ -609,7 +609,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					
 				}
 				
-				return self.tree_view_id_lookup[root_id].node;
+				return self.tree_view_hash_lookup[root_id].node;
 				*/
 			};
 			
@@ -617,9 +617,9 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 			self.Insert_Tree_Node = function(lookup_entry)
 			{
 				/*
-				if(lookup_entry.parent_id in self.tree_view_id_lookup)
+				if(lookup_entry.parent_id in self.tree_view_hash_lookup)
 				{
-					var parent_lookup = self.tree_view_id_lookup[lookup_entry.parent_id];
+					var parent_lookup = self.tree_view_hash_lookup[lookup_entry.parent_id];
 			
 					parent_lookup.node.addItem(lookup_entry.node);
 					parent_lookup.node.isBranch = true;
@@ -634,9 +634,9 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 			self.Remove_Tree_Node = function(lookup_entry)
 			{
 				/*
-				if(lookup_entry.parent_id in self.tree_view_id_lookup)
+				if(lookup_entry.parent_id in self.tree_view_hash_lookup)
 				{
-					var parent_lookup = self.tree_view_id_lookup[lookup_entry.parent_id];
+					var parent_lookup = self.tree_view_hash_lookup[lookup_entry.parent_id];
 					
 					parent_lookup.node.removeItem(lookup_entry.node_id);
 					

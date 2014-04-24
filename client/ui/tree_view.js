@@ -20,7 +20,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 			
 			self.Refresh = function(new_data)
 			{
-				/*
+				
 				self.data = new_data;
 					
 				var should_restore_value = false;
@@ -44,12 +44,12 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					self.Set_Tree_Node_Expanded(self.tree_nodes.id,true);
 					self.Select_Node(self.tree_nodes.id);
 				}
-				*/
+				
 			};
 			
 			self.Refresh_From_Diff = function(diff, new_data)
 			{
-				/*
+				
 				self.data = new_data;
 				
 				var has_updated = false;
@@ -143,7 +143,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 						self.Select_Node(self.tree_nodes.id);
 					}
 				}
-				*/
+				
 			};
 			
 			self.Node_Click_Callback = function(id)
@@ -158,7 +158,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 			
 			self.Force_Tree_Refresh = function()
 			{
-				/*
+				
 				document.getElementById(self.tree_view_div).innerHTML = "";
 				
 				delete self.tree_view_hash_lookup;
@@ -168,14 +168,28 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				//re-initialize the lookup
 				self.tree_view_hash_lookup = [];
 				
+				//TODO: implement jstree 
+				$('#' + self.div_id).jstree({ 'core' : {
+					'check_callback' : function (operation, node, node_parent, node_position, more) {
+						return true;
+					},
+				    'data' : []
+				       } });
+				self.jstree = $('#' + self.div_id).jstree(true);
+								
 				//self.tree_nodes = self.Create_Category_Tree_Nodes(self.data);
 				self.tree_nodes = self.Create_Tree(self.data);
 				
-				self.tree = new jstree.Tree(document.getElementById(self.tree_view_div),[self.tree_nodes]);
 				self.last_selected_id = 0;
 				
-				self.tree.onNodeClick = self.Node_Click_Callback;
-				*/
+				$('#' + self.div_id).on('changed.jstree', function (e, data) {
+					
+					self.Node_Click_Callback(data.node.id);
+					
+				});
+				
+				//self.tree.onNodeClick = self.Node_Click_Callback;
+				
 			};
 			
 			self.Select_Node = function(id)
@@ -299,7 +313,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 			
 			self.Get_ID_From_Table_Row = function(table,row)
 			{
-				/*
+				
 				var primary_id_lookup = {
 					'Categories' : 'Category ID',
 					'items' : 'item_id',
@@ -316,12 +330,12 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				var found_key = self.Generate_Hashed_ID(table, primary_id);
 				
 				return found_key;
-				*/
+				
 			};
 			
 			self.Expand_All_Node_Parents = function(table, row)
 			{
-				/*
+				
 				var parents = [];
 				
 				id = self.Get_ID_From_Table_Row(table,row);
@@ -354,7 +368,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					self.Set_Tree_Node_Expanded(self.tree_nodes.id,true);
 					self.Select_Node(self.tree_nodes.id);
 				}
-				*/
+				
 				
 			};
 			
@@ -369,7 +383,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				lookup_entry = 
 					{
 						"node_id" : random_id,
-						"node" : {},
+						"node" : row["Name"],
 						"parent_id" : parent_id,
 						"table" : table,
 						"row" : row
@@ -390,7 +404,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				lookup_entry = 
 					{
 						"node_id" : random_id,
-						"node" : {},
+						"node" : row["item_name"],
 						"parent_id" : parent_id,
 						"table" : table,
 						"row" : row
@@ -420,7 +434,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				lookup_entry = 
 					{
 						"node_id" : random_id,
-						"node" : new_tree_row,
+						"node" : row["start_time"],
 						"parent_id" : parent_id,
 						"table" : table,
 						"row" : row
@@ -450,7 +464,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				lookup_entry = 
 					{
 						"node_id" : random_id,
-						"node" : new_tree_row,
+						"node" : row["time"],
 						"parent_id" : parent_id,
 						"table" : table,
 						"row" : row
@@ -471,7 +485,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				lookup_entry = 
 					{
 						"node_id" : random_id,
-						"node" : {},
+						"node" : row["name"],
 						"parent_id" : parent_id,
 						"table" : table,
 						"row" : row
@@ -501,7 +515,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				lookup_entry = 
 					{
 						"node_id" : random_id,
-						"node" : {},
+						"node" : row["scheduled_time"],
 						"parent_id" : parent_id,
 						"table" : table,
 						"row" : row
@@ -531,7 +545,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				lookup_entry = 
 					{
 						"node_id" : random_id,
-						"node" : {},
+						"node" : row["start_time"],
 						"parent_id" : parent_id,
 						"table" : table,
 						"row" : row
@@ -565,14 +579,15 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 			
 			self.Create_Tree = function(data)
 			{
-				/*
+				
 				self.tree_view_hash_lookup = {};
 				
 				//add the root node (non-child category parent)
 				var root_id = self.Generate_Hashed_ID("Categories", 0);
-				var new_tree_row = new jstree.TreeNode(root_id, "All", true);
+				//var new_tree_row = new jstree.TreeNode(root_id, "All", true);
 				self.tree_view_hash_lookup[root_id] = {
-					node : new_tree_row,
+					node_id : root_id,
+					node : "All",
 					parent_id : 0,
 					table: "Categories",
 					row: {"Category ID": 0}
@@ -600,7 +615,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					var current_lookup = self.tree_view_hash_lookup[lookup_key];
 					
 					//ensure we don't add the root node with no parent
-					if(current_lookup.parent_id !== 0)
+					//if(current_lookup.parent_id !== 0)
 					{
 						
 						self.Insert_Tree_Node(current_lookup);
@@ -610,45 +625,48 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				}
 				
 				return self.tree_view_hash_lookup[root_id].node;
-				*/
+				
 			};
 			
 			
 			self.Insert_Tree_Node = function(lookup_entry)
 			{
-				/*
+				
 				if(lookup_entry.parent_id in self.tree_view_hash_lookup)
 				{
 					var parent_lookup = self.tree_view_hash_lookup[lookup_entry.parent_id];
-			
-					parent_lookup.node.addItem(lookup_entry.node);
-					parent_lookup.node.isBranch = true;
+					
+					var newNode = { state: "open", text: lookup_entry.node, id: lookup_entry.node_id };
+					
+					self.jstree.create_node(lookup_entry.parent_id, newNode, "first", false, false);
+					
 				}
 				else
 				{
-					alert('Error finding parent: ' + lookup_entry.parent_id + '. ' + JSON.stringify(lookup_entry));
+					//alert('Error finding parent: ' + lookup_entry.parent_id + '. ' + JSON.stringify(lookup_entry));
+					
+					var newNode = { state: "open", text: lookup_entry.node, id: lookup_entry.node_id };
+					
+					self.jstree.create_node(null, newNode, "first", false, false);
 				}
-				*/
+				
 			};
 			
 			self.Remove_Tree_Node = function(lookup_entry)
 			{
-				/*
+				
 				if(lookup_entry.parent_id in self.tree_view_hash_lookup)
 				{
 					var parent_lookup = self.tree_view_hash_lookup[lookup_entry.parent_id];
 					
-					parent_lookup.node.removeItem(lookup_entry.node_id);
+					//parent_lookup.node.removeItem(lookup_entry.node_id);
+					self.jstree.delete_node(lookup_entry.node_id);
 					
-					if(!parent_lookup.node.hasItems())
-					{
-						parent_lookup.node.isBranch = false;
-					}
 				}
 				else{
 					alert('Remove_Tree_Node: Parent node not found.');
 				}
-				*/
+				
 			};
 			
 			self.Generate_Hashed_ID = function(table, index)
@@ -675,19 +693,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 			self.Render = function() {
 				
 				document.getElementById(self.div_id).innerHTML = '<ul id="'+self.tree_view_div+'"></ul>';
-				$('#' + self.div_id).jstree({ 'core' : {
-					'check_callback' : function (operation, node, node_parent, node_position, more) {
-						return true;
-					},
-				    'data' : [
-				              {'id':"category_0",'text':"All"}]
-				       } });
-				var tree = $('#' + self.div_id).jstree(true);
 				
-				var position = 0;
-				var newNode = { state: "open", text: "Category 1", attr : {id: 'category_1'} };
-			    tree.create_node("category_0", newNode, position, false, false);
-			    
 			};
 		}
 	};

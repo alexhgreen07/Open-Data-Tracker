@@ -239,6 +239,7 @@ define([],function(){
 				};
 			
 			var task_target_id = params.task_target_id;
+			var continue_recurrance = params.continue_recurrance;
 			
 			//get the child columns
 			session.database.Select(
@@ -254,7 +255,7 @@ define([],function(){
 						var recurrance_child_id = table[0]["recurrance_child_id"];
 						
 						var columns = {
-								"task_id" : "scheduled_time",
+								"task_id" : "task_id",
 								"task_schedule_id" : "task_schedule_id",
 								"scheduled_time" : "scheduled_time",
 								"recurring" : "recurring",
@@ -278,7 +279,45 @@ define([],function(){
 									
 									if(table.length == 1)
 									{
-										//TODO: implement child break
+										
+										var value_lookup = {
+											'recurrance_child_id': '0',
+											'recurring': '0',
+										};
+										
+										where = 'task_schedule_id = ' + task_target_id;
+										
+										//break the child from the parent
+										session.database.Update('item_log',value_lookup,where,function(object){
+											
+											if(continue_recurrance)
+											{
+												var columns = {
+														"task_schedule_id" : "task_schedule_id",
+														"scheduled_time" : "scheduled_time",
+														};
+												
+												var where = "recurrance_child_id` = " + recurrance_child_id + 
+													" AND scheduled_time > '" + task_start_time + "'";
+												
+												//get the next recurring child
+												session.database.Select(
+														'task_targets', 
+														columns, 
+														where,
+														'ORDER BY scheduled_time',
+														function(table){
+															
+															if(table.length > 0)
+															{
+																
+															}
+															
+														});
+											}
+											
+											callback(object);
+										});
 									}
 									else
 									{

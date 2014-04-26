@@ -48,56 +48,60 @@ function Refresh_Select_HTML_From_Table(select_id, table, value_column_name, tex
 
 function Refresh_Select_HTML_From_Table_Diff(select_id, table_diff, value_column_name, text_column_name)
 {
-	select_to_refresh = document.getElementById(select_id);
-	selected_value = select_to_refresh.value;
-	is_selected_value_present = true;
-	
-	for (var i=0; i < table.length; i++) {
-	
-		diff_row = table[i];
-		var current_row = diff_row.row;
-		
-		if(diff_row.operation == 'insert')
-		{
-		
-			var new_option = Select_Option_From_Table_Row(current_row, value_column_name, text_column_name);
-			select_to_refresh.options.add(new_option);
-		}
-		else if(diff_row.operation == 'update')
-		{
-			for(var i = 0; i < select_to_refresh.options.length; i++)
-			{
-				var current_option = select_to_refresh.options[i];
-				
-				if(current_option.value == current_row[value_column_name])
-				{
-					var new_option = Select_Option_From_Table_Row(current_row, value_column_name, text_column_name);
-					select_to_refresh.options[i] = new_option;
-					
-					break;
-				}
-			}
-		}
-		else if(diff_row.operation == 'delete')
-		{
-			for(var i = 0; i < select_to_refresh.options.length; i++)
-			{
-				var current_option = select_to_refresh.options[i];
-				
-				if(current_option.value == current_row[value_column_name])
-				{
-					select_to_refresh.options.remove(i);
-					
-					break;
-				}
-			}
-		}
-	}
-	
-	if(is_selected_value_present)
+	if(table_diff.length > 0)
 	{
-		select_to_refresh.value = selected_value;
+		select_to_refresh = document.getElementById(select_id);
+		selected_value = select_to_refresh.value;
+		is_selected_value_present = true;
+		
+		for (var i=0; i < table_diff.length; i++) {
+		
+			diff_row = table_diff[i];
+			var current_row = diff_row.row;
+			
+			if(diff_row.operation == 'insert')
+			{
+			
+				var new_option = Select_Option_From_Table_Row(current_row, value_column_name, text_column_name);
+				select_to_refresh.options.add(new_option);
+			}
+			else if(diff_row.operation == 'update')
+			{
+				for(var i = 0; i < select_to_refresh.options.length; i++)
+				{
+					var current_option = select_to_refresh.options[i];
+					
+					if(current_option.value == current_row[value_column_name])
+					{
+						var new_option = Select_Option_From_Table_Row(current_row, value_column_name, text_column_name);
+						select_to_refresh.options[i] = new_option;
+						
+						break;
+					}
+				}
+			}
+			else if(diff_row.operation == 'delete')
+			{
+				for(var i = 0; i < select_to_refresh.options.length; i++)
+				{
+					var current_option = select_to_refresh.options[i];
+					
+					if(current_option.value == current_row[value_column_name])
+					{
+						select_to_refresh.options.remove(i);
+						
+						break;
+					}
+				}
+			}
+		}
+		
+		if(is_selected_value_present)
+		{
+			select_to_refresh.value = selected_value;
+		}
 	}
+	
 }
 
 function Rainbow(numOfSteps, step) {

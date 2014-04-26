@@ -233,7 +233,67 @@ define([],function(){
 		},
 		Break_Recuring_Child: function(params, session, callback)
 		{
-			//TODO: implement
+			var columns = {
+				"scheduled_time" : "scheduled_time",
+				"recurrance_child_id" : "recurrance_child_id",
+				};
+			
+			var task_target_id = params.task_target_id;
+			
+			//get the child columns
+			session.database.Select(
+				'task_targets', 
+				columns, 
+				"task_schedule_id = " + task_target_id,
+				'',
+				function(table){
+					
+					if(table.length == 1)
+					{
+						var task_start_time = table[0]["scheduled_time"];
+						var recurrance_child_id = table[0]["recurrance_child_id"];
+						
+						var columns = {
+								"task_id" : "scheduled_time",
+								"task_schedule_id" : "task_schedule_id",
+								"scheduled_time" : "scheduled_time",
+								"recurring" : "recurring",
+								"recurrance_type" : "recurrance_type",
+								"recurrance_period" : "recurrance_period",
+								"recurrance_type" : "recurrance_type",
+								"allowed_variance" : "allowed_variance",
+								"estimated_time" : "estimated_time",
+								"recurrance_end_time" : "recurrance_end_time",
+								"recurrance_child_id" : "recurrance_child_id",
+								"status" : "status",
+								};
+						
+						//get the parent columns
+						session.database.Select(
+								'task_targets', 
+								columns, 
+								"task_schedule_id = " + recurrance_child_id,
+								'',
+								function(table){
+									
+									if(table.length == 1)
+									{
+										//TODO: implement child break
+									}
+									else
+									{
+										callback(table);
+									}
+									
+								});
+					}
+					else
+					{
+						callback(table);
+					}
+					
+					
+				});
 		},
 		Insert_Recurring_Children: function(params, session, callback)
 		{

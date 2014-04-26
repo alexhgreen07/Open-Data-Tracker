@@ -109,24 +109,7 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 							delete self.tree_view_hash_lookup[random_id];
 						}
 					}
-					
-					for(var row_key in diff_array)
-					{
-						var table_key = diff_array[row_key].table_key;
-						var diff_row = diff_array[row_key];
-						var row = diff_row['row'];
-						var random_id = self.Get_ID_From_Table_Row(table_key,row);
-						
-						if(diff_row.operation == 'update')
-						{
-							//update old entry
-							var new_lookup_entry = self.Create_Tree_Node_Lookup_Entry(table_key,row);
-							self.tree_view_hash_lookup[new_lookup_entry.node_id] = new_lookup_entry;
-							
-							self.Update_Tree_Node(new_lookup_entry);
-						}
-					}
-					
+										
 					//apply diff to tree_view_hash_lookup
 					for(var row_key in diff_array)
 					{
@@ -143,28 +126,23 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 							self.Insert_Tree_Node(new_lookup_entry);
 						}
 					}
-					/*
-					//apply rest of diff to treeview
+
 					for(var row_key in diff_array)
 					{
 						var table_key = diff_array[row_key].table_key;
 						var diff_row = diff_array[row_key];
+						var row = diff_row['row'];
+						var random_id = self.Get_ID_From_Table_Row(table_key,row);
 						
-						if(diff_row.operation !== 'remove')
+						if(diff_row.operation == 'update')
 						{
+							//update old entry
+							var new_lookup_entry = self.Create_Tree_Node_Lookup_Entry(table_key,row);
+							self.tree_view_hash_lookup[new_lookup_entry.node_id] = new_lookup_entry;
 							
-							var row = diff_row['row'];
-							var random_id = self.Get_ID_From_Table_Row(table_key,row);
-							
-							var new_lookup_entry = self.tree_view_hash_lookup[random_id];
-							
-							//alert(diff_row.operation);
-							
-							self.Insert_Tree_Node(new_lookup_entry);
-							
+							self.Update_Tree_Node(new_lookup_entry);
 						}
-						
-					}*/
+					}
 					
 				}
 				
@@ -741,6 +719,8 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 			self.Update_Tree_Node = function(lookup_entry)
 			{
 				self.jstree.rename_node(lookup_entry.node_id,lookup_entry.node);
+				
+				self.jstree.move_node(lookup_entry.node_id,lookup_entry.parent_id);
 			};
 			
 			self.Remove_Tree_Node = function(lookup_entry)

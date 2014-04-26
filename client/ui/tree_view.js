@@ -64,67 +64,107 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					should_restore_value = true;
 				}
 				
+				var diff_array = [];
+				
 				for(table_key in diff['data'])
 				{
 					var table = diff['data'][table_key];
 					
-					if(table.length > 0)
+					for(row_key in table)
 					{
-						has_updated = true;
+						diff_array.push({table_key: table_key, operation:table[row_key].operation, row: table[row_key].row});
+					}
+					
+				}
+				
+				if(diff_array.length > 0)
+				{
+					has_updated = true;
+					diff_array.sort(function(a,b){
 						
-						//execute removals diff to tree_view_hash_lookup
-						for(row_key in table)
-						{
-							var diff_row = table[row_key];
-							var row = diff_row['row'];
-							var random_id = self.Get_ID_From_Table_Row(table_key,row);
-							
-							if(diff_row.operation == 'remove' || diff_row.operation == 'update')
-							{
-								//remove old entry
-								var old_entry = self.tree_view_hash_lookup[random_id];
-								self.Remove_Tree_Node(old_entry);
-								delete self.tree_view_hash_lookup[random_id];
-							}
-						}
+						var node_id_a = self.Get_ID_From_Table_Row(a.table_key, a.row);
+						var node_id_b = self.Get_ID_From_Table_Row(b.table_key, b.row);
 						
-						//apply diff to tree_view_hash_lookup
-						for(row_key in table)
-						{
-							var diff_row = table[row_key];
-							var row = diff_row['row'];
-							var random_id = self.Get_ID_From_Table_Row(table_key,row);
-							
-							if(diff_row.operation == 'insert' || diff_row.operation == 'update')
-							{
-								//add new entry
-								var new_lookup_entry = self.Create_Tree_Node_Lookup_Entry(table_key,row);
-								self.tree_view_hash_lookup[new_lookup_entry.node_id] = new_lookup_entry;
-							}
-						}
+						var nest_level_a = self.Get_Nest_Level_From_Hash_Id(node_id_a);
+						var nest_level_b = self.Get_Nest_Level_From_Hash_Id(node_id_b);
 						
-						//apply rest of diff to treeview
-						for(row_key in table)
+						return nest_level_b - nest_level_a;
+						
+					});
+					
+					
+					//execute removals diff to tree_view_hash_lookup
+					for(var row_key in diff_array)
+					{
+						var table_key = diff_array[row_key].table_key;
+						var diff_row = diff_array[row_key];
+						var row = diff_row['row'];
+						var random_id = self.Get_ID_From_Table_Row(table_key,row);
+						
+						if(diff_row.operation == 'remove')
 						{
-							var diff_row = table[row_key];
-							
-							if(diff_row.operation !== 'remove')
-							{
-								
-								var row = diff_row['row'];
-								var random_id = self.Get_ID_From_Table_Row(table_key,row);
-								
-								var new_lookup_entry = self.tree_view_hash_lookup[random_id];
-								
-								//alert(diff_row.operation);
-								
-								self.Insert_Tree_Node(new_lookup_entry);
-								
-							}
-							
+							//remove old entry
+							var old_entry = self.tree_view_hash_lookup[random_id];
+							self.Remove_Tree_Node(old_entry);
+							delete self.tree_view_hash_lookup[random_id];
 						}
 					}
 					
+					for(var row_key in diff_array)
+					{
+						var table_key = diff_array[row_key].table_key;
+						var diff_row = diff_array[row_key];
+						var row = diff_row['row'];
+						var random_id = self.Get_ID_From_Table_Row(table_key,row);
+						
+						if(diff_row.operation == 'update')
+						{
+							//update old entry
+							var new_lookup_entry = self.Create_Tree_Node_Lookup_Entry(table_key,row);
+							self.tree_view_hash_lookup[new_lookup_entry.node_id] = new_lookup_entry;
+							
+							self.Update_Tree_Node(new_lookup_entry);
+						}
+					}
+					
+					//apply diff to tree_view_hash_lookup
+					for(var row_key in diff_array)
+					{
+						var table_key = diff_array[row_key].table_key;
+						var diff_row = diff_array[row_key];
+						var row = diff_row['row'];
+						var random_id = self.Get_ID_From_Table_Row(table_key,row);
+						
+						if(diff_row.operation == 'insert')
+						{
+							//add new entry
+							var new_lookup_entry = self.Create_Tree_Node_Lookup_Entry(table_key,row);
+							self.tree_view_hash_lookup[new_lookup_entry.node_id] = new_lookup_entry;
+							self.Insert_Tree_Node(new_lookup_entry);
+						}
+					}
+					/*
+					//apply rest of diff to treeview
+					for(var row_key in diff_array)
+					{
+						var table_key = diff_array[row_key].table_key;
+						var diff_row = diff_array[row_key];
+						
+						if(diff_row.operation !== 'remove')
+						{
+							
+							var row = diff_row['row'];
+							var random_id = self.Get_ID_From_Table_Row(table_key,row);
+							
+							var new_lookup_entry = self.tree_view_hash_lookup[random_id];
+							
+							//alert(diff_row.operation);
+							
+							self.Insert_Tree_Node(new_lookup_entry);
+							
+						}
+						
+					}*/
 					
 				}
 				
@@ -609,26 +649,49 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					}
 				}
 				
-				//iterate through lookup and add all children
-				for(lookup_key in self.tree_view_hash_lookup)
-				{
-					
-					var current_lookup = self.tree_view_hash_lookup[lookup_key];
-					
-					//ensure we don't add the root node with no parent
-					//if(current_lookup.parent_id !== 0)
-					{
-						
-						self.Insert_Tree_Node(current_lookup);
-						
-					}
-					
-				}
+				self.Insert_All_Hash_Lookup_Nodes();
 				
 				return self.tree_view_hash_lookup[root_id].node;
 				
 			};
 			
+			self.Insert_All_Hash_Lookup_Nodes = function()
+			{
+				
+				var nodes_to_check = [self.Generate_Hashed_ID("Categories", 0)];
+				
+				self.Insert_Hash_Lookup_Children(nodes_to_check);
+				
+			};
+			
+			self.Insert_Hash_Lookup_Children = function(nodes_to_check)
+			{
+				while(nodes_to_check.length > 0)
+				{
+					node_to_check = nodes_to_check[0];
+					
+					for(lookup_key in self.tree_view_hash_lookup)
+					{
+						var current_lookup = self.tree_view_hash_lookup[lookup_key];
+						
+						if(node_to_check == current_lookup.node_id)
+						{
+							self.Insert_Tree_Node(current_lookup);
+							
+							nodes_to_check.splice(0,1);
+							
+							for(child_key in self.tree_view_hash_lookup)
+							{
+								if(self.tree_view_hash_lookup[child_key].parent_id == node_to_check)
+								{
+									nodes_to_check.push(child_key);
+								}
+							}
+						}
+						
+					}
+				}
+			};
 			
 			self.Insert_Tree_Node = function(lookup_entry)
 			{
@@ -637,7 +700,29 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 				{
 					var parent_lookup = self.tree_view_hash_lookup[lookup_entry.parent_id];
 					
-					var newNode = { state: "open", text: lookup_entry.node, id: lookup_entry.node_id };
+					var new_style = '';
+					
+					var tree_map = {
+							'Categories' : '',
+							'items' : 'red',
+							'item_targets' : 'green',
+							'item_entries' : 'blue',
+							'tasks' : 'orange',
+							'task_targets' : 'yellow',
+							'task_entries' : 'pink',
+						};
+					
+					for(var key in tree_map)
+					{
+						if(lookup_entry.table == key && tree_map[key] != '')
+						{
+							new_style = 'background-color:' + tree_map[key] + ';';
+							new_style += 'border-radius:10px;';
+							break;
+						}
+					}
+					
+					var newNode = { state: "open", text: lookup_entry.node, id: lookup_entry.node_id , a_attr: {style:new_style}};
 					
 					self.jstree.create_node(lookup_entry.parent_id, newNode, "first", false, false);
 					
@@ -651,6 +736,11 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					self.jstree.create_node(null, newNode, "first", false, false);
 				}
 				
+			};
+			
+			self.Update_Tree_Node = function(lookup_entry)
+			{
+				self.jstree.rename_node(lookup_entry.node_id,lookup_entry.node);
 			};
 			
 			self.Remove_Tree_Node = function(lookup_entry)
@@ -670,6 +760,29 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					alert('Remove_Tree_Node: Parent node not found.');
 				}
 				
+			};
+			
+			self.Get_Nest_Level_From_Hash_Id = function(node_id)
+			{
+				
+				var nest_level = 0;
+				
+				if(node_id in self.tree_view_hash_lookup)
+				{
+					var current_node = self.tree_view_hash_lookup[node_id];
+					
+					while(current_node.parent_id != self.Generate_Hashed_ID("Categories", 0))
+					{
+						current_node = self.tree_view_hash_lookup[current_node.parent_id];
+						nest_level++;
+					}
+				}
+				else
+				{
+					nest_level = -1;
+				}
+				
+				return nest_level;
 			};
 			
 			self.Generate_Hashed_ID = function(table, index)

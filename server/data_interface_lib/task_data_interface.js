@@ -280,6 +280,8 @@ define([],function(){
 									if(table.length == 1)
 									{
 										
+										var parent_recurrance_end_time = table[0]["recurrance_end_time"];
+										
 										var value_lookup = {
 											'recurrance_child_id': '0',
 											'recurring': '0',
@@ -288,7 +290,7 @@ define([],function(){
 										where = 'task_schedule_id = ' + task_target_id;
 										
 										//break the child from the parent
-										session.database.Update('item_log',value_lookup,where,function(object){
+										session.database.Update('task_targets',value_lookup,where,function(object){
 											
 											if(continue_recurrance)
 											{
@@ -310,7 +312,36 @@ define([],function(){
 															
 															if(table.length > 0)
 															{
+																var task_schedule_id = table[0]["task_schedule_id"];
+																var task_schedule_time = table[0]["scheduled_time"];
 																
+																var value_lookup = {
+																		'recurrance_child_id': '0',
+																		'recurrance_end_time': parent_recurrance_end_time,
+																	};
+																	
+																where = 'task_schedule_id = ' + task_schedule_id;
+																
+																//break the next child from the parent
+																session.database.Update('task_targets',value_lookup,where,function(object){
+																	
+																	var value_lookup = {
+																			'recurrance_child_id': task_schedule_id,
+																		};
+																		
+																	where = "scheduled_time > '" + task_target_id = "'" +
+																		" AND recurrance_child_id = " + recurrance_child_id;
+																	
+																	//update all children parents to next child parent
+																	session.database.Update('task_targets',value_lookup,where,function(object){
+																		
+																		//TODO: create proper update parameters
+																		var update_params = {};
+																		
+																		self.Update_Recurring_Children(update_params, session, callback);
+																		
+																	});
+																});
 															}
 															
 														});
@@ -337,14 +368,23 @@ define([],function(){
 		Insert_Recurring_Children: function(params, session, callback)
 		{
 			//TODO: implement
+			
+			callback(false);
 		},
 		Update_Recurring_Children: function(params, session, callback)
 		{
 			//TODO: implement
+			
+			callback(false);
 		},
 		Delete_Recurring_Children: function(params, session, callback)
 		{
-			//TODO: implement
+			var where = 'recurrance_child_id = ' + params.recurrance_child_id;
+			
+			session.database.Delete('task_targets',where,function(object){
+				callback(object);
+			});
+			
 		},
 	};
 });

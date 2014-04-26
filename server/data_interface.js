@@ -28,14 +28,14 @@ define([
 			}
 			else if(old_row[primary_column] < new_row[primary_column])
 			{
-				diff_table.push({'operation': 'insert','row': new_row});
-				new_count++;
+				diff_table.push({'operation': 'remove','row': old_row});
+				old_count++;
 			}
 			else if(old_row[primary_column] > new_row[primary_column])
 			{
 				
-				diff_table.push({'operation': 'remove','row': old_row});
-				old_count++;
+				diff_table.push({'operation': 'insert','row': new_row});
+				new_count++;
 			}
 			else {
 				

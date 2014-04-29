@@ -170,28 +170,36 @@ define([
 			};
 			self.Queries = function(queries, callback)
 			{
-				var resultsCallbackCount = 0;
-				var results_array = [];
-				
-				//function to check if all queries have completed
-				function AllQueriesComplete(result)
+				if(queries.length > 0)
 				{
-					resultsCallbackCount--;
-					results_array.push(result);
+					var resultsCallbackCount = 0;
+					var results_array = [];
 					
-					if(resultsCallbackCount == 0)
+					//function to check if all queries have completed
+					function AllQueriesComplete(result)
 					{
-						callback(results_array);
+						resultsCallbackCount--;
+						results_array.push(result);
+						
+						if(resultsCallbackCount == 0)
+						{
+							callback(results_array);
+						}
+					}
+					
+					resultsCallbackCount = queries.length;
+					
+					//start all queries
+					for(var key in queries)
+					{
+						self.Query(queries[key], AllQueriesComplete);
 					}
 				}
-				
-				resultsCallbackCount = queries.length;
-				
-				//start all queries
-				for(var key in queries)
+				else
 				{
-					self.Query(queries[key], AllQueriesComplete);
+					callback(true);
 				}
+				
 			};
 			self.Date_To_MYSQL_String = function(date)
 			{

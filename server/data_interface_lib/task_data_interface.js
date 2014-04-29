@@ -125,7 +125,9 @@ define([],function(){
 			//handle recurring children
 			Update_Recurring_Children(params,session,function(object){
 				
-				callback(object);
+				var return_object = {success: true};
+				
+				callback(return_object);
 				
 			});
 			
@@ -451,8 +453,8 @@ define([],function(){
 					if(table[0]["scheduled_time"] && table[0]["recurrance_child_id"] == 0)
 					{
 						
-						var recurring_timestamp = table[0]["scheduled_time"];
-						var recurrance_end_timestamp = table[0]["recurrance_end_time"];
+						var recurring_timestamp = new Date(table[0]["scheduled_time"]);
+						var recurrance_end_timestamp = new Date(table[0]["recurrance_end_time"]);
 						
 						var recurrance_period_miliseconds = table[0]["recurrance_period"] * 60 * 60 * 1000;
 						
@@ -460,7 +462,9 @@ define([],function(){
 						
 						while(recurring_timestamp < recurrance_end_timestamp)
 						{
-							recurring_timestamp = recurring_timestamp + recurrance_period_miliseconds;
+							recurring_timestamp = new Date((+recurring_timestamp) + (+recurrance_period_miliseconds));
+							
+							console.log(typeof(recurring_timestamp));
 							
 							var recurring_timestring = session.database.Date_To_MYSQL_String(recurring_timestamp);
 							
@@ -524,12 +528,12 @@ define([],function(){
 				session.database.Select(
 					'task_targets', 
 					columns, 
-					"task_schedule_id = " + params.task_schedule_id,
+					"recurrance_child_id = " + params.task_schedule_id,
 					'',
 					function(table){
 						
-						var recurring_timestamp = params['scheduled_time'];
-						var recurrance_end_timestamp = params['recurrance_end_time'];
+						var recurring_timestamp = new Date(params['scheduled_time']);
+						var recurrance_end_timestamp = new Date(params['recurrance_end_time']);
 						
 						var recurrance_period_miliseconds = params['recurrance_period'] * 60 * 60 * 1000;
 						
@@ -537,9 +541,9 @@ define([],function(){
 						
 						var update_queries = [];
 						
-						while((i < table.length) || (recurring_timestamp < recurrance_end_timestamp))
+						while((i < table.length) || ((+recurring_timestamp) < (+recurrance_end_timestamp)))
 						{
-							recurring_timestamp = recurring_timestamp + recurrance_period_miliseconds;
+							recurring_timestamp = new Date((+recurring_timestamp) + (+recurrance_period_miliseconds));
 							var recurring_timestring = session.database.Date_To_MYSQL_String(recurring_timestamp);
 							
 							if(i < table.length)
@@ -581,7 +585,7 @@ define([],function(){
 								"'" + params["allowed_variance"] + "'," +
 								"'" + recurring_timestring + "'," +
 								"'" + params["estimated_time"] + "'," +
-								"'" + table[i]['task_schedule_id'] + "'," +
+								"'" + params['task_schedule_id'] + "'," +
 								"'Incomplete')";
 								
 								update_queries.push(sql);

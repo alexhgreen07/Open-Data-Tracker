@@ -94,7 +94,9 @@ define([],function(){
 				
 				Insert_Recurring_Children({'task_schedule_id' : table[0]['task_schedule_id']},session,function(object){
 					
-					callback(object);
+					var return_object = {success: object};
+					
+					callback(return_object);
 					
 				});
 				

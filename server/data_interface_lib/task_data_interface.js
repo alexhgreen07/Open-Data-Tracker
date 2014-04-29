@@ -528,6 +528,8 @@ define([],function(){
 									"'" + params["estimated_time"] + "'," +
 									"'" + table[i]['task_schedule_id'] + "'," +
 									"'Incomplete')";
+									
+									update_queries.push(sql);
 								}
 								
 								i++;

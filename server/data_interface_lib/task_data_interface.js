@@ -398,13 +398,34 @@ define([],function(){
 							
 							var recurrance_period_seconds = (int)table[0]["recurrance_period"] * 60 * 60;
 							
+							var insert_queries = [];
+							
 							while(recurring_timestamp < recurrance_end_timestamp)
 							{
-								//TODO: create all queries for insert
+								recurring_timestamp = recurring_timestamp + recurrance_period_seconds;
+								
+								var recurring_timestring = session.database.Date_To_MYSQL_String(recurring_timestamp);
+								
+								var sql = 'INSERT INTO `task_targets`(`task_id`,`scheduled_time`,`recurring`,`recurrance_type`,`recurrance_period`,`allowed_variance`,`recurrance_end_time`,`estimated_time`,`recurrance_child_id`,`status`)' +
+									"VALUES (" +
+									"'" + table[0]["task_id"] + "'," + 
+									"'" + recurring_timestring + "'," + 
+									"'" + table[0]["recurring"] + "'," +
+									"'" + table[0]["recurrance_type"] + "'," +
+									"'" + table[0]["recurrance_period"] + "'," +
+									"'" + table[0]["allowed_variance"] + "'," +
+									"'" + recurring_timestring + "'," +
+									"'" + table[0]["estimated_time"] + "'," +
+									"'" + table[0]["task_schedule_id"] + "'," +
+									"'Incomplete')";
+								
+								insert_queries.push(sql);
 							}
 							
-							//TODO: implement proper callback location
-							callback(table);
+							session.database.Queries(insert_queries, function(object){
+								callback(object);
+							});
+							
 						}
 						else
 						{

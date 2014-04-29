@@ -14,8 +14,17 @@ requirejs([
            'fs',
            'querystring',
            './server/api.js',
+           './core/logger.js',
            ],
-function   (http,url,path,fs,qs,api) {
+       function(
+		   http,
+		   url,
+		   path,
+		   fs,
+		   qs,
+		   api,
+		   logger
+		   ){
     
 	var port = 8888;
 
@@ -95,6 +104,9 @@ function   (http,url,path,fs,qs,api) {
 	}).listen(parseInt(port, 10));
 
 	console.log("Static file server running at\n  => http://localhost:" + port + "/\nCTRL + C to shutdown");
+	
+	//set the log level for the server
+	logger.Set_Log_Level(logger.INFO);
 	
 });
 

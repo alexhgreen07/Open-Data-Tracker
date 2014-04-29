@@ -1,7 +1,12 @@
 define([
         'querystring',
         './config.js',
-        ],function(qs,config){
+        '../core/logger.js',
+        ],function(
+		qs,
+		config,
+		logger
+		){
 	return {
 		Server: function()
 		{
@@ -21,7 +26,7 @@ define([
 					break;
 				}
 				
-				console.log(JSON.stringify(post_object));
+				logger.Info(JSON.stringify(post_object));
 				
 				method_name = post_object.method;
 				

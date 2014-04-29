@@ -464,8 +464,6 @@ define([],function(){
 						{
 							recurring_timestamp = new Date((+recurring_timestamp) + (+recurrance_period_miliseconds));
 							
-							console.log(typeof(recurring_timestamp));
-							
 							var recurring_timestring = session.database.Date_To_MYSQL_String(recurring_timestamp);
 							
 							var sql = 'INSERT INTO `task_targets`(`task_id`,`scheduled_time`,`recurring`,`recurrance_type`,`recurrance_period`,`allowed_variance`,`recurrance_end_time`,`estimated_time`,`recurrance_child_id`,`status`)' +

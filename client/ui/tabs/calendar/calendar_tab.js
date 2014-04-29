@@ -2,8 +2,9 @@ define([
         'jquery.ui',
         'core/logger',
         './events/scheduler',
+        '../../../../core/logger.js',
         ],
-        function($,logger,scheduler){
+        function($,logger,scheduler,logger){
 	return {
 		/** This is the home tab class which holds all UI objects for general data.
 		 * @constructor Home_Tab

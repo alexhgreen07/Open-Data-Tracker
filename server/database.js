@@ -1,8 +1,12 @@
 define([
         'mysql',
         './config.js',
-        ],function(mysql,config){
-	
+        '../core/logger.js',
+        ],function(
+		mysql,
+		config,
+		logger
+		){
 	return {
 		Database: function(){
 			var self = this;
@@ -35,7 +39,7 @@ define([
 				
 				var self = this;
 				
-				console.log('Attempting query.');
+				logger.Info('Attempting query.');
 				
 				sql = 'SELECT ';
 				
@@ -52,7 +56,7 @@ define([
 				sql += ' WHERE (' + where + ')';
 				sql += ' ' + extra	;
 				
-				console.log(sql);
+				logger.Info(sql);
 				
 				self.connection.query(sql, function(err, rows, fields) {
 		
@@ -83,7 +87,7 @@ define([
 				sql += ' (' + columns.join(', ') + ')';
 				sql += ' VALUES (' + values.join(', ') + ')';
 				
-				console.log(sql);
+				logger.Info(sql);
 				
 				self.connection.query(sql, function(err, rows, fields) {
 		
@@ -114,7 +118,7 @@ define([
 				
 				sql += ' WHERE (' + where + ')';
 				
-				console.log(sql);
+				logger.Info(sql);
 				
 				self.connection.query(sql, function(err, rows, fields) {
 		
@@ -136,7 +140,7 @@ define([
 				
 				sql = "DELETE FROM `" + table + "` WHERE (" + where + ")";
 				
-				console.log(sql);
+				logger.Info(sql);
 				
 				self.connection.query(sql, function(err, rows, fields) {
 		
@@ -153,13 +157,13 @@ define([
 			};
 			self.Query = function(query_string, callback)
 			{
-				console.log(query_string);
+				logger.Info(query_string);
 				
 				self.connection.query(query_string, function(err, rows, fields) {
 					
 					if (err)
 					{
-						console.log('Query error: ' + err);
+						logger.Info('Query error: ' + err);
 						//callback(err);
 					}
 					

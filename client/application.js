@@ -1,4 +1,5 @@
 define([
+    '../../core/logger.js',
     './rpc/api',
     './ui/tabs',
 	'./ui/tabs/home/home_tab',
@@ -8,7 +9,7 @@ define([
 	'./ui/tabs/login/login_tab',
 	'./ui/tabs/register/register_tab',
 	],
-	function (api, tabs, home_tab, entry_tab, calendar_tab, report_tab, login_tab,register_tab){
+	function (logger, api, tabs, home_tab, entry_tab, calendar_tab, report_tab, login_tab,register_tab){
 		
 		return {
 			/** Represents the main application.
@@ -54,6 +55,9 @@ define([
 				this.busy_count = 0;
 				
 				this.is_logged_in = false;
+				
+				//setup logger
+				logger.Set_Log_Level(logger.INFO);
 				
 				this.Parse_Cookies = function(rc) {
 					
@@ -121,8 +125,8 @@ define([
 					times.push('report_tab_object: ' + (end - start) / 1000);
 					
 					//alert(JSON.stringify(times));
-					Info('Full refresh: ' + JSON.stringify(times));
-					Info('Total: ' + (end - total_start) / 1000);
+					logger.Info('Full refresh: ' + JSON.stringify(times));
+					logger.Info('Total: ' + (end - total_start) / 1000);
 				};
 				
 				this.Refresh_From_Diff = function(diff) {
@@ -157,8 +161,8 @@ define([
 					times.push('report_tab_object: ' + (end - start) / 1000);
 					
 					//alert(JSON.stringify(times));
-					Info('Diff refresh: ' + JSON.stringify(times));
-					Info('Total: ' + (end - total_start) / 1000);
+					logger.Info('Diff refresh: ' + JSON.stringify(times));
+					logger.Info('Total: ' + (end - total_start) / 1000);
 				};
 				
 				this.Select_Event_Click_Callback = function(table, row)

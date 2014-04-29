@@ -3,13 +3,17 @@ current_version_string = '0.0.8';
 
 define([
         	'./database.js',
-        ],function(database){
+        	'../core/logger.js'
+        ],function(
+    		database,
+    		logger
+    		){
 	
 	//*****************Updater functions*********************
 	function Update_From_0_To_1(params, session, callback)
 	{
 		//TODO: implement
-		console.log("Updating database from v0 to v1");
+		logger.Info("Updating database from v0 to v1");
 		
 		callback(false);
 	}
@@ -17,7 +21,7 @@ define([
 	function Update_From_1_To_2(params, session, callback)
 	{
 		//TODO: implement
-		console.log("Updating database from v1 to v2");
+		logger.Info("Updating database from v1 to v2");
 		
 		callback(false);
 	}
@@ -25,7 +29,7 @@ define([
 	function Update_From_2_To_3(params, session, callback)
 	{
 		//TODO: implement
-		console.log("Updating database from v2 to v3");
+		logger.Info("Updating database from v2 to v3");
 		
 		callback(false);
 	}
@@ -33,7 +37,7 @@ define([
 	function Update_From_3_To_4(params, session, callback)
 	{
 		//TODO: implement
-		console.log("Updating database from v3 to v4");
+		logger.Info("Updating database from v3 to v4");
 		
 		callback(false);
 	}
@@ -41,7 +45,7 @@ define([
 	function Update_From_4_To_5(params, session, callback)
 	{
 		//TODO: implement
-		console.log("Updating database from v4 to v5");
+		logger.Info("Updating database from v4 to v5");
 		
 		callback(false);
 	}
@@ -49,7 +53,7 @@ define([
 	function Update_From_5_To_6(params, session, callback)
 	{
 		//TODO: implement
-		console.log("Updating database from v5 to v6");
+		logger.Info("Updating database from v5 to v6");
 		
 		callback(false);
 	}
@@ -57,7 +61,7 @@ define([
 	function Update_From_6_To_7(params, session, callback)
 	{
 		//TODO: implement
-		console.log("Updating database from v6 to v7");
+		logger.Info("Updating database from v6 to v7");
 		
 		callback(false);
 	}
@@ -327,7 +331,7 @@ define([
 			}
 			else
 			{
-				console.log("Installing fresh database.");
+				logger.Info("Installing fresh database.");
 				
 				//Attempt to install database
 				Install_Database(params, session, function(result){

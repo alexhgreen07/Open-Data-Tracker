@@ -382,6 +382,7 @@ define([],function(){
 				"name" : "tasks.name",
 				};
 			
+			
 			session.database.Select(
 				'task_targets', 
 				columns, 
@@ -391,12 +392,14 @@ define([],function(){
 					
 					if(table.length > 0)
 					{
+						
 						if(table[0]["scheduled_time"] && table[0]["recurrance_child_id"] == 0)
 						{
+							
 							var recurring_timestamp = table[0]["scheduled_time"];
 							var recurrance_end_timestamp = table[0]["recurrance_end_time"];
 							
-							var recurrance_period_seconds = (int)table[0]["recurrance_period"] * 60 * 60;
+							var recurrance_period_seconds = table[0]["recurrance_period"] * 60 * 60;
 							
 							var insert_queries = [];
 							
@@ -426,11 +429,13 @@ define([],function(){
 								callback(object);
 							});
 							
+							
 						}
 						else
 						{
 							callback(true);
 						}
+						
 						
 					}
 					else
@@ -438,9 +443,9 @@ define([],function(){
 						//TODO: figure out this case
 						callback(false);
 					}
+					
 				});
 			
-			callback(false);
 		},
 		Update_Recurring_Children: function(params, session, callback)
 		{
@@ -475,6 +480,8 @@ define([],function(){
 							
 							var i = 0;
 							
+							var update_queries = [];
+							
 							while((i < table.length) || (recurring_timestamp < recurrance_end_timestamp))
 							{
 								recurring_timestamp = recurring_timestamp + recurrance_period_seconds;
@@ -482,13 +489,53 @@ define([],function(){
 								
 								if(i < table.length)
 								{
-									//TODO: implement update/deletions
+									if(recurring_timestamp < recurrance_end_timestamp)
+									{
+										var sql = "UPDATE `task_targets` SET " + 
+											"`task_id` = '" + params['task_id'] + "'," + 
+											"`scheduled_time` = '" + recurring_timestring + "'," + 
+											"`recurring` = " + table[i]['recurring'] + "," + 
+											"`recurrance_type` = '" + params['recurrance_type'] + "'," + 
+											"`recurrance_period` = " + params['recurrance_period'] + "," + 
+											"`allowed_variance` = " + params['allowed_variance'] + "," + 
+											"`recurrance_end_time` = '" + recurring_timestring + "'," + 
+											"`estimated_time` = '" + params['estimated_time'] + "'," + 
+											"`recurrance_child_id` = " + params['task_schedule_id'] + "" + 
+											" WHERE " +  
+											"`task_schedule_id` = " + table[i]['task_schedule_id'] + "";
+										
+										update_queries.push(sql);
+									}
+									else
+									{
+										var sql = "DELETE FROM `task_targets` WHERE " + 
+											"`task_schedule_id` = " + table[i]['task_schedule_id'] + "";
+										
+										update_queries.push(sql);
+									}
 								}
 								else
 								{
-									//TODO: implement insertions
+									var sql = 'INSERT INTO `task_targets`(`task_id`,`scheduled_time`,`recurring`,`recurrance_type`,`recurrance_period`,`allowed_variance`,`recurrance_end_time`,`estimated_time`,`recurrance_child_id`,`status`)' +
+									"VALUES (" +
+									"'" + params["task_id"] + "'," + 
+									"'" + recurring_timestring + "'," + 
+									"'" + params["recurring"] + "'," +
+									"'" + params["recurrance_type"] + "'," +
+									"'" + params["recurrance_period"] + "'," +
+									"'" + params["allowed_variance"] + "'," +
+									"'" + recurring_timestring + "'," +
+									"'" + params["estimated_time"] + "'," +
+									"'" + table[i]['task_schedule_id'] + "'," +
+									"'Incomplete')";
 								}
+								
+								i++;
 							}
+							
+							session.database.Queries(update_queries, function(object){
+								callback(object);
+							});
 							
 						});
 			}

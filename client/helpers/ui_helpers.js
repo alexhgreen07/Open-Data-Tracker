@@ -67,14 +67,14 @@ function Refresh_Select_HTML_From_Table_Diff(select_id, table_diff, value_column
 			}
 			else if(diff_row.operation == 'update')
 			{
-				for(var i = 0; i < select_to_refresh.options.length; i++)
+				for(var j = 0; j < select_to_refresh.options.length; j++)
 				{
-					var current_option = select_to_refresh.options[i];
+					var current_option = select_to_refresh.options[j];
 					
 					if(current_option.value == current_row[value_column_name])
 					{
 						var new_option = Select_Option_From_Table_Row(current_row, value_column_name, text_column_name);
-						select_to_refresh.options[i] = new_option;
+						select_to_refresh.options[j] = new_option;
 						
 						break;
 					}
@@ -82,13 +82,13 @@ function Refresh_Select_HTML_From_Table_Diff(select_id, table_diff, value_column
 			}
 			else if(diff_row.operation == 'delete')
 			{
-				for(var i = 0; i < select_to_refresh.options.length; i++)
+				for(var j = 0; j < select_to_refresh.options.length; j++)
 				{
-					var current_option = select_to_refresh.options[i];
+					var current_option = select_to_refresh.options[j];
 					
 					if(current_option.value == current_row[value_column_name])
 					{
-						select_to_refresh.options.remove(i);
+						select_to_refresh.options.remove(j);
 						
 						break;
 					}

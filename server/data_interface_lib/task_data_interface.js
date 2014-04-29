@@ -72,6 +72,9 @@ define([],function(){
 			value_lookup.recurrance_end_time = session.database.Date_To_MYSQL_String(new Date(value_lookup.recurrance_end_time));
 			
 			session.database.Insert('task_targets',value_lookup,function(object){
+				
+				//TODO: implement query for inserted row
+				
 				callback(object);
 			});
 		},
@@ -88,7 +91,14 @@ define([],function(){
 			var where = 'task_schedule_id = ' + task_schedule_id;
 			
 			session.database.Update('task_targets',value_lookup,where,function(object){
-				callback(object);
+				
+				//handle recurring children
+				self.Update_Recurring_Children(task_schedule_id,function(object){
+					
+					callback(object);
+					
+				});
+				
 			});
 		},
 		Delete_Task_Target: function(params, session, callback)
@@ -96,7 +106,14 @@ define([],function(){
 			var where = 'task_schedule_id = ' + params.task_schedule_id;
 			
 			session.database.Delete('task_targets',where,function(object){
-				callback(object);
+				
+				//handle recurring children
+				self.Delete_Recurring_Children(params.task_schedule_id,function(object){
+					
+					callback(object);
+					
+				});
+				
 			});
 		},
 		Get_Tasks_Schema: function(params, session, callback)

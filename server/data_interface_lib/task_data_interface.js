@@ -444,9 +444,59 @@ define([],function(){
 		},
 		Update_Recurring_Children: function(params, session, callback)
 		{
-			//TODO: implement
+			if(params['recurring'])
+			{
+				var columns = {
+						"task_id" : "task_targets.task_id",
+						"task_schedule_id" : "task_targets.task_schedule_id",
+						"scheduled_time" : "task_targets.scheduled_time",
+						"recurring" : "task_targets.recurring",
+						"recurrance_type" : "task_targets.recurrance_type",
+						"variance" : "task_targets.allowed_variance",
+						"estimated_time" : "task_targets.estimated_time",
+						"recurrance_period" : "task_targets.recurrance_period",
+						"recurrance_end_time" : "task_targets.recurrance_end_time",
+						"recurrance_child_id" : "task_targets.recurrance_child_id",
+						"status" : "task_targets.status",
+						"name" : "tasks.name",
+						};
+					
+					session.database.Select(
+						'task_targets', 
+						columns, 
+						"task_schedule_id = " + params.task_schedule_id,
+						'',
+						function(table){
+							
+							var recurring_timestamp = params['scheduled_time'];
+							var recurrance_end_timestamp = params['recurrance_end_time'];
+							
+							var recurrance_period_seconds = params['recurrance_period'];
+							
+							var i = 0;
+							
+							while((i < table.length) || (recurring_timestamp < recurrance_end_timestamp))
+							{
+								recurring_timestamp = recurring_timestamp + recurrance_period_seconds;
+								var recurring_timestring = session.database.Date_To_MYSQL_String(recurring_timestamp);
+								
+								if(i < table.length)
+								{
+									//TODO: implement update/deletions
+								}
+								else
+								{
+									//TODO: implement insertions
+								}
+							}
+							
+						});
+			}
+			else
+			{
+				callback(false);
+			}
 			
-			callback(false);
 		},
 		Delete_Recurring_Children: function(params, session, callback)
 		{

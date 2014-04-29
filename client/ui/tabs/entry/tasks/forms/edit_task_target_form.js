@@ -194,6 +194,8 @@ define([
 								
 								alert('Index deleted: ' + index_to_delete);
 								
+								document.getElementById(this.task_edit_target_select.id).value = 0;
+								
 								app.api.Refresh_Data(function() {
 									//self.refresh_item_log_callback();
 								});

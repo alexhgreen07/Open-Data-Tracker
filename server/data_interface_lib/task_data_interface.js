@@ -399,13 +399,13 @@ define([],function(){
 							var recurring_timestamp = table[0]["scheduled_time"];
 							var recurrance_end_timestamp = table[0]["recurrance_end_time"];
 							
-							var recurrance_period_seconds = table[0]["recurrance_period"] * 60 * 60;
+							var recurrance_period_miliseconds = table[0]["recurrance_period"] * 60 * 60 * 1000;
 							
 							var insert_queries = [];
 							
 							while(recurring_timestamp < recurrance_end_timestamp)
 							{
-								recurring_timestamp = recurring_timestamp + recurrance_period_seconds;
+								recurring_timestamp = recurring_timestamp + recurrance_period_miliseconds;
 								
 								var recurring_timestring = session.database.Date_To_MYSQL_String(recurring_timestamp);
 								
@@ -476,7 +476,7 @@ define([],function(){
 							var recurring_timestamp = params['scheduled_time'];
 							var recurrance_end_timestamp = params['recurrance_end_time'];
 							
-							var recurrance_period_seconds = params['recurrance_period'];
+							var recurrance_period_miliseconds = params['recurrance_period'] * 60 * 60 * 1000;
 							
 							var i = 0;
 							
@@ -484,7 +484,7 @@ define([],function(){
 							
 							while((i < table.length) || (recurring_timestamp < recurrance_end_timestamp))
 							{
-								recurring_timestamp = recurring_timestamp + recurrance_period_seconds;
+								recurring_timestamp = recurring_timestamp + recurrance_period_miliseconds;
 								var recurring_timestring = session.database.Date_To_MYSQL_String(recurring_timestamp);
 								
 								if(i < table.length)

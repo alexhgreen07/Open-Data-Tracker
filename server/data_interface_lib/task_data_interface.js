@@ -73,9 +73,25 @@ define([],function(){
 			
 			session.database.Insert('task_targets',value_lookup,function(object){
 				
-				//TODO: implement query for inserted row
+				var columns = {'task_schedule_id': 'task_schedule_id'};
+				var where = "";
 				
-				callback(object);
+				//find exact match of inserted task target
+				for(var key in params)
+				{
+					where += "`" + key + "` = '" + params[key] + "'";
+				}
+				
+				session.database.Select('task_targets',columns,where,'',function(table){
+					
+					self.Insert_Recurring_Children({'task_schedule_id' : table[0]['task_schedule_id']},function(object){
+						
+						callback(object);
+						
+					});
+					
+				});
+				
 			});
 		},
 		Update_Task_Target: function(params, session, callback)
@@ -86,14 +102,17 @@ define([],function(){
 			
 			task_schedule_id = value_lookup.task_schedule_id;
 			
+			//remove this column for the update
 			delete value_lookup.task_schedule_id;
 			
 			var where = 'task_schedule_id = ' + task_schedule_id;
 			
 			session.database.Update('task_targets',value_lookup,where,function(object){
 				
+				params['task_schedule_id'] = task_schedule_id;
+				
 				//handle recurring children
-				self.Update_Recurring_Children(task_schedule_id,function(object){
+				self.Update_Recurring_Children(params,function(object){
 					
 					callback(object);
 					
@@ -108,7 +127,7 @@ define([],function(){
 			session.database.Delete('task_targets',where,function(object){
 				
 				//handle recurring children
-				self.Delete_Recurring_Children(params.task_schedule_id,function(object){
+				self.Delete_Recurring_Children({'task_schedule_id' : params.task_schedule_id},function(object){
 					
 					callback(object);
 					

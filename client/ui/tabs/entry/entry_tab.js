@@ -1,9 +1,10 @@
 define([
+        '../../../../core/logger.js',
         '../../tree_view',
         './categories/category_form',
         './items/item_tab',
         './tasks/task_tab',
-        ],function(tree_view, category_form, item_tab, task_tab){
+        ],function(logger, tree_view, category_form, item_tab, task_tab){
 	return {
 		/** This is the task tab object which holds all UI objects for task data interaction.
 		 * @constructor Task_Tab
@@ -32,10 +33,33 @@ define([
 				
 				self.data = data;
 				
+				var times = [];
+				var start = new Date();
+				
 				self.tree_view.Refresh(self.data);
+				
+				var end = new Date();
+				times.push('tree_view: ' + (end - start) / 1000);
+				var start = new Date();
+				
 				self.category_tab.Refresh(self.data);
+				
+				var end = new Date();
+				times.push('category_tab: ' + (end - start) / 1000);
+				var start = new Date();
+				
 				self.items_tab.Refresh(self.data);
+				
+				var end = new Date();
+				times.push('items_tab: ' + (end - start) / 1000);
+				var start = new Date();
+				
 				self.tasks_tab.Refresh(self.data);
+				
+				var end = new Date();
+				times.push('tasks_tab: ' + (end - start) / 1000);
+				
+				logger.Info('Entry_Tab Refresh: ' + JSON.stringify(times));
 			};
 			
 			this.Refresh_From_Diff = function(diff, data)
@@ -44,15 +68,33 @@ define([
 				//TODO: implement
 				self.data = data;
 				
+				var times = [];
+				var start = new Date();
+				
 				self.tree_view.Refresh_From_Diff(diff, self.data);
 				
+				var end = new Date();
+				times.push('tree_view: ' + (end - start) / 1000);
+				var start = new Date();
+								
 				self.category_tab.Refresh_From_Diff(diff);
+				
+				var end = new Date();
+				times.push('category_tab: ' + (end - start) / 1000);
+				var start = new Date();
 				
 				self.items_tab.Refresh_From_Diff(diff, data);
 				
+				var end = new Date();
+				times.push('items_tab: ' + (end - start) / 1000);
+				var start = new Date();
+				
 				self.tasks_tab.Refresh_From_Diff(diff, data);
 				
+				var end = new Date();
+				times.push('tasks_tab: ' + (end - start) / 1000);
 				
+				logger.Info('Entry_Tab Diff: ' + JSON.stringify(times));
 			};
 			
 			this.Select_Entry = function(table, row)

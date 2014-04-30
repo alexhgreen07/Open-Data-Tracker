@@ -7,7 +7,8 @@ define([
         './forms/edit_task_form',
         './forms/new_task_target_form',
         './forms/edit_task_target_form',
-        ],function($,timecard_task_entry_form,new_task_entry_form,edit_task_entry_form,new_task_form,edit_task_form,new_task_target_form,edit_task_target_form){
+        '../../../../../core/logger.js',
+        ],function($,timecard_task_entry_form,new_task_entry_form,edit_task_entry_form,new_task_form,edit_task_form,new_task_target_form,edit_task_target_form,logger){
 	return {
 		/** This is the task tab object which holds all UI objects for task data interaction.
 		 * @constructor Task_Tab
@@ -74,15 +75,52 @@ define([
 				
 				//ensure the task info array is saved
 				self.task_info_json_array = data.tasks;
-
-				this.timecard_task_entry_form.Refresh(data);
-				this.new_task_entry_form.Refresh(data);
-				this.edit_task_entry_form.Refresh(data);
-				this.new_task_form.Refresh(data);
-				this.edit_task_form.Refresh(data);
-				this.new_task_target_form.Refresh(data);
-				this.edit_task_target_form.Refresh(data);
 				
+				var times = [];
+				var start = new Date();
+				
+				this.timecard_task_entry_form.Refresh(data);
+
+				var end = new Date();
+				times.push('timecard_task_entry_form: ' + (end - start) / 1000);
+				var start = new Date();
+				
+				this.new_task_entry_form.Refresh(data);
+
+				var end = new Date();
+				times.push('new_task_entry_form: ' + (end - start) / 1000);
+				var start = new Date();
+				
+				this.edit_task_entry_form.Refresh(data);
+
+				var end = new Date();
+				times.push('edit_task_entry_form: ' + (end - start) / 1000);
+				var start = new Date();
+				
+				this.new_task_form.Refresh(data);
+
+				var end = new Date();
+				times.push('new_task_form: ' + (end - start) / 1000);
+				var start = new Date();
+				
+				this.edit_task_form.Refresh(data);
+
+				var end = new Date();
+				times.push('edit_task_form: ' + (end - start) / 1000);
+				var start = new Date();
+				
+				this.new_task_target_form.Refresh(data);
+
+				var end = new Date();
+				times.push('new_task_target_form: ' + (end - start) / 1000);
+				var start = new Date();
+				
+				this.edit_task_target_form.Refresh(data);
+
+				var end = new Date();
+				times.push('edit_task_target_form: ' + (end - start) / 1000);
+				
+				logger.Info('Task_Tab Refresh: ' + JSON.stringify(times));
 			};
 			
 			this.Refresh_From_Diff = function(diff, data)
@@ -93,14 +131,51 @@ define([
 				//ensure the task info array is saved
 				self.task_info_json_array = data.tasks;
 				
-				this.timecard_task_entry_form.Refresh_From_Diff(diff, data);
-				this.new_task_entry_form.Refresh_From_Diff(diff, data);
-				this.edit_task_entry_form.Refresh_From_Diff(diff, data);
-				this.new_task_form.Refresh_From_Diff(diff, data);
-				this.edit_task_form.Refresh_From_Diff(diff, data);
-				this.new_task_target_form.Refresh_From_Diff(diff, data);
-				this.edit_task_target_form.Refresh_From_Diff(diff, data);
+				var times = [];
+				var start = new Date();
 				
+				this.timecard_task_entry_form.Refresh_From_Diff(diff, data);
+				
+				var end = new Date();
+				times.push('timecard_task_entry_form: ' + (end - start) / 1000);
+				var start = new Date();
+				
+				this.new_task_entry_form.Refresh_From_Diff(diff, data);
+				
+				var end = new Date();
+				times.push('new_task_entry_form: ' + (end - start) / 1000);
+				var start = new Date();
+				
+				this.edit_task_entry_form.Refresh_From_Diff(diff, data);
+
+				var end = new Date();
+				times.push('edit_task_entry_form: ' + (end - start) / 1000);
+				var start = new Date();
+				
+				this.new_task_form.Refresh_From_Diff(diff, data);
+
+				var end = new Date();
+				times.push('new_task_form: ' + (end - start) / 1000);
+				var start = new Date();
+				
+				this.edit_task_form.Refresh_From_Diff(diff, data);
+
+				var end = new Date();
+				times.push('edit_task_form: ' + (end - start) / 1000);
+				var start = new Date();
+				
+				this.new_task_target_form.Refresh_From_Diff(diff, data);
+
+				var end = new Date();
+				times.push('new_task_target_form: ' + (end - start) / 1000);
+				var start = new Date();
+				
+				this.edit_task_target_form.Refresh_From_Diff(diff, data);
+
+				var end = new Date();
+				times.push('edit_task_target_form: ' + (end - start) / 1000);
+				
+				logger.Info('Task_Tab Diff: ' + JSON.stringify(times));
 			};
 			
 			this.Show_Form = function(div_id){

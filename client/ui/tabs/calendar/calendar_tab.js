@@ -59,7 +59,7 @@ define([
 				
 				var end = new Date();
 				times.push('fullCalendar: ' + (end - start) / 1000);
-				logger.Info('Diff refresh: ' + JSON.stringify(times));
+				logger.Info('Calendar_Tab Refresh: ' + JSON.stringify(times));
 				
 				$('#' + self.calendar_div.id).fullCalendar('changeView', previous_name);
 				$('#' + self.calendar_div.id).fullCalendar('gotoDate',previous_date);

@@ -1,6 +1,6 @@
 define(
 		[ 'jquery',
-		  './client/application.test.js'
+		  './client/application.test.js',
 		  ],
 		function($, application_test) {
 
@@ -9,6 +9,7 @@ define(
 				document.body.innerHTML = '';
 				
 				application_test.Describe();
+				
 
 				//run the load event
 				window.onload();

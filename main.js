@@ -30,8 +30,6 @@ require.config({
 	
 });
 
-var unit_test = true;
-
 /** This is the main application object to be used
  * during operation.
  * */

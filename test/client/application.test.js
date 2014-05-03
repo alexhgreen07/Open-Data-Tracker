@@ -8,9 +8,16 @@ define([
 	{
 		describe("application.test Initialize", function() {
 
-			it("contains spec with an expectation, index: 0", function(done) {
+			it("Initializes the main application object.", function(done) {
 				
-				expect(true).toBe(true);
+				var test_window = window.open("", "popupWindow", "width=600,height=600,scrollbars=yes");
+				
+				var app = new application.Main_Application(test_window.document);
+				
+				app.Initialize();
+				
+				test_window.close();
+				
 				done();
 			});
 

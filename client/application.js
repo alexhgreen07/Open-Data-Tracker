@@ -15,7 +15,7 @@ define([
 			/** Represents the main application.
 			 * @constructor Main_Application
 			 */
-			Main_Application: function() {
+			Main_Application: function(parent_document) {
 				
 				var self = this;
 				
@@ -55,6 +55,8 @@ define([
 				this.busy_count = 0;
 				
 				this.is_logged_in = false;
+				
+				this.parent_document = parent_document;
 				
 				//setup logger
 				logger.Set_Log_Level(logger.INFO);
@@ -244,17 +246,17 @@ define([
 					self.main_tabs_div = "main_tab_navigation_div";
 					
 					//clear all previous content
-					document.body.innerHTML = "";
+					this.parent_document.body.innerHTML = "";
 					
 					//create the loader image div
-					self.loader_div = document.createElement("div");
+					self.loader_div = this.parent_document.createElement("div");
 					self.loader_div.id = "loader_div";
 					self.loader_div.className = "loader_div";
 					self.loader_div.innerHTML = '<img class="loader_img" src="ajax-loader.gif"/></div>';
-					document.body.appendChild(this.loader_div);
+					this.parent_document.body.appendChild(this.loader_div);
 				
 					//append the main tab div
-					document.body.innerHTML += '<div id="' + self.main_tabs_div + '"></div>';
+					this.parent_document.body.innerHTML += '<div id="' + self.main_tabs_div + '"></div>';
 					
 					this.tabs_array = [];
 					this.tabs_array.push(["Login", "<div id='login_tab_div'></div>"]);
@@ -287,17 +289,17 @@ define([
 					self.main_tabs_div = "main_tab_navigation_div";
 					
 					//clear all previous content
-					document.body.innerHTML = "";
+					this.parent_document.body.innerHTML = "";
 					
 					//create the loader image div
-					self.loader_div = document.createElement("div");
+					self.loader_div = this.parent_document.createElement("div");
 					self.loader_div.id = "loader_div";
 					self.loader_div.className = "loader_div";
 					self.loader_div.innerHTML = '<img class="loader_img" src="ajax-loader.gif"/></div>';
-					document.body.appendChild(this.loader_div);
+					this.parent_document.body.appendChild(this.loader_div);
 				
 					//append the main tab div
-					document.body.innerHTML += '<div id="' + self.main_tabs_div + '"></div>';
+					this.parent_document.body.innerHTML += '<div id="' + self.main_tabs_div + '"></div>';
 					
 					this.tabs_array = [];
 					this.tabs_array.push(["Home", "<div id='home_tab_div'></div>"]);

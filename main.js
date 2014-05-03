@@ -30,23 +30,33 @@ require.config({
 	
 });
 
+var unit_test = true;
+
 /** This is the main application object to be used
  * during operation.
  * */
 var app;
 
 //setup all initial requires
-require(['client/application', 'fastclick', 'jquery.ui'], function(application, fastclick, $) {
+require(['client/application', 'test/test', 'fastclick', 'jquery.ui'], function(application, test, fastclick, $) {
 	
-	$(document).ready(function(){
-		
-		fastclick.attach(document.body);
-
-		app = new application.Main_Application();
-		
-		app.Initialize();
-		
-		
-	});
+	if(!unit_test)
+	{
+		$(document).ready(function(){
+			
+			fastclick.attach(document.body);
+			
+			app = new application.Main_Application();
+			
+			app.Initialize();
+			
+			
+		});
+	}
+	else
+	{
+		//run unit tests
+		test.Execute_Tests();
+	}
 	
 });

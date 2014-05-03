@@ -27,8 +27,10 @@ define([],function(){
 					
 					      self.Run();
 					}
-					
-					self.is_busy = false;
+					else
+					{
+						self.is_busy = false;
+					}
 					
 				});
 				

@@ -38,23 +38,24 @@ var app;
 //setup all initial requires
 require(['client/application', 'test/test', 'fastclick', 'jquery.ui'], function(application, test, fastclick, $) {
 	
-	if(!unit_test)
-	{
+	
 		$(document).ready(function(){
 			
 			fastclick.attach(document.body);
 			
-			app = new application.Main_Application();
-			
-			app.Initialize();
-			
+			if(!unit_test)
+			{
+				app = new application.Main_Application();
+				
+				app.Initialize();
+			}
+			else
+			{
+				//run unit tests
+				test.Execute_Tests();
+			}
 			
 		});
-	}
-	else
-	{
-		//run unit tests
-		test.Execute_Tests();
-	}
+	
 	
 });

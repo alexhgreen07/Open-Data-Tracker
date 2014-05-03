@@ -1,30 +1,14 @@
 define(
-		[ 'jquery' ],
-		function($) {
+		[ 'jquery',
+		  './client/application.test.js'
+		  ],
+		function($, application_test) {
 
 			function Execute_Tests() {
 				
 				document.body.innerHTML = '';
 				
-				describe("Suite 0", function() {
-
-					it("contains spec with an expectation, index: 0", function(done) {
-						
-						expect(true).toBe(true);
-						done();
-					});
-
-				});
-				
-				describe("Suite 1", function() {
-
-					it("contains spec with an expectation, index: 1", function(done) {
-						
-						expect(true).toBe(true);
-						done();
-					});
-
-				});
+				application_test.Describe();
 
 				//run the load event
 				window.onload();

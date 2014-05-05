@@ -18,46 +18,46 @@ define([
 				/** This is the server api object. 
 				 * @type Server_API
 				 * */
-				this.api = application_api;
+				self.api = application_api;
 				
 				/** This is the tabs array for the main application. 
 				 * @type Array
 				 * */
-				this.tabs_array = new Array();
-				this.login_tabs_array = new Array();
+				self.tabs_array = new Array();
+				self.login_tabs_array = new Array();
 				/** This is the main tab navigation object.
 				 * @type Tabs
 				 * */
-				this.main_tab_nav = null;
+				self.main_tab_nav = null;
 				/** This is the home tab navigation object.
 				 * @type Home_Tab
 				 * */
-				this.home_tab_object = new home_tab.Home_Tab();
+				self.home_tab_object = new home_tab.Home_Tab();
 				/** This is the item tab navigation object.
 				 * @type Entry_Tab
 				 * */
-				this.entry_tab_object = new entry_tab.Entry_Tab();
+				self.entry_tab_object = new entry_tab.Entry_Tab();
 				
-				this.calendar_tab_object = new calendar_tab.Calendar_Tab();
+				self.calendar_tab_object = new calendar_tab.Calendar_Tab();
 				/** This is the report tab navigation object.
 				 * @type Report_Tab
 				 * */
-				this.report_tab_object = new report_tab.Report_Tab();
+				self.report_tab_object = new report_tab.Report_Tab();
 				
-				this.login_tab_object = new login_tab.Login_Tab();
+				self.login_tab_object = new login_tab.Login_Tab();
 				
-				this.register_tab_object = new register_tab.Register_Tab();
+				self.register_tab_object = new register_tab.Register_Tab();
 				
-				this.busy_count = 0;
+				self.busy_count = 0;
 				
-				this.is_logged_in = false;
+				self.is_logged_in = false;
 				
-				this.parent_document = parent_document;
+				self.parent_document = parent_document;
 				
 				//setup logger
 				logger.Set_Log_Level(logger.INFO);
 				
-				this.Parse_Cookies = function(rc) {
+				self.Parse_Cookies = function(rc) {
 					
 					var list = {};
 					
@@ -69,7 +69,7 @@ define([
 				    return list;
 				};
 				
-				this.Initialize = function(){
+				self.Initialize = function(){
 					
 					self.Connect('server/api.php', function() {
 					
@@ -91,7 +91,7 @@ define([
 				/** @method Refresh_Data
 				 * @desc This should be called to refresh data in all forms.
 				 * */
-				this.Refresh_Data = function() {
+				self.Refresh_Data = function() {
 					
 					var times = [];
 					
@@ -127,7 +127,7 @@ define([
 					logger.Info('Total: ' + (end - total_start) / 1000);
 				};
 				
-				this.Refresh_From_Diff = function(diff) {
+				self.Refresh_From_Diff = function(diff) {
 					
 					var times = [];
 					
@@ -163,15 +163,15 @@ define([
 					logger.Info('Total: ' + (end - total_start) / 1000);
 				};
 				
-				this.Select_Event_Click_Callback = function(table, row)
+				self.Select_Event_Click_Callback = function(table, row)
 				{
 					//activate the entry tab
-					$('#' + self.main_tabs_div).tabs({ active: 1 });
+					$('#' + self.main_tabs_div.id).tabs({ active: 1 });
 					
 					self.entry_tab_object.Select_Entry(table,row);
 				};
 				
-				this.Is_Busy_Callback = function(is_busy)
+				self.Is_Busy_Callback = function(is_busy)
 				{
 					
 					if(is_busy)
@@ -196,7 +196,7 @@ define([
 					
 				};
 				
-				this.Start_Auto_Refresh = function(){
+				self.Start_Auto_Refresh = function(){
 					
 					refresh_period = 60;
 					
@@ -221,9 +221,7 @@ define([
 				 * @desc Connects to the specified server.
 				 * @param 
 				 * */
-				this.Connect = function(url, callback) {
-					
-					var self = this;
+				self.Connect = function(url, callback) {
 					
 					self.api.is_busy_callback = self.Is_Busy_Callback;
 					self.api.data_refresh_callback = self.Refresh_Data;
@@ -236,34 +234,41 @@ define([
 					});
 				};
 				
-				this.Render_Login_Tabs = function(){
-					
-					var self = this;
-					self.main_tabs_div = "main_tab_navigation_div";
+				self.Render_Login_Tabs = function(){
 					
 					//clear all previous content
-					this.parent_document.body.innerHTML = "";
+					self.parent_document.body.innerHTML = "";
 					
 					//create the loader image div
-					self.loader_div = this.parent_document.createElement("div");
+					self.loader_div = document.createElement("div");
 					self.loader_div.id = "loader_div";
 					self.loader_div.className = "loader_div";
-					self.loader_div.innerHTML = '<img class="loader_img" src="ajax-loader.gif"/></div>';
-					this.parent_document.body.appendChild(this.loader_div);
-				
-					//append the main tab div
-					this.parent_document.body.innerHTML += '<div id="' + self.main_tabs_div + '"></div>';
+					self.loader_div = self.parent_document.body.appendChild(self.loader_div);
 					
-					this.tabs_array = [];
-					this.tabs_array.push(["Login", "<div id='login_tab_div'></div>"]);
-					this.tabs_array.push(["Register", "<div id='register_tab_div'></div>"]);
+					self.loader_div_img = document.createElement("img");
+					self.loader_div_img.className = "loader_img";
+					self.loader_div_img.src = "ajax-loader.gif";
+					self.loader_div_img = self.loader_div.appendChild(self.loader_div_img);
+					
+					//append the main tab div
+					self.main_tabs_div = document.createElement("div");
+					self.main_tabs_div.id = "main_tab_navigation_div";
+					self.parent_document.body.appendChild(self.main_tabs_div);
+					
+					self.tabs_array = [];
+					self.login_tab_div = document.createElement("div");
+					self.login_tab_div.id = "login_tab_div";
+					self.tabs_array.push(["Login", self.login_tab_div]);
+					self.register_tab_div = document.createElement("div");
+					self.register_tab_div.id = "register_tab_div";
+					self.tabs_array.push(["Register", self.register_tab_div]);
 		
 					//render the tabs
-					this.main_tab_nav = new tabs.Tabs(self.main_tabs_div, this.tabs_array);
-					this.main_tab_nav.Render();
+					self.main_tab_nav = new tabs.Tabs(self.main_tabs_div, self.tabs_array);
+					self.main_tab_nav.Render();
 					
-					this.login_tab_object.Render('login_tab_div');
-					this.register_tab_object.Render('register_tab_div');
+					self.login_tab_object.Render(self.login_tab_div.id);
+					self.register_tab_object.Render(self.register_tab_div.id);
 					
 					$('#' + self.loader_div.id).hide();
 					
@@ -279,49 +284,60 @@ define([
 				 * @desc This function renders the main navigation tab object
 				 * and all sub-tab objects.
 				 * */
-				this.Render_Main_Tabs = function() {
+				self.Render_Main_Tabs = function() {
 		
-					var self = this;
-					self.main_tabs_div = "main_tab_navigation_div";
-					
 					//clear all previous content
-					this.parent_document.body.innerHTML = "";
+					self.parent_document.body.innerHTML = "";
 					
 					//create the loader image div
-					self.loader_div = this.parent_document.createElement("div");
+					self.loader_div = document.createElement("div");
 					self.loader_div.id = "loader_div";
 					self.loader_div.className = "loader_div";
-					self.loader_div.innerHTML = '<img class="loader_img" src="ajax-loader.gif"/></div>';
-					this.parent_document.body.appendChild(this.loader_div);
+					self.loader_div = self.parent_document.body.appendChild(self.loader_div);
+					
+					self.loader_div_img = document.createElement("img");
+					self.loader_div_img.className = "loader_img";
+					self.loader_div_img.src = "ajax-loader.gif";
+					self.loader_div_img = self.loader_div.appendChild(self.loader_div_img);
 				
 					//append the main tab div
-					this.parent_document.body.innerHTML += '<div id="' + self.main_tabs_div + '"></div>';
+					self.main_tabs_div = document.createElement("div");
+					self.main_tabs_div.id = "main_tab_navigation_div";
+					self.parent_document.body.appendChild(self.main_tabs_div);
 					
-					this.tabs_array = [];
-					this.tabs_array.push(["Home", "<div id='home_tab_div'></div>"]);
-					this.tabs_array.push(["Entry", "<div id='entry_tab_div'></div>"]);
-					this.tabs_array.push(["Calendar", "<div id='calendar_tab_div'></div>"]);
-					this.tabs_array.push(["Reports", "<div id='report_tab_div'></div>"]);
+					self.tabs_array = [];
+					self.home_tab_div = document.createElement("div");
+					self.home_tab_div.id = "home_tab_div";
+					self.tabs_array.push(["Home", self.home_tab_div]);
+					self.entry_tab_div = document.createElement("div");
+					self.entry_tab_div.id = "entry_tab_div";
+					self.tabs_array.push(["Entry", self.entry_tab_div]);
+					self.calendar_tab_div = document.createElement("div");
+					self.calendar_tab_div.id = "calendar_tab_div";
+					self.tabs_array.push(["Calendar", self.calendar_tab_div]);
+					self.report_tab_div = document.createElement("div");
+					self.report_tab_div.id = "report_tab_div";
+					self.tabs_array.push(["Reports", self.report_tab_div]);
 					
 					//render the tabs
-					this.main_tab_nav = new tabs.Tabs(self.main_tabs_div, this.tabs_array);
-					this.main_tab_nav.Render();
+					self.main_tab_nav = new tabs.Tabs(self.main_tabs_div, self.tabs_array);
+					self.main_tab_nav.Render();
 					
-					this.main_tab_nav.activate_callback = function(){
+					self.main_tab_nav.activate_callback = function(){
 						self.calendar_tab_object.Render_Calendar();
 					};
 					
-					this.home_tab_object.Render('home_tab_div');
+					self.home_tab_object.Render(self.home_tab_div.id);
 					
-					this.entry_tab_object.Render('entry_tab_div');
+					self.entry_tab_object.Render(self.entry_tab_div.id);
 					
-					this.calendar_tab_object.Render('calendar_tab_div');
+					self.calendar_tab_object.Render(self.calendar_tab_div.id);
 					
-					this.report_tab_object.Render('report_tab_div');
+					self.report_tab_object.Render(self.report_tab_div.id);
 					
-					this.home_tab_object.home_form.event_click_callback = this.Select_Event_Click_Callback;
+					self.home_tab_object.home_form.event_click_callback = self.Select_Event_Click_Callback;
 					
-					this.calendar_tab_object.event_click_callback = this.Select_Event_Click_Callback;
+					self.calendar_tab_object.event_click_callback = self.Select_Event_Click_Callback;
 					
 					$('#' + self.loader_div.id).hide();
 					
@@ -331,7 +347,7 @@ define([
 				 * @desc This function will render the main application
 				 * and all sub-elements.
 				 * */
-				this.Render = function()
+				self.Render = function()
 				{
 					
 					var cookies = self.Parse_Cookies(document.cookie);

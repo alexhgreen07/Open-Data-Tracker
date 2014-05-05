@@ -18,6 +18,36 @@ define([
 				
 				done();
 			});
+			
+			it("Connects to a remote server at the default URL.", function(done){
+				
+				var test_api = api.Build_Server_API();
+				
+				test_api.Connect('server/api.php', function() {
+					
+					done();
+					
+				});
+				
+			});
+			
+			it("Tests basic RPC functionality.",function(done){
+				
+				//TODO: implement
+				expect(true).toBe(false);
+				
+				done();
+				
+			});
+			
+			it("Tests basic busy indicator functionality.",function(done){
+				
+				//TODO: implement
+				expect(true).toBe(false);
+				
+				done();
+				
+			});
 
 		});
 		

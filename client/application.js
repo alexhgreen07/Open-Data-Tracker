@@ -11,18 +11,14 @@ define([
 	],
 	function (logger, api, tabs, home_tab, entry_tab, calendar_tab, report_tab, login_tab,register_tab){
 		
-		return {
-			/** Represents the main application.
-			 * @constructor Main_Application
-			 */
-			Main_Application: function(parent_document) {
+			function Main_Application(parent_document, application_api) {
 				
 				var self = this;
 				
 				/** This is the server api object. 
 				 * @type Server_API
 				 * */
-				this.api = new api.Server_API();
+				this.api = application_api;
 				
 				/** This is the tabs array for the main application. 
 				 * @type Array
@@ -104,7 +100,7 @@ define([
 					
 					//refresh all data in all forms
 					self.home_tab_object.Refresh(self.api.data, self.api.settings,self.api.home_report);
-	
+		
 					var end = new Date();
 					times.push('home_tab_object: ' + (end - start) / 1000);
 					var start = new Date();
@@ -261,7 +257,7 @@ define([
 					this.tabs_array = [];
 					this.tabs_array.push(["Login", "<div id='login_tab_div'></div>"]);
 					this.tabs_array.push(["Register", "<div id='register_tab_div'></div>"]);
-	
+		
 					//render the tabs
 					this.main_tab_nav = new tabs.Tabs(self.main_tabs_div, this.tabs_array);
 					this.main_tab_nav.Render();
@@ -284,7 +280,7 @@ define([
 				 * and all sub-tab objects.
 				 * */
 				this.Render_Main_Tabs = function() {
-	
+		
 					var self = this;
 					self.main_tabs_div = "main_tab_navigation_div";
 					
@@ -362,9 +358,25 @@ define([
 					}
 					
 				};
-
-
+		
+		
 		}
+	
+		function Build_Main_Application(parent_document){
+			
+			var application_api = api.Build_Server_API();
+			
+			var built_application = new Main_Application(parent_document, application_api);
+			
+			return built_application;
+		}
+	
+		return {
+			Build_Main_Application: Build_Main_Application,
+			/** Represents the main application.
+			 * @constructor Main_Application
+			 */
+			Main_Application: Main_Application,
 	};
 });
 

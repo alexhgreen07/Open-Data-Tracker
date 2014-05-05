@@ -45,7 +45,7 @@ require(['client/application', 'test/test', 'fastclick', 'jquery.ui'], function(
 			
 			if(!unit_test)
 			{
-				app = new application.Main_Application(document);
+				app = application.Build_Main_Application(document);
 				
 				app.Initialize();
 			}

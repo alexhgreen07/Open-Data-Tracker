@@ -14,7 +14,7 @@ define([
 
 			it("Initializes the API object.", function(done) {
 				
-				//TODO: implement
+				var test_api = api.Build_Server_API();
 				
 				done();
 			});

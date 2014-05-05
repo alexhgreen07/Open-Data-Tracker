@@ -32,13 +32,19 @@ define([
 					
 				}
 				
+				var callback_success_count = 0;
+				
 				//test callback
 				function Test_Rpc_Callback(object)
 				{
 					expect(test_queue.is_busy).toBe(true);
 					
+					callback_success_count++;
+					
 					if(object.index == (test_rpc_count - 1))
 					{
+						expect(callback_success_count).toBe(test_rpc_count);
+						
 						done();
 					}
 				}

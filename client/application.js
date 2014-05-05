@@ -236,25 +236,6 @@ define([
 				
 				self.Render_Login_Tabs = function(){
 					
-					//clear all previous content
-					self.parent_document.body.innerHTML = "";
-					
-					//create the loader image div
-					self.loader_div = document.createElement("div");
-					self.loader_div.id = "loader_div";
-					self.loader_div.className = "loader_div";
-					self.loader_div = self.parent_document.body.appendChild(self.loader_div);
-					
-					self.loader_div_img = document.createElement("img");
-					self.loader_div_img.className = "loader_img";
-					self.loader_div_img.src = "ajax-loader.gif";
-					self.loader_div_img = self.loader_div.appendChild(self.loader_div_img);
-					
-					//append the main tab div
-					self.main_tabs_div = document.createElement("div");
-					self.main_tabs_div.id = "main_tab_navigation_div";
-					self.parent_document.body.appendChild(self.main_tabs_div);
-					
 					self.tabs_array = [];
 					self.login_tab_div = document.createElement("div");
 					self.login_tab_div.id = "login_tab_div";
@@ -286,25 +267,6 @@ define([
 				 * */
 				self.Render_Main_Tabs = function() {
 		
-					//clear all previous content
-					self.parent_document.body.innerHTML = "";
-					
-					//create the loader image div
-					self.loader_div = document.createElement("div");
-					self.loader_div.id = "loader_div";
-					self.loader_div.className = "loader_div";
-					self.loader_div = self.parent_document.body.appendChild(self.loader_div);
-					
-					self.loader_div_img = document.createElement("img");
-					self.loader_div_img.className = "loader_img";
-					self.loader_div_img.src = "ajax-loader.gif";
-					self.loader_div_img = self.loader_div.appendChild(self.loader_div_img);
-				
-					//append the main tab div
-					self.main_tabs_div = document.createElement("div");
-					self.main_tabs_div.id = "main_tab_navigation_div";
-					self.parent_document.body.appendChild(self.main_tabs_div);
-					
 					self.tabs_array = [];
 					self.home_tab_div = document.createElement("div");
 					self.home_tab_div.id = "home_tab_div";
@@ -360,6 +322,25 @@ define([
 					{
 						self.is_logged_in = false;
 					}
+					
+					//clear all previous content
+					self.parent_document.body.innerHTML = "";
+					
+					//create the loader image div
+					self.loader_div = document.createElement("div");
+					self.loader_div.id = "loader_div";
+					self.loader_div.className = "loader_div";
+					self.loader_div = self.parent_document.body.appendChild(self.loader_div);
+					
+					self.loader_div_img = document.createElement("img");
+					self.loader_div_img.className = "loader_img";
+					self.loader_div_img.src = "ajax-loader.gif";
+					self.loader_div_img = self.loader_div.appendChild(self.loader_div_img);
+				
+					//append the main tab div
+					self.main_tabs_div = document.createElement("div");
+					self.main_tabs_div.id = "main_tab_navigation_div";
+					self.parent_document.body.appendChild(self.main_tabs_div);
 					
 					//main tabs
 					if(self.is_logged_in)

@@ -3,40 +3,49 @@ define(['jquery.ui'],function($){
 		/** This is a wrapper for an array of panes in a JQuery tab object.
 		 * @constructor Tabs
 		 */
-		Tabs: function (tab_div_id, tab_array) {
+		Tabs: function (tab_div, tab_array) {
 			
 			var self = this;
 			
 			//class variables
-			this.div_id = tab_div_id;
-			this.tabs = tab_array;
-			this.activate_callback = function(){};
+			self.tab_div = tab_div;
+			self.tabs = tab_array;
+			self.activate_callback = function(){};
 
 			//render function (div must already exist)
-			this.Render = function() {
+			self.Render = function() {
 
 				var new_inner_html = '';
-
-				new_inner_html += "<ul>";
+				
+				var ul_container = document.createElement("ul");
+				ul_container = self.tab_div.appendChild(ul_container);
 
 				//create all top tab items using ul
-				for (var i = 0; i < this.tabs.length; i++) {
-					new_inner_html += '<li><a href="#' + this.div_id + '-tab-' + i + '">' + this.tabs[i][0] + '</a></li>';
+				for (var i = 0; i < self.tabs.length; i++) {
+					
+					var li_container = document.createElement("li");
+					li_container = ul_container.appendChild(li_container);
+					
+					var a_container = document.createElement("a");
+					a_container.href = '#' + self.tab_div.id + '-tab-' + i + '';
+					a_container.innerHTML = this.tabs[i][0];
+					a_container = li_container.appendChild(a_container);
+					
 				}
-
-				new_inner_html += "</ul>";
 
 				//create all content tab items using div
-				for (var i = 0; i < this.tabs.length; i++) {
-					new_inner_html += '<div id="' + this.div_id + '-tab-' + i + '">' + this.tabs[i][1] + '</div>';
+				for (var i = 0; i < self.tabs.length; i++) {
+					
+					var div_container = document.createElement("div");
+					div_container.id = self.tab_div.id + '-tab-' + i + '';
+					div_container = self.tab_div.appendChild(div_container);
+					
+					self.tabs[i][1] = div_container.appendChild(self.tabs[i][1]);
+					
 				}
 
-				var div_tab = document.getElementById(this.div_id);
-
-				div_tab.innerHTML = new_inner_html;
-
 				//execute JQuery tabs initialization
-				$("#" + this.div_id).tabs({
+				$(self.tab_div).tabs({
 					activate: function(event, ui) {
 				        self.activate_callback();
 				   },

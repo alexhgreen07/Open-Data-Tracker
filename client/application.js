@@ -9,7 +9,7 @@ define([
 	'./ui/tabs/login/login_tab',
 	'./ui/tabs/register/register_tab',
 	],
-	function (logger, api, tabs, home_tab, entry_tab, calendar_tab, report_tab, login_tab,register_tab){
+	function (logger, api, tabs, home_tab, entry_tab, calendar_tab, report_tab, login_tab, register_tab){
 			
 			/** Represents the main application.
 			 * @constructor Main_Application
@@ -17,6 +17,7 @@ define([
 			function Main_Application(
 					parent_document, 
 					application_api,
+					login_tab_object,
 					register_tab_object) {
 				
 				var self = this;
@@ -50,7 +51,7 @@ define([
 				 * */
 				self.report_tab_object = new report_tab.Report_Tab();
 				
-				self.login_tab_object = new login_tab.Login_Tab();
+				self.login_tab_object = login_tab_object;
 				
 				self.register_tab_object = register_tab_object;
 				
@@ -368,9 +369,15 @@ define([
 		function Build_Main_Application(parent_document){
 			
 			var application_api = api.Build_Server_API();
+			
+			var application_login_tab = login_tab.Build_Login_Tab();
 			var application_register_tab = register_tab.Build_Register_Tab();
 			
-			var built_application = new Main_Application(parent_document, application_api, application_register_tab);
+			var built_application = new Main_Application(
+					parent_document, 
+					application_api, 
+					application_login_tab, 
+					application_register_tab);
 			
 			return built_application;
 		}

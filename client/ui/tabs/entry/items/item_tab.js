@@ -22,7 +22,8 @@ define([
 	function Item_Tab(
 			init_quick_item_entry_form,
 			init_new_item_entry_form,
-			init_edit_item_entry_form) {
+			init_edit_item_entry_form,
+			init_new_item_form) {
 
 		/** This is the array for the item log.
 		 * @type Array
@@ -47,7 +48,7 @@ define([
 		/** This is the new item form object.
 		 * @type New_Item_Form
 		 * */
-		this.new_item_form = new new_item_form.New_Item_Form();
+		this.new_item_form = init_new_item_form;
 		
 		/** This is the edit item form object.
 		 * @type Edit_Item_Form
@@ -160,13 +161,15 @@ define([
 		var init_quick_item_entry_form = quick_item_entry_form.Build_Quick_Item_Entry_Form();
 		var init_new_item_entry_form = new_item_entry_form.Build_New_Item_Entry_Form();
 		var init_edit_item_entry_form = edit_item_entry_form.Build_Edit_Item_Entry_Form();
+		var init_new_item_form = new_item_form.Build_New_Item_Form();
 		
 		//TODO: implement
 		
 		var built_item_tab = new Item_Tab(
 				init_quick_item_entry_form,
 				init_new_item_entry_form,
-				init_edit_item_entry_form);
+				init_edit_item_entry_form,
+				init_new_item_form);
 		
 		return built_item_tab;
 	}

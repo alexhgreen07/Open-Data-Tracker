@@ -18,6 +18,7 @@ define([
 					parent_document, 
 					application_api,
 					home_tab_object,
+					entry_tab_object,
 					login_tab_object,
 					register_tab_object) {
 				
@@ -44,7 +45,7 @@ define([
 				/** This is the item tab navigation object.
 				 * @type Entry_Tab
 				 * */
-				self.entry_tab_object = new entry_tab.Entry_Tab();
+				self.entry_tab_object = entry_tab_object;
 				
 				self.calendar_tab_object = new calendar_tab.Calendar_Tab();
 				/** This is the report tab navigation object.
@@ -372,6 +373,7 @@ define([
 			var application_api = api.Build_Server_API();
 			
 			var application_home_tab = home_tab.Build_Home_Tab();
+			var application_entry_tab = entry_tab.Build_Entry_Tab();
 			var application_login_tab = login_tab.Build_Login_Tab();
 			var application_register_tab = register_tab.Build_Register_Tab();
 			
@@ -379,6 +381,7 @@ define([
 					parent_document, 
 					application_api, 
 					application_home_tab,
+					application_entry_tab,
 					application_login_tab, 
 					application_register_tab);
 			

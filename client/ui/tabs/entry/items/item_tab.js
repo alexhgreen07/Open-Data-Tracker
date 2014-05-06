@@ -7,12 +7,21 @@ define([
         './forms/edit_item_form',
         './forms/new_item_target_form',
         './forms/edit_item_target_form',
-        ],function($,quick_item_entry_form,new_item_entry_form,edit_item_entry_form,new_item_form,edit_item_form,new_item_target_form,edit_item_target_form){
+        ],function(
+		$,
+		quick_item_entry_form,
+		new_item_entry_form,
+		edit_item_entry_form,
+		new_item_form,edit_item_form,
+		new_item_target_form,
+		edit_item_target_form){
 	
 	/** This is the item tab class which holds all UI objects for item data.
 	 * @constructor Item_Tab
 	 */
-	function Item_Tab(init_quick_item_entry_form) {
+	function Item_Tab(
+			init_quick_item_entry_form,
+			init_new_item_entry_form) {
 
 		/** This is the array for the item log.
 		 * @type Array
@@ -27,7 +36,7 @@ define([
 		/** This is the new item entry form object.
 		 * @type New_Item_Entry_Form
 		 * */
-		this.new_item_entry_form = new new_item_entry_form.New_Item_Entry_Form();
+		this.new_item_entry_form = init_new_item_entry_form;
 		
 		/** This is the edit item entry form object.
 		 * @type Edit_Item_Entry_Form
@@ -148,10 +157,13 @@ define([
 	function Build_Item_Tab()
 	{
 		var init_quick_item_entry_form = quick_item_entry_form.Build_Quick_Item_Entry_Form();
+		var init_new_item_entry_form = new_item_entry_form.Build_New_Item_Entry_Form();
 		
 		//TODO: implement
 		
-		var built_item_tab = new Item_Tab(init_quick_item_entry_form);
+		var built_item_tab = new Item_Tab(
+				init_quick_item_entry_form,
+				init_new_item_entry_form);
 		
 		return built_item_tab;
 	}

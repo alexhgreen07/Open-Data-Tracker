@@ -9,7 +9,7 @@ define([
 	/** This is the task tab object which holds all UI objects for task data interaction.
 	 * @constructor Task_Tab
 	 */
-	function Entry_Tab(init_category_tab) {
+	function Entry_Tab(init_category_tab, init_items_tab) {
 		
 		var self = this;
 		
@@ -21,6 +21,7 @@ define([
 		self.current_selected_info = {};
 		
 		self.category_tab = init_category_tab;
+		self.items_tab = init_items_tab;
 		
 		/** This is the callback function for the refresh event of the task log.
 		 * @type function
@@ -773,7 +774,6 @@ define([
 			
 			self.category_tab.Render(self.tree_category_div.id);
 			
-			self.items_tab = new item_tab.Item_Tab();
 			self.items_tab.Render(self.tree_items_div.id);
 			
 			self.tasks_tab = new task_tab.Task_Tab();
@@ -918,10 +918,11 @@ define([
 	function Build_Entry_Tab()
 	{
 		var init_category_tab = category_form.Build_Category_Form();
+		var init_items_tab = item_tab.Build_Item_Tab();
 		
 		//TODO: implement
 		
-		var built_entry_tab = new Entry_Tab(init_category_tab);
+		var built_entry_tab = new Entry_Tab(init_category_tab,init_items_tab);
 		
 		return built_entry_tab;
 	}

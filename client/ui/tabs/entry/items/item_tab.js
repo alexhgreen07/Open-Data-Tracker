@@ -26,7 +26,8 @@ define([
 			init_edit_item_entry_form,
 			init_new_item_form,
 			init_edit_item_form,
-			init_new_item_target_form) {
+			init_new_item_target_form,
+			init_edit_item_target_form) {
 
 		/** This is the array for the item log.
 		 * @type Array
@@ -66,7 +67,7 @@ define([
 		/** This is the edit item targets form object.
 		 * @type Edit_Item_Target_Form
 		 * */
-		this.edit_item_target_form = new edit_item_target_form.Edit_Item_Target_Form();
+		this.edit_item_target_form = init_edit_item_target_form;
 		
 		/** @method Refresh_Items
 		 * @desc This function retrieves the item list from the database.
@@ -167,8 +168,7 @@ define([
 		var init_new_item_form = new_item_form.Build_New_Item_Form();
 		var init_edit_item_form = edit_item_form.Build_Edit_Item_Form();
 		var init_new_item_target_form = new_item_target_form.Build_New_Item_Target_Form();
-		
-		//TODO: implement
+		var init_edit_item_target_form = edit_item_target_form.Build_Edit_Item_Target_Form();
 		
 		var built_item_tab = new Item_Tab(
 				init_quick_item_entry_form,
@@ -176,7 +176,8 @@ define([
 				init_edit_item_entry_form,
 				init_new_item_form,
 				init_edit_item_form,
-				init_new_item_target_form);
+				init_new_item_target_form,
+				init_edit_item_target_form);
 		
 		return built_item_tab;
 	}

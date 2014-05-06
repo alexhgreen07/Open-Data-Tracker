@@ -10,8 +10,14 @@ define([
 	'./ui/tabs/register/register_tab',
 	],
 	function (logger, api, tabs, home_tab, entry_tab, calendar_tab, report_tab, login_tab,register_tab){
-		
-			function Main_Application(parent_document, application_api) {
+			
+			/** Represents the main application.
+			 * @constructor Main_Application
+			 */
+			function Main_Application(
+					parent_document, 
+					application_api,
+					register_tab_object) {
 				
 				var self = this;
 				
@@ -23,8 +29,8 @@ define([
 				/** This is the tabs array for the main application. 
 				 * @type Array
 				 * */
-				self.tabs_array = new Array();
-				self.login_tabs_array = new Array();
+				self.tabs_array = [];
+				self.login_tabs_array = [];
 				/** This is the main tab navigation object.
 				 * @type Tabs
 				 * */
@@ -46,7 +52,7 @@ define([
 				
 				self.login_tab_object = new login_tab.Login_Tab();
 				
-				self.register_tab_object = new register_tab.Register_Tab();
+				self.register_tab_object = register_tab_object;
 				
 				self.busy_count = 0;
 				
@@ -177,7 +183,7 @@ define([
 					if(is_busy)
 					{
 						self.busy_count++;
-						$('#' + self.loader_div.id).show();
+						$(self.loader_div).show();
 					}
 					else
 					{
@@ -189,7 +195,7 @@ define([
 						
 						if(self.busy_count == 0)
 						{
-							$('#' + self.loader_div.id).hide();
+							$(self.loader_div).hide();
 						}
 						
 					}
@@ -251,7 +257,7 @@ define([
 					self.login_tab_object.Render(self.login_tab_div.id);
 					self.register_tab_object.Render(self.register_tab_div.id);
 					
-					$('#' + self.loader_div.id).hide();
+					$(self.loader_div).hide();
 					
 					self.login_tab_object.login_success = function(){
 						
@@ -301,7 +307,7 @@ define([
 					
 					self.calendar_tab_object.event_click_callback = self.Select_Event_Click_Callback;
 					
-					$('#' + self.loader_div.id).hide();
+					$(self.loader_div).hide();
 					
 				};
 				
@@ -362,17 +368,15 @@ define([
 		function Build_Main_Application(parent_document){
 			
 			var application_api = api.Build_Server_API();
+			var application_register_tab = register_tab.Build_Register_Tab();
 			
-			var built_application = new Main_Application(parent_document, application_api);
+			var built_application = new Main_Application(parent_document, application_api, application_register_tab);
 			
 			return built_application;
 		}
 	
 		return {
 			Build_Main_Application: Build_Main_Application,
-			/** Represents the main application.
-			 * @constructor Main_Application
-			 */
 			Main_Application: Main_Application,
 	};
 });

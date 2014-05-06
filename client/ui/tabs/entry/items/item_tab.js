@@ -12,17 +12,17 @@ define([
 	/** This is the item tab class which holds all UI objects for item data.
 	 * @constructor Item_Tab
 	 */
-	function Item_Tab() {
+	function Item_Tab(init_quick_item_entry_form) {
 
 		/** This is the array for the item log.
 		 * @type Array
 		 * */
-		this.item_log_data = Array();
+		this.item_log_data = [];
 		
 		/** This is the quick item entry form object.
 		 * @type Quick_Item_Entry_Form
 		 * */
-		this.quick_item_entry_form = new quick_item_entry_form.Quick_Item_Entry_Form();
+		this.quick_item_entry_form = init_quick_item_entry_form;
 		
 		/** This is the new item entry form object.
 		 * @type New_Item_Entry_Form
@@ -147,9 +147,11 @@ define([
 	
 	function Build_Item_Tab()
 	{
+		var init_quick_item_entry_form = quick_item_entry_form.Build_Quick_Item_Entry_Form();
+		
 		//TODO: implement
 		
-		var built_item_tab = new Item_Tab();
+		var built_item_tab = new Item_Tab(init_quick_item_entry_form);
 		
 		return built_item_tab;
 	}

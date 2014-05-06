@@ -17,6 +17,7 @@ define([
 			function Main_Application(
 					parent_document, 
 					application_api,
+					home_tab_object,
 					login_tab_object,
 					register_tab_object) {
 				
@@ -39,7 +40,7 @@ define([
 				/** This is the home tab navigation object.
 				 * @type Home_Tab
 				 * */
-				self.home_tab_object = new home_tab.Home_Tab();
+				self.home_tab_object = home_tab_object;
 				/** This is the item tab navigation object.
 				 * @type Entry_Tab
 				 * */
@@ -370,12 +371,14 @@ define([
 			
 			var application_api = api.Build_Server_API();
 			
+			var application_home_tab = home_tab.Build_Home_Tab();
 			var application_login_tab = login_tab.Build_Login_Tab();
 			var application_register_tab = register_tab.Build_Register_Tab();
 			
 			var built_application = new Main_Application(
 					parent_document, 
 					application_api, 
+					application_home_tab,
 					application_login_tab, 
 					application_register_tab);
 			

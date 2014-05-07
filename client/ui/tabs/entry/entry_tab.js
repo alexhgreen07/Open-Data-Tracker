@@ -770,8 +770,8 @@ define([
 			
 			document.getElementById(accordian_div).appendChild(self.form);
 			
-			self.tree_view = new tree_view.Tree_View(self.tree_view_disp_div.id);
-			self.tree_view.Render();
+			self.tree_view = new tree_view.Tree_View();
+			self.tree_view.Render(self.tree_view_disp_div.id);
 			
 			self.category_tab.Render(self.tree_category_div.id);
 			

@@ -4,16 +4,14 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 		/** This organizes the tabled data into a tree view.
 		 * @constructor Tree_View
 		 */
-		Tree_View: function(div_id, data) {
+		Tree_View: function() {
 			
 			var self = this;
 			
 			//class variables
 			self.selected_css_class = 'treeview-li-selected';
 			self.last_selected_id = 0;
-			self.div_id = div_id;
 			self.tree_view_div = self.div_id + '_treeview_div';
-			self.data = data;
 			self.layer_is_enabled = [];
 			self.tree_view_hash_lookup = [];
 			self.node_click_callback = function(info){};
@@ -786,7 +784,9 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 			};
 			
 			//render function (div must already exist)
-			self.Render = function() {
+			self.Render = function(div_id) {
+				
+				self.div_id = div_id;
 				
 				document.getElementById(self.div_id).innerHTML = '<ul id="'+self.tree_view_div+'"></ul>';
 				

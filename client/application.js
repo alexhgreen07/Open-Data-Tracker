@@ -254,8 +254,8 @@ define([
 					self.tabs_array.push(["Register", self.register_tab_div]);
 		
 					//render the tabs
-					self.main_tab_nav = new tabs.Tabs(self.main_tabs_div, self.tabs_array);
-					self.main_tab_nav.Render();
+					self.main_tab_nav = new tabs.Tabs();
+					self.main_tab_nav.Render(self.main_tabs_div, self.tabs_array);
 					
 					self.login_tab_object.Render(self.login_tab_div.id);
 					self.register_tab_object.Render(self.register_tab_div.id);
@@ -291,8 +291,8 @@ define([
 					self.tabs_array.push(["Reports", self.report_tab_div]);
 					
 					//render the tabs
-					self.main_tab_nav = new tabs.Tabs(self.main_tabs_div, self.tabs_array);
-					self.main_tab_nav.Render();
+					self.main_tab_nav = new tabs.Tabs();
+					self.main_tab_nav.Render(self.main_tabs_div, self.tabs_array);
 					
 					self.main_tab_nav.activate_callback = function(){
 						self.calendar_tab_object.Render_Calendar();

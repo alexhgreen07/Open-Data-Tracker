@@ -9,7 +9,7 @@ define([
 	/** This is the task tab object which holds all UI objects for task data interaction.
 	 * @constructor Task_Tab
 	 */
-	function Entry_Tab(init_category_tab, init_items_tab, init_tasks_tab) {
+	function Entry_Tab(init_category_tab, init_items_tab, init_tasks_tab,entry_accordian,init_tree_view) {
 		
 		var self = this;
 		
@@ -23,6 +23,9 @@ define([
 		self.category_tab = init_category_tab;
 		self.items_tab = init_items_tab;
 		self.tasks_tab = init_tasks_tab;
+		
+		self.entry_accordian = entry_accordian;
+		self.tree_view = init_tree_view;
 		
 		/** This is the callback function for the refresh event of the task log.
 		 * @type function
@@ -765,12 +768,10 @@ define([
 			new_tab.push('<div id="'+accordian_div+'"></div>');
 			tabs_array.push(new_tab);
 			
-			var items_accordian = new Accordian();
-			items_accordian.Render(form_div_id, tabs_array);
+			self.entry_accordian.Render(form_div_id, tabs_array);
 			
 			document.getElementById(accordian_div).appendChild(self.form);
 			
-			self.tree_view = new tree_view.Tree_View();
 			self.tree_view.Render(self.tree_view_disp_div.id);
 			
 			self.category_tab.Render(self.tree_category_div.id);
@@ -921,10 +922,10 @@ define([
 		var init_items_tab = item_tab.Build_Item_Tab();
 		var init_tasks_tab = task_tab.Build_Task_Tab();
 		
+		var entry_accordian = new Accordian();
+		var init_tree_view = new tree_view.Tree_View();
 		
-		//TODO: implement
-		
-		var built_entry_tab = new Entry_Tab(init_category_tab,init_items_tab,init_tasks_tab);
+		var built_entry_tab = new Entry_Tab(init_category_tab,init_items_tab,init_tasks_tab,entry_accordian,init_tree_view);
 		
 		return built_entry_tab;
 	}

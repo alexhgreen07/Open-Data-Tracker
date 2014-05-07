@@ -765,8 +765,8 @@ define([
 			new_tab.push('<div id="'+accordian_div+'"></div>');
 			tabs_array.push(new_tab);
 			
-			var items_accordian = new Accordian(form_div_id, tabs_array);
-			items_accordian.Render();
+			var items_accordian = new Accordian();
+			items_accordian.Render(form_div_id, tabs_array);
 			
 			document.getElementById(accordian_div).appendChild(self.form);
 			

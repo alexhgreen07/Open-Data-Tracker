@@ -229,7 +229,7 @@ define([
 			var div_tab = document.getElementById(task_div_id);
 			div_tab.innerHTML = return_html;
 
-			//now render all accordian tabs
+			//now render all tabs
 			this.timecard_task_entry_form.Render('timecard_task_entry_div');
 
 			this.new_task_entry_form.Render('new_task_entry_div');

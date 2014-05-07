@@ -138,7 +138,7 @@ define([
 			var div_tab = document.getElementById(item_div_id);
 			div_tab.innerHTML = return_html;
 			
-			//render the accordian panes
+			//render the panes
 			this.quick_item_entry_form.Render('quick_item_entry_div');
 
 			this.new_item_entry_form.Render('new_item_entry_div');

@@ -78,8 +78,8 @@ define([
 
 			div_tab.innerHTML = return_html;
 
-			var items_accordian = new Accordian('home_accordian', tabs_array);
-			items_accordian.Render();
+			var items_accordian = new Accordian();
+			items_accordian.Render('home_accordian', tabs_array);
 
 			this.home_form.Render('home_summary_data_div');
 			this.settings_form.Render('home_settings_div');

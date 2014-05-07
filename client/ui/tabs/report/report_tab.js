@@ -871,8 +871,8 @@ define([
 				div_tab.innerHTML = return_html;
 
 				//render the accordian
-				var task_accordian = new Accordian('reports_accordian', tabs_array);
-				task_accordian.Render();
+				var task_accordian = new Accordian();
+				task_accordian.Render('reports_accordian', tabs_array);
 
 				this.Render_Summaries_Form('reports_summaries_tab');
 				this.Render_Time_Based_Form('reports_time_based_tab');

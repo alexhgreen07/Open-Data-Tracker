@@ -261,8 +261,8 @@ define([
 				new_tab.push('<div id="'+accordian_div+'"></div>');
 				tabs_array.push(new_tab);
 				
-				var calendar_accordian = new Accordian(home_div_id, tabs_array);
-				calendar_accordian.Render();
+				var calendar_accordian = new Accordian();
+				calendar_accordian.Render(home_div_id, tabs_array);
 				
 				self.calendar_options_form = document.createElement("form");
 				self.calendar_options_form.id = home_div_id + "_calendar_options_form";

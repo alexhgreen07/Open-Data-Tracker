@@ -19,6 +19,7 @@ define([
 					application_api,
 					home_tab_object,
 					entry_tab_object,
+					calendar_tab_object,
 					login_tab_object,
 					register_tab_object) {
 				
@@ -47,7 +48,7 @@ define([
 				 * */
 				self.entry_tab_object = entry_tab_object;
 				
-				self.calendar_tab_object = new calendar_tab.Calendar_Tab();
+				self.calendar_tab_object = calendar_tab_object;
 				/** This is the report tab navigation object.
 				 * @type Report_Tab
 				 * */
@@ -374,6 +375,7 @@ define([
 			
 			var application_home_tab = home_tab.Build_Home_Tab();
 			var application_entry_tab = entry_tab.Build_Entry_Tab();
+			var application_calendar_tab = calendar_tab.Build_Calendar_Tab();
 			var application_login_tab = login_tab.Build_Login_Tab();
 			var application_register_tab = register_tab.Build_Register_Tab();
 			
@@ -382,6 +384,7 @@ define([
 					application_api, 
 					application_home_tab,
 					application_entry_tab,
+					application_calendar_tab,
 					application_login_tab, 
 					application_register_tab);
 			

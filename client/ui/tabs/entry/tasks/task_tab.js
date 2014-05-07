@@ -18,7 +18,8 @@ define([
 			init_new_task_entry_form,
 			init_edit_task_entry_form,
 			init_new_task_form,
-			init_edit_task_form
+			init_edit_task_form,
+			init_new_task_target_form
 			) {
 
 		/** This is the array for the task log.
@@ -59,7 +60,7 @@ define([
 		/** This is the new task target form.
 		 * @type View_Tasks_Form
 		 * */
-		this.new_task_target_form = new new_task_target_form.New_Task_Target_Form();
+		this.new_task_target_form = init_new_task_target_form;
 		
 		/** This is the edit task target form.
 		 * @type Edit_Task_Target_Form
@@ -257,6 +258,7 @@ define([
 		var init_edit_task_entry_form = edit_task_entry_form.Build_Edit_Task_Entry_Form();
 		var init_new_task_form = new_task_form.Build_New_Task_Form();
 		var init_edit_task_form = edit_task_form.Build_Edit_Task_Form();
+		var init_new_task_target_form = new_task_target_form.Build_New_Task_Target_Form();
 		
 		//TODO: implement
 		
@@ -265,7 +267,8 @@ define([
 				init_new_task_entry_form,
 				init_edit_task_entry_form,
 				init_new_task_form,
-				init_edit_task_form
+				init_edit_task_form,
+				init_new_task_target_form
 				);
 		
 		return built_task_tab;

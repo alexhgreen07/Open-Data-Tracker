@@ -84,7 +84,10 @@ requirejs([
 
 		});
 	}
-
+	
+	//TODO: remove these global and add to an 'application' class.
+	var sessions = {};
+	
 	http.createServer(function(request, response) {
 
 		var uri = url.parse(request.url).pathname;
@@ -92,7 +95,7 @@ requirejs([
 
 		if (uri == '/server/api.php') {
 			
-			var request_api = new api.API();
+			var request_api = api.Build_API(sessions);
 			request_api.Process(request, response);
 			
 		} else {

@@ -16,7 +16,8 @@ define([
 	function Task_Tab(
 			init_timecard_task_entry_form,
 			init_new_task_entry_form,
-			init_edit_task_entry_form
+			init_edit_task_entry_form,
+			init_new_task_form
 			) {
 
 		/** This is the array for the task log.
@@ -47,7 +48,7 @@ define([
 		/** This is the new task form.
 		 * @type New_Task_Form
 		 * */
-		this.new_task_form = new new_task_form.New_Task_Form();
+		this.new_task_form = init_new_task_form;
 		
 		/** This is the edit task form.
 		 * @type Edit_Task_Form
@@ -253,13 +254,15 @@ define([
 		var init_timecard_task_entry_form = timecard_task_entry_form.Build_Timecard_Task_Entry_Form(); 
 		var init_new_task_entry_form = new_task_entry_form.Build_New_Task_Entry_Form();
 		var init_edit_task_entry_form = edit_task_entry_form.Build_Edit_Task_Entry_Form();
+		var init_new_task_form = new_task_form.Build_New_Task_Form();
 		
 		//TODO: implement
 		
 		var built_task_tab = new Task_Tab(
 				init_timecard_task_entry_form,
 				init_new_task_entry_form,
-				init_edit_task_entry_form
+				init_edit_task_entry_form,
+				init_new_task_form
 				);
 		
 		return built_task_tab;

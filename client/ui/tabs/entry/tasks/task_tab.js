@@ -262,9 +262,6 @@ define([
 		var init_new_task_target_form = new_task_target_form.Build_New_Task_Target_Form();
 		var init_edit_task_target_form = edit_task_target_form.Build_Edit_Task_Target_Form()
 		
-		
-		//TODO: implement
-		
 		var built_task_tab = new Task_Tab(
 				init_timecard_task_entry_form,
 				init_new_task_entry_form,

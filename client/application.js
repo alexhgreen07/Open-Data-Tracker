@@ -20,8 +20,10 @@ define([
 					home_tab_object,
 					entry_tab_object,
 					calendar_tab_object,
+					report_tab_object,
 					login_tab_object,
-					register_tab_object) {
+					register_tab_object,
+					main_tab_nav) {
 				
 				var self = this;
 				
@@ -52,11 +54,13 @@ define([
 				/** This is the report tab navigation object.
 				 * @type Report_Tab
 				 * */
-				self.report_tab_object = new report_tab.Report_Tab();
+				self.report_tab_object = report_tab_object;
 				
 				self.login_tab_object = login_tab_object;
 				
 				self.register_tab_object = register_tab_object;
+				
+				self.main_tab_nav = main_tab_nav;
 				
 				self.busy_count = 0;
 				
@@ -255,7 +259,6 @@ define([
 					self.tabs_array.push(["Register", self.register_tab_div]);
 		
 					//render the tabs
-					self.main_tab_nav = new tabs.Tabs();
 					self.main_tab_nav.Render(self.main_tabs_div, self.tabs_array);
 					
 					self.login_tab_object.Render(self.login_tab_div.id);
@@ -292,7 +295,6 @@ define([
 					self.tabs_array.push(["Reports", self.report_tab_div]);
 					
 					//render the tabs
-					self.main_tab_nav = new tabs.Tabs();
 					self.main_tab_nav.Render(self.main_tabs_div, self.tabs_array);
 					
 					self.main_tab_nav.activate_callback = function(){
@@ -376,8 +378,11 @@ define([
 			var application_home_tab = home_tab.Build_Home_Tab();
 			var application_entry_tab = entry_tab.Build_Entry_Tab();
 			var application_calendar_tab = calendar_tab.Build_Calendar_Tab();
+			var appliation_report_tab = report_tab.Build_Report_Tab();
 			var application_login_tab = login_tab.Build_Login_Tab();
 			var application_register_tab = register_tab.Build_Register_Tab();
+			
+			self.main_tab_nav = new tabs.Tabs();
 			
 			var built_application = new Main_Application(
 					parent_document, 
@@ -385,8 +390,10 @@ define([
 					application_home_tab,
 					application_entry_tab,
 					application_calendar_tab,
+					appliation_report_tab,
 					application_login_tab, 
-					application_register_tab);
+					application_register_tab,
+					main_tab_nav);
 			
 			return built_application;
 		}

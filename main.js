@@ -36,7 +36,7 @@ require.config({
 var app;
 
 //setup all initial requires
-require(['client/application', 'test/test', 'fastclick', 'jquery.ui'], function(application, test, fastclick, $) {
+require(['client/application', 'test/main.spec', 'fastclick', 'jquery.ui'], function(application, test, fastclick, $) {
 	
 	
 		$(document).ready(function(){

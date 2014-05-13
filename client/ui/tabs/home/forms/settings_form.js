@@ -18,23 +18,23 @@ define([],function(){
 				
 				if(current_setting_entry["Name"] == "First Name")
 				{
-					document.getElementById(self.settings_first_name_text_box.id).value = current_setting_entry["Value"];
+					self.settings_first_name_text_box.value = current_setting_entry["Value"];
 				}
 				else if(current_setting_entry["Name"] == "Last Name")
 				{
-					document.getElementById(self.settings_last_name_text_box.id).value = current_setting_entry["Value"];
+					self.settings_last_name_text_box.value = current_setting_entry["Value"];
 				}
 				else if(current_setting_entry["Name"] == "Email")
 				{
-					document.getElementById(self.settings_email_text_box.id).value = current_setting_entry["Value"];
+					self.settings_email_text_box.value = current_setting_entry["Value"];
 				}
 				else if(current_setting_entry["Name"] == "Text Size")
 				{
-					document.getElementById(self.change_text_box.id).value = current_setting_entry["Value"];
+					self.change_text_box.value = current_setting_entry["Value"];
 				}
 				else if(current_setting_entry["Name"] == "Remember Me Time")
 				{
-					document.getElementById(self.settings_remember_me_period_text_box.id).value = current_setting_entry["Value"];
+					self.settings_remember_me_period_text_box.value = current_setting_entry["Value"];
 				}
 			}
 			
@@ -44,11 +44,11 @@ define([],function(){
 			
 			var params = [];
 			
-			var first_name = document.getElementById(self.settings_first_name_text_box.id).value;
-			var last_name = document.getElementById(self.settings_last_name_text_box.id).value;
-			var email = document.getElementById(self.settings_email_text_box.id).value;
-			var text_size = document.getElementById(self.change_text_box.id).value;
-			var remember_me_period = document.getElementById(self.settings_remember_me_period_text_box.id).value;
+			var first_name = self.settings_first_name_text_box.value;
+			var last_name = self.settings_last_name_text_box.value;
+			var email = self.settings_email_text_box.value;
+			var text_size = self.change_text_box.value;
+			var remember_me_period = self.settings_remember_me_period_text_box.value;
 			
 			params[0] = {};
 			
@@ -106,101 +106,114 @@ define([],function(){
 		 * @desc This function will render the tab in the div that it was initialized with.
 		 * @param {String} form_div_id The div ID to render the form in.
 		 * */
-		this.Render = function(form_div_id){
+		this.Render = function(div_tab){
 			
-
 			//append the main tab div
 			this.text_changer_div = document.createElement('div');
-			
-			this.text_changer_div.innerHTML += 'First Name: <br />';
+			this.text_changer_div = div_tab.appendChild(this.text_changer_div);
+
+			this.text_changer_div.appendChild(document.createTextNode("First Name: "));
+			this.text_changer_div.appendChild(document.createElement('br'));
 			this.settings_first_name_text_box = document.createElement('input');
 			this.settings_first_name_text_box.id = 'settings_first_name_text_box';
 			this.settings_first_name_text_box.setAttribute('type','text');
-			this.text_changer_div.appendChild(this.settings_first_name_text_box);
+			this.settings_first_name_text_box = this.text_changer_div.appendChild(this.settings_first_name_text_box);
 			
-			this.text_changer_div.innerHTML += '<br /><br />';
+			this.text_changer_div.appendChild(document.createElement('br'));
+			this.text_changer_div.appendChild(document.createElement('br'));
 			
-			this.text_changer_div.innerHTML += 'Last Name: <br />';
+			this.text_changer_div.appendChild(document.createTextNode("Last Name: "));
+			this.text_changer_div.appendChild(document.createElement('br'));
 			this.settings_last_name_text_box = document.createElement('input');
 			this.settings_last_name_text_box.id = 'settings_last_name_text_box';
 			this.settings_last_name_text_box.setAttribute('type','text');
-			this.text_changer_div.appendChild(this.settings_last_name_text_box);
+			this.settings_last_name_text_box = this.text_changer_div.appendChild(this.settings_last_name_text_box);
 			
-			this.text_changer_div.innerHTML += '<br /><br />';
+			this.text_changer_div.appendChild(document.createElement('br'));
+			this.text_changer_div.appendChild(document.createElement('br'));
 			
-			this.text_changer_div.innerHTML += 'Email: <br />';
+			this.text_changer_div.appendChild(document.createTextNode("Email: "));
+			this.text_changer_div.appendChild(document.createElement('br'));
 			this.settings_email_text_box = document.createElement('input');
 			this.settings_email_text_box.id = 'settings_email_text_box';
 			this.settings_email_text_box.setAttribute('type','text');
-			this.text_changer_div.appendChild(this.settings_email_text_box);
+			this.settings_email_text_box = this.text_changer_div.appendChild(this.settings_email_text_box);
 			
-			this.text_changer_div.innerHTML += '<br /><br />';
+			this.text_changer_div.appendChild(document.createElement('br'));
+			this.text_changer_div.appendChild(document.createElement('br'));
 			
-			this.text_changer_div.innerHTML += 'Remember Me Expiry Period: <br />';
+			this.text_changer_div.appendChild(document.createTextNode("Remember Me Expiry Period: "));
+			this.text_changer_div.appendChild(document.createElement('br'));
 			this.settings_remember_me_period_text_box = document.createElement('input');
 			this.settings_remember_me_period_text_box.id = 'settings_remember_me_period_text_box';
 			this.settings_remember_me_period_text_box.setAttribute('type','text');
-			this.text_changer_div.appendChild(this.settings_remember_me_period_text_box);
+			this.settings_remember_me_period_text_box = this.text_changer_div.appendChild(this.settings_remember_me_period_text_box);
 			
-			this.text_changer_div.innerHTML += '<br /><br />';
+			this.text_changer_div.appendChild(document.createElement('br'));
+			this.text_changer_div.appendChild(document.createElement('br'));
 			
-			this.text_changer_div.innerHTML += 'Text Size: <br />';
+			this.text_changer_div.appendChild(document.createTextNode("Text Size: "));
+			this.text_changer_div.appendChild(document.createElement('br'));
 			
 			this.change_text_box = document.createElement('input');
 			this.change_text_box.setAttribute('id','change_text_box');
 			this.change_text_box.setAttribute('type','text');
 			
-			this.text_changer_div.appendChild(this.change_text_box);
+			this.change_text_box = this.text_changer_div.appendChild(this.change_text_box);
 			
-			this.text_changer_div.innerHTML += '<br /><br />';
+			this.text_changer_div.appendChild(document.createElement('br'));
+			this.text_changer_div.appendChild(document.createElement('br'));
 			
 			this.change_text_link = document.createElement('input');
 			this.change_text_link.setAttribute('id','change_text_link');
 			this.change_text_link.setAttribute('type','submit');
 			this.change_text_link.setAttribute('value','Change');
 			
-			this.text_changer_div.appendChild(this.change_text_link);
+			this.change_text_link = this.text_changer_div.appendChild(this.change_text_link);
 			
-			this.text_changer_div.innerHTML += '<br /><br />';
+			this.text_changer_div.appendChild(document.createElement('br'));
+			this.text_changer_div.appendChild(document.createElement('br'));
 			
 			this.smaller_text_link = document.createElement('input');
 			this.smaller_text_link.setAttribute('id','smaller_text_link');
 			this.smaller_text_link.setAttribute('type','submit');
 			this.smaller_text_link.setAttribute('value','Smaller');
-			this.text_changer_div.appendChild(this.smaller_text_link);
+			this.smaller_text_link = this.text_changer_div.appendChild(this.smaller_text_link);
 			
-			this.text_changer_div.innerHTML += '<br /><br />';
+			this.text_changer_div.appendChild(document.createElement('br'));
+			this.text_changer_div.appendChild(document.createElement('br'));
 			
 			this.larger_text_link = document.createElement('input');
 			this.larger_text_link.setAttribute('id','larger_text_link');
 			this.larger_text_link.setAttribute('type','submit');
 			this.larger_text_link.setAttribute('value','Larger');
-			this.text_changer_div.appendChild(this.larger_text_link);
+			this.larger_text_link = this.text_changer_div.appendChild(this.larger_text_link);
 			
-			this.text_changer_div.innerHTML += '<br /><br /><hr><br />';
+			this.text_changer_div.appendChild(document.createElement('br'));
+			this.text_changer_div.appendChild(document.createElement('br'));
+			this.text_changer_div.appendChild(document.createElement('hr'));
+			this.text_changer_div.appendChild(document.createElement('br'));
 			
 			this.submit_new_settings_button = document.createElement('input');
 			this.submit_new_settings_button.setAttribute('id','submit_new_settings_button');
 			this.submit_new_settings_button.setAttribute('type','submit');
 			this.submit_new_settings_button.setAttribute('value','Save');
-			this.text_changer_div.appendChild(this.submit_new_settings_button);
+			this.submit_new_settings_button = this.text_changer_div.appendChild(this.submit_new_settings_button);
 			
-			this.text_changer_div.innerHTML += '<br /><br />';
-			
-			var div_tab = document.getElementById(form_div_id);
-			div_tab.appendChild(this.text_changer_div);
-			
-			$('#' + this.change_text_link.id).button();
-			$('#' + this.change_text_link.id).click(function(){
+			this.text_changer_div.appendChild(document.createElement('br'));
+			this.text_changer_div.appendChild(document.createElement('br'));
+						
+			$(this.change_text_link).button();
+			$(this.change_text_link).click(function(){
 				
-				var size = document.getElementById(self.change_text_box.id).value;
+				var size = self.change_text_box.value;
 				
 				$('body').css('font-size',size + 'px');
 				
 			});
 			
-			$('#' + this.smaller_text_link.id).button();
-			$('#' + this.smaller_text_link.id).click(function()
+			$(this.smaller_text_link).button();
+			$(this.smaller_text_link).click(function()
 			{
 				var size = parseInt($('body').css('font-size').replace("px",""));
 				
@@ -211,11 +224,11 @@ define([],function(){
 				
 				$('body').css('font-size',size + 'px');
 				
-				document.getElementById(self.change_text_box.id).value = size;
+				self.change_text_box.value = size;
 			});
 			
-			$('#' + this.larger_text_link.id).button();
-			$('#' + this.larger_text_link.id).click(function()
+			$(this.larger_text_link).button();
+			$(this.larger_text_link).click(function()
 			{
 				var size = parseInt($('body').css('font-size').replace("px",""));
 				
@@ -223,18 +236,18 @@ define([],function(){
 				
 				$('body').css('font-size',size + 'px');
 				
-				document.getElementById(self.change_text_box.id).value = size;
+				self.change_text_box.value = size;
 			});
 			
-			$('#' + this.submit_new_settings_button.id).button();
-			$('#' + this.submit_new_settings_button.id).click(function()
+			$(this.submit_new_settings_button).button();
+			$(this.submit_new_settings_button).click(function()
 			{
 				self.Save_Settings_Button_Click();
 			});
 			
 			var size = parseInt($('body').css('font-size').replace("px",""));
 			
-			document.getElementById(this.change_text_box.id).value = size;
+			this.change_text_box.value = size;
 			
 		};
 	}

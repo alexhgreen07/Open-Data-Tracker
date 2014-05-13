@@ -82,7 +82,9 @@ define([
 			items_accordian.Render('home_accordian', tabs_array);
 
 			this.home_form.Render('home_summary_data_div');
-			this.settings_form.Render('home_settings_div');
+			
+			var home_settings_div_element = document.getElementById('home_settings_div');
+			this.settings_form.Render(home_settings_div_element);
 
 			//call the click event function
 			//this.Summary_Data_Refresh_Click_Event();

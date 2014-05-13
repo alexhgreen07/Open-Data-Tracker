@@ -77,6 +77,7 @@ define([
 				params["allowed_variance"] = variance;
 				params["estimated_time"] = estimated_time;
 				params["recurrance_end_time"] = end_date.toISOString();
+				params["status"] = "Incomplete";
 
 				//execute the RPC callback for retrieving the item log
 				app.api.Task_Data_Interface.Insert_Task_Target(params, function(jsonRpcObj) {

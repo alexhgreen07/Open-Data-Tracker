@@ -1,5 +1,5 @@
 define([
-    '../../core/logger.js',
+    '../core/logger.js',
     './rpc/api',
     './ui/tabs',
 	'./ui/tabs/home/home_tab',

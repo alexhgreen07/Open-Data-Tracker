@@ -90,6 +90,8 @@ define([
 			
 			return_object.reports = [];
 			
+			return_object.forms = {};
+			
 			var counter = 0;
 			
 			var counter_callback = function()
@@ -108,7 +110,7 @@ define([
 					
 					home_data_interface.Get_Homepage_Report(params, session, function(object){
 						
-						return_object["home_report"] = object;
+						return_object.forms["home_report"] = object;
 						
 						callback(return_object);
 						

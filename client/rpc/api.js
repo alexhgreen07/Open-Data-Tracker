@@ -110,7 +110,8 @@ define([
 						self.reports = jsonRpcObj.result.reports;
 						self.settings = jsonRpcObj.result.settings;
 						
-						self.home_report = jsonRpcObj.result.home_report;
+						self.forms = {};
+						self.forms.home_report = jsonRpcObj.result.home_report;
 						
 						//try
 						{

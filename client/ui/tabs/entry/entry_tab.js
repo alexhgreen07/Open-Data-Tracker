@@ -216,8 +216,14 @@ define([
 			if(self.current_selected_info.table == 'tasks')
 			{
 				name_select_id = self.tasks_tab.timecard_task_entry_form.task_name_select.id;
+				target_select_id = self.tasks_tab.timecard_task_entry_form.task_target_select.id;
+				entry_select_id = self.tasks_tab.timecard_task_entry_form.task_entries_started_select.id;
+				
 				document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
-				self.tasks_tab.Refresh(self.data);
+				document.getElementById(target_select_id).value = 0;
+				document.getElementById(entry_select_id).value = 0;
+				
+				self.tasks_tab.timecard_task_entry_form.Task_Start_Entry_Change();
 				
 				//execute the click event
 				self.tasks_tab.Show_Form('timecard_task_entry_div');
@@ -277,13 +283,13 @@ define([
 				
 				name_select_id = self.tasks_tab.timecard_task_entry_form.task_name_select.id;
 				target_select_id = self.tasks_tab.timecard_task_entry_form.task_target_select.id;
-				
-				document.getElementById(name_select_id).value = 0;
-				self.tasks_tab.Refresh(self.data);
-				
+				entry_select_id = self.tasks_tab.timecard_task_entry_form.task_entries_started_select.id;
+
 				document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
 				document.getElementById(target_select_id).value = self.current_selected_info.row.task_schedule_id;
-				self.tasks_tab.Refresh(self.data);
+				document.getElementById(entry_select_id).value = 0;
+				
+				self.tasks_tab.timecard_task_entry_form.Task_Start_Entry_Change();
 				
 				//execute the click event
 				self.tasks_tab.Show_Form('timecard_task_entry_div');
@@ -377,15 +383,11 @@ define([
 				target_select_id = self.tasks_tab.timecard_task_entry_form.task_target_select.id;
 				entry_select_id = self.tasks_tab.timecard_task_entry_form.task_entries_started_select.id;
 				
-				document.getElementById(name_select_id).value = 0;
-				self.tasks_tab.Refresh(self.data);
-				
 				document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
-				self.tasks_tab.Refresh(self.data);
 				document.getElementById(target_select_id).value = self.current_selected_info.row.task_target_id;
-				self.tasks_tab.Refresh(self.data);
 				document.getElementById(entry_select_id).value = self.current_selected_info.row.task_log_id;
-				self.tasks_tab.Refresh(self.data);
+				
+				self.tasks_tab.timecard_task_entry_form.Task_Start_Entry_Change();
 				
 				//execute the click event
 				self.tasks_tab.Show_Form('timecard_task_entry_div');

@@ -26,7 +26,7 @@ define([
 				"name");
 			
 			Refresh_Select_HTML_From_Table(
-				self.task_target_select.id,
+				self.task_entries_started_select.id,
 				data.task_entries,
 				"task_log_id",
 				"name");
@@ -49,290 +49,10 @@ define([
 				"name");
 			
 			Refresh_Select_HTML_From_Table_Diff(
-				self.task_target_select.id,
+				self.task_entries_started_select.id,
 				diff.data.task_entries,
 				"task_log_id",
 				"name");
-			
-		};
-		
-		this.Refresh_Task_Name_Select = function(data){
-			
-			//ensure the task info array is saved
-			self.task_info_json_array = data.tasks;
-			
-			var previous_value = document.getElementById(self.task_name_select.id).value;
-			var is_previous_value_present = false;
-			
-			//create a list of options for the select
-			var new_inner_html = '';
-
-			new_inner_html += '<option value="0">-</option>';
-			self.selected_task = {task_id : 0};
-			
-			self.active_tasks = Array();
-			
-			//iterate through all tasks
-			for (var i = 0; i < self.task_info_json_array.length; i++) {
-				
-				if(self.task_info_json_array[i].status == "Active")
-				{
-					self.active_tasks.push(self.task_info_json_array[i]); 
-					
-					//add task option to select
-					new_inner_html += '<option value="' + self.task_info_json_array[i].task_id + '">';
-					new_inner_html += self.task_info_json_array[i].name + '</option>';
-					
-					if(self.task_info_json_array[i].task_id == previous_value)
-					{
-						is_previous_value_present = true;
-						self.selected_task = self.task_info_json_array[i];
-					}
-				}
-
-			}
-
-			document.getElementById(self.task_name_select.id).innerHTML = new_inner_html;
-					
-			if(is_previous_value_present)
-			{
-				document.getElementById(self.task_name_select.id).value = previous_value;
-			}
-
-		};
-		
-		this.Refresh_Task_Targets = function(data){
-			
-			var previous_value = document.getElementById(self.task_target_select.id).value;
-			var is_previous_value_present = false;
-			
-			//create a list of options for the select
-			var new_inner_html = '';
-
-			new_inner_html += '<option value="0">-</option>';
-			
-			self.selected_task_target = {task_schedule_id : 0};
-
-			//iterate through all tasks
-			for (var i = 0; i < data.task_targets.length; i++) {
-				
-				for(var j = 0; j < self.active_tasks.length; j++)
-				{
-					if(self.active_tasks[j].task_id == data.task_targets[i].task_id)
-					{
-						if(document.getElementById(self.task_name_select.id).value == 0 ||
-						document.getElementById(self.task_name_select.id).value == data.task_targets[i].task_id)
-						{
-							//add task option to select
-							new_inner_html += '<option value="'
-							new_inner_html += data.task_targets[i].task_schedule_id;
-							new_inner_html += '">(';
-							new_inner_html += data.task_targets[i].task_schedule_id + ') ';
-							new_inner_html += data.task_targets[i].name + '</option>';
-							
-							if(data.task_targets[i].task_schedule_id == previous_value)
-							{
-								is_previous_value_present = true;
-								self.selected_task_target = data.task_targets[i];
-							}
-						}
-						
-						break;
-					}
-				}
-				
-
-			}
-
-			document.getElementById(self.task_target_select.id).innerHTML = new_inner_html;
-			
-			if(is_previous_value_present)
-			{
-				document.getElementById(self.task_target_select.id).value = previous_value;
-			}
-		};
-		
-		this.Refresh_Task_Started_Entries = function(data){
-			
-			//create a list of options for the select
-			var new_inner_html = '';
-
-			new_inner_html += '<option value="0">-</option>';
-			
-			var previous_value = document.getElementById(self.task_entries_started_select.id).value;
-			var is_previous_value_present = false;
-
-			//iterate through all tasks
-			for (var i = 0; i < data.task_entries.length; i++) {
-				
-				for(var j = 0; j < self.active_tasks.length; j++)
-				{
-					if((self.active_tasks[j].task_id == data.task_entries[i].task_id) && 
-						(data.task_entries[i].status == "Started"))
-					{
-						if(document.getElementById(self.task_name_select.id).value == 0 ||
-						document.getElementById(self.task_name_select.id).value == data.task_entries[i].task_id)
-						{
-							if(document.getElementById(self.task_target_select.id).value == 0 ||
-							document.getElementById(self.task_target_select.id).value == data.task_entries[i].task_target_id){
-								
-								//add task option to select
-								new_inner_html += '<option value="'
-								new_inner_html += data.task_entries[i].task_log_id;
-								new_inner_html += '">(';
-								new_inner_html += data.task_entries[i].task_log_id + ') ';
-								new_inner_html += data.task_entries[i].name + '</option>';
-								
-								if(data.task_entries[i].task_log_id == previous_value)
-								{
-									is_previous_value_present = true;
-								}
-								
-								
-							}
-							
-							
-						}
-				
-						
-					}
-				}
-
-			}
-
-			document.getElementById(self.task_entries_started_select.id).innerHTML = new_inner_html;
-			
-			if(is_previous_value_present)
-			{
-				document.getElementById(self.task_entries_started_select.id).value = previous_value;
-				
-				$('#' + this.task_timecard_note_div.id).show();
-				if(document.getElementById(self.task_target_select.id).value != 0)
-				{
-					$('#' + this.task_start_complete_button.id).show();
-				}
-				self.task_start_stop_button.value = 'Stop';
-			}
-			else
-			{
-				$('#' + this.task_timecard_note_div.id).hide();
-				$('#' + this.task_start_complete_button.id).hide();
-				self.task_start_stop_button.value = 'Start';
-			}
-		};
-		
-		
-		/** @method On_Task_Name_Select_Change_Event
-		 * @desc This function is the HTML select task start/stop index change event handler.
-		 * */
-		this.On_Task_Name_Select_Change_Event = function() {
-			
-			
-			this.Refresh(this.data);
-			
-			this.On_Task_Change_Event();
-		};
-		
-		
-		this.On_Task_Target_Select_Change_Event = function() {
-			
-			for (var i = 0; i < self.data.task_targets.length; i++) {
-			
-				if(self.data.task_targets[i].task_schedule_id == document.getElementById(self.task_target_select.id).value)
-				{
-					document.getElementById(self.task_name_select.id).value = self.data.task_targets[i].task_id;
-				}
-			
-			}
-			
-			this.Refresh(this.data);
-			
-			this.On_Task_Change_Event();
-		};
-		
-		this.On_Task_Entry_Select_Change_Event = function() {
-			
-			if(document.getElementById(self.task_entries_started_select.id).value != 0)
-			{
-				for (var i = 0; i < self.data.task_entries.length; i++) {
-					
-					if(self.data.task_entries[i].task_log_id == document.getElementById(self.task_entries_started_select.id).value)
-					{
-						self.selected_task_entry = self.data.task_entries[i];
-						
-						var sqlDateStr = self.selected_task_entry.start_time; // as for MySQL DATETIME
-				        sqlDateStr = sqlDateStr.replace(/:| /g,"-");
-				        var YMDhms = sqlDateStr.split("-");
-				        var sqlDate = new Date();
-				        sqlDate.setFullYear(parseInt(YMDhms[0]), parseInt(YMDhms[1])-1,
-				                                                 parseInt(YMDhms[2]));
-				        sqlDate.setHours(parseInt(YMDhms[3]), parseInt(YMDhms[4]), 
-				                                              parseInt(YMDhms[5]), 0/*msValue*/);
-				        
-						self.current_task_start_time = sqlDate;
-						
-						document.getElementById(self.task_name_select.id).value = self.selected_task_entry.task_id;
-						document.getElementById(self.task_target_select.id).value = self.selected_task_entry.task_target_id;
-						
-						break;
-					}
-					
-				}
-				
-				$('#' + this.task_timecard_note_div.id).show();
-				if(document.getElementById(self.task_target_select.id).value != 0)
-				{
-					$('#' + this.task_start_complete_button.id).show();
-				}
-				
-				
-				self.task_start_stop_button.value = 'Stop';
-			}
-			else
-			{
-				$('#' + this.task_timecard_note_div.id).hide();
-				$('#' + this.task_start_complete_button.id).hide();
-				
-				self.task_start_stop_button.value = 'Start';
-			}
-			
-			self.On_Task_Change_Event();
-			
-		};
-		
-		
-		this.On_Task_Change_Event = function() {
-			
-			//alert('Handler for task name select change called.');
-
-			var selected_index = document.getElementById(this.task_name_select.id).selectedIndex;
-			var new_html = '';
-			new_html += 'Info:<br /><br />';
-			new_html += 'Current Time: ' + (new Date()) + '<br />';
-
-			if (selected_index > 0) {
-
-				var new_item = this.task_info_json_array[selected_index - 1];
-
-				new_html += 'Task ID: ' + new_item.task_id + '<br />';
-				new_html += 'Date Created: ' + new_item.date_created + '<br />';
-				new_html += 'Estimated Time (Hours): ' + new_item.estimated_time + '<br />';
-				
-				if(this.task_entries_started_select.value != 0 && this.selected_task_entry != null)
-				{
-					new_html += 'Status: ' + this.selected_task_entry.status + '<br />';
-					new_html += 'Start Time: ' + this.selected_task_entry.start_time + '<br />';
-				}
-				
-
-			}
-
-			new_html += '<br />';
-
-			this.task_info_div.innerHTML = new_html;
-
-			//refresh the timer
-			this.Refresh_Timer_Display();
 			
 		};
 		
@@ -349,13 +69,13 @@ define([
 				var time_diff_seconds = (currentTime - self.current_task_start_time) / 1000;
 				var hours = time_diff_seconds / 60 / 60;
 				
-				var selected_task_entry_id = self.selected_task_entry.task_log_id;
-				var selected_task_id = self.selected_task_entry.task_id;
+				var selected_task_entry_id = document.getElementById(self.task_entries_started_select.id).value;
+				var selected_task_id = document.getElementById(self.task_name_select.id).value;
 				var task_time = self.selected_task_entry.start_time;
 				var duration = hours;
 				var task_note = self.selected_task_entry.note;
 				var task_status = 'Stopped';
-				var target_id = self.selected_task_entry.task_target_id;
+				var target_id = document.getElementById(self.task_target_select.id).value;
 				
 				var params = Array();
 				
@@ -400,26 +120,26 @@ define([
 				
 				var current_time = new Date();
 				
-				var selected_task_id = self.selected_task.task_id;
-				var task_time = Cast_Date_to_Server_Datetime(current_time);
+				var selected_task_id = document.getElementById(self.task_name_select.id).value;
+				var task_time = current_time.toISOString();
 				var duration = 0;
 				var task_note = '';
 				var task_status = 'Started';
-				var target_id = self.selected_task_target.task_schedule_id;
+				var target_id = document.getElementById(self.task_target_select.id).value;
 				
-				var params = new Array();
-
-				params[0] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(task_time);
-				params[1] = selected_task_id;
-				params[2] = duration;
-				params[3] = task_status;
-				params[4] = task_note;
-				params[5] = target_id;
+				var params = {};
+				
+				params["start_time"] = task_time;
+				params["task_id"] = selected_task_id;
+				params["hours"] = duration;
+				params["status"] = task_status;
+				params["note"] = task_note;
+				params["task_target_id"] = target_id;
 
 				//execute the RPC callback for retrieving the item log
 				app.api.Task_Data_Interface.Insert_Task_Entry(params, function(jsonRpcObj) {
 
-					if (jsonRpcObj.result.success == 'true') {
+					if (jsonRpcObj.result.success) {
 
 						alert('Task entry submitted.');
 
@@ -485,6 +205,29 @@ define([
 			}
 
 			self.task_timer_div.innerHTML = new_html;
+		};
+		
+		this.Task_Start_Entry_Change = function(){
+			
+
+			//execute the click event
+			if(document.getElementById(self.task_entries_started_select.id).value != 0)
+			{
+				
+				$('#' + self.task_timecard_note_div.id).show();
+				if(document.getElementById(self.task_target_select.id).value != 0)
+				{
+					$('#' + self.task_start_complete_button.id).show();
+				}
+				self.task_start_stop_button.value = 'Stop';
+			}
+			else
+			{
+				$('#' + self.task_timecard_note_div.id).hide();
+				$('#' + self.task_start_complete_button.id).hide();
+				self.task_start_stop_button.value = 'Start';
+			}
+			
 		};
 
 		
@@ -575,26 +318,12 @@ define([
 
 			$('#' + self.task_timecard_note_div.id).hide();
 			
-			//hook for the name change select event
-			$('#' + this.task_name_select.id).change(function() {
-
-				//call the change event function
-				self.On_Task_Name_Select_Change_Event();
-
-			});
-			
-			//hook for the target change select event
-			$('#' + this.task_target_select.id).change(function(event) {
-
-				//execute the click event
-				self.On_Task_Target_Select_Change_Event();
-			});
-			
 			//hook for the entry change select event
 			$('#' + this.task_entries_started_select.id).change(function(event) {
 
-				//execute the click event
-				//self.On_Task_Entry_Select_Change_Event();
+				
+				self.Task_Start_Entry_Change();
+				
 			});
 			
 					

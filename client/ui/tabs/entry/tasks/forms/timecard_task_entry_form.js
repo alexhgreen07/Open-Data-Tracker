@@ -227,6 +227,7 @@ define([
 					$('#' + self.task_start_complete_button.id).show();
 				}
 				self.task_start_stop_button.value = 'Stop';
+				
 			}
 			else
 			{
@@ -234,6 +235,8 @@ define([
 				$('#' + self.task_start_complete_button.id).hide();
 				self.task_start_stop_button.value = 'Start';
 			}
+			
+			self.Refresh_Timer_Display();
 			
 		};
 

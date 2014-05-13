@@ -1,22 +1,19 @@
 define([
         'jquery.ui',
         'core/logger',
-        './events/scheduler',
-        '../../../../core/logger.js',
         ],
-        function($,logger,scheduler,logger){
+        function($,logger){
 	
 	/** This is the calendar tab class which holds all UI objects for calendar data.
 	 * @constructor Calendar_Tab
 	 */
-	function Calendar_Tab(init_scheduler,calendar_accordian) {
+	function Calendar_Tab(calendar_accordian) {
 
 		var self = this;
 		
 		self.day_view_type = 'agendaDay';
 		self.week_view_type = 'agendaWeek';
 		
-		self.scheduler = init_scheduler;
 		self.calendar_accordian = calendar_accordian;
 		
 		self.event_click_callback = function(table, row){};
@@ -25,7 +22,7 @@ define([
 		 * @desc This function retrieves the home data from the server.
 		 * @param {function} data The callback to call after the refresh of data has completed.
 		 * */
-		this.Refresh = function(data) {
+		this.Refresh = function(data,scheduled_events) {
 			
 			self.data = data;
 		
@@ -37,7 +34,8 @@ define([
 			var times = [];
 			var start = new Date();
 			
-			self.new_events = self.scheduler.Generate_Event_Schedule(data);
+			//TODO: implement server-side
+			self.new_events = scheduled_events;
 			
 			var end = new Date();
 			times.push('Generate_Event_Schedule: ' + (end - start) / 1000);
@@ -71,7 +69,8 @@ define([
 			
 			self.data = data;
 			
-			self.event_diff = self.scheduler.Generate_Event_Schedule_Diff(diff, data);
+			//TODO: implement server-side
+			//self.event_diff = self.scheduler.Generate_Event_Schedule_Diff(diff, data);
 			
 			var events_to_insert = [];
 			var events_to_remove = [];
@@ -328,10 +327,9 @@ define([
 	
 	function Build_Calendar_Tab()
 	{
-		var init_scheduler = scheduler.Build_Event_Scheduler();
 		var calendar_accordian = new Accordian();
 		
-		var built_calendar_tab = new Calendar_Tab(init_scheduler,calendar_accordian);
+		var built_calendar_tab = new Calendar_Tab(calendar_accordian);
 		
 		return built_calendar_tab;
 	}

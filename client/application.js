@@ -125,7 +125,7 @@ define([
 					times.push('entry_tab_object: ' + (end - start) / 1000);
 					var start = new Date();
 					
-					self.calendar_tab_object.Refresh(self.api.data);
+					self.calendar_tab_object.Refresh(self.api.data,self.api.forms.scheduled_events);
 					
 					var end = new Date();
 					times.push('calendar_tab_object: ' + (end - start) / 1000);

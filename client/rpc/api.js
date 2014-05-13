@@ -112,6 +112,7 @@ define([
 						
 						self.forms = {};
 						self.forms.home_report = jsonRpcObj.result.forms.home_report;
+						self.forms.scheduled_events = jsonRpcObj.result.forms.scheduled_events;
 						
 						//try
 						{

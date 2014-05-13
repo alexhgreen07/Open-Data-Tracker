@@ -2,7 +2,9 @@ define([
         './data_interface_lib/home_data_interface.js',
         './data_interface_lib/item_data_interface.js',
         './data_interface_lib/task_data_interface.js',
-        ],function(home_data_interface,item_data_interface,task_data_interface){
+        'core/events/scheduler',
+        'core/events/summaries/homepage_summaries',
+        ],function(home_data_interface,item_data_interface,task_data_interface,scheduler,homepage_summaries){
 	
 	function Diff_Table(old_table, new_table, primary_column)
 	{
@@ -62,6 +64,8 @@ define([
 		
 		var self = this;
 		
+		this.scheduler = new scheduler.Event_Scheduler();
+		
 		this.Refresh_All_Data = function(params, session, callback){
 		
 			var return_object = {};
@@ -108,9 +112,11 @@ define([
 						session.data = return_object.data;
 					}
 					
-					home_data_interface.Get_Homepage_Report(params, session, function(object){
+					homepage_summaries.Get_Homepage_Report(params, session, function(object){
 						
 						return_object.forms["home_report"] = object;
+						
+						return_object.forms["scheduled_events"] = self.scheduler.Generate_Event_Schedule(return_object.data);
 						
 						callback(return_object);
 						

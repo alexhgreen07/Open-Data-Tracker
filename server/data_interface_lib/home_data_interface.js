@@ -37,9 +37,39 @@ define([],function(){
 			var value_lookup = params;
 			value_lookup.member_id = session.member_id;
 			
-			session.database.Insert('categories',value_lookup,function(object){
-				callback(object);
-			});
+			value_lookup['category_path'] = '/' + value_lookup['name'];
+			
+			if(value_lookup["parent_category_id"] == 0)
+			{
+				session.database.Insert('categories',value_lookup,function(object){
+					callback(object);
+				});
+			}
+			else
+			{
+				var columns = {
+						'category_path' : 'category_path'};
+				
+				var where = "member_id = " + session.member_id + " AND category_id = " + value_lookup["parent_category_id"];
+				
+				//check the parent category path
+				session.database.Select(
+						'categories', 
+						columns, 
+						where,
+						'ORDER BY `category_id`',
+						function(table){
+							
+							value_lookup['category_path'] = table[0]['category_path'] + value_lookup['category_path'];
+							
+							session.database.Insert('categories',value_lookup,function(object){
+								callback(object);
+							});
+							
+						});
+			}
+			
+			
 			
 		},
 		Update_Category: function(params, session, callback){
@@ -53,9 +83,37 @@ define([],function(){
 			var where = 'category_id = ' + category_id;
 			where += ' AND member_id = ' + session.member_id;
 			
-			session.database.Update('categories',value_lookup,where,function(object){
-				callback(object);
-			});
+			value_lookup['category_path'] = '/' + value_lookup['name'];
+			
+			if(value_lookup["parent_category_id"] == 0)
+			{
+				session.database.Update('categories',value_lookup,where,function(object){
+					callback(object);
+				});
+			}
+			else
+			{
+				var columns = {
+						'category_path' : 'category_path'};
+				
+				var select_where = "member_id = " + session.member_id + " AND category_id = " + value_lookup["parent_category_id"];
+				
+				//check the parent category path
+				session.database.Select(
+						'categories', 
+						columns, 
+						select_where,
+						'ORDER BY `category_id`',
+						function(table){
+							
+							value_lookup['category_path'] = table[0]['category_path'] + value_lookup['category_path'];
+							
+							session.database.Update('categories',value_lookup,where,function(object){
+								callback(object);
+							});
+							
+						});
+			}
 			
 		},
 		Delete_Category: function(params, session, callback){

@@ -149,7 +149,7 @@ define([
 					var start = new Date();
 					
 					//TODO: implement
-					self.home_tab_object.Refresh(self.api.data, self.api.settings,self.api.home_report);
+					self.home_tab_object.Refresh(self.api.data, self.api.settings,self.api.forms.home_report);
 					
 					var end = new Date();
 					times.push('home_tab_object: ' + (end - start) / 1000);

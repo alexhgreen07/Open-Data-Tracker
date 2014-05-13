@@ -539,7 +539,7 @@ define([
 			$('#' + self.cancel_button_div.id).fadeIn();
 			
 			name_select_id = self.tasks_tab.new_task_form.task_category_select.id;
-			document.getElementById(name_select_id).value = self.current_selected_info.row.category_id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row["Category ID"];
 			self.category_tab.Refresh(self.data);
 			
 			//execute the click event
@@ -557,7 +557,7 @@ define([
 			$('#' + self.cancel_button_div.id).fadeIn();
 			
 			name_select_id = self.items_tab.new_item_form.item_category_select.id;
-			document.getElementById(name_select_id).value = self.current_selected_info.row.category_id;
+			document.getElementById(name_select_id).value = self.current_selected_info.row["Category ID"];
 			self.category_tab.Refresh(self.data);
 			
 			//execute the click event

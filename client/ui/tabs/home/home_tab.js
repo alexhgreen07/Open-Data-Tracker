@@ -80,8 +80,9 @@ define([
 
 			var items_accordian = new Accordian();
 			items_accordian.Render('home_accordian', tabs_array);
-
-			this.home_form.Render('home_summary_data_div');
+			
+			var home_summary_data_div_element = document.getElementById('home_summary_data_div');
+			this.home_form.Render(home_summary_data_div_element);
 			
 			var home_settings_div_element = document.getElementById('home_settings_div');
 			this.settings_form.Render(home_settings_div_element);

@@ -13,9 +13,9 @@ define([
 		
 		this.Refresh = function(data, home_report){
 			
-			running_tasks_div = document.getElementById(this.running_tasks_div.id);
-			upcoming_tasks_div = document.getElementById(this.upcoming_tasks_div.id);
-			recent_items_div = document.getElementById(this.recent_items_div.id);
+			running_tasks_div = this.running_tasks_div;
+			upcoming_tasks_div = this.upcoming_tasks_div;
+			recent_items_div = this.recent_items_div;
 			
 			running_tasks_div.innerHTML = '';
 			upcoming_tasks_div.innerHTML = '';
@@ -27,10 +27,20 @@ define([
 			
 			//create the running tasks table
 			running_tasks_table = document.createElement('table');
+			running_tasks_table = running_tasks_div.appendChild(running_tasks_table);
 			
-			running_tasks_table.innerHTML += '<tr><th>Name</th><th>Start Time</th></tr>';
+			//create header row
+			var header_row = document.createElement('tr');
+			header_row = running_tasks_table.appendChild(header_row);
 			
-			var row_ids = [];
+			//create header cells
+			var header_cell = document.createElement('th');
+			header_cell = header_row.appendChild(header_cell);
+			header_cell.appendChild(document.createTextNode("Name"));
+			
+			header_cell = document.createElement('th');
+			header_cell = header_row.appendChild(header_cell);
+			header_cell.appendChild(document.createTextNode("Start Time"));
 			
 			for(var i = 0; i < running_tasks.length; i++)
 			{
@@ -53,27 +63,21 @@ define([
 					'<td>' + running_tasks[i].name + '</td>' + 
 					'<td>' + scheduled_interval + '</td>';
 				
-				running_tasks_table.appendChild(running_tasks_row);
+				running_tasks_row = running_tasks_table.appendChild(running_tasks_row);
 				
-				row_ids.push(running_tasks_row.id);
-			}
-			
-			running_tasks_div.appendChild(running_tasks_table);
-			running_tasks_div.innerHTML += '<hr>';
-			
-			//assign events
-			for(var i = 0; i < row_ids.length; i++)
-			{
-				document.getElementById(row_ids[i]).row = running_tasks[i];
+				running_tasks_row.row = running_tasks[i];
 				
-				$('#' + row_ids[i]).css('cursor','pointer');
+				$(running_tasks_row).css('cursor','pointer');
 				
-				$('#' + row_ids[i]).click(function(){
+				$(running_tasks_row).click(function(){
 					
 					self.event_click_callback('task_entries', this.row);
 					
 				});
+				
 			}
+			
+			running_tasks_div.appendChild(document.createElement('hr'));
 			
 			var row_ids = [];
 			
@@ -202,34 +206,37 @@ define([
 		 * @desc This function will render the home data form in the specified div.
 		 * @param {String} form_div_id The div ID to render the form in.
 		 * */
-		this.Render = function(form_div_id) {
+		this.Render = function(div_tab) {
+			
+			div_tab.innerHTML = '';
+			
 			this.data_form = document.createElement("form");
 			this.data_form.setAttribute('method', "post");
 			this.data_form.setAttribute('id', "home_display_form");
+			
+			this.data_form = div_tab.appendChild(this.data_form);
 
 			this.new_data_display_div = document.createElement("div");
+			this.new_data_display_div = this.data_form.appendChild(this.new_data_display_div);
 			
-			this.new_data_display_div.innerHTML = 'Running Tasks:<br/>';
+			this.new_data_display_div.appendChild(document.createTextNode("Running Tasks: "));
+			this.new_data_display_div.appendChild(document.createElement('br'));
 			this.running_tasks_div = document.createElement("div");
 			this.running_tasks_div.id = 'new_data_display_div';
-			this.new_data_display_div.appendChild(this.running_tasks_div);
+			this.running_tasks_div = this.new_data_display_div.appendChild(this.running_tasks_div);
 			
-			this.new_data_display_div.innerHTML += 'Upcoming Targets:<br/>';
+			this.new_data_display_div.appendChild(document.createTextNode("Upcoming Tasks: "));
+			this.new_data_display_div.appendChild(document.createElement('br'));
 			this.upcoming_tasks_div = document.createElement("div");
 			this.upcoming_tasks_div.id = 'upcoming_tasks_div';
-			this.new_data_display_div.appendChild(this.upcoming_tasks_div);
+			this.upcoming_tasks_div = this.new_data_display_div.appendChild(this.upcoming_tasks_div);
 			
 			
-			this.new_data_display_div.innerHTML += 'Recent Items:<br/>';
+			this.new_data_display_div.appendChild(document.createTextNode("Recent Items: "));
+			this.new_data_display_div.appendChild(document.createElement('br'));
 			this.recent_items_div = document.createElement("div");
 			this.recent_items_div.id = 'recent_items_div';
-			this.new_data_display_div.appendChild(this.recent_items_div);
-			
-			this.data_form.appendChild(this.new_data_display_div);
-
-			var div_tab = document.getElementById(form_div_id);
-			div_tab.innerHTML = '';
-			div_tab.appendChild(this.data_form);
+			this.recent_items_div = this.new_data_display_div.appendChild(this.recent_items_div);
 
 		};
 			

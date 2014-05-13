@@ -102,12 +102,13 @@ define([],function(){
 			
 		};
 		
-		/** @method Render_Text_Size_Changer
-		 * @desc This function will render the text size changer in the specified div.
+		/** @method Render
+		 * @desc This function will render the tab in the div that it was initialized with.
 		 * @param {String} form_div_id The div ID to render the form in.
 		 * */
-		this.Render_Text_Size_Changer = function(form_div_id) {
+		this.Render = function(form_div_id){
 			
+
 			//append the main tab div
 			this.text_changer_div = document.createElement('div');
 			
@@ -234,16 +235,6 @@ define([],function(){
 			var size = parseInt($('body').css('font-size').replace("px",""));
 			
 			document.getElementById(this.change_text_box.id).value = size;
-			
-		};
-		
-		/** @method Render
-		 * @desc This function will render the tab in the div that it was initialized with.
-		 * @param {String} form_div_id The div ID to render the form in.
-		 * */
-		this.Render = function(form_div_id){
-			
-			this.Render_Text_Size_Changer(form_div_id);
 			
 		};
 	}

@@ -219,6 +219,8 @@ define([
 				target_select_id = self.tasks_tab.timecard_task_entry_form.task_target_select.id;
 				entry_select_id = self.tasks_tab.timecard_task_entry_form.task_entries_started_select.id;
 				
+				self.tasks_tab.timecard_task_entry_form.selected_task_entry = self.current_selected_info.row;
+				
 				document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
 				document.getElementById(target_select_id).value = 0;
 				document.getElementById(entry_select_id).value = 0;
@@ -284,7 +286,9 @@ define([
 				name_select_id = self.tasks_tab.timecard_task_entry_form.task_name_select.id;
 				target_select_id = self.tasks_tab.timecard_task_entry_form.task_target_select.id;
 				entry_select_id = self.tasks_tab.timecard_task_entry_form.task_entries_started_select.id;
-
+				
+				self.tasks_tab.timecard_task_entry_form.selected_task_entry = self.current_selected_info.row;
+				
 				document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
 				document.getElementById(target_select_id).value = self.current_selected_info.row.task_schedule_id;
 				document.getElementById(entry_select_id).value = 0;
@@ -382,6 +386,8 @@ define([
 				name_select_id = self.tasks_tab.timecard_task_entry_form.task_name_select.id;
 				target_select_id = self.tasks_tab.timecard_task_entry_form.task_target_select.id;
 				entry_select_id = self.tasks_tab.timecard_task_entry_form.task_entries_started_select.id;
+				
+				self.tasks_tab.timecard_task_entry_form.selected_task_entry = self.current_selected_info.row;
 				
 				document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
 				document.getElementById(target_select_id).value = self.current_selected_info.row.task_target_id;

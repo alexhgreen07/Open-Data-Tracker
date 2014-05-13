@@ -66,7 +66,8 @@ define([
 			if(this.task_start_stop_button.value == 'Stop')
 			{
 				var currentTime = new Date();
-				var time_diff_seconds = (currentTime - self.current_task_start_time) / 1000;
+				var start_time = new Date(self.selected_task_entry.start_time);
+				var time_diff_seconds = (currentTime - start_time) / 1000;
 				var hours = time_diff_seconds / 60 / 60;
 				
 				var selected_task_entry_id = document.getElementById(self.task_entries_started_select.id).value;
@@ -77,15 +78,18 @@ define([
 				var task_status = 'Stopped';
 				var target_id = document.getElementById(self.task_target_select.id).value;
 				
-				var params = Array();
+				var params = {};
 				
-				params[0] = selected_task_entry_id;
-				params[1] = selected_task_id;
-				params[2] = Cast_Local_Server_Datetime_To_UTC_Server_Datetime(task_time);
-				params[3] = duration;
-				params[4] = task_status;
-				params[5] = task_note;
-				params[6] = target_id;
+				params["task_log_id"] = selected_task_entry_id;
+				params["task_id"] = selected_task_id;
+				params["start_time"] = task_time;
+				params["hours"] = duration;
+				params["status"] = task_status;
+				params["note"] = task_note;
+				params["task_target_id"] = target_id;
+				
+				//TODO: implement
+				/*
 				if(is_complete && target_id != 0)
 				{
 					params[7] = 1;
@@ -94,12 +98,13 @@ define([
 				{
 					params[7] = 0;
 				}
+				*/
 				
 		
 				//execute the RPC callback for retrieving the item log
 				app.api.Task_Data_Interface.Update_Task_Entry(params, function(jsonRpcObj) {
 		
-					if (jsonRpcObj.result.success == 'true') {
+					if (jsonRpcObj.result.success) {
 		
 						alert('Task entry submitted.');
 		
@@ -190,9 +195,11 @@ define([
 			var new_html = '';
 
 			if (self.task_start_stop_button.value == 'Stop') {
+				
 				var currentTime = new Date();
+				var start_time = new Date(self.selected_task_entry.start_time);
 
-				var time_diff_seconds = (currentTime - self.current_task_start_time) / 1000;
+				var time_diff_seconds = (currentTime - start_time) / 1000;
 				var days = Math.floor(time_diff_seconds / 60 / 60 / 24);
 				var hours = Math.floor(time_diff_seconds / 60 / 60) % 24;
 				var minutes = Math.floor(time_diff_seconds / 60) % 60;

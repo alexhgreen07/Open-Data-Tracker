@@ -1,4 +1,4 @@
-define(['jquery.ui','jquery.ui.jstree'],function($){
+define(['core/logger','jquery.ui','jquery.ui.jstree'],function(logger,$){
 	
 	return {
 		/** This organizes the tabled data into a tree view.
@@ -585,12 +585,36 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					'task_entries' : self.Create_Task_Entry_Node_Lookup_Entry,
 				};
 				
-				//TODO: implement for all table types
 				lookup_entry = tree_map[table](table,row);
 				
+				lookup_entry.children = [];
 				lookup_entry.is_expanded = false;
 				
 				return lookup_entry;
+				
+			};
+			
+			self.Populate_Tree_Node_Lookup_Children = function()
+			{
+				for(lookup_key in self.tree_view_hash_lookup)
+				{
+					var current_lookup = self.tree_view_hash_lookup[lookup_key];
+					
+					if(current_lookup.parent_id != 0)
+					{
+						var parent_lookup = self.tree_view_hash_lookup[current_lookup.parent_id]
+						
+						if(parent_lookup)
+						{
+							parent_lookup.children.push(lookup_key);
+						}
+						else
+						{
+							logger.Error("Unable to find parent node for: " + JSON.stringify(current_lookup));
+						}
+					}
+					
+				}
 				
 			};
 			
@@ -607,7 +631,8 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					node : "All",
 					parent_id : 0,
 					table: "Categories",
-					row: {"Category ID": 0}
+					row: {"Category ID": 0},
+					children: []
 					};
 				
 				//add all nodes to lookup
@@ -625,6 +650,8 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 					}
 				}
 				
+				self.Populate_Tree_Node_Lookup_Children();
+				
 				self.Insert_All_Hash_Lookup_Nodes();
 				
 				return self.tree_view_hash_lookup[root_id].node;
@@ -634,39 +661,49 @@ define(['jquery.ui','jquery.ui.jstree'],function($){
 			self.Insert_All_Hash_Lookup_Nodes = function()
 			{
 				
-				var nodes_to_check = [self.Generate_Hashed_ID("Categories", 0)];
+				var nodes_to_check = self.Generate_Hashed_ID("Categories", 0);
+				
+				var current_lookup = self.tree_view_hash_lookup[nodes_to_check];
+				self.Insert_Tree_Node(current_lookup);
 				
 				self.Insert_Hash_Lookup_Children(nodes_to_check);
 				
 			};
 			
-			self.Insert_Hash_Lookup_Children = function(nodes_to_check)
+			self.Insert_Hash_Lookup_Children = function(node_to_check)
 			{
-				while(nodes_to_check.length > 0)
+				
+				var parent_lookup = self.tree_view_hash_lookup[node_to_check];
+				
+				for(child_key in parent_lookup.children)
 				{
-					node_to_check = nodes_to_check[0];
+					var child_lookup = self.tree_view_hash_lookup[parent_lookup.children[child_key]];
 					
-					for(lookup_key in self.tree_view_hash_lookup)
+					if(child_lookup)
 					{
-						var current_lookup = self.tree_view_hash_lookup[lookup_key];
+						self.Insert_Tree_Node(child_lookup);
 						
-						if(node_to_check == current_lookup.node_id)
-						{
-							self.Insert_Tree_Node(current_lookup);
-							
-							nodes_to_check.splice(0,1);
-							
-							for(child_key in self.tree_view_hash_lookup)
-							{
-								if(self.tree_view_hash_lookup[child_key].parent_id == node_to_check)
-								{
-									nodes_to_check.push(child_key);
-								}
-							}
-						}
+						self.Insert_Hash_Lookup_Children(parent_lookup.children[child_key]);
+					}
+					else
+					{
+						logger.Error("Unable to find tree node child: " + parent_lookup.children[child_key]);
+					}
+					
+				}
+				
+				/*
+				for(child_key in self.tree_view_hash_lookup)
+				{
+					if(self.tree_view_hash_lookup[child_key].parent_id == node_to_check)
+					{
+						var current_lookup = self.tree_view_hash_lookup[child_key];
+						self.Insert_Tree_Node(current_lookup);
 						
+						self.Insert_Hash_Lookup_Children(child_key);
 					}
 				}
+				*/
 			};
 			
 			self.Insert_Tree_Node = function(lookup_entry)

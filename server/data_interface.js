@@ -3,8 +3,14 @@ define([
         './data_interface_lib/item_data_interface.js',
         './data_interface_lib/task_data_interface.js',
         'core/events/scheduler',
-        'core/events/summaries/homepage_summaries',
-        ],function(home_data_interface,item_data_interface,task_data_interface,scheduler,homepage_summaries){
+        'core/summaries/homepage_summaries',
+        ],function(
+		home_data_interface,
+		item_data_interface,
+		task_data_interface,
+		scheduler,
+		homepage_summaries
+		){
 	
 	function Diff_Table(old_table, new_table, primary_column)
 	{
@@ -283,7 +289,13 @@ define([
 				
 				return_object.reports = [];
 				
+				return_object.forms = {};
+				
 				session.data = object.data;
+				
+				//TODO: change these form reports to diffs
+				return_object.forms["home_report"] = object.forms.home_report;
+				return_object.forms["scheduled_events"] = object.forms.scheduled_events;
 				
 				callback(return_object);
 				

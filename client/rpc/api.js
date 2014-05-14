@@ -200,6 +200,10 @@ define([
 						new_patch.reports,
 						'report_id');
 					
+					//TODO: implement diff
+					self.forms.home_report = new_patch.forms.home_report;
+					self.forms.scheduled_events = new_patch.forms.scheduled_events;
+					
 					callback(new_patch);
 					
 				});

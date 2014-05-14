@@ -34,7 +34,6 @@ define([
 			var times = [];
 			var start = new Date();
 			
-			//TODO: implement server-side
 			self.new_events = scheduled_events;
 			
 			var end = new Date();
@@ -65,7 +64,12 @@ define([
 			
 		};
 		
-		this.Refresh_From_Diff = function(diff, data){
+		this.Refresh_From_Diff = function(diff, data, scheduled_events){
+			
+			self.Refresh(data,scheduled_events);
+			
+			//TODO: implement diff
+			/*
 			
 			self.data = data;
 			
@@ -123,7 +127,7 @@ define([
 			
 			$('#' + self.calendar_div.id).fullCalendar('addEventSource',events_to_insert);
 			
-			
+			*/
 		};
 		
 		this.isTouchDevice = function()

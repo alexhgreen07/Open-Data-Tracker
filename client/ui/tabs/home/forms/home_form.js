@@ -83,8 +83,23 @@ define([
 			
 			//create the upcoming task targets table
 			upcoming_tasks_table = document.createElement('table');
+			upcoming_tasks_table = upcoming_tasks_div.appendChild(upcoming_tasks_table);
 			
-			upcoming_tasks_table.innerHTML += '<tr><th>Name</th><th>Time To Target</th><th>Estimated Time</th></tr>';
+			var header_row = document.createElement('tr');
+			header_row = upcoming_tasks_table.appendChild(header_row);
+			
+			//create header cells
+			var header_cell = document.createElement('th');
+			header_cell = header_row.appendChild(header_cell);
+			header_cell.appendChild(document.createTextNode("Name"));
+			
+			header_cell = document.createElement('th');
+			header_cell = header_row.appendChild(header_cell);
+			header_cell.appendChild(document.createTextNode("Time To Target"));
+			
+			header_cell = document.createElement('th');
+			header_cell = header_row.appendChild(header_cell);
+			header_cell.appendChild(document.createTextNode("Estimated Time"));
 			
 			for(var i = 0; i < upcoming_tasks.length; i++)
 			{
@@ -109,34 +124,43 @@ define([
 					'<td>' + scheduled_interval + '</td>' + 
 					'<td>' + estimated_time_string + '</td>';
 					
-				upcoming_tasks_table.appendChild(upcoming_tasks_row);
+				upcoming_tasks_row = upcoming_tasks_table.appendChild(upcoming_tasks_row);
 				
-				row_ids.push(upcoming_tasks_row.id);
-			}
-			
-			upcoming_tasks_div.appendChild(upcoming_tasks_table);
-			upcoming_tasks_div.innerHTML += '<hr>';
-			
-			//assign events
-			for(var i = 0; i < row_ids.length; i++)
-			{
-				document.getElementById(row_ids[i]).row = upcoming_tasks[i];
+				upcoming_tasks_row.row = upcoming_tasks[i];
 				
-				$('#' + row_ids[i]).css('cursor','pointer');
+				$(upcoming_tasks_row).css('cursor','pointer');
 				
-				$('#' + row_ids[i]).click(function(){
+				$(upcoming_tasks_row).click(function(){
 					
 					self.event_click_callback('task_targets', this.row);
 					
 				});
 			}
 			
-			var row_ids = [];
+			upcoming_tasks_div.appendChild(document.createElement('hr'));
+			
 			
 			//create the recent items table
 			recent_items_table = document.createElement('table');
+			recent_items_table = recent_items_div.appendChild(recent_items_table);
 			
-			recent_items_table.innerHTML += '<tr><th>Name</th><th>Entry Time</th><th>Value</th></tr>';
+			var header_row = document.createElement('tr');
+			header_row = recent_items_table.appendChild(header_row);
+			
+			//create header cells
+			var header_cell = document.createElement('th');
+			header_cell = header_row.appendChild(header_cell);
+			header_cell.appendChild(document.createTextNode("Name"));
+			
+			header_cell = document.createElement('th');
+			header_cell = header_row.appendChild(header_cell);
+			header_cell.appendChild(document.createTextNode("Entry Time"));
+			
+			header_cell = document.createElement('th');
+			header_cell = header_row.appendChild(header_cell);
+			header_cell.appendChild(document.createTextNode("Value"));
+			
+			//recent_items_table.innerHTML += '<tr><th>Name</th><th>Entry Time</th><th>Value</th></tr>';
 			
 			for(var i = 0; i < recent_items.length; i++)
 			{
@@ -162,27 +186,20 @@ define([
 					'<td>' + recent_items[i].value + '</td>' + 
 					'</tr>';
 				
-				recent_items_table.appendChild(recent_item_row);
+				recent_item_row = recent_items_table.appendChild(recent_item_row);
 				
-				row_ids.push(recent_item_row.id);
-			}
-			
-			recent_items_div.appendChild(recent_items_table);
-			recent_items_div.innerHTML += '<hr>';
-			
-			//assign events
-			for(var i = 0; i < row_ids.length; i++)
-			{
-				document.getElementById(row_ids[i]).row = recent_items[i];
+				recent_item_row.row = recent_items[i];
 				
-				$('#' + row_ids[i]).css('cursor','pointer');
+				$(recent_item_row).css('cursor','pointer');
 				
-				$('#' + row_ids[i]).click(function(){
+				$(recent_item_row).click(function(){
 					
 					self.event_click_callback('item_entries', this.row);
 					
 				});
 			}
+			
+			recent_items_div.appendChild(document.createElement('hr'));
 			
 		};
 		

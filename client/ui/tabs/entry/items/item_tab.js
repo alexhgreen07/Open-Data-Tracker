@@ -150,9 +150,9 @@ define([
 		
 			this.edit_item_form.Render(this.div_forms['edit_item_div']);
 
-			this.new_item_target_form.Render('new_item_target_div');
+			this.new_item_target_form.Render(this.div_forms['new_item_target_div']);
 			
-			this.edit_item_target_form.Render('edit_item_target_div');
+			this.edit_item_target_form.Render(this.div_forms['edit_item_target_div']);
 			
 			for(var key in this.div_forms)
 			{

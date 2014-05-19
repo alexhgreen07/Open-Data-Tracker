@@ -239,7 +239,7 @@ define([
 
 			this.new_task_form.Render(this.div_forms['add_task_div']);
 
-			this.edit_task_form.Render('edit_tasks_div');
+			this.edit_task_form.Render(this.div_forms['edit_tasks_div']);
 
 			this.new_task_target_form.Render('new_target_task_entry_div');
 			

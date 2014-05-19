@@ -48,11 +48,11 @@ define([
 			var self = this;
 
 			//get the value string
-			var entry_time = $("#" + self.item_new_time.id).datetimepicker('getDate');
-			var value_string = $("#" + self.item_new_value.id).val();
-			var item_select_index = $("#" + self.new_item_name_select.id).prop("selectedIndex");
-			var note_string = $("#" + self.item_new_note.id).val();
-			var target_id = $("#" + self.new_item_target_select.id).val();
+			var entry_time = $(self.item_new_time).datetimepicker('getDate');
+			var value_string = $(self.item_new_value).val();
+			var item_select_index = $(self.new_item_name_select).prop("selectedIndex");
+			var note_string = $(self.item_new_note).val();
+			var target_id = $(self.new_item_target_select).val();
 
 			//check that the string is numeric
 			if (!isNaN(Number(value_string)) && value_string != '') {
@@ -80,9 +80,9 @@ define([
 					}
 
 					//reset all the fields to default
-					$("#" + self.item_new_value.id).val('');
-					$("#" + self.new_item_name_select.id).val('-');
-					$("#" + self.item_new_note.id).val('');
+					$(self.item_new_value).val('');
+					$(self.new_item_name_select).val('-');
+					$(self.item_new_note).val('');
 
 				});
 			} else {
@@ -95,81 +95,83 @@ define([
 		 * @desc This function will render the new item entry form in the specified div.
 		 * @param {String} form_div_id The div ID to render the form in.
 		 * */
-		this.Render = function(form_div_id) {
+		this.Render = function(parent_div) {
 
 			//create the top form
 			this.item_new_entry_data_form = document.createElement("form");
 			this.item_new_entry_data_form.setAttribute('method', "post");
 			this.item_new_entry_data_form.setAttribute('id', "new_item_entry_form");
 
-			this.item_new_entry_data_form.innerHTML += 'Time:<br />';
+			this.item_new_entry_data_form = parent_div.appendChild(this.item_new_entry_data_form);
+			
+			this.item_new_entry_data_form.appendChild(document.createTextNode('Time:'));
+			this.item_new_entry_data_form.appendChild(document.createElement('br'));
 
 			//item value
 			this.item_new_time = document.createElement("input");
 			this.item_new_time.setAttribute('name', "new_time");
 			this.item_new_time.setAttribute('id', "new_time");
 			this.item_new_time.setAttribute('type', 'text');
-			this.item_new_entry_data_form.appendChild(this.item_new_time);
+			this.item_new_time = this.item_new_entry_data_form.appendChild(this.item_new_time);
 			
-			this.item_new_entry_data_form.innerHTML += '<br />';
-			
-			this.item_new_entry_data_form.innerHTML += 'Value:<br />';
+			this.item_new_entry_data_form.appendChild(document.createElement('br'));
+			this.item_new_entry_data_form.appendChild(document.createTextNode('Value:'));
+			this.item_new_entry_data_form.appendChild(document.createElement('br'));
 
 			//item value
 			this.item_new_value = document.createElement("input");
 			this.item_new_value.setAttribute('name', "new_value");
 			this.item_new_value.setAttribute('id', "new_value");
 			this.item_new_value.setAttribute('type', 'text');
-			this.item_new_entry_data_form.appendChild(this.item_new_value);
-			
-			this.item_new_entry_data_form.innerHTML += '<br />';
-			
-			this.item_new_entry_data_form.innerHTML += 'Item:<br />';
+			this.item_new_value = this.item_new_entry_data_form.appendChild(this.item_new_value);
+
+			this.item_new_entry_data_form.appendChild(document.createElement('br'));
+			this.item_new_entry_data_form.appendChild(document.createTextNode('Item:'));
+			this.item_new_entry_data_form.appendChild(document.createElement('br'));
 
 			//item unit
 			this.new_item_name_select = document.createElement("select");
 			this.new_item_name_select.setAttribute('name', "new_task_name_dropdown");
 			this.new_item_name_select.setAttribute('id', "new_task_name_dropdown");
 			this.new_item_name_select.innerHTML = '<option>-</option>';
-			this.item_new_entry_data_form.appendChild(this.new_item_name_select);
+			this.new_item_name_select = this.item_new_entry_data_form.appendChild(this.new_item_name_select);
 
-			this.item_new_entry_data_form.innerHTML += '<br />';
-			
-			this.item_new_entry_data_form.innerHTML += 'Note:<br />';
+			this.item_new_entry_data_form.appendChild(document.createElement('br'));
+			this.item_new_entry_data_form.appendChild(document.createTextNode('Note:'));
+			this.item_new_entry_data_form.appendChild(document.createElement('br'));
 
 			//item note
 			this.item_new_note = document.createElement("input");
 			this.item_new_note.setAttribute('name', "new_notes");
 			this.item_new_note.setAttribute('id', "new_notes");
 			this.item_new_note.setAttribute('type', 'text');
-			this.item_new_entry_data_form.appendChild(this.item_new_note);
+			this.item_new_note = this.item_new_entry_data_form.appendChild(this.item_new_note);
 			
-			this.item_new_entry_data_form.innerHTML += '<br />';
-			
-			this.item_new_entry_data_form.innerHTML += 'Target:<br />';
+			this.item_new_entry_data_form.appendChild(document.createElement('br'));
+			this.item_new_entry_data_form.appendChild(document.createTextNode('Target:'));
+			this.item_new_entry_data_form.appendChild(document.createElement('br'));
 
 			//item target
 			this.new_item_target_select = document.createElement("select");
 			this.new_item_target_select.setAttribute('name', "new_item_target_select");
 			this.new_item_target_select.setAttribute('id', "new_item_target_select");
 			this.new_item_target_select.innerHTML = '<option>-</option>';
-			this.item_new_entry_data_form.appendChild(this.new_item_target_select);
+			this.new_item_target_select = this.item_new_entry_data_form.appendChild(this.new_item_target_select);
 
-			this.item_new_entry_data_form.innerHTML += '<br /><br />';
+			this.item_new_entry_data_form.appendChild(document.createElement('br'));
+			this.item_new_entry_data_form.appendChild(document.createElement('br'));
 
 			//task start/stop button creation
 			this.item_new_add_entry_button = document.createElement("input");
 			this.item_new_add_entry_button.setAttribute('id', 'item_new_add_entry_button');
 			this.item_new_add_entry_button.setAttribute('type', 'submit');
 			this.item_new_add_entry_button.value = 'Submit';
+			this.item_new_add_entry_button = this.item_new_entry_data_form.appendChild(this.item_new_add_entry_button);
+
 			var self = this;
-			this.item_new_entry_data_form.appendChild(this.item_new_add_entry_button);
-
-			var div_tab = document.getElementById(form_div_id);
-			div_tab.appendChild(this.item_new_entry_data_form);
-
-			$('#' + this.item_new_add_entry_button.id).button();
-			$('#' + this.item_new_add_entry_button.id).click(function(event) {
+			
+			$(this.item_new_add_entry_button).button();
+			$(this.item_new_add_entry_button).click(function(event) {
 
 				//ensure a normal postback does not occur
 				event.preventDefault();
@@ -179,11 +181,11 @@ define([
 			});
 
 			//initialize the datetime picker
-			$('#' + this.item_new_time.id).datetimepicker({
+			$(this.item_new_time).datetimepicker({
 				timeFormat : "HH:mm:ss",
 				dateFormat : 'yy-mm-dd'
 			});
-			$('#' + this.item_new_time.id).datetimepicker("setDate", new Date());
+			$(this.item_new_time).datetimepicker("setDate", new Date());
 
 		};
 		

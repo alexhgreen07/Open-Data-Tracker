@@ -237,7 +237,7 @@ define([
 
 			this.edit_task_entry_form.Render(this.div_forms['edit_task_entry_div']);
 
-			this.new_task_form.Render('add_task_div');
+			this.new_task_form.Render(this.div_forms['add_task_div']);
 
 			this.edit_task_form.Render('edit_tasks_div');
 

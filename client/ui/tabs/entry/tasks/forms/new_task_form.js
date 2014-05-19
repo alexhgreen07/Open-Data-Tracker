@@ -34,10 +34,10 @@ define([
 		 * */
 		this.Task_New_Submit_Click = function() {
 			var params = {};
-			params["name"] = $("#" + this.task_name.id).val();
-			params["description"] = $("#" + this.task_description.id).val();
-			params["note"] = $("#" + this.task_note.id).val();
-			params["category_id"] = $("#" + this.task_category_select.id).val();
+			params["name"] = $(this.task_name).val();
+			params["description"] = $(this.task_description).val();
+			params["note"] = $(this.task_note).val();
+			params["category_id"] = $(this.task_category_select).val();
 
 			var self = this;
 
@@ -65,65 +65,71 @@ define([
 		 * @desc This function renders the new task form in the specified div.
 		 * @param {String} form_div_id The div ID to render the form in. 
 		 * */
-		this.Render = function(form_div_id) {
+		this.Render = function(parent_div) {
 
 			//create the top form
 			this.data_form_new_task = document.createElement("form");
 			this.data_form_new_task.setAttribute('method', "post");
 			this.data_form_new_task.setAttribute('id', "new_task_form");
 
-			this.data_form_new_task.innerHTML += 'Name:<br />';
+			this.data_form_new_task = parent_div.appendChild(this.data_form_new_task);
+			
+			this.data_form_new_task.appendChild(document.createTextNode('Name:'));
+			this.data_form_new_task.appendChild(document.createElement('br'));
 
 			//task name creation
 			this.task_name = document.createElement("input");
 			this.task_name.setAttribute('name', 'task_name');
 			this.task_name.setAttribute('id', 'task_name');
 			this.task_name.setAttribute('type', 'text');
-			this.data_form_new_task.appendChild(this.task_name);
+			this.task_name = this.data_form_new_task.appendChild(this.task_name);
 
-			this.data_form_new_task.innerHTML += '<br />Category:<br />';
+			this.data_form_new_task.appendChild(document.createElement('br'));
+			this.data_form_new_task.appendChild(document.createTextNode('Category:'));
+			this.data_form_new_task.appendChild(document.createElement('br'));
 
 			//task recurring
 			this.task_category_select = document.createElement("select");
 			this.task_category_select.setAttribute('id', 'task_category_select');
 			this.task_category_select.innerHTML = '<option value="0">-</option>';
-			this.data_form_new_task.appendChild(this.task_category_select);
+			this.task_category_select = this.data_form_new_task.appendChild(this.task_category_select);
 
-			this.data_form_new_task.innerHTML += '<br />Description:<br />';
+			this.data_form_new_task.appendChild(document.createElement('br'));
+			this.data_form_new_task.appendChild(document.createTextNode('Description:'));
+			this.data_form_new_task.appendChild(document.createElement('br'));
 
 			//task description creation
 			this.task_description = document.createElement("input");
 			this.task_description.setAttribute('name', 'task_description');
 			this.task_description.setAttribute('id', 'task_description');
 			this.task_description.setAttribute('type', 'text');
-			this.data_form_new_task.appendChild(this.task_description);
+			this.task_description = this.data_form_new_task.appendChild(this.task_description);
 
-			this.data_form_new_task.innerHTML += '<br />Note:<br />';
+			this.data_form_new_task.appendChild(document.createElement('br'));
+			this.data_form_new_task.appendChild(document.createTextNode('Note:'));
+			this.data_form_new_task.appendChild(document.createElement('br'));
 
 			//task note creation
 			this.task_note = document.createElement("input");
 			this.task_note.setAttribute('name', 'task_note');
 			this.task_note.setAttribute('id', 'task_note');
 			this.task_note.setAttribute('type', 'text');
-			this.data_form_new_task.appendChild(this.task_note);
+			this.task_note = this.data_form_new_task.appendChild(this.task_note);
 			
-			this.data_form_new_task.innerHTML += '<br /><br />';
+			this.data_form_new_task.appendChild(document.createElement('br'));
+			this.data_form_new_task.appendChild(document.createElement('br'));
 
 			//task submit creation
 			this.task_submit_button = document.createElement("input");
 			this.task_submit_button.setAttribute('id', 'task_submit');
 			this.task_submit_button.setAttribute('type', 'submit');
 			this.task_submit_button.value = 'Submit';
+			this.task_submit_button = this.data_form_new_task.appendChild(this.task_submit_button);
+			
 			var self = this;
 			
-			this.data_form_new_task.appendChild(this.task_submit_button);
-
-			var div_tab = document.getElementById(form_div_id);
-
-			div_tab.appendChild(this.data_form_new_task);
-
-			$('#' + this.task_submit_button.id).button();
-			$('#' + this.task_submit_button.id).click(function(event) {
+			$(this.task_submit_button).button();
+			$(this.task_submit_button).click(function(event) {
 
 				//ensure a normal postback does not occur
 				event.preventDefault();

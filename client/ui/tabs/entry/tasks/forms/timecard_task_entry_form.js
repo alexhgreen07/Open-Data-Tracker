@@ -70,13 +70,13 @@ define([
 				var time_diff_seconds = (currentTime - start_time) / 1000;
 				var hours = time_diff_seconds / 60 / 60;
 				
-				var selected_task_entry_id = document.getElementById(self.task_entries_started_select.id).value;
-				var selected_task_id = document.getElementById(self.task_name_select.id).value;
+				var selected_task_entry_id = self.task_entries_started_select.value;
+				var selected_task_id = self.task_name_select.value;
 				var task_time = self.selected_task_entry.start_time;
 				var duration = hours;
 				var task_note = self.selected_task_entry.note;
 				var task_status = 'Stopped';
-				var target_id = document.getElementById(self.task_target_select.id).value;
+				var target_id = self.task_target_select.value;
 				
 				var params = {};
 				
@@ -125,12 +125,12 @@ define([
 				
 				var current_time = new Date();
 				
-				var selected_task_id = document.getElementById(self.task_name_select.id).value;
+				var selected_task_id = self.task_name_select.value;
 				var task_time = current_time.toISOString();
 				var duration = 0;
 				var task_note = '';
 				var task_status = 'Started';
-				var target_id = document.getElementById(self.task_target_select.id).value;
+				var target_id = self.task_target_select.value;
 				
 				var params = {};
 				
@@ -178,7 +178,7 @@ define([
 		 * @desc This function is the complete button click event.
 		 * */
 		this.On_Complete_Click_Event = function() {
-			var task_name = $('#' + this.task_name_select.id).val();
+			var task_name = $(this.task_name_select).val();
 			var task_start_stop = this.task_start_stop_button.value;
 
 			//stop the task before marking it complete
@@ -218,21 +218,21 @@ define([
 			
 
 			//execute the click event
-			if(document.getElementById(self.task_entries_started_select.id).value != 0)
+			if(self.task_entries_started_select.value != 0)
 			{
 				
-				$('#' + self.task_timecard_note_div.id).show();
-				if(document.getElementById(self.task_target_select.id).value != 0)
+				$(self.task_timecard_note_div).show();
+				if(self.task_target_select.value != 0)
 				{
-					$('#' + self.task_start_complete_button.id).show();
+					$(self.task_start_complete_button).show();
 				}
 				self.task_start_stop_button.value = 'Stop';
 				
 			}
 			else
 			{
-				$('#' + self.task_timecard_note_div.id).hide();
-				$('#' + self.task_start_complete_button.id).hide();
+				$(self.task_timecard_note_div).hide();
+				$(self.task_start_complete_button).hide();
 				self.task_start_stop_button.value = 'Start';
 			}
 			
@@ -245,59 +245,65 @@ define([
 		 * @desc This function renders the timecard task entry form in the specified div.
 		 * @param {String} form_div_id The div ID to render the form in. 
 		 * */
-		this.Render = function(form_div_id) {
+		this.Render = function(parent_div) {
 
 			//create the top form
 			this.data_form_timecard_entry = document.createElement("form");
 			this.data_form_timecard_entry.setAttribute('method', "post");
 			this.data_form_timecard_entry.setAttribute('id', "timecard_task_entry_form");
 
-			this.data_form_timecard_entry.innerHTML += 'Task:<br />';
+			this.data_form_timecard_entry = parent_div.appendChild(this.data_form_timecard_entry);
+			
+			this.data_form_timecard_entry.appendChild(document.createTextNode('Task:'));
+			this.data_form_timecard_entry.appendChild(document.createElement('br'));
 
 			//task name select dropdown
 			this.task_name_select = document.createElement("select");
 			this.task_name_select.setAttribute('name', "task_name_to_enter");
 			this.task_name_select.setAttribute('id', "task_name_to_enter");
 			this.task_name_select.innerHTML = '<option value="0">-</option>';
-			
-			this.data_form_timecard_entry.appendChild(this.task_name_select);
+			this.task_name_select = this.data_form_timecard_entry.appendChild(this.task_name_select);
 
-			this.data_form_timecard_entry.innerHTML += '<br />Target:<br />';
+			this.data_form_timecard_entry.appendChild(document.createElement('br'));
+			this.data_form_timecard_entry.appendChild(document.createTextNode('Target:'));
+			this.data_form_timecard_entry.appendChild(document.createElement('br'));
 
 			//task name select dropdown
 			this.task_target_select = document.createElement("select");
 			this.task_target_select.setAttribute('name', "task_target_name");
 			this.task_target_select.setAttribute('id', "task_target_name");
 			this.task_target_select.innerHTML = '<option value="0">-</option>';
+			this.task_target_select = this.data_form_timecard_entry.appendChild(this.task_target_select);
+
+			this.data_form_timecard_entry.appendChild(document.createElement('br'));
+			this.data_form_timecard_entry.appendChild(document.createTextNode('Started Entry:'));
+			this.data_form_timecard_entry.appendChild(document.createElement('br'));
 			
-			this.data_form_timecard_entry.appendChild(this.task_target_select);
-
-			this.data_form_timecard_entry.innerHTML += '<br />Started Entry:<br />';
-
 			//task name select dropdown
 			this.task_entries_started_select = document.createElement("select");
 			this.task_entries_started_select.setAttribute('name', "task_entries_started_names");
 			this.task_entries_started_select.setAttribute('id', "task_entries_started_names");
 			this.task_entries_started_select.innerHTML = '<option value="0">-</option>';
-			
-			this.data_form_timecard_entry.appendChild(this.task_entries_started_select);
+			this.task_entries_started_select = this.data_form_timecard_entry.appendChild(this.task_entries_started_select);
 
 			this.task_timecard_note_div = document.createElement("div");
 			this.task_timecard_note_div.setAttribute('id', 'task_timecard_note_div');
-			this.task_timecard_note_div.innerHTML = 'Note:<br />';
+			this.task_timecard_note_div.appendChild(document.createTextNode('Note:'));
+			this.task_timecard_note_div.appendChild(document.createElement('br'));
+			this.task_timecard_note_div = this.data_form_timecard_entry.appendChild(this.task_timecard_note_div);
+
 			this.task_timecard_note = document.createElement("input");
 			this.task_timecard_note.setAttribute('id', 'task_timecard_note');
-			this.task_timecard_note_div.appendChild(this.task_timecard_note);
-			this.data_form_timecard_entry.appendChild(this.task_timecard_note_div);
+			this.task_timecard_note = this.task_timecard_note_div.appendChild(this.task_timecard_note);
 
 			//info div creation
 			this.task_info_div = document.createElement("div");
 			this.task_info_div.setAttribute('id', 'task_info_div');
 			this.task_info_div.innerHTML = 'Info:<br /><br />';
-			this.data_form_timecard_entry.appendChild(this.task_info_div);
+			this.task_info_div = this.data_form_timecard_entry.appendChild(this.task_info_div);
 
 			this.task_timer_div = document.createElement("div");
-			this.data_form_timecard_entry.appendChild(this.task_timer_div);
+			this.task_timer_div = this.data_form_timecard_entry.appendChild(this.task_timer_div);
 
 			//task start/stop button creation
 			this.task_start_stop_button = document.createElement("input");
@@ -305,31 +311,23 @@ define([
 			this.task_start_stop_button.setAttribute('name', 'task_entry_start_stop');
 			this.task_start_stop_button.setAttribute('type', 'submit');
 			this.task_start_stop_button.value = 'Start';
+			this.task_start_stop_button = this.data_form_timecard_entry.appendChild(this.task_start_stop_button);
 
-			this.data_form_timecard_entry.appendChild(this.task_start_stop_button);
-
-			this.test_div = document.createElement("div");
-			this.test_div.innerHTML = '<br />';
-			this.data_form_timecard_entry.appendChild(this.test_div);
-
+			this.data_form_timecard_entry.appendChild(document.createElement('br'));
+			this.data_form_timecard_entry.appendChild(document.createElement('br'));
+			
 			//task mark complete button creation
 			this.task_start_complete_button = document.createElement("input");
 			this.task_start_complete_button.setAttribute('id', 'task_entry_complete');
 			this.task_start_complete_button.setAttribute('name', 'task_entry_complete');
 			this.task_start_complete_button.setAttribute('type', 'submit');
 			this.task_start_complete_button.value = 'Mark Complete';
+			this.task_start_complete_button = this.data_form_timecard_entry.appendChild(this.task_start_complete_button);
 
-			
-			this.data_form_timecard_entry.appendChild(this.task_start_complete_button);
-
-			var div_tab = document.getElementById(form_div_id);
-
-			div_tab.appendChild(this.data_form_timecard_entry);
-
-			$('#' + self.task_timecard_note_div.id).hide();
+			$(self.task_timecard_note_div).hide();
 			
 			//hook for the entry change select event
-			$('#' + this.task_entries_started_select.id).change(function(event) {
+			$(this.task_entries_started_select).change(function(event) {
 
 				
 				self.Task_Start_Entry_Change();
@@ -337,8 +335,8 @@ define([
 			});
 			
 					
-			$('#' + this.task_start_stop_button.id).button();
-			$('#' + this.task_start_stop_button.id).click(function(event) {
+			$(this.task_start_stop_button).button();
+			$(this.task_start_stop_button).click(function(event) {
 
 				//ensure a normal postback does not occur
 				event.preventDefault();
@@ -348,8 +346,8 @@ define([
 			});
 			
 			
-			$('#' + this.task_start_complete_button.id).button();
-			$('#' + this.task_start_complete_button.id).click(function(event) {
+			$(this.task_start_complete_button).button();
+			$(this.task_start_complete_button).click(function(event) {
 
 				//ensure a normal postback does not occur
 				event.preventDefault();
@@ -359,7 +357,7 @@ define([
 			});
 			
 			//hide the task complete button
-			$('#' + this.task_start_complete_button.id).hide();
+			$(this.task_start_complete_button).hide();
 
 			
 			//this is used to update the timer value on running tasks

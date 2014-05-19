@@ -231,7 +231,7 @@ define([
 			}
 
 			//now render all tabs
-			this.timecard_task_entry_form.Render('timecard_task_entry_div');
+			this.timecard_task_entry_form.Render(this.div_forms['timecard_task_entry_div']);
 
 			this.new_task_entry_form.Render('new_task_entry_div');
 

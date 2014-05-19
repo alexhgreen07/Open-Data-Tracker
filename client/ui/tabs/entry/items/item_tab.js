@@ -98,15 +98,15 @@ define([
 
 		this.Show_Form = function(div_id){
 			
-			for(var i = 0; i < this.div_forms.length; i++)
+			for(var key in this.div_forms)
 			{
-				if(div_id == this.div_forms[i].id)
+				if(div_id == this.div_forms[key].id)
 				{
-					$(this.div_forms[i]).fadeIn();
+					$(this.div_forms[key]).fadeIn();
 				}
 				else
 				{
-					$(this.div_forms[i]).hide();
+					$(this.div_forms[key]).hide();
 				}
 				
 			}
@@ -127,7 +127,7 @@ define([
 				'new_item_target_div',
 				'edit_item_target_div',
 			];
-			this.div_forms = [];
+			this.div_forms = {};
 			
 			var return_html = '';
 			
@@ -136,7 +136,7 @@ define([
 				var new_form = document.createElement('div');
 				new_form.id = this.div_ids[i];
 				
-				this.div_forms.push(parent_div.appendChild(new_form));
+				this.div_forms[this.div_ids[i]] = parent_div.appendChild(new_form);
 			}
 
 			//render the panes
@@ -154,9 +154,9 @@ define([
 			
 			this.edit_item_target_form.Render('edit_item_target_div');
 			
-			for(var i = 0; i < this.div_forms.length; i++)
+			for(var key in this.div_forms)
 			{
-				$(this.div_forms[i]).hide();
+				$(this.div_forms[key]).hide();
 			}
 		};
 	}

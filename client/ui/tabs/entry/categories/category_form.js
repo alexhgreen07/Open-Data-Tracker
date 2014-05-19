@@ -74,15 +74,15 @@ define([
 		
 		this.Show_Form = function(div_id){
 			
-			for(var i = 0; i < this.div_forms.length; i++)
+			for(var key in this.div_forms)
 			{
-				if(div_id == this.div_forms[i].id)
+				if(div_id == this.div_forms[key].id)
 				{
-					$(this.div_forms[i]).fadeIn();
+					$(this.div_forms[key]).fadeIn();
 				}
 				else
 				{
-					$(this.div_forms[i]).hide();
+					$(this.div_forms[key]).hide();
 				}
 				
 			}
@@ -99,23 +99,23 @@ define([
 				'home_category_add_new_tab',
 				'home_category_edit_tab',
 			];
-			this.div_forms = [];
+			this.div_forms = {};
 			
 			for(var i = 0; i < this.div_ids.length; i++)
 			{
 				var new_form = document.createElement('div');
 				new_form.id = this.div_ids[i];
 				
-				this.div_forms.push(parent_div.appendChild(new_form));
+				this.div_forms[this.div_ids[i]] = parent_div.appendChild(new_form);
 				
 			}
 
-			this.new_category_form.Render(this.div_forms[0]);
-			this.edit_category_form.Render(this.div_forms[1]);
+			this.new_category_form.Render(this.div_forms['home_category_add_new_tab']);
+			this.edit_category_form.Render(this.div_forms['home_category_edit_tab']);
 			
-			for(var i = 0; i < this.div_forms.length; i++)
+			for(var key in this.div_forms)
 			{
-				$(this.div_forms[i]).hide();
+				$(this.div_forms[key]).hide();
 			}
 		};
 		

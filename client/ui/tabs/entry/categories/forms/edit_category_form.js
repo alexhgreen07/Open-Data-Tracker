@@ -156,7 +156,7 @@ define([
 		 * @desc This function will render the edit category tab in the specified div.
 		 * @param {String} form_div_id The div ID to render the form in.
 		 * */
-		this.Render = function(form_div_id) {
+		this.Render = function(parent_div) {
 			
 			var self = this;
 			
@@ -164,55 +164,69 @@ define([
 			this.edit_category_form.setAttribute('method', "post");
 			this.edit_category_form.setAttribute('id', "home_edit_category_form");
 
-			this.edit_category_form.innerHTML += 'Category:<br />';
+			var div_tab = parent_div;
+			div_tab.innerHTML = '';
+			this.edit_category_form = div_tab.appendChild(this.edit_category_form);
+
+			this.edit_category_form.appendChild(document.createTextNode('Category:'));
+			this.edit_category_form.appendChild(document.createElement('br'));
+			//this.edit_category_form.innerHTML += 'Category:<br />';
 
 			this.edit_category_select = document.createElement("select");
 			this.edit_category_select.setAttribute('id', "edit_category_select");
 			this.edit_category_select.innerHTML = '<option>-</option>';
-			this.edit_category_form.appendChild(this.edit_category_select);
+			this.edit_category_select = this.edit_category_form.appendChild(this.edit_category_select);
 
-			this.edit_category_form.innerHTML += '<br /><br />';
+			this.edit_category_form.appendChild(document.createElement('br'));
+			this.edit_category_form.appendChild(document.createElement('br'));
+			//this.edit_category_form.innerHTML += '<br /><br />';
 
-			this.edit_category_form.innerHTML += 'Name:<br />';
+			this.edit_category_form.appendChild(document.createTextNode('Name:'));
+			this.edit_category_form.appendChild(document.createElement('br'));
+			//this.edit_category_form.innerHTML += 'Name:<br />';
 
 			this.edit_category_name = document.createElement("input");
 			this.edit_category_name.setAttribute('type', "text");
 			this.edit_category_name.setAttribute('id', "edit_category_name");
-			this.edit_category_form.appendChild(this.edit_category_name);
+			this.edit_category_name = this.edit_category_form.appendChild(this.edit_category_name);
 
-			this.edit_category_form.innerHTML += 'Description:<br />';
+			this.edit_category_form.appendChild(document.createTextNode('Description:'));
+			this.edit_category_form.appendChild(document.createElement('br'));
+			//this.edit_category_form.innerHTML += 'Description:<br />';
 
 			this.edit_category_description = document.createElement("input");
 			this.edit_category_description.setAttribute('type', "text");
 			this.edit_category_description.setAttribute('id', "edit_category_description");
-			this.edit_category_form.appendChild(this.edit_category_description);
+			this.edit_category_description = this.edit_category_form.appendChild(this.edit_category_description);
 
-			this.edit_category_form.innerHTML += 'Parent Category:<br />';
+			this.edit_category_form.appendChild(document.createTextNode('Parent Category:'));
+			this.edit_category_form.appendChild(document.createElement('br'));
+			//this.edit_category_form.innerHTML += 'Parent Category:<br />';
 
 			this.edit_category_parent_select = document.createElement("select");
 			this.edit_category_parent_select.setAttribute('id', "edit_category_parent_select");
 			this.edit_category_parent_select.innerHTML = '<option value="0">-</option>';
-			this.edit_category_form.appendChild(this.edit_category_parent_select);
+			this.edit_category_parent_select = this.edit_category_form.appendChild(this.edit_category_parent_select);
 
-			this.edit_category_form.innerHTML += '<br /><br />';
+			this.edit_category_form.appendChild(document.createElement('br'));
+			this.edit_category_form.appendChild(document.createElement('br'));
+			//this.edit_category_form.innerHTML += '<br /><br />';
 
 			this.edit_category_submit_button = document.createElement("input");
 			this.edit_category_submit_button.setAttribute('id', 'edit_category_submit_button');
 			this.edit_category_submit_button.setAttribute('type', 'submit');
 			this.edit_category_submit_button.value = 'Submit';
-			this.edit_category_form.appendChild(this.edit_category_submit_button);
+			this.edit_category_submit_button = this.edit_category_form.appendChild(this.edit_category_submit_button);
 
-			this.edit_category_form.innerHTML += '<br /><br />';
+			this.edit_category_form.appendChild(document.createElement('br'));
+			this.edit_category_form.appendChild(document.createElement('br'));
+			//this.edit_category_form.innerHTML += '<br /><br />';
 
 			this.edit_category_delete_button = document.createElement("input");
 			this.edit_category_delete_button.setAttribute('id', 'edit_category_delete_button');
 			this.edit_category_delete_button.setAttribute('type', 'submit');
 			this.edit_category_delete_button.value = 'Delete';
-			this.edit_category_form.appendChild(this.edit_category_delete_button);
-
-			var div_tab = document.getElementById(form_div_id);
-			div_tab.innerHTML = '';
-			div_tab.appendChild(this.edit_category_form);
+			this.edit_category_delete_button = this.edit_category_form.appendChild(this.edit_category_delete_button);
 
 			$('#' + this.edit_category_submit_button.id).button();
 			$('#' + this.edit_category_delete_button.id).button();

@@ -47,9 +47,9 @@ define([
 		
 		/** @method Render
 		 * @desc This function will render the add new category tab in the specified div.
-		 * @param {String} form_div_id The div ID to render the form in.
+		 * @param {String} parent_div The div ID to render the form in.
 		 * */
-		this.Render = function(form_div_id) {
+		this.Render = function(parent_div) {
 			
 			var self = this;
 			
@@ -57,41 +57,44 @@ define([
 			this.add_new_category_form.setAttribute('method', "post");
 			this.add_new_category_form.setAttribute('id', "home_add_new_category_form");
 
-			this.add_new_category_form.innerHTML += 'Name:<br />';
+			var div_tab = parent_div;
+			this.add_new_category_form = div_tab.appendChild(this.add_new_category_form);
+			
+			this.add_new_category_form.appendChild(document.createTextNode('Name:'));
+			this.add_new_category_form.appendChild(document.createElement('br'));
 
 			this.add_new_category_name = document.createElement("input");
 			this.add_new_category_name.setAttribute('type', "text");
 			this.add_new_category_name.setAttribute('id', "add_new_category_name");
-			this.add_new_category_form.appendChild(this.add_new_category_name);
+			this.add_new_category_name = this.add_new_category_form.appendChild(this.add_new_category_name);
 
-			this.add_new_category_form.innerHTML += 'Description:<br />';
+			this.add_new_category_form.appendChild(document.createTextNode('Description:'));
+			this.add_new_category_form.appendChild(document.createElement('br'));
 
 			this.add_new_category_description = document.createElement("input");
 			this.add_new_category_description.setAttribute('type', "text");
 			this.add_new_category_description.setAttribute('id', "add_new_category_description");
-			this.add_new_category_form.appendChild(this.add_new_category_description);
+			this.add_new_category_description = this.add_new_category_form.appendChild(this.add_new_category_description);
 
-			this.add_new_category_form.innerHTML += 'Parent Category:<br />';
+			this.add_new_category_form.appendChild(document.createTextNode('Parent Category:'));
+			this.add_new_category_form.appendChild(document.createElement('br'));
 
 			this.add_new_category_parent_select = document.createElement("select");
 			this.add_new_category_parent_select.setAttribute('id', "add_new_category_parent_select");
 			this.add_new_category_parent_select.innerHTML = '<option value="0">-</option>';
-			this.add_new_category_form.appendChild(this.add_new_category_parent_select);
+			this.add_new_category_parent_select = this.add_new_category_form.appendChild(this.add_new_category_parent_select);
 
-			this.add_new_category_form.innerHTML += '<br /><br />';
+			this.add_new_category_form.appendChild(document.createElement('br'));
+			this.add_new_category_form.appendChild(document.createElement('br'));
 
 			this.add_new_category_submit_button = document.createElement("input");
 			this.add_new_category_submit_button.setAttribute('id', 'add_new_category_submit_button');
 			this.add_new_category_submit_button.setAttribute('type', 'submit');
 			this.add_new_category_submit_button.value = 'Submit';
-			this.add_new_category_form.appendChild(this.add_new_category_submit_button);
+			this.add_new_category_submit_button = this.add_new_category_form.appendChild(this.add_new_category_submit_button);
 
-			var div_tab = document.getElementById(form_div_id);
-			div_tab.innerHTML = '';
-			div_tab.appendChild(this.add_new_category_form);
-
-			$('#' + this.add_new_category_submit_button.id).button();
-			$('#' + this.add_new_category_submit_button.id).click(function(event) {
+			$(this.add_new_category_submit_button).button();
+			$(this.add_new_category_submit_button).click(function(event) {
 				//ensure a normal postback does not occur
 				event.preventDefault();
 				

@@ -74,15 +74,15 @@ define([
 		
 		this.Show_Form = function(div_id){
 			
-			for(var i = 0; i < this.div_ids.length; i++)
+			for(var i = 0; i < this.div_forms.length; i++)
 			{
-				if(div_id == this.div_ids[i])
+				if(div_id == this.div_forms[i].id)
 				{
-					$('#'+this.div_ids[i]).fadeIn();
+					$(this.div_forms[i]).fadeIn();
 				}
 				else
 				{
-					$('#'+this.div_ids[i]).hide();
+					$(this.div_forms[i]).hide();
 				}
 				
 			}
@@ -93,30 +93,35 @@ define([
 		 * @desc This function will render the general home form in the specified div.
 		 * @param {String} form_div_id The div ID to render the form in.
 		 * */
-		this.Render = function(form_div_id) {
+		this.Render = function(parent_div) {
 			
 			this.div_ids = [
-				'home_category_view_tab',
 				'home_category_add_new_tab',
 				'home_category_edit_tab',
 			];
+			this.div_forms = [];
 			
 			var return_html = '';
 			
 			for(var i = 0; i < this.div_ids.length; i++)
 			{
-				return_html += '<div id="'+this.div_ids[i]+'"></div>';
+				var new_form = document.createElement('div');
+				new_form.id = this.div_ids[i];
+				
+				this.div_forms.push(parent_div.appendChild(new_form));
+				
+				//return_html += '<div id="'+this.div_forms[i]+'"></div>';
 			}
 
-			var div_tab = document.getElementById(form_div_id);
-			div_tab.innerHTML = return_html;
+			//var div_tab = parent_div;
+			//div_tab.innerHTML = return_html;
 			
-			this.new_category_form.Render('home_category_add_new_tab');
-			this.edit_category_form.Render('home_category_edit_tab');
+			this.new_category_form.Render(this.div_forms[0]);
+			this.edit_category_form.Render(this.div_forms[1]);
 			
-			for(var i = 0; i < this.div_ids.length; i++)
+			for(var i = 0; i < this.div_forms.length; i++)
 			{
-				$('#'+this.div_ids[i]).hide();
+				$(this.div_forms[i]).hide();
 			}
 		};
 		

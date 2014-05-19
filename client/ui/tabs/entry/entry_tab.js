@@ -789,7 +789,7 @@ define([
 			
 			self.tree_view.Render(self.tree_view_disp_div);
 			
-			self.category_tab.Render(self.tree_category_div.id);
+			self.category_tab.Render(self.tree_category_div);
 			
 			self.items_tab.Render(self.tree_items_div.id);
 			

@@ -218,7 +218,7 @@ define([
 		 * @desc This function renders the edit task entry form in the specified div.
 		 * @param {String} form_div_id The div ID to render the form in. 
 		 * */
-		this.Render = function(form_div_id) {
+		this.Render = function(parent_div) {
 
 			//create the top form
 			this.data_form_edit_entry = document.createElement("form");
@@ -226,8 +226,7 @@ define([
 			this.data_form_edit_entry.setAttribute('id', "edit_task_entry_form");
 			
 			//append to the div tab
-			var div_tab = document.getElementById(form_div_id);
-			this.data_form_edit_entry = div_tab.appendChild(this.data_form_edit_entry);
+			this.data_form_edit_entry = parent_div.appendChild(this.data_form_edit_entry);
 			
 			this.data_form_edit_entry.appendChild(document.createTextNode('Task Entries:'));
 			this.data_form_edit_entry.appendChild(document.createElement('br'));
@@ -250,7 +249,6 @@ define([
 			this.edit_task_entry_task_name_select.setAttribute('name', "edit_task_entry_name_to_enter");
 			this.edit_task_entry_task_name_select.setAttribute('id', "edit_task_entry_name_to_enter");
 			this.edit_task_entry_task_name_select.innerHTML = '<option>-</option>';
-			
 			this.edit_task_entry_task_name_select = this.data_form_edit_entry.appendChild(this.edit_task_entry_task_name_select);
 			
 			this.data_form_edit_entry.appendChild(document.createElement('br'));
@@ -262,7 +260,6 @@ define([
 			this.task_target_select.setAttribute('name', "edit_task_target_name");
 			this.task_target_select.setAttribute('id', "edit_task_target_name");
 			this.task_target_select.innerHTML = '<option>-</option>';
-			
 			this.task_target_select = this.data_form_edit_entry.appendChild(this.task_target_select);
 			
 			this.data_form_edit_entry.appendChild(document.createElement('br'));

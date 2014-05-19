@@ -793,7 +793,7 @@ define([
 			
 			self.items_tab.Render(self.tree_items_div);
 			
-			self.tasks_tab.Render(self.tree_tasks_div.id);
+			self.tasks_tab.Render(self.tree_tasks_div);
 			
 			self.tree_view.node_click_callback = self.Node_Click_Callback;
 			

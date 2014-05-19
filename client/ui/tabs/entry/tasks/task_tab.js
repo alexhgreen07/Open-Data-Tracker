@@ -188,15 +188,15 @@ define([
 		
 		this.Show_Form = function(div_id){
 			
-			for(var i = 0; i < this.div_ids.length; i++)
+			for(var key in this.div_forms)
 			{
-				if(div_id == this.div_ids[i])
+				if(div_id == this.div_forms[key].id)
 				{
-					$('#'+this.div_ids[i]).fadeIn();
+					$(this.div_forms[key]).fadeIn();
 				}
 				else
 				{
-					$('#'+this.div_ids[i]).hide();
+					$(this.div_forms[key]).hide();
 				}
 				
 			}
@@ -207,7 +207,7 @@ define([
 		 * @desc This function renders the tab in the div the object was initialized with.
 		 * @param {String} form_div_id The div ID to render the form in. 
 		 * */
-		this.Render = function(task_div_id) {
+		this.Render = function(parent_div) {
 			
 			this.div_ids = [
 				'timecard_task_entry_div',
@@ -218,16 +218,17 @@ define([
 				'new_target_task_entry_div',
 				'edit_target_task_entry_div',
 			];
+			this.div_forms = {};
 			
 			var return_html = '';
 			
 			for(var i = 0; i < this.div_ids.length; i++)
 			{
-				return_html += '<div id="'+this.div_ids[i]+'"></div>';
+				var new_form = document.createElement('div');
+				new_form.id = this.div_ids[i];
+				
+				this.div_forms[this.div_ids[i]] = parent_div.appendChild(new_form);
 			}
-
-			var div_tab = document.getElementById(task_div_id);
-			div_tab.innerHTML = return_html;
 
 			//now render all tabs
 			this.timecard_task_entry_form.Render('timecard_task_entry_div');
@@ -244,9 +245,9 @@ define([
 			
 			this.edit_task_target_form.Render('edit_target_task_entry_div');
 			
-			for(var i = 0; i < this.div_ids.length; i++)
+			for(var key in this.div_forms)
 			{
-				$('#'+this.div_ids[i]).hide();
+				$(this.div_forms[key]).hide();
 			}
 			
 		};

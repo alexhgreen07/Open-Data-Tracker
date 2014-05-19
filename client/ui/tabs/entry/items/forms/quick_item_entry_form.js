@@ -7,6 +7,8 @@ define([
 	 */
 	function Quick_Item_Entry_Form(){
 		
+		var self = this;
+		
 		this.Refresh = function(data){
 			
 			Refresh_Select_HTML_From_Table(
@@ -45,13 +47,11 @@ define([
 		 * */
 		this.Add_Quick_Item_Entry_Click = function() {
 
-			var self = this;
-
 			//get the value string
-			var value_string = $("#" + self.item_value.id).val();
-			var item_select_index = $("#" + self.quick_item_name_select.id).prop("selectedIndex");
-			var note_string = $("#" + self.item_note.id).val();
-			var target_id = $("#" + self.quick_item_target_select.id).val();
+			var value_string = $(self.item_value).val();
+			var item_select_index = $(self.quick_item_name_select).prop("selectedIndex");
+			var note_string = $(self.item_note).val();
+			var target_id = $(self.quick_item_target_select).val();
 
 			//check that the string is numeric
 			if (!isNaN(Number(value_string)) && value_string != '') {
@@ -81,9 +81,9 @@ define([
 					}
 
 					//reset all the fields to default
-					$("#" + self.item_value.id).val('');
-					$("#" + self.quick_item_name_select.id).val('-');
-					$("#" + self.item_note.id).val('');
+					$(self.item_value).val('');
+					$(self.quick_item_name_select).val('-');
+					$(self.item_note).val('');
 
 				});
 			} else {
@@ -97,63 +97,69 @@ define([
 		 * @desc This function will render the quick item entry form in the specified div.
 		 * @param {String} form_div_id The div ID to render the form in.
 		 * */
-		this.Render = function(form_div_id) {
+		this.Render = function(parent_div) {
 
 			//create the top form
 			this.item_quick_entry_data_form = document.createElement("form");
 			this.item_quick_entry_data_form.setAttribute('method', "post");
 			this.item_quick_entry_data_form.setAttribute('id', "quick_item_entry_form");
 
-			this.item_quick_entry_data_form.innerHTML += 'Value:<br />';
+			this.item_quick_entry_data_form = parent_div.appendChild(this.item_quick_entry_data_form);
+			
+			this.item_quick_entry_data_form.appendChild(document.createTextNode('Value:'));
+			this.item_quick_entry_data_form.appendChild(document.createElement('br'));
 
 			//item value
 			this.item_value = document.createElement("input");
 			this.item_value.setAttribute('name', "value");
 			this.item_value.setAttribute('id', "value");
 			this.item_value.setAttribute('type', 'text');
-			this.item_quick_entry_data_form.appendChild(this.item_value);
+			this.item_value = this.item_quick_entry_data_form.appendChild(this.item_value);
 			
-			this.item_quick_entry_data_form.innerHTML += '<br />';
-
-			this.item_quick_entry_data_form.innerHTML += 'Item:<br />';
+			this.item_quick_entry_data_form.appendChild(document.createElement('br'));
+			this.item_quick_entry_data_form.appendChild(document.createTextNode('Item:'));
+			this.item_quick_entry_data_form.appendChild(document.createElement('br'));
 
 			//item unit
 			this.quick_item_name_select = document.createElement("select");
 			this.quick_item_name_select.setAttribute('name', "task_name_dropdown");
 			this.quick_item_name_select.setAttribute('id', "task_name_dropdown");
 			this.quick_item_name_select.innerHTML = '<option>-</option>';
-			this.item_quick_entry_data_form.appendChild(this.quick_item_name_select);
+			this.quick_item_name_select = this.item_quick_entry_data_form.appendChild(this.quick_item_name_select);
 
-			this.item_quick_entry_data_form.innerHTML += '<br />';
-
-			this.item_quick_entry_data_form.innerHTML += 'Note:<br />';
+			this.item_quick_entry_data_form.appendChild(document.createElement('br'));
+			this.item_quick_entry_data_form.appendChild(document.createTextNode('Note:'));
+			this.item_quick_entry_data_form.appendChild(document.createElement('br'));
 
 			//item note
 			this.item_note = document.createElement("input");
 			this.item_note.setAttribute('name', "notes");
 			this.item_note.setAttribute('id', "notes");
 			this.item_note.setAttribute('type', 'text');
-			this.item_quick_entry_data_form.appendChild(this.item_note);
+			this.item_note = this.item_quick_entry_data_form.appendChild(this.item_note);
 			
-			this.item_quick_entry_data_form.innerHTML += '<br />';
-
-			this.item_quick_entry_data_form.innerHTML += 'Target:<br />';
+			this.item_quick_entry_data_form.appendChild(document.createElement('br'));
+			this.item_quick_entry_data_form.appendChild(document.createTextNode('Target:'));
+			this.item_quick_entry_data_form.appendChild(document.createElement('br'));
 
 			//item target
 			this.quick_item_target_select = document.createElement("select");
 			this.quick_item_target_select.setAttribute('name', "quick_item_target_select");
 			this.quick_item_target_select.setAttribute('id', "quick_item_target_select");
 			this.quick_item_target_select.innerHTML = '<option>-</option>';
-			this.item_quick_entry_data_form.appendChild(this.quick_item_target_select);
+			this.quick_item_target_select = this.item_quick_entry_data_form.appendChild(this.quick_item_target_select);
 
-			this.item_quick_entry_data_form.innerHTML += '<br /><br />';
+			this.item_quick_entry_data_form.appendChild(document.createElement('br'));
+			this.item_quick_entry_data_form.appendChild(document.createElement('br'));
 
 			//task start/stop button creation
 			this.item_add_entry_button = document.createElement("input");
 			this.item_add_entry_button.setAttribute('id', 'item_add_entry_button');
 			this.item_add_entry_button.setAttribute('type', 'submit');
 			this.item_add_entry_button.value = 'Submit';
-			var self = this;
+			
+			this.item_add_entry_button = this.item_quick_entry_data_form.appendChild(this.item_add_entry_button);
+			
 			$(this.item_add_entry_button).button();
 			$(this.item_add_entry_button).click(function(event) {
 
@@ -163,10 +169,6 @@ define([
 				//execute the click event
 				self.Add_Quick_Item_Entry_Click();
 			});
-			this.item_quick_entry_data_form.appendChild(this.item_add_entry_button);
-
-			var div_tab = document.getElementById(form_div_id);
-			div_tab.appendChild(this.item_quick_entry_data_form);
 
 		};
 		

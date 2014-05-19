@@ -172,6 +172,38 @@ define(['core/logger','jquery.ui','jquery.ui.jstree'],function(logger,$){
 				self.node_click_callback(info);
 			};
 			
+			self.Get_Node_Children = function(obj, cb)
+			{
+			   //add root node
+			   if(obj.id == '#')
+			   {
+				   var nodes_to_check = self.Generate_Hashed_ID("Categories", 0);
+					
+					var current_lookup = self.tree_view_hash_lookup[nodes_to_check];
+					var newNode = self.Create_Tree_Node(current_lookup);
+				   
+				   cb.call(this,[newNode]);
+			   }
+			   else
+			   {
+				   var current_lookup = self.tree_view_hash_lookup[obj.id];
+				   
+				   var new_nodes = [];
+				   
+				   for(var key in current_lookup.children)
+				   {
+					   var child_lookup = self.tree_view_hash_lookup[current_lookup.children[key]];
+					   var newNode = self.Create_Tree_Node(child_lookup);
+					   
+					   new_nodes.push(newNode);
+					   
+				   }
+				   
+				   cb.call(this,new_nodes);
+			   }
+			   
+	    	};
+			
 			self.Force_Tree_Refresh = function()
 			{
 				
@@ -184,17 +216,18 @@ define(['core/logger','jquery.ui','jquery.ui.jstree'],function(logger,$){
 				//re-initialize the lookup
 				self.tree_view_hash_lookup = [];
 				
+				
+				self.tree_nodes = self.Create_Tree(self.data);
+				
 				document.getElementById(self.div_id).innerHTML = '<ul id="'+self.tree_view_div+'"></ul>';
 				$('#' + self.div_id).jstree({ 'core' : {
 					'check_callback' : function (operation, node, node_parent, node_position, more) {
 						return true;
 					},
-				    'data' : []
-				       } });
+				    'data' : self.Get_Node_Children
+				    } 
+				});
 				self.jstree = $('#' + self.div_id).jstree(true);
-								
-				//self.tree_nodes = self.Create_Category_Tree_Nodes(self.data);
-				self.tree_nodes = self.Create_Tree(self.data);
 				
 				self.last_selected_id = 0;
 				
@@ -652,7 +685,7 @@ define(['core/logger','jquery.ui','jquery.ui.jstree'],function(logger,$){
 				
 				self.Populate_Tree_Node_Lookup_Children();
 				
-				self.Insert_All_Hash_Lookup_Nodes();
+				//self.Insert_All_Hash_Lookup_Nodes();
 				
 				return self.tree_view_hash_lookup[root_id].node;
 				
@@ -706,8 +739,17 @@ define(['core/logger','jquery.ui','jquery.ui.jstree'],function(logger,$){
 				*/
 			};
 			
-			self.Insert_Tree_Node = function(lookup_entry)
+			self.Create_Tree_Node = function(lookup_entry)
 			{
+				var newNode = {};
+				
+
+				var hasChildren = true;
+				
+				if(lookup_entry.children && lookup_entry.children.length == 0)
+				{
+					hasChildren = false;
+				}
 				
 				if(lookup_entry.parent_id in self.tree_view_hash_lookup)
 				{
@@ -735,19 +777,27 @@ define(['core/logger','jquery.ui','jquery.ui.jstree'],function(logger,$){
 						}
 					}
 					
-					var newNode = { state: "open", text: lookup_entry.node, id: lookup_entry.node_id , a_attr: {style:new_style}};
+					newNode = { state: "open", text: lookup_entry.node, id: lookup_entry.node_id , children: hasChildren, a_attr: {style:new_style}};
 					
-					self.jstree.create_node(lookup_entry.parent_id, newNode, "first", false, false);
 					
 				}
 				else
 				{
 					//alert('Error finding parent: ' + lookup_entry.parent_id + '. ' + JSON.stringify(lookup_entry));
 					
-					var newNode = { state: "open", text: lookup_entry.node, id: lookup_entry.node_id };
+					newNode = { state: "open", text: lookup_entry.node, id: lookup_entry.node_id, children: hasChildren};
 					
-					self.jstree.create_node(null, newNode, "first", false, false);
 				}
+				
+				return newNode;
+			}
+			
+			self.Insert_Tree_Node = function(lookup_entry)
+			{
+				
+				var newNode = self.Create_Tree_Node(lookup_entry);
+				
+				self.jstree.create_node(lookup_entry.parent_id, newNode, "first", false, false);
 				
 			};
 			

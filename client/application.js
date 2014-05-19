@@ -301,7 +301,7 @@ define([
 						self.calendar_tab_object.Render_Calendar();
 					};
 					
-					self.home_tab_object.Render(self.home_tab_div.id);
+					self.home_tab_object.Render(self.home_tab_div);
 					
 					self.entry_tab_object.Render(self.entry_tab_div.id);
 					

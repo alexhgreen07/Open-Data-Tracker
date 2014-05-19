@@ -13,7 +13,7 @@ define([
 		/** This is the parent div ID where the home tab is.
 		 * @type String
 		 * */
-		this.div_id = null;
+		this.parent_div = null;
 		
 		this.home_form = child_home_form;
 		
@@ -53,9 +53,9 @@ define([
 		/** @method Render
 		 * @desc This function will render the tab in the div that it was initialized with.
 		 * */
-		this.Render = function(home_div_id) {
+		this.Render = function(home_div) {
 			
-			this.div_id = home_div_id;
+			this.parent_div = home_div;
 			
 			var tabs_array = new Array();
 			var new_tab;
@@ -70,25 +70,19 @@ define([
 			new_tab.push('<div id="home_settings_div"></div>');
 			tabs_array.push(new_tab);
 
-			var return_html = '';
-
-			return_html += '<div id="home_accordian"></div>';
-
-			var div_tab = document.getElementById(this.div_id);
-
-			div_tab.innerHTML = return_html;
+			var home_accordian_div = document.createElement('div');
+			home_accordian_div.id = 'home_accordian';
+			
+			home_accordian_div = this.parent_div.appendChild(home_accordian_div);
 
 			var items_accordian = new Accordian();
-			items_accordian.Render('home_accordian', tabs_array);
+			items_accordian.Render(home_accordian_div.id, tabs_array);
 			
 			var home_summary_data_div_element = document.getElementById('home_summary_data_div');
 			this.home_form.Render(home_summary_data_div_element);
 			
 			var home_settings_div_element = document.getElementById('home_settings_div');
 			this.settings_form.Render(home_settings_div_element);
-
-			//call the click event function
-			//this.Summary_Data_Refresh_Click_Event();
 
 		};
 	}

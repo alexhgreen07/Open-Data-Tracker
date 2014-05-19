@@ -37,10 +37,10 @@ define([
 			var self = this;
 
 			//get the value string
-			var name_string = $("#" + self.item_name.id).val();
-			var note_string = $("#" + self.item_description.id).val();
-			var unit_string = $("#" + self.item_new_unit.id).val();
-			var category_id = $("#" + self.item_category_select.id).val();
+			var name_string = $(self.item_name).val();
+			var note_string = $(self.item_description).val();
+			var unit_string = $(self.item_new_unit).val();
+			var category_id = $(self.item_category_select).val();
 
 			if (name_string != '') {
 
@@ -61,9 +61,9 @@ define([
 					}
 
 					//reset all the fields to default
-					$("#" + self.item_name.id).val('');
-					$("#" + self.item_description.id).val('');
-					$("#" + self.item_new_unit.id).val('');
+					$(self.item_name).val('');
+					$(self.item_description).val('');
+					$(self.item_new_unit).val('');
 
 					//refresh the items
 					app.api.Refresh_Data(function() {
@@ -82,61 +82,68 @@ define([
 		 * @desc This function will render the add item form in the specified div.
 		 * @param {String} form_div_id The div ID to render the form in.
 		 * */
-		this.Render = function(form_div_id) {
+		this.Render = function(parent_div) {
 			
 			//create the top form
 			this.item_add_data_form = document.createElement("form");
 			this.item_add_data_form.setAttribute('method', "post");
 			this.item_add_data_form.setAttribute('id', "add_item_entry_form");
 
-			this.item_add_data_form.innerHTML += 'Name:<br />';
+			this.item_add_data_form = parent_div.appendChild(this.item_add_data_form);
+			
+			this.item_add_data_form.appendChild(document.createTextNode('Name:'));
+			this.item_add_data_form.appendChild(document.createElement('br'));
 
 			//item name
 			this.item_name = document.createElement("input");
 			this.item_name.setAttribute('name', "item_name");
 			this.item_name.setAttribute('id', "item_name");
 			this.item_name.setAttribute('type', 'text');
-			this.item_add_data_form.appendChild(this.item_name);
+			this.item_name = this.item_add_data_form.appendChild(this.item_name);
 			
-			this.item_add_data_form.innerHTML += '<br />';
-			
-			this.item_add_data_form.innerHTML += 'Category:<br />';
+			this.item_add_data_form.appendChild(document.createElement('br'));
+			this.item_add_data_form.appendChild(document.createTextNode('Category:'));
+			this.item_add_data_form.appendChild(document.createElement('br'));
 
 			//task recurring
 			this.item_category_select = document.createElement("select");
 			this.item_category_select.setAttribute('id', 'item_category_select');
 			this.item_category_select.innerHTML = '<option>-</option>';
-			this.item_add_data_form.appendChild(this.item_category_select);
-			
-			this.item_add_data_form.innerHTML += '<br />';
-			
-			this.item_add_data_form.innerHTML += 'Description:<br />';
+			this.item_category_select = this.item_add_data_form.appendChild(this.item_category_select);
+
+			this.item_add_data_form.appendChild(document.createElement('br'));
+			this.item_add_data_form.appendChild(document.createTextNode('Description:'));
+			this.item_add_data_form.appendChild(document.createElement('br'));
 
 			//item description
 			this.item_description = document.createElement("input");
 			this.item_description.setAttribute('name', "item_description");
 			this.item_description.setAttribute('id', "item_description");
 			this.item_description.setAttribute('type', 'text');
-			this.item_add_data_form.appendChild(this.item_description);
+			this.item_description = this.item_add_data_form.appendChild(this.item_description);
 			
-			this.item_add_data_form.innerHTML += '<br />';
-			
-			this.item_add_data_form.innerHTML += 'Unit:<br />';
+			this.item_add_data_form.appendChild(document.createElement('br'));
+			this.item_add_data_form.appendChild(document.createTextNode('Unit:'));
+			this.item_add_data_form.appendChild(document.createElement('br'));
 
 			//item note
 			this.item_new_unit = document.createElement("input");
 			this.item_new_unit.setAttribute('name', "add_item_unit");
 			this.item_new_unit.setAttribute('id', "add_item_unit");
 			this.item_new_unit.setAttribute('type', 'text');
-			this.item_add_data_form.appendChild(this.item_new_unit);
+			this.item_new_unit = this.item_add_data_form.appendChild(this.item_new_unit);
 
-			this.item_add_data_form.innerHTML += '<br /><br />';
+			this.item_add_data_form.appendChild(document.createElement('br'));
+			this.item_add_data_form.appendChild(document.createElement('br'));
 
 			//task start/stop button creation
 			this.item_add_button = document.createElement("input");
 			this.item_add_button.setAttribute('id', 'item_add');
 			this.item_add_button.setAttribute('type', 'submit');
 			this.item_add_button.value = 'Submit';
+			
+			this.item_add_button = this.item_add_data_form.appendChild(this.item_add_button);
+			
 			var self = this;
 			$(this.item_add_button).button();
 			$(this.item_add_button).click(function(event) {
@@ -147,18 +154,7 @@ define([
 				//execute the click event
 				self.Add_New_Item_Click();
 			});
-			this.item_add_data_form.appendChild(this.item_add_button);
 
-			this.loading_image_add_item = document.createElement("img");
-			this.loading_image_add_item.setAttribute('id', 'item_tab_add_item_entry_loader_image');
-			this.loading_image_add_item.setAttribute('style', 'width:100%;height:19px;');
-			this.loading_image_add_item.setAttribute('src', 'ajax-loader.gif');
-			this.item_add_data_form.appendChild(this.loading_image_add_item);
-
-			$(this.loading_image_add_item).hide();
-
-			var div_tab = document.getElementById(form_div_id);
-			div_tab.appendChild(this.item_add_data_form);
 		};
 		
 		

@@ -148,7 +148,7 @@ define([
 
 			this.new_item_form.Render(this.div_forms['add_item_div']);
 		
-			this.edit_item_form.Render('edit_item_div');
+			this.edit_item_form.Render(this.div_forms['edit_item_div']);
 
 			this.new_item_target_form.Render('new_item_target_div');
 			

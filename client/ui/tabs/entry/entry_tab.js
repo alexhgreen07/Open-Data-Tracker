@@ -787,7 +787,7 @@ define([
 			self.category_buttons_div.appendChild(document.createElement("br"));
 			self.category_buttons_div.appendChild(document.createElement("br"));
 			
-			self.tree_view.Render(self.tree_view_disp_div.id);
+			self.tree_view.Render(self.tree_view_disp_div);
 			
 			self.category_tab.Render(self.tree_category_div.id);
 			

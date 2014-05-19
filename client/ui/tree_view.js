@@ -207,8 +207,6 @@ define(['core/logger','jquery.ui','jquery.ui.jstree'],function(logger,$){
 			self.Force_Tree_Refresh = function()
 			{
 				
-				document.getElementById(self.tree_view_div).innerHTML = "";
-				
 				delete self.tree_view_hash_lookup;
 				delete self.tree_nodes;
 				delete self.tree;
@@ -219,19 +217,19 @@ define(['core/logger','jquery.ui','jquery.ui.jstree'],function(logger,$){
 				
 				self.tree_nodes = self.Create_Tree(self.data);
 				
-				document.getElementById(self.div_id).innerHTML = '<ul id="'+self.tree_view_div+'"></ul>';
-				$('#' + self.div_id).jstree({ 'core' : {
+				self.parent_div.innerHTML = '<ul id="'+self.tree_view_div+'"></ul>';
+				$(self.parent_div).jstree({ 'core' : {
 					'check_callback' : function (operation, node, node_parent, node_position, more) {
 						return true;
 					},
 				    'data' : self.Get_Node_Children
 				    } 
 				});
-				self.jstree = $('#' + self.div_id).jstree(true);
+				self.jstree = $(self.parent_div).jstree(true);
 				
 				self.last_selected_id = 0;
 				
-				$('#' + self.div_id).on('select_node.jstree', function (e, data) {
+				$(self.parent_div).on('select_node.jstree', function (e, data) {
 					
 					self.Node_Click_Callback(data.node.id);
 					
@@ -871,11 +869,12 @@ define(['core/logger','jquery.ui','jquery.ui.jstree'],function(logger,$){
 			};
 			
 			//render function (div must already exist)
-			self.Render = function(div_id) {
+			self.Render = function(parent_div) {
 				
-				self.div_id = div_id;
+				self.parent_div = parent_div;
+				//self.div_id = div_id;
 				
-				document.getElementById(self.div_id).innerHTML = '<ul id="'+self.tree_view_div+'"></ul>';
+				self.parent_div.innerHTML = '<ul id="'+self.tree_view_div+'"></ul>';
 				
 			};
 		}

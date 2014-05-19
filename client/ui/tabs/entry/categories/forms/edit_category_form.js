@@ -228,17 +228,17 @@ define([
 			this.edit_category_delete_button.value = 'Delete';
 			this.edit_category_delete_button = this.edit_category_form.appendChild(this.edit_category_delete_button);
 
-			$('#' + this.edit_category_submit_button.id).button();
-			$('#' + this.edit_category_delete_button.id).button();
+			$(this.edit_category_submit_button).button();
+			$(this.edit_category_delete_button).button();
 
-			$('#' + this.edit_category_submit_button.id).click(function(event) {
+			$(this.edit_category_submit_button).click(function(event) {
 				//ensure a normal postback does not occur
 				event.preventDefault();
 				
 				self.Category_Edit_Submit_Click_Event(function(){});
 			});
 
-			$('#' + this.edit_category_delete_button.id).click(function(event) {
+			$(this.edit_category_delete_button).click(function(event) {
 				//ensure a normal postback does not occur
 				event.preventDefault();
 				
@@ -246,7 +246,7 @@ define([
 
 			});
 			
-			$('#' + this.edit_category_select.id).change(function(){
+			$(this.edit_category_select).change(function(){
 				
 				self.Category_Edit_Select_Change_Event();
 				

@@ -144,7 +144,7 @@ define([
 
 			this.new_item_entry_form.Render(this.div_forms['new_item_entry_div']);
 
-			this.edit_item_entry_form.Render('edit_item_log_div');
+			this.edit_item_entry_form.Render(this.div_forms['edit_item_log_div']);
 
 			this.new_item_form.Render('add_item_div');
 		

@@ -101,8 +101,6 @@ define([
 			];
 			this.div_forms = [];
 			
-			var return_html = '';
-			
 			for(var i = 0; i < this.div_ids.length; i++)
 			{
 				var new_form = document.createElement('div');
@@ -110,12 +108,8 @@ define([
 				
 				this.div_forms.push(parent_div.appendChild(new_form));
 				
-				//return_html += '<div id="'+this.div_forms[i]+'"></div>';
 			}
 
-			//var div_tab = parent_div;
-			//div_tab.innerHTML = return_html;
-			
 			this.new_category_form.Render(this.div_forms[0]);
 			this.edit_category_form.Render(this.div_forms[1]);
 			

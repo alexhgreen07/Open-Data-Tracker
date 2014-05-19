@@ -791,7 +791,7 @@ define([
 			
 			self.category_tab.Render(self.tree_category_div);
 			
-			self.items_tab.Render(self.tree_items_div.id);
+			self.items_tab.Render(self.tree_items_div);
 			
 			self.tasks_tab.Render(self.tree_tasks_div.id);
 			

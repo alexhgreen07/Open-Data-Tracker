@@ -98,15 +98,15 @@ define([
 
 		this.Show_Form = function(div_id){
 			
-			for(var i = 0; i < this.div_ids.length; i++)
+			for(var i = 0; i < this.div_forms.length; i++)
 			{
-				if(div_id == this.div_ids[i])
+				if(div_id == this.div_forms[i].id)
 				{
-					$('#'+this.div_ids[i]).fadeIn();
+					$(this.div_forms[i]).fadeIn();
 				}
 				else
 				{
-					$('#'+this.div_ids[i]).hide();
+					$(this.div_forms[i]).hide();
 				}
 				
 			}
@@ -116,7 +116,7 @@ define([
 		/** @method Render
 		 * @desc This function will render the full tab in the div that it was initialized with.
 		 * */
-		this.Render = function(item_div_id) {
+		this.Render = function(parent_div) {
 			
 			this.div_ids = [
 				'quick_item_entry_div',
@@ -127,17 +127,18 @@ define([
 				'new_item_target_div',
 				'edit_item_target_div',
 			];
+			this.div_forms = [];
 			
 			var return_html = '';
 			
 			for(var i = 0; i < this.div_ids.length; i++)
 			{
-				return_html += '<div id="'+this.div_ids[i]+'"></div>';
+				var new_form = document.createElement('div');
+				new_form.id = this.div_ids[i];
+				
+				this.div_forms.push(parent_div.appendChild(new_form));
 			}
 
-			var div_tab = document.getElementById(item_div_id);
-			div_tab.innerHTML = return_html;
-			
 			//render the panes
 			this.quick_item_entry_form.Render('quick_item_entry_div');
 
@@ -153,9 +154,9 @@ define([
 			
 			this.edit_item_target_form.Render('edit_item_target_div');
 			
-			for(var i = 0; i < this.div_ids.length; i++)
+			for(var i = 0; i < this.div_forms.length; i++)
 			{
-				$('#'+this.div_ids[i]).hide();
+				$(this.div_forms[i]).hide();
 			}
 		};
 	}

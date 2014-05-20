@@ -243,7 +243,7 @@ define([
 
 			this.new_task_target_form.Render(this.div_forms['new_target_task_entry_div']);
 			
-			this.edit_task_target_form.Render('edit_target_task_entry_div');
+			this.edit_task_target_form.Render(this.div_forms['edit_target_task_entry_div']);
 			
 			for(var key in this.div_forms)
 			{

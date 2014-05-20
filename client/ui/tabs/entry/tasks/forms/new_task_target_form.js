@@ -46,20 +46,20 @@ define([
 			var self = this;
 
 			//retrieve the selected item from the info array
-			var selected_index = document.getElementById(this.task_target_new_name_select.id).selectedIndex;
+			var selected_index = this.task_target_new_name_select.selectedIndex;
 
 			if (selected_index > 0) {
 
 				var selected_task = this.task_info_json_array[selected_index - 1];
-				//var scheduled_time = document.getElementById(self.task_scheduled_target_date.id).value;
-				var scheduled_time = $('#' + self.task_scheduled_target_date.id).datetimepicker('getDate');
-				var recurring = document.getElementById(self.task_recurring_target_select.id).value;
-				var recurrance_type = document.getElementById(self.task_recurring_target_select_type.id).value;
-				var recurrance_period = document.getElementById(self.task_reccurance_target_period.id).value;
-				var variance = document.getElementById(self.task_scheduled_variance.id).value;
-				var estimated_time = document.getElementById(self.task_target_estimated_time.id).value;
-				//var end_date = document.getElementById(self.task_recurring_end_date.id).value;
-				var end_date = $('#' + self.task_recurring_end_date.id).datetimepicker('getDate');
+				//var scheduled_time = self.task_scheduled_target_date.value;
+				var scheduled_time = $(self.task_scheduled_target_date).datetimepicker('getDate');
+				var recurring = self.task_recurring_target_select.value;
+				var recurrance_type = self.task_recurring_target_select_type.value;
+				var recurrance_period = self.task_reccurance_target_period.value;
+				var variance = self.task_scheduled_variance.value;
+				var estimated_time = self.task_target_estimated_time.value;
+				//var end_date = self.task_recurring_end_date.value;
+				var end_date = $(self.task_recurring_end_date).datetimepicker('getDate');
 
 				var params = {};
 				
@@ -105,7 +105,7 @@ define([
 		 * @desc This function renders the new task targets form in the specified div.
 		 * @param {String} form_div_id The div ID to render the form in. 
 		 * */
-		this.Render = function(form_div_id)
+		this.Render = function(parent_div)
 		{
 			
 			var self = this;
@@ -114,71 +114,80 @@ define([
 			this.new_task_target_form = document.createElement("form");
 			this.new_task_target_form.setAttribute('method', "post");
 			this.new_task_target_form.setAttribute('id', "new_task_target_form");
+
+			this.new_task_target_form = parent_div.appendChild(this.new_task_target_form);
 			
-			this.new_task_target_form.innerHTML += 'Task:<br />';
+			this.new_task_target_form.appendChild(document.createTextNode('Tasks:'));
+			this.new_task_target_form.appendChild(document.createElement('br'));
 
 			//task recurring
 			this.task_target_new_name_select = document.createElement("select");
 			this.task_target_new_name_select.setAttribute('id', 'task_target_new_name_select');
 			this.task_target_new_name_select.innerHTML = '<option>-</option>';
-			this.new_task_target_form.appendChild(this.task_target_new_name_select);
+			this.task_target_new_name_select = this.new_task_target_form.appendChild(this.task_target_new_name_select);
 
-			this.new_task_target_form.innerHTML += '<br /><br />';
+			this.new_task_target_form.appendChild(document.createElement('br'));
 			
-			this.new_task_target_form.innerHTML += 'Scheduled Date:<br />';
+			this.new_task_target_form.appendChild(document.createElement('br'));
+			this.new_task_target_form.appendChild(document.createTextNode('Scheduled Date:'));
+			this.new_task_target_form.appendChild(document.createElement('br'));
 
 			//task estimate creation
 			this.task_scheduled_target_date = document.createElement("input");
 			this.task_scheduled_target_date.setAttribute('id', 'task_scheduled_target_date');
 			this.task_scheduled_target_date.setAttribute('type', 'text');
-			this.new_task_target_form.appendChild(this.task_scheduled_target_date);
+			this.task_scheduled_target_date = this.new_task_target_form.appendChild(this.task_scheduled_target_date);
 			
-			this.new_task_target_form.innerHTML += 'Scheduled Date Variance (Hours):<br />';
+			this.new_task_target_form.appendChild(document.createElement('br'));
+			this.new_task_target_form.appendChild(document.createTextNode('Scheduled Date Variance (Hours):'));
+			this.new_task_target_form.appendChild(document.createElement('br'));
 
 			//task estimate creation
 			this.task_scheduled_variance = document.createElement("input");
 			this.task_scheduled_variance.setAttribute('id', 'task_scheduled_variance');
 			this.task_scheduled_variance.setAttribute('type', 'text');
 			this.task_scheduled_variance.setAttribute('value', '0');
-			this.new_task_target_form.appendChild(this.task_scheduled_variance);
+			this.task_scheduled_variance = this.new_task_target_form.appendChild(this.task_scheduled_variance);
 
-			this.new_task_target_form.innerHTML += '<br />';
-			
-			this.new_task_target_form.innerHTML += 'Estimated Time (Hours):<br />';
+			this.new_task_target_form.appendChild(document.createElement('br'));
+			this.new_task_target_form.appendChild(document.createTextNode('Estimated Time (Hours):'));
+			this.new_task_target_form.appendChild(document.createElement('br'));
 
 			//task estimate creation
 			this.task_target_estimated_time = document.createElement("input");
 			this.task_target_estimated_time.setAttribute('id', 'task_target_estimated_time');
 			this.task_target_estimated_time.setAttribute('type', 'text');
 			this.task_target_estimated_time.setAttribute('value', '0');
-			this.new_task_target_form.appendChild(this.task_target_estimated_time);
+			this.task_target_estimated_time = this.new_task_target_form.appendChild(this.task_target_estimated_time);
 
-			this.new_task_target_form.innerHTML += '<br /><br />';
-
-			this.new_task_target_form.innerHTML += 'Recurring:<br />';
+			this.new_task_target_form.appendChild(document.createElement('br'));
+			this.new_task_target_form.appendChild(document.createElement('br'));
+			this.new_task_target_form.appendChild(document.createTextNode('Recurring:'));
+			this.new_task_target_form.appendChild(document.createElement('br'));
 
 			//task recurring
 			this.task_recurring_target_select = document.createElement("select");
 			this.task_recurring_target_select.setAttribute('id', 'task_recurring_target_select');
 			this.task_recurring_target_select.innerHTML = '<option>False</option><option>True</option>';
-			this.new_task_target_form.appendChild(this.task_recurring_target_select);
+			this.task_recurring_target_select = this.new_task_target_form.appendChild(this.task_recurring_target_select);
 
-			this.new_task_target_form.innerHTML += '<br />';
-			
-			this.new_task_target_form.innerHTML += 'Recurrance Type:<br />';
+			this.new_task_target_form.appendChild(document.createElement('br'));
+			this.new_task_target_form.appendChild(document.createTextNode('Recurrance Type:'));
+			this.new_task_target_form.appendChild(document.createElement('br'));
 
 			//task recurring
 			this.task_recurring_target_select_type = document.createElement("select");
 			this.task_recurring_target_select_type.setAttribute('id', 'task_recurring_target_select_type');
 			this.task_recurring_target_select_type.innerHTML = "<option>Minutes</option><option>Hours</option><option>Days</option><option>Weeks</option><option>Weekly</option><option>Months</option><option>Years</option>";
-			this.new_task_target_form.appendChild(this.task_recurring_target_select_type);
+			this.task_recurring_target_select_type = this.new_task_target_form.appendChild(this.task_recurring_target_select_type);
 
-			this.new_task_target_form.innerHTML += '<br />';
-			
-			this.new_task_target_form.innerHTML += 'Recurrance Period:<br />';
+			this.new_task_target_form.appendChild(document.createElement('br'));
+			this.new_task_target_form.appendChild(document.createTextNode('Recurrance Period:'));
+			this.new_task_target_form.appendChild(document.createElement('br'));
 
 			this.task_reccurance_target_period_div = document.createElement('div');
 			this.task_reccurance_target_period_div.setAttribute('id', 'task_reccurance_target_period_div');
+			this.task_reccurance_target_period_div = this.new_task_target_form.appendChild(this.task_reccurance_target_period_div);
 
 			//task estimate creation
 			this.task_reccurance_target_period = document.createElement("input");
@@ -186,16 +195,18 @@ define([
 			this.task_reccurance_target_period.setAttribute('type', 'text');
 			this.task_reccurance_target_period.setAttribute('value', '0');
 			this.task_reccurance_target_period_div.appendChild(this.task_reccurance_target_period);
-			this.new_task_target_form.appendChild(this.task_reccurance_target_period_div);
 
-			this.new_task_target_form.innerHTML += 'Recurrance End:<br />';
+			this.new_task_target_form.appendChild(document.createElement('br'));
+			this.new_task_target_form.appendChild(document.createTextNode('Recurrance End:'));
+			this.new_task_target_form.appendChild(document.createElement('br'));
 
 			this.task_recurring_end_date = document.createElement("input");
 			this.task_recurring_end_date.setAttribute('id', 'task_recurring_end_date');
 			this.task_recurring_end_date.innerHTML = '<option>False</option><option>True</option>';
-			this.new_task_target_form.appendChild(this.task_recurring_end_date);
+			this.task_recurring_end_date = this.new_task_target_form.appendChild(this.task_recurring_end_date);
 
-			this.new_task_target_form.innerHTML += '<br /><br />';
+			this.new_task_target_form.appendChild(document.createElement('br'));
+			this.new_task_target_form.appendChild(document.createElement('br'));
 			
 			//task delete creation
 			this.task_target_submit_button = document.createElement("input");
@@ -203,26 +214,12 @@ define([
 			this.task_target_submit_button.setAttribute('id', 'task_target_submit_button');
 			this.task_target_submit_button.setAttribute('type', 'submit');
 			this.task_target_submit_button.value = 'Submit';
-			this.new_task_target_form.appendChild(this.task_target_submit_button);
+			this.task_target_submit_button = this.new_task_target_form.appendChild(this.task_target_submit_button);
 			
-			this.new_task_target_form.innerHTML += '<br />';
-			
-			this.loading_image_task_target_new = document.createElement("img");
-			this.loading_image_task_target_new.setAttribute('id', 'loading_image_task_target_new');
-			this.loading_image_task_target_new.setAttribute('style', 'width:100%;height:19px;');
-			this.loading_image_task_target_new.setAttribute('src', 'ajax-loader.gif');
-			this.new_task_target_form.appendChild(this.loading_image_task_target_new);
-			
-			var div_tab = document.getElementById(form_div_id);
+			this.new_task_target_form.appendChild(document.createElement('br'));
 
-			div_tab.innerHTML = '';
-			
-			div_tab.appendChild(this.new_task_target_form);
-			
-			$('#' + this.loading_image_task_target_new.id).hide();
-			
-			$('#' + this.task_target_submit_button.id).button();
-			$('#' + this.task_target_submit_button.id).click(function(event){
+			$(this.task_target_submit_button).button();
+			$(this.task_target_submit_button).click(function(event){
 				
 				//ensure a normal postback does not occur
 				event.preventDefault();
@@ -230,17 +227,17 @@ define([
 				self.Task_Target_New_Submit_Click();
 			});
 			
-			$('#' + this.task_scheduled_target_date.id).datetimepicker({
+			$(this.task_scheduled_target_date).datetimepicker({
 				timeFormat : "HH:mm:ss",
 				dateFormat : 'yy-mm-dd'
 			});
-			$('#' + this.task_scheduled_target_date.id).datetimepicker("setDate", new Date());
+			$(this.task_scheduled_target_date).datetimepicker("setDate", new Date());
 			
-			$('#' + this.task_recurring_end_date.id).datetimepicker({
+			$(this.task_recurring_end_date).datetimepicker({
 				timeFormat : "HH:mm:ss",
 				dateFormat : 'yy-mm-dd'
 			});
-			$('#' + this.task_recurring_end_date.id).datetimepicker("setDate", new Date());
+			$(this.task_recurring_end_date).datetimepicker("setDate", new Date());
 		};
 
 	}

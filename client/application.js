@@ -305,9 +305,9 @@ define([
 					
 					self.entry_tab_object.Render(self.entry_tab_div);
 					
-					self.calendar_tab_object.Render(self.calendar_tab_div.id);
+					self.calendar_tab_object.Render(self.calendar_tab_div);
 					
-					self.report_tab_object.Render(self.report_tab_div.id);
+					self.report_tab_object.Render(self.report_tab_div);
 					
 					self.home_tab_object.home_form.event_click_callback = self.Select_Event_Click_Callback;
 					

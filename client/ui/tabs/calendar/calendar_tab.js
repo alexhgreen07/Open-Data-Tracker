@@ -256,19 +256,19 @@ define([
 		/** @method Render
 		 * @desc This function will render the tab in the div that it was initialized with.
 		 * */
-		this.Render = function(home_div_id) {
+		this.Render = function(parent_div) {
 			
 			var tabs_array = [];
 			var new_tab = [];
 			new_tab.push("Calendar");
-			var accordian_div = home_div_id + '_accordian_div';
+			var accordian_div = parent_div.id + '_accordian_div';
 			new_tab.push('<div id="'+accordian_div+'"></div>');
 			tabs_array.push(new_tab);
 			
-			self.calendar_accordian.Render(home_div_id, tabs_array);
+			self.calendar_accordian.Render(parent_div.id, tabs_array);
 			
 			self.calendar_options_form = document.createElement("form");
-			self.calendar_options_form.id = home_div_id + "_calendar_options_form";
+			self.calendar_options_form.id = parent_div.id + "_calendar_options_form";
 
 			self.calendar_options_form = document.getElementById(accordian_div).appendChild(self.calendar_options_form);
 			
@@ -277,7 +277,7 @@ define([
 			self.calendar_options_form.appendChild(document.createElement('br'));
 			
 			self.radio_button_agenda = document.createElement('input');
-			self.radio_button_agenda.id = home_div_id + '_radio_button_agenda';
+			self.radio_button_agenda.id = parent_div.id + '_radio_button_agenda';
 			self.radio_button_agenda.type = 'radio';
 			self.radio_button_agenda.value = 'agenda';
 			self.radio_button_agenda.className = 'radio_input';
@@ -287,7 +287,7 @@ define([
 			self.calendar_options_form.appendChild(document.createTextNode('Agenda View'));
 			
 			self.radio_button_basic = document.createElement('input');
-			self.radio_button_basic.id = home_div_id + '_radio_button_basic';
+			self.radio_button_basic.id = parent_div.id + '_radio_button_basic';
 			self.radio_button_basic.type = 'radio';
 			self.radio_button_basic.value = 'basic';
 			self.radio_button_basic.className = 'radio_input';
@@ -300,7 +300,7 @@ define([
 			self.calendar_options_form.appendChild(document.createElement('hr'));
 			
 			self.calendar_div = document.createElement("div");
-			self.calendar_div.id = home_div_id + '_calendar_div';
+			self.calendar_div.id = parent_div.id + '_calendar_div';
 			self.calendar_div = document.getElementById(accordian_div).appendChild(self.calendar_div);
 			
 			$(self.calendar_div).fullCalendar({

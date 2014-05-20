@@ -74,7 +74,7 @@ define([
 	function Report_Tab() {
 
 		//class variables
-		this.div_id = null;
+		this.parent_div = null;
 		var self = this;
 		self.psuedo_date_columns = [];
 		
@@ -674,11 +674,14 @@ define([
 			
 		};
 
-		this.Render_Summaries_Form = function(form_div_id) {
+		this.Render_Summaries_Form = function(parent_div_id) {
 
 			this.report_summaries_data_form = document.createElement("form");
 			this.report_summaries_data_form.setAttribute('method', "post");
 			this.report_summaries_data_form.setAttribute('id', "report_summaries_display_form");
+			
+			var parent_div = document.getElementById(parent_div_id);
+			this.report_summaries_data_form = parent_div.appendChild(this.report_summaries_data_form);
 			
 			this.report_summaries_data_form.innerHTML += 'Saved Reports:<br/>';
 			
@@ -761,9 +764,6 @@ define([
 			this.report_delete_button.value = 'Delete';
 			this.report_summaries_data_form.appendChild(this.report_delete_button);
 			
-			var div_tab = document.getElementById(form_div_id);
-			div_tab.appendChild(this.report_summaries_data_form);
-			
 			$('#' + this.report_save_button.id).button();
 			$('#' + this.report_save_button.id).click(function(event) {
 
@@ -844,9 +844,9 @@ define([
 		};
 		
 		//render function (div must already exist)
-		this.Render = function(data_div_id) {
+		this.Render = function(parent_div) {
 			
-			this.div_id = data_div_id;
+			this.parent_div = parent_div;
 			
 			var tabs_array = new Array();
 
@@ -866,7 +866,7 @@ define([
 
 			return_html += '<div id="reports_accordian"></div>';
 
-			var div_tab = document.getElementById(this.div_id);
+			var div_tab = this.parent_div;
 			div_tab.innerHTML = return_html;
 
 			//render the accordian

@@ -215,15 +215,11 @@ define([
 			
 			if(self.current_selected_info.table == 'tasks')
 			{
-				name_select_id = self.tasks_tab.timecard_task_entry_form.task_name_select.id;
-				target_select_id = self.tasks_tab.timecard_task_entry_form.task_target_select.id;
-				entry_select_id = self.tasks_tab.timecard_task_entry_form.task_entries_started_select.id;
-				
 				self.tasks_tab.timecard_task_entry_form.selected_task_entry = self.current_selected_info.row;
 				
-				document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
-				document.getElementById(target_select_id).value = 0;
-				document.getElementById(entry_select_id).value = 0;
+				self.tasks_tab.timecard_task_entry_form.task_name_select.value = self.current_selected_info.row.task_id;
+				self.tasks_tab.timecard_task_entry_form.task_target_select.value = 0;
+				self.tasks_tab.timecard_task_entry_form.task_entries_started_select.value = 0;
 				
 				self.tasks_tab.timecard_task_entry_form.Task_Start_Entry_Change();
 				
@@ -232,8 +228,7 @@ define([
 			}
 			else if(self.current_selected_info.table == 'items' || self.current_selected_info.table == 'item_entries')
 			{
-				name_select_id = self.items_tab.quick_item_entry_form.quick_item_name_select.id;
-				document.getElementById(name_select_id).value = self.current_selected_info.row.item_id;
+				self.items_tab.quick_item_entry_form.quick_item_name_select.value = self.current_selected_info.row.item_id;
 				
 				self.items_tab.Show_Form('quick_item_entry_div');
 			}
@@ -252,8 +247,7 @@ define([
 			if(self.current_selected_info.table == 'tasks')
 			{
 				
-				name_select_id = self.tasks_tab.edit_task_form.task_entry_task_edit_name_select.id;
-				document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
+				self.tasks_tab.edit_task_form.task_entry_task_edit_name_select.value = self.current_selected_info.row.task_id;
 				self.tasks_tab.edit_task_form.Task_Edit_Select_Change();
 				
 				//execute the click event
@@ -261,8 +255,7 @@ define([
 			}
 			else if(self.current_selected_info.table == 'items')
 			{
-				name_select_id = self.items_tab.edit_item_form.item_edit_select.id;
-				document.getElementById(name_select_id).value = self.current_selected_info.row.item_id;
+				self.items_tab.edit_item_form.item_edit_select.value = self.current_selected_info.row.item_id;
 				self.items_tab.edit_item_form.Item_Select_Change();
 				
 				self.items_tab.Show_Form('edit_item_div');
@@ -281,16 +274,11 @@ define([
 			
 			if(self.current_selected_info.table == 'task_targets')
 			{
-				
-				name_select_id = self.tasks_tab.timecard_task_entry_form.task_name_select.id;
-				target_select_id = self.tasks_tab.timecard_task_entry_form.task_target_select.id;
-				entry_select_id = self.tasks_tab.timecard_task_entry_form.task_entries_started_select.id;
-				
 				self.tasks_tab.timecard_task_entry_form.selected_task_entry = self.current_selected_info.row;
 				
-				document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
-				document.getElementById(target_select_id).value = self.current_selected_info.row.task_schedule_id;
-				document.getElementById(entry_select_id).value = 0;
+				self.tasks_tab.timecard_task_entry_form.task_name_select.value = self.current_selected_info.row.task_id;
+				self.tasks_tab.timecard_task_entry_form.task_target_select.value = self.current_selected_info.row.task_schedule_id;
+				self.tasks_tab.timecard_task_entry_form.task_entries_started_select.value = 0;
 				
 				self.tasks_tab.timecard_task_entry_form.Task_Start_Entry_Change();
 				
@@ -299,10 +287,8 @@ define([
 			}
 			else if(self.current_selected_info.table == 'item_targets')
 			{
-				name_select_id = self.items_tab.quick_item_entry_form.quick_item_name_select.id;
-				target_select_id = self.items_tab.quick_item_entry_form.quick_item_target_select.id;
-				document.getElementById(name_select_id).value = self.current_selected_info.row.item_id;
-				document.getElementById(target_select_id).value = self.current_selected_info.row.item_target_id;
+				self.items_tab.quick_item_entry_form.quick_item_name_select.value = self.current_selected_info.row.item_id;
+				self.items_tab.quick_item_entry_form.quick_item_target_select.value = self.current_selected_info.row.item_target_id;
 				
 				self.items_tab.Show_Form('quick_item_entry_div');
 			}
@@ -320,8 +306,7 @@ define([
 			if(self.current_selected_info.table == 'task_targets')
 			{
 				
-				target_select_id = self.tasks_tab.edit_task_target_form.task_edit_target_select.id;
-				document.getElementById(target_select_id).value = self.current_selected_info.row.task_schedule_id;
+				self.tasks_tab.edit_task_target_form.task_edit_target_select.value = self.current_selected_info.row.task_schedule_id;
 				self.tasks_tab.edit_task_target_form.Task_Target_Edit_Select_Change();
 				
 				//execute the click event
@@ -329,8 +314,7 @@ define([
 			}
 			else if(self.current_selected_info.table == 'item_targets')
 			{
-				target_select_id = self.items_tab.edit_item_target_form.edit_item_target_id_select.id;
-				document.getElementById(target_select_id).value = self.current_selected_info.row.item_target_id;
+				self.items_tab.edit_item_target_form.edit_item_target_id_select.value = self.current_selected_info.row.item_target_id;
 				self.items_tab.edit_item_target_form.Selected_Item_Target_Change();
 				
 				self.items_tab.Show_Form('edit_item_target_div');
@@ -348,20 +332,16 @@ define([
 			
 			if(self.current_selected_info.table == 'task_targets')
 			{
-				name_select_id = self.tasks_tab.new_task_entry_form.add_task_entry_task_name_select.id;
-				target_select_id = self.tasks_tab.new_task_entry_form.task_target_select.id;
-				document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
-				document.getElementById(target_select_id).value = self.current_selected_info.row.task_schedule_id;
+				self.tasks_tab.new_task_entry_form.add_task_entry_task_name_select.value = self.current_selected_info.row.task_id;
+				self.tasks_tab.new_task_entry_form.task_target_select.value = self.current_selected_info.row.task_schedule_id;
 				
 				//execute the click event
 				self.tasks_tab.Show_Form('new_task_entry_div');
 			}
 			else if(self.current_selected_info.table == 'item_targets')
 			{
-				name_select_id = self.items_tab.new_item_entry_form.new_item_name_select.id;
-				target_select_id = self.items_tab.new_item_entry_form.new_item_target_select.id;
-				document.getElementById(name_select_id).value = self.current_selected_info.row.item_id;
-				document.getElementById(target_select_id).value = self.current_selected_info.row.item_target_id;
+				self.items_tab.new_item_entry_form.new_item_name_select.value = self.current_selected_info.row.item_id;
+				self.items_tab.new_item_entry_form.new_item_target_select.value = self.current_selected_info.row.item_target_id;
 				
 				self.items_tab.Show_Form('new_item_entry_div');
 			}
@@ -379,15 +359,11 @@ define([
 			
 			if(self.current_selected_info.table == 'task_entries')
 			{
-				name_select_id = self.tasks_tab.timecard_task_entry_form.task_name_select.id;
-				target_select_id = self.tasks_tab.timecard_task_entry_form.task_target_select.id;
-				entry_select_id = self.tasks_tab.timecard_task_entry_form.task_entries_started_select.id;
-				
 				self.tasks_tab.timecard_task_entry_form.selected_task_entry = self.current_selected_info.row;
 				
-				document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
-				document.getElementById(target_select_id).value = self.current_selected_info.row.task_target_id;
-				document.getElementById(entry_select_id).value = self.current_selected_info.row.task_log_id;
+				self.tasks_tab.timecard_task_entry_form.task_name_select.value = self.current_selected_info.row.task_id;
+				self.tasks_tab.timecard_task_entry_form.task_target_select.value = self.current_selected_info.row.task_target_id;
+				self.tasks_tab.timecard_task_entry_form.task_entries_started_select.value = self.current_selected_info.row.task_log_id;
 				
 				self.tasks_tab.timecard_task_entry_form.Task_Start_Entry_Change();
 				
@@ -413,8 +389,7 @@ define([
 			
 			if(self.current_selected_info.table == 'task_entries')
 			{
-				name_select_id = self.tasks_tab.edit_task_entry_form.edit_task_entry_select.id;
-				document.getElementById(name_select_id).value = self.current_selected_info.row.task_log_id;
+				self.tasks_tab.edit_task_entry_form.edit_task_entry_select.value = self.current_selected_info.row.task_log_id;
 				self.tasks_tab.edit_task_entry_form.Task_Edit_Entry_Select_Change();
 				
 				//execute the click event
@@ -422,8 +397,7 @@ define([
 			}
 			else if(self.current_selected_info.table == 'item_entries')
 			{
-				name_select_id = self.items_tab.edit_item_entry_form.edit_item_entry_select.id;
-				document.getElementById(name_select_id).value = self.current_selected_info.row.item_log_id;
+				self.items_tab.edit_item_entry_form.edit_item_entry_select.value = self.current_selected_info.row.item_log_id;
 				self.items_tab.edit_item_entry_form.Item_Entry_Select_Change();
 				
 				self.items_tab.Show_Form('edit_item_log_div');
@@ -442,16 +416,14 @@ define([
 			
 			if(self.current_selected_info.table == 'tasks')
 			{
-				name_select_id = self.tasks_tab.new_task_target_form.task_target_new_name_select.id;
-				document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
+				self.tasks_tab.new_task_target_form.task_target_new_name_select.value = self.current_selected_info.row.task_id;
 				
 				//execute the click event
 				self.tasks_tab.Show_Form('new_target_task_entry_div');
 			}
 			else if(self.current_selected_info.table == 'items')
 			{
-				name_select_id = self.items_tab.new_item_target_form.new_item_target_name_select.id;
-				document.getElementById(name_select_id).value = self.current_selected_info.row.item_id;
+				self.items_tab.new_item_target_form.new_item_target_name_select.value = self.current_selected_info.row.item_id;
 				
 				self.items_tab.Show_Form('new_item_target_div');
 			}
@@ -469,8 +441,7 @@ define([
 			
 			if(self.current_selected_info.table == 'tasks')
 			{
-				name_select_id = self.tasks_tab.new_task_entry_form.add_task_entry_task_name_select.id;
-				document.getElementById(name_select_id).value = self.current_selected_info.row.task_id;
+				self.tasks_tab.new_task_entry_form.add_task_entry_task_name_select.value = self.current_selected_info.row.task_id;
 				
 				//execute the click event
 				self.tasks_tab.Show_Form('new_task_entry_div');
@@ -478,7 +449,7 @@ define([
 			else if(self.current_selected_info.table == 'items')
 			{
 				name_select_id = self.items_tab.new_item_entry_form.new_item_name_select.id;
-				document.getElementById(name_select_id).value = self.current_selected_info.row.item_id;
+				self.items_tab.new_item_entry_form.new_item_name_select.value = self.current_selected_info.row.item_id;
 				
 				self.items_tab.Show_Form('new_item_entry_div');
 			}
@@ -494,8 +465,7 @@ define([
 			
 			$(self.cancel_button_div).fadeIn();
 			
-			name_select_id = self.category_tab.new_category_form.add_new_category_parent_select.id;
-			document.getElementById(name_select_id).value = self.current_selected_info.row["Category ID"];
+			self.category_tab.new_category_form.add_new_category_parent_select.value = self.current_selected_info.row["Category ID"];
 			
 			//execute the click event
 			self.category_tab.Show_Form('home_category_add_new_tab');
@@ -511,8 +481,7 @@ define([
 			
 			$(self.cancel_button_div).fadeIn();
 			
-			name_select_id = self.category_tab.edit_category_form.edit_category_select.id;
-			document.getElementById(name_select_id).value = self.current_selected_info.row["Category ID"];
+			self.category_tab.edit_category_form.edit_category_select.value = self.current_selected_info.row["Category ID"];
 			self.category_tab.edit_category_form.Category_Edit_Select_Change_Event();
 			
 			//execute the click event
@@ -529,8 +498,7 @@ define([
 			
 			$(self.cancel_button_div).fadeIn();
 			
-			name_select_id = self.tasks_tab.new_task_form.task_category_select.id;
-			document.getElementById(name_select_id).value = self.current_selected_info.row["Category ID"];
+			self.tasks_tab.new_task_form.task_category_select.value = self.current_selected_info.row["Category ID"];
 			self.category_tab.Refresh(self.data);
 			
 			//execute the click event
@@ -547,8 +515,7 @@ define([
 			
 			$(self.cancel_button_div).fadeIn();
 			
-			name_select_id = self.items_tab.new_item_form.item_category_select.id;
-			document.getElementById(name_select_id).value = self.current_selected_info.row["Category ID"];
+			self.items_tab.new_item_form.item_category_select.value = self.current_selected_info.row["Category ID"];
 			self.category_tab.Refresh(self.data);
 			
 			//execute the click event

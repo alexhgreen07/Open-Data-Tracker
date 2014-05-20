@@ -26,10 +26,10 @@ define([
 			
 			self.data = data;
 		
-			document.getElementById(self.calendar_div.id).innerHTML = '';
+			self.calendar_div.innerHTML = '';
 			
-			var previous_name = $('#' + self.calendar_div.id).fullCalendar('getView').name;
-			var previous_date = $('#' + self.calendar_div.id).fullCalendar('getDate');
+			var previous_name = $(self.calendar_div).fullCalendar('getView').name;
+			var previous_date = $(self.calendar_div).fullCalendar('getDate');
 			
 			var times = [];
 			var start = new Date();
@@ -40,7 +40,7 @@ define([
 			times.push('Generate_Event_Schedule: ' + (end - start) / 1000);
 			var start = new Date();
 			
-			$('#' + self.calendar_div.id).fullCalendar({
+			$(self.calendar_div).fullCalendar({
 				header: {
 					left: 'month,' + self.week_view_type + ',' + self.day_view_type,
 					center: 'today',
@@ -59,8 +59,8 @@ define([
 			times.push('fullCalendar: ' + (end - start) / 1000);
 			logger.Info('Calendar_Tab Refresh: ' + JSON.stringify(times));
 			
-			$('#' + self.calendar_div.id).fullCalendar('changeView', previous_name);
-			$('#' + self.calendar_div.id).fullCalendar('gotoDate',previous_date);
+			$(self.calendar_div).fullCalendar('changeView', previous_name);
+			$(self.calendar_div).fullCalendar('gotoDate',previous_date);
 			
 		};
 		
@@ -166,27 +166,27 @@ define([
 			    	self.new_events[i].start = start_string;
 			    	self.new_events[i].end = end_string;
 			    	
-			    	$('#' + self.calendar_div.id).fullCalendar('updateEvent',self.new_events[i]);
+			    	$(self.calendar_div).fullCalendar('updateEvent',self.new_events[i]);
 				}
 			}
 		};
 		
 		this.Render_Calendar = function()
 		{
-			$('#' + self.calendar_div.id).fullCalendar('render');
+			$(self.calendar_div).fullCalendar('render');
 		};
 		
 		this.Day_Click = function(date, allDay, jsEvent, view) {
 
-			$('#' + self.calendar_div.id).fullCalendar('gotoDate',date);
+			$(self.calendar_div).fullCalendar('gotoDate',date);
 				
-			if($('#' + self.calendar_div.id).fullCalendar('getView').name == 'month')
+			if($(self.calendar_div).fullCalendar('getView').name == 'month')
 			{
-				$('#' + self.calendar_div.id).fullCalendar('changeView', self.week_view_type);
+				$(self.calendar_div).fullCalendar('changeView', self.week_view_type);
 			}
-			else if($('#' + self.calendar_div.id).fullCalendar('getView').name == self.week_view_type)
+			else if($(self.calendar_div).fullCalendar('getView').name == self.week_view_type)
 			{
-				$('#' + self.calendar_div.id).fullCalendar('changeView', self.day_view_type );
+				$(self.calendar_div).fullCalendar('changeView', self.day_view_type );
 			}
 
 	   };
@@ -198,15 +198,15 @@ define([
 	   
 	   this.Event_Drill_Down = function(calEvent, jsEvent, view)
 	   {
-		   	if($('#' + self.calendar_div.id).fullCalendar('getView').name == 'month')
+		   	if($(self.calendar_div).fullCalendar('getView').name == 'month')
 			{
-				$('#' + self.calendar_div.id).fullCalendar('gotoDate',calEvent.start);
-				$('#' + self.calendar_div.id).fullCalendar('changeView', self.week_view_type );
+				$(self.calendar_div).fullCalendar('gotoDate',calEvent.start);
+				$(self.calendar_div).fullCalendar('changeView', self.week_view_type );
 			}
-			else if($('#' + self.calendar_div.id).fullCalendar('getView').name == self.week_view_type)
+			else if($(self.calendar_div).fullCalendar('getView').name == self.week_view_type)
 			{
-				$('#' + self.calendar_div.id).fullCalendar('gotoDate',calEvent.start);
-				$('#' + self.calendar_div.id).fullCalendar('changeView', self.day_view_type );
+				$(self.calendar_div).fullCalendar('gotoDate',calEvent.start);
+				$(self.calendar_div).fullCalendar('changeView', self.day_view_type );
 			}
 			else
 			{
@@ -237,7 +237,7 @@ define([
 		this.Calendar_View_Type_Radio_Change = function()
 		{
 			
-			if(document.getElementById(self.radio_button_agenda.id).checked)
+			if(self.radio_button_agenda.checked)
 			{
 				self.day_view_type = 'agendaDay';
 				self.week_view_type = 'agendaWeek';
@@ -248,7 +248,7 @@ define([
 				self.week_view_type = 'basicWeek';
 			}
 			
-			$('#' + self.calendar_div.id).fullCalendar('changeView', self.day_view_type );
+			$(self.calendar_div).fullCalendar('changeView', self.day_view_type );
 			self.Refresh(self.data);
 			
 		};
@@ -269,8 +269,12 @@ define([
 			
 			self.calendar_options_form = document.createElement("form");
 			self.calendar_options_form.id = home_div_id + "_calendar_options_form";
+
+			self.calendar_options_form = document.getElementById(accordian_div).appendChild(self.calendar_options_form);
 			
-			self.calendar_options_form.innerHTML += "Settings:<br><br>";
+			self.calendar_options_form.appendChild(document.createTextNode('Settings:'));
+			self.calendar_options_form.appendChild(document.createElement('br'));
+			self.calendar_options_form.appendChild(document.createElement('br'));
 			
 			self.radio_button_agenda = document.createElement('input');
 			self.radio_button_agenda.id = home_div_id + '_radio_button_agenda';
@@ -278,8 +282,9 @@ define([
 			self.radio_button_agenda.value = 'agenda';
 			self.radio_button_agenda.className = 'radio_input';
 			self.radio_button_agenda.name = 'calendar_view';
-			self.calendar_options_form.appendChild(self.radio_button_agenda);
-			self.calendar_options_form.innerHTML += "Agenda View";
+			self.radio_button_agenda = self.calendar_options_form.appendChild(self.radio_button_agenda);
+			
+			self.calendar_options_form.appendChild(document.createTextNode('Agenda View'));
 			
 			self.radio_button_basic = document.createElement('input');
 			self.radio_button_basic.id = home_div_id + '_radio_button_basic';
@@ -287,18 +292,18 @@ define([
 			self.radio_button_basic.value = 'basic';
 			self.radio_button_basic.className = 'radio_input';
 			self.radio_button_basic.name = 'calendar_view';
-			self.calendar_options_form.appendChild(self.radio_button_basic);
-			self.calendar_options_form.innerHTML += "Basic View";
+			self.radio_button_basic = self.calendar_options_form.appendChild(self.radio_button_basic);
 			
-			self.calendar_options_form.innerHTML += "<br><hr>";
+			self.calendar_options_form.appendChild(document.createTextNode('Basic View'));
 			
-			document.getElementById(accordian_div).appendChild(self.calendar_options_form);
+			self.calendar_options_form.appendChild(document.createElement('br'));
+			self.calendar_options_form.appendChild(document.createElement('hr'));
 			
 			self.calendar_div = document.createElement("div");
 			self.calendar_div.id = home_div_id + '_calendar_div';
-			document.getElementById(accordian_div).appendChild(self.calendar_div);
+			self.calendar_div = document.getElementById(accordian_div).appendChild(self.calendar_div);
 			
-			$('#' + self.calendar_div.id).fullCalendar({
+			$(self.calendar_div).fullCalendar({
 				header: {
 					left: 'month,' + self.week_view_type + ',' + self.day_view_type,
 					center: 'today',
@@ -307,19 +312,19 @@ define([
 				eventAfterAllRender: self.Calendar_Render_Complete
 			});
 			
-	   		$('#' + self.calendar_div.id).fullCalendar('render');
-	   		$('#' + self.calendar_div.id).fullCalendar('today');
-	   		$('#' + self.calendar_div.id).fullCalendar('changeView', self.day_view_type );
+	   		$(self.calendar_div).fullCalendar('render');
+	   		$(self.calendar_div).fullCalendar('today');
+	   		$(self.calendar_div).fullCalendar('changeView', self.day_view_type );
 			
-			document.getElementById(self.radio_button_agenda.id).checked = true;
+			self.radio_button_agenda.checked = true;
 			
-			$('#' + self.radio_button_agenda.id).change(function(){
+			$(self.radio_button_agenda).change(function(){
 				
 				self.Calendar_View_Type_Radio_Change();
 				
 			});
 			
-			$('#' + self.radio_button_basic.id).change(function(){
+			$(self.radio_button_basic).change(function(){
 				
 				self.Calendar_View_Type_Radio_Change();
 				

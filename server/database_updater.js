@@ -70,25 +70,36 @@ define([
 	{
 		logger.Info("Updating database from v7 to v8");
 		
-		//TODO: implement
+		//table alter queries
+		var queries = [
+               "ALTER TABLE `item_log` ADD `name` TEXT NOT NULL , ADD `unit` TEXT NOT NULL , ADD `member_id` INT NOT NULL",
+               "ALTER TABLE `item_targets` ADD `name` TEXT NOT NULL , ADD `member_id` INT NOT NULL",
+               "ALTER TABLE `task_log` ADD `name` TEXT NOT NULL , ADD `target_status` TEXT NOT NULL , ADD `member_id` INT NOT NULL",
+               "ALTER TABLE `task_targets` ADD `name` TEXT NOT NULL , ADD `hours` DOUBLE NOT NULL , ADD `member_id` INT NOT NULL"
+           ];
 
-		//TODO: implement query
-		var sql = "ALTER TABLE `item_log` ADD `name` TEXT NOT NULL , ADD `unit` TEXT NOT NULL , ADD `member_id` INT NOT NULL";
-		//TODO: implement current item_log table update
+		session.database.Queries(queries, function(result){
+			
+			//update all field in the current data
+			var queries = [
+			               "UPDATE `item_log` SET `member_id`=(Select member_id from items where item_id = item_log.item_id), `name`=(Select name from items where item_id = item_log.item_id), `unit`=(Select unit from items where item_id = item_log.item_id)",
+			               "UPDATE `item_targets` SET `member_id`=(Select member_id from items where item_id = item_targets.item_id), `name`=(Select name from items where item_id = item_targets.item_id)",
+			               "UPDATE `task_log` SET `member_id`=(Select member_id from tasks where task_id = task_log.task_id), `name`=(Select name from tasks where task_id = task_log.task_id), `target_status`=(Select status from task_targets where task_target_id = task_targets.task_schedule_id)",
+			               "UPDATE `task_targets` SET `member_id`=(Select member_id from tasks where task_id = task_targets.task_id), `name`=(Select name from tasks where task_id = task_targets.task_id), `hours`=(Select SUM(hours) from task_log where task_target_id = task_targets.task_schedule_id)",
+			               ];
+			session.database.Queries(queries, function(result){
+				
+				//insert most current version
+				Insert_Version({},session,function(result){
+					
+					callback(result);
+	
+				});
+				
+			};
+			
+		});
 		
-		//TODO: implement query
-		sql = "ALTER TABLE `item_targets` ADD `name` TEXT NOT NULL , ADD `member_id` INT NOT NULL";
-		//TODO: implement current item_targets table update
-		
-		//TODO: implement query
-		sql = "ALTER TABLE `task_log` ADD `name` TEXT NOT NULL , ADD `target_status` TEXT NOT NULL , ADD `member_id` INT NOT NULL";
-		//TODO: implement current task_log table update
-
-		//TODO: implement query
-		sql = "ALTER TABLE `task_targets` ADD `name` TEXT NOT NULL , ADD `hours` DOUBLE NOT NULL , ADD `member_id` INT NOT NULL";
-		//TODO: implement current task_targets table update
-		
-		callback(false);
 	}
 	
 	//*****************Other functions*********************

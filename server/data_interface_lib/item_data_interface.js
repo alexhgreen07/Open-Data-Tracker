@@ -3,6 +3,7 @@ define([],function(){
 		Insert_Item_Entry: function(params, session, callback){
 			
 			var value_lookup = params;
+			value_lookup.member_id = session.member_id;
 			value_lookup.time = session.database.Date_To_MYSQL_String(new Date(value_lookup.time));
 			
 			session.database.Insert('item_log',value_lookup,function(object){
@@ -20,6 +21,7 @@ define([],function(){
 			delete value_lookup.item_log_id;
 			
 			var where = 'item_log_id = ' + item_log_id;
+			where += ' AND member_id = ' + session.member_id;
 			
 			session.database.Update('item_log',value_lookup,where,function(object){
 				callback(object);
@@ -29,6 +31,7 @@ define([],function(){
 		Delete_Item_Entry: function(params, session, callback){
 			
 			var where = 'item_log_id = ' + params.item_log_id;
+			where += ' AND member_id = ' + session.member_id;
 			
 			session.database.Delete('item_log',where,function(object){
 				callback(object);
@@ -75,6 +78,7 @@ define([],function(){
 		Insert_Item_Target: function(params, session, callback){
 			
 			var value_lookup = params;
+			value_lookup.member_id = session.member_id;
 			
 			session.database.Insert('item_targets',value_lookup,function(object){
 				callback(object);
@@ -89,6 +93,7 @@ define([],function(){
 			delete value_lookup.item_target_id;
 			
 			var where = 'item_target_id = ' + item_target_id;
+			where += ' AND member_id = ' + session.member_id;
 			
 			session.database.Update('item_targets',value_lookup,where,function(object){
 				callback(object);

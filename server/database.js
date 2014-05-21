@@ -78,14 +78,16 @@ define([
 				columns = [];
 				values = [];
 				
+				var delimiter = "'";
+				
 				for(var key in value_lookup)
 				{
-					columns.push('`' + key + '`');
-					values.push("'" + value_lookup[key] + "'");
+					columns.push("`" + key + "`");
+					values.push(delimiter + value_lookup[key] + delimiter);
 				}
 				
-				sql += ' (' + columns.join(', ') + ')';
-				sql += ' VALUES (' + values.join(', ') + ')';
+				sql += " (" + columns.join(", ") + ")";
+				sql += " VALUES (" + values.join(", ") + ")";
 				
 				logger.Info(sql);
 				
@@ -109,9 +111,12 @@ define([
 				
 				set_columns = [];
 				
+				var delimiter = "'";
+
+				
 				for(var key in value_lookup)
 				{
-					set_columns.push("`" + key + "` = '" + value_lookup[key] + "'");
+					set_columns.push("`" + key + "` = " + delimiter + value_lookup[key] + delimiter);
 				}
 				
 				sql += "SET " + set_columns.join(',');

@@ -4,9 +4,14 @@ define([],function(){
 	{
 		var value_lookup = params;
 		value_lookup.start_time = session.database.Date_To_MYSQL_String(new Date(value_lookup.start_time));
+		value_lookup.member_id = session.member_id;
 		
 		session.database.Insert('task_log',value_lookup,function(object){
-			callback(object);
+			
+			Update_Task_Entries_Table_Links(value_lookup,session,function(result){
+				callback(result);
+			});
+			
 		});
 	}
 	
@@ -19,10 +24,14 @@ define([],function(){
 		
 		delete value_lookup.task_log_id;
 		
-		var where = 'task_log_id = ' + task_log_id;
+		var where = 'task_log_id = ' + task_log_id+ ' AND member_id = ' + session.member_id;
 		
 		session.database.Update('task_log',value_lookup,where,function(object){
-			callback(object);
+			
+			Update_Task_Entries_Table_Links(value_lookup,session,function(result){
+				callback(result);
+			});
+			
 		});
 	}
 	
@@ -31,7 +40,9 @@ define([],function(){
 		var where = 'task_log_id = ' + params.task_log_id;
 		
 		session.database.Delete('task_log',where,function(object){
-			callback(object);
+			Update_Task_Entries_Table_Links(params,session,function(result){
+				callback(result);
+			});
 		});
 	}
 	
@@ -43,7 +54,9 @@ define([],function(){
 		value_lookup.member_id = session.member_id;
 		
 		session.database.Insert('tasks',value_lookup,function(object){
-			callback(object);
+			Update_Tasks_Table_Links(params,session,function(result){
+				callback(result);
+			});
 		});
 	}
 	
@@ -58,7 +71,9 @@ define([],function(){
 		var where = 'task_id = ' + task_id + ' AND member_id = ' + session.member_id;
 		
 		session.database.Update('tasks',value_lookup,where,function(object){
-			callback(object);
+			Update_Tasks_Table_Links(params,session,function(result){
+				callback(result);
+			});
 		});
 	}
 	
@@ -67,7 +82,9 @@ define([],function(){
 		var where = 'task_id = ' + params.task_id + ' AND member_id = ' + session.member_id;
 		
 		session.database.Delete('tasks',where,function(object){
-			callback(object);
+			Update_Tasks_Table_Links(params,session,function(result){
+				callback(result);
+			});
 		});
 	}
 	
@@ -76,6 +93,7 @@ define([],function(){
 		var value_lookup = params;
 		value_lookup.scheduled_time = session.database.Date_To_MYSQL_String(new Date(value_lookup.scheduled_time));
 		value_lookup.recurrance_end_time = session.database.Date_To_MYSQL_String(new Date(value_lookup.recurrance_end_time));
+		value_lookup.member_id = session.member_id;
 		
 		session.database.Insert('task_targets',value_lookup,function(object){
 			
@@ -96,7 +114,9 @@ define([],function(){
 					
 					var return_object = {success: object};
 					
-					callback(return_object);
+					Update_Table_Links(params,session,function(result){
+						callback(result);
+					});
 					
 				});
 				
@@ -116,7 +136,7 @@ define([],function(){
 		//remove this column for the update
 		delete value_lookup.task_schedule_id;
 		
-		var where = 'task_schedule_id = ' + task_schedule_id;
+		var where = 'task_schedule_id = ' + task_schedule_id + ' AND member_id = ' + session.member_id;
 		
 		session.database.Update('task_targets',value_lookup,where,function(object){
 			
@@ -127,7 +147,9 @@ define([],function(){
 				
 				var return_object = {success: true};
 				
-				callback(return_object);
+				Update_Table_Links(params,session,function(result){
+					callback(result);
+				});
 				
 			});
 			
@@ -143,7 +165,9 @@ define([],function(){
 			//handle recurring children
 			Delete_Recurring_Children({'task_schedule_id' : params.task_schedule_id},session,function(object){
 				
-				callback(object);
+				Update_Table_Links(params,session,function(result){
+					callback(result);
+				});
 				
 			});
 			
@@ -609,6 +633,69 @@ define([],function(){
 			callback(object);
 		});
 		
+	}
+	
+	function Update_Table_Links(params, session, callback)
+	{
+		var queries = [
+			"UPDATE `task_log` SET `member_id`=(Select member_id from tasks where task_id = task_log.task_id), `name`=(Select name from tasks where task_id = task_log.task_id), `target_status`=(Select status from task_targets where task_target_id = task_targets.task_schedule_id) WHERE member_id = " + session.member_id,
+			"UPDATE `task_targets` SET `member_id`=(Select member_id from tasks where task_id = task_targets.task_id), `name`=(Select name from tasks where task_id = task_targets.task_id), `hours`=(Select SUM(hours) from task_log where task_target_id = task_targets.task_schedule_id) WHERE member_id = " + session.member_id,
+		    ];
+		
+		session.database.Queries(queries, function(result){
+			
+			var object = {success:result};
+			
+			callback(object);
+		});
+	}
+	
+	function Update_Tasks_Table_Links(params, session, callback)
+	{
+		//used for task updates
+		var queries = [
+           "UPDATE `task_log` SET `name`=(Select name from tasks where task_id = task_log.task_id) WHERE member_id = " + session.member_id,
+           "UPDATE `task_targets` SET `name`=(Select name from tasks where task_id = task_targets.task_id) WHERE member_id = " + session.member_id,
+           ];
+		   		
+   		session.database.Queries(queries, function(result){
+   			
+   			var object = {success:result};
+   			
+   			callback(object);
+   		});
+	}
+	
+	function Update_Task_Targets_Table_Links(params, session, callback)
+	{
+		//used for task target updates
+		var queries = [
+		               "UPDATE `task_targets` SET `name`=(Select name from tasks where task_id = task_targets.task_id) WHERE task_id = " + params.task_id + " AND member_id = " + session.member_id,
+		               "UPDATE `task_log` SET `target_status`=(Select status from task_targets where task_target_id = task_targets.task_schedule_id) WHERE member_id = " + session.member_id
+		               ];
+		
+   		session.database.Queries(queries, function(result){
+   			
+   			var object = {success:result};
+   			
+   			callback(object);
+   		});
+	}
+	
+	function Update_Task_Entries_Table_Links(params, session, callback)
+	{
+		//used for task entry updates
+		var queries = [
+		               "UPDATE `task_targets` SET `hours`=(Select SUM(hours) from task_log where task_target_id = task_targets.task_schedule_id) WHERE task_schedule_id = " + params.task_target_id + " AND member_id = " + session.member_id,
+		               "UPDATE `task_log` SET `name`=(Select name from tasks where task_id = task_log.task_id), `target_status`=(Select status from task_targets where task_target_id = task_targets.task_schedule_id) WHERE task_id = " + params.task_id + " AND member_id = " + session.member_id
+		               ];
+		
+   		session.database.Queries(queries, function(result){
+   			
+   			var object = {success:result};
+   			
+   			callback(object);
+   		});
 	}
 	
 	return {

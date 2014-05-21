@@ -66,6 +66,31 @@ define([
 		callback(false);
 	}
 	
+	function Update_From_7_To_8(params,session,callback)
+	{
+		logger.Info("Updating database from v7 to v8");
+		
+		//TODO: implement
+
+		//TODO: implement query
+		var sql = "ALTER TABLE `item_log` ADD `name` TEXT NOT NULL , ADD `unit` TEXT NOT NULL , ADD `member_id` INT NOT NULL";
+		//TODO: implement current item_log table update
+		
+		//TODO: implement query
+		sql = "ALTER TABLE `item_targets` ADD `name` TEXT NOT NULL , ADD `member_id` INT NOT NULL";
+		//TODO: implement current item_targets table update
+		
+		//TODO: implement query
+		sql = "ALTER TABLE `task_log` ADD `name` TEXT NOT NULL , ADD `target_status` TEXT NOT NULL , ADD `member_id` INT NOT NULL";
+		//TODO: implement current task_log table update
+
+		//TODO: implement query
+		sql = "ALTER TABLE `task_targets` ADD `name` TEXT NOT NULL , ADD `hours` DOUBLE NOT NULL , ADD `member_id` INT NOT NULL";
+		//TODO: implement current task_targets table update
+		
+		callback(false);
+	}
+	
 	//*****************Other functions*********************
 	function Insert_Version(params, session, callback)
 	{
@@ -282,6 +307,7 @@ define([
 			4 : Update_From_4_To_5,
 			5 : Update_From_5_To_6,
 			6 : Update_From_6_To_7,
+			7 : Update_From_7_To_8,
 		};
 		
 		

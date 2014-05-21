@@ -207,19 +207,17 @@ define([],function(){
 	
 	function Get_Task_Log(params, session, callback)
 	{
-		var join = "task_log " + 
-			"JOIN tasks ON tasks.task_id = task_log.task_id " + 
-			"LEFT JOIN task_targets ON task_targets.task_schedule_id = task_log.task_target_id";
+		var join = "task_log";
 		var columns = {
-			"name" : "IFNULL(tasks.name,'')",
-			"task_log_id" : "task_log.task_log_id",
-			"task_id" : "IFNULL(tasks.task_id,0)",
-			"start_time" : "task_log.start_time",
-			"hours" : "task_log.hours",
-			"status" : "task_log.status",
-			"note" : "task_log.note",
-			"task_target_id" : "task_log.task_target_id",
-			"target_status" : "IFNULL(task_targets.status,'')"};
+			"name" : "name",
+			"task_log_id" : "task_log_id",
+			"task_id" : "task_id",
+			"start_time" : "start_time",
+			"hours" : "hours",
+			"status" : "status",
+			"note" : "note",
+			"task_target_id" : "task_target_id",
+			"target_status" : "target_status"};
 		
 		session.database.Select(
 			join, 
@@ -257,23 +255,21 @@ define([],function(){
 	
 	function Get_Task_Targets(params, session, callback)
 	{
-		var join = "task_targets " + 
-			"JOIN tasks ON tasks.task_id = task_targets.task_id " + 
-			"LEFT JOIN task_log ON task_targets.task_schedule_id = task_log.task_target_id ";
+		var join = "task_targets";
 		var columns = {
-			"task_id" : "task_targets.task_id",
-			"task_schedule_id" : "task_targets.task_schedule_id",
-			"scheduled_time" : "task_targets.scheduled_time",
-			"recurring" : "task_targets.recurring",
-			"recurrance_type" : "task_targets.recurrance_type",
-			"variance" : "task_targets.allowed_variance",
-			"estimated_time" : "task_targets.estimated_time",
-			"recurrance_period" : "task_targets.recurrance_period",
-			"recurrance_end_time" : "task_targets.recurrance_end_time",
-			"recurrance_child_id" : "task_targets.recurrance_child_id",
-			"status" : "task_targets.status",
-			"name" : "tasks.name",
-			"hours" : "IFNULL(SUM(task_log.hours),0)"};
+			"task_id" : "task_id",
+			"task_schedule_id" : "task_schedule_id",
+			"scheduled_time" : "scheduled_time",
+			"recurring" : "recurring",
+			"recurrance_type" : "recurrance_type",
+			"variance" : "allowed_variance",
+			"estimated_time" : "estimated_time",
+			"recurrance_period" : "recurrance_period",
+			"recurrance_end_time" : "recurrance_end_time",
+			"recurrance_child_id" : "recurrance_child_id",
+			"status" : "status",
+			"name" : "name",
+			"hours" : "hours"};
 		
 		session.database.Select(
 			join, 

@@ -121,16 +121,16 @@ define([],function(){
 		},
 		Get_Item_Log: function(params, session, callback){
 			
-			var join = "item_log JOIN items ON item_log.item_id = items.item_id";
+			var join = "item_log";
 			var columns = {
-				"item_log_id" : "item_log.item_log_id",
-				"item_id" : "item_log.item_id",
-				"time" : "item_log.time",
-				"value" : "item_log.value",
-				"item_target_id" : "item_log.item_target_id",
-				"note" : "item_log.note",
-				"name" : "items.name",
-				"unit" : "items.unit"};
+				"item_log_id" : "item_log_id",
+				"item_id" : "item_id",
+				"time" : "time",
+				"value" : "value",
+				"item_target_id" : "item_target_id",
+				"note" : "note",
+				"name" : "name",
+				"unit" : "unit"};
 			
 			session.database.Select(
 				join, 
@@ -199,22 +199,22 @@ define([],function(){
 		},
 		Get_Item_Targets: function(params, session, callback){
 			
-			var join = "item_targets JOIN items ON item_targets.item_id = items.item_id";
+			var join = "item_targets";
 			var columns = {
-				"item_target_id" : "item_targets.item_target_id",
-				"start_time" : "item_targets.start_time",
-				"type" : "item_targets.type",
-				"value" : "item_targets.value",
-				"item_id" : "item_targets.item_id",
-				"period_type" : "item_targets.period_type",
-				"period" : "item_targets.period",
-				"recurring" : "item_targets.recurring",
-				"recurring_child_id" : "item_targets.recurring_child_id",
-				"recurrance_end_time" : "item_targets.recurrance_end_time",
-				"allowed_variance" : "item_targets.allowed_variance",
-				"recurrance_period" : "item_targets.recurrance_period",
-				"status" : "item_targets.status",
-				"name" : "items.name"};
+				"item_target_id" : "item_target_id",
+				"start_time" : "start_time",
+				"type" : "type",
+				"value" : "value",
+				"item_id" : "item_id",
+				"period_type" : "period_type",
+				"period" : "period",
+				"recurring" : "recurring",
+				"recurring_child_id" : "recurring_child_id",
+				"recurrance_end_time" : "recurrance_end_time",
+				"allowed_variance" : "allowed_variance",
+				"recurrance_period" : "recurrance_period",
+				"status" : "status",
+				"name" : "name"};
 			
 			session.database.Select(
 				join, 

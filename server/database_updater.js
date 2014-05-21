@@ -87,6 +87,7 @@ define([
 			               "UPDATE `task_log` SET `member_id`=(Select member_id from tasks where task_id = task_log.task_id), `name`=(Select name from tasks where task_id = task_log.task_id), `target_status`=(Select status from task_targets where task_target_id = task_targets.task_schedule_id)",
 			               "UPDATE `task_targets` SET `member_id`=(Select member_id from tasks where task_id = task_targets.task_id), `name`=(Select name from tasks where task_id = task_targets.task_id), `hours`=(Select SUM(hours) from task_log where task_target_id = task_targets.task_schedule_id)",
 			               ];
+			
 			session.database.Queries(queries, function(result){
 				
 				//insert most current version
@@ -96,7 +97,7 @@ define([
 	
 				});
 				
-			};
+			});
 			
 		});
 		
